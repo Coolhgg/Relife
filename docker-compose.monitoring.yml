@@ -27,16 +27,16 @@ services:
     ports:
       - "9090:9090"
     command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--storage.tsdb.retention.time=90d'
-      - '--storage.tsdb.wal-compression'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.console.templates=/etc/prometheus/consoles'
-      - '--web.enable-lifecycle'
-      - '--web.enable-admin-api'
-      - '--web.external-url=https://prometheus.relife.app'
-      - '--log.level=info'
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=90d"
+      - "--storage.tsdb.wal-compression"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--web.enable-lifecycle"
+      - "--web.enable-admin-api"
+      - "--web.external-url=https://prometheus.relife.app"
+      - "--log.level=info"
     volumes:
       - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./monitoring/prometheus/alerts:/etc/prometheus/rules:ro
@@ -47,7 +47,15 @@ services:
     environment:
       - TZ=UTC
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:9090/-/healthy",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -65,11 +73,11 @@ services:
     ports:
       - "9093:9093"
     command:
-      - '--config.file=/etc/alertmanager/alertmanager.yml'
-      - '--storage.path=/alertmanager'
-      - '--web.external-url=https://alertmanager.relife.app'
-      - '--cluster.listen-address=0.0.0.0:9094'
-      - '--log.level=info'
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--storage.path=/alertmanager"
+      - "--web.external-url=https://alertmanager.relife.app"
+      - "--cluster.listen-address=0.0.0.0:9094"
+      - "--log.level=info"
     volumes:
       - ./monitoring/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
       - ./monitoring/alertmanager/templates:/etc/alertmanager/templates:ro
@@ -85,7 +93,15 @@ services:
       - PAGERDUTY_ROUTING_KEY_URGENT=${PAGERDUTY_ROUTING_KEY_URGENT}
       - WEBHOOK_AUTH_TOKEN=${WEBHOOK_AUTH_TOKEN}
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9093/-/healthy"]
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:9093/-/healthy",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -150,11 +166,11 @@ services:
     ports:
       - "9100:9100"
     command:
-      - '--path.procfs=/host/proc'
-      - '--path.sysfs=/host/sys'
-      - '--path.rootfs=/rootfs'
-      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
-      - '--collector.textfile.directory=/var/lib/node_exporter/textfile_collector'
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
+      - "--path.rootfs=/rootfs"
+      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+      - "--collector.textfile.directory=/var/lib/node_exporter/textfile_collector"
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
@@ -173,14 +189,22 @@ services:
     ports:
       - "9091:9091"
     command:
-      - '--web.enable-admin-api'
-      - '--log.level=info'
+      - "--web.enable-admin-api"
+      - "--log.level=info"
     networks:
       - monitoring-network
     environment:
       - TZ=UTC
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9091/-/healthy"]
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:9091/-/healthy",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -227,7 +251,7 @@ services:
     ports:
       - "9113:9113"
     command:
-      - '-nginx.scrape-uri=http://relife-app-prod/nginx_status'
+      - "-nginx.scrape-uri=http://relife-app-prod/nginx_status"
     networks:
       - monitoring-network
       - relife-network

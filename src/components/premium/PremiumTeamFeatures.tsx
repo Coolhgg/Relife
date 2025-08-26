@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-// Replaced stub import with proper implementation // auto: restored by scout - verify
+  // Replaced stub import with proper implementation // auto: restored by scout - verify
   Users,
   Crown,
   Trophy,
@@ -150,7 +150,7 @@ function TeamDashboard() {
 
         <div className="space-y-3">
           <h4 className="font-semibold">Team Members</h4>
-          {team.members.map((member: any) => (
+          {team.members.map((member: unknown) => (
             <div
               key={member.id}
               className="flex items-center justify-between p-3 border rounded-lg"
@@ -302,7 +302,7 @@ function WakeUpChallenges() {
 
         <div className="space-y-3">
           <h4 className="font-semibold">Available Challenges</h4>
-          {availableChallenges.map((challenge: any) => (
+          {availableChallenges.map((challenge: unknown) => (
             <div
               key={challenge.id}
               className="flex items-center justify-between p-3 border rounded-lg"
@@ -373,7 +373,7 @@ function AccountabilityPartners() {
               </Button>
             </div>
           ) : (
-            partners.map((partner: any) => (
+            partners.map((partner: unknown) => (
               <div
                 key={partner.id}
                 className="flex items-center justify-between p-3 border rounded-lg"
@@ -402,7 +402,7 @@ function AccountabilityPartners() {
         {partnerRequests.length > 0 && (
           <div className="space-y-3">
             <h4 className="font-semibold">Partner Requests</h4>
-            {partnerRequests.map((request: any) => (
+            {partnerRequests.map((request: unknown) => (
               <div
                 key={request.id}
                 className="flex items-center justify-between p-3 border rounded-lg bg-blue-50"
@@ -550,8 +550,8 @@ function SocialWakeUpFeatures() {
               </span>
               <Switch
                 checked={enabled}
-                onCheckedChange={(checked: any) =>
-                  setSocialSettings((prev: any) => ({ ...prev, [key]: checked }))
+                onCheckedChange={(checked: unknown) =>
+                  setSocialSettings((prev: unknown) => ({ ...prev, [key]: checked }))
                 }
               />
             </div>

@@ -589,7 +589,7 @@ describe('useAuth Hook', () => {
   describe('Auth State Changes', () => {
     it('should handle auth state change listener', async () => {
       const { supabase } = require('../../services/supabase');
-      let authStateChangeCallback: (_event: string, session: any) => void;
+      let authStateChangeCallback: (_event: string, session: unknown) => void;
 
       supabase.auth.onAuthStateChange.mockImplementation(callback => {
         authStateChangeCallback = callback;
@@ -615,7 +615,7 @@ describe('useAuth Hook', () => {
 
     it('should handle signed out _event', async () => {
       const { supabase } = require('../../services/supabase');
-      let authStateChangeCallback: (_event: string, session: any) => void;
+      let authStateChangeCallback: (_event: string, session: unknown) => void;
 
       supabase.auth.onAuthStateChange.mockImplementation(callback => {
         authStateChangeCallback = callback;

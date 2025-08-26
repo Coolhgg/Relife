@@ -628,6 +628,46 @@ interface OverageFee {
 // =============================================================================
 
 export interface AppState {
+  // Flattened alarm properties for component compatibility
+  alarms: Alarm[];
+  activeAlarm: Alarm | null;
+  permissions: {
+    notifications: boolean;
+    location: boolean;
+    camera: boolean;
+    microphone: boolean;
+  };
+  
+  // Navigation state
+  currentView:
+    | 'dashboard'
+    | 'alarms'
+    | 'settings'
+    | 'profile'
+    | 'subscription'
+    | 'gaming'
+    | 'advanced-scheduling'
+    | 'pricing'
+    | 'gift-shop';
+  
+  // Reward and gamification
+  rewardSystem: {
+    points: number;
+    level: number;
+    experience: number;
+    streakDays: number;
+    unlockedRewards: string[];
+  };
+  
+  activeBattles: Record<string, string>; // alarmId -> battleId mapping
+  
+  // Social features
+  friends: UserFriend[];
+  
+  // Onboarding state
+  isOnboarding: boolean;
+  
+  // Full nested state for advanced functionality
   alarm: AlarmState;
   user: UserState;
   subscription: SubscriptionState;
@@ -644,9 +684,18 @@ export interface AppState {
     criticalError: string | null;
   };
 
-  // Navigation and routing
+  // Navigation and routing (keeping for backward compatibility)
   navigation: {
-    currentView: 'dashboard' | 'alarms' | 'settings' | 'profile' | 'subscription' | 'gaming' | 'advanced-scheduling' | 'pricing' | 'gift-shop';
+    currentView:
+      | 'dashboard'
+      | 'alarms'
+      | 'settings'
+      | 'profile'
+      | 'subscription'
+      | 'gaming'
+      | 'advanced-scheduling'
+      | 'pricing'
+      | 'gift-shop';
     previousView: string | null;
     navigationHistory: string[];
     modalStack: string[];
@@ -791,14 +840,14 @@ export const validateSubscriptionState = (state: SubscriptionState): boolean => 
 };
 
 // Type guards
-export const isAlarmState = (value: any): value is AlarmState => {
+export const isAlarmState = (value: unknown): value is AlarmState => {
   return value && validateAlarmState(value);
 };
 
-export const isUserState = (value: any): value is UserState => {
+export const isUserState = (value: unknown): value is UserState => {
   return value && validateUserState(value);
 };
 
-export const isSubscriptionState = (value: any): value is SubscriptionState => {
+export const isSubscriptionState = (value: unknown): value is SubscriptionState => {
   return value && validateSubscriptionState(value);
 };

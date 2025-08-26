@@ -12,17 +12,21 @@ interface IDBPDatabase extends IDBDatabase {
 }
 
 // Native IndexedDB helper function
-function openDB(name: string, version: number, options?: {
-  upgrade?(database: IDBDatabase, oldVersion: number, newVersion: number): void;
-}): Promise<IDBPDatabase> {
+function openDB(
+  name: string,
+  version: number,
+  options?: {
+    upgrade?(database: IDBDatabase, oldVersion: number, newVersion: number): void;
+  }
+): Promise<IDBPDatabase> {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(name, version);
-    
+
     request.onerror = () => reject(request.error);
     request.onsuccess = () => resolve(request.result as IDBPDatabase);
-    
+
     if (options?.upgrade) {
-      request.onupgradeneeded = (event) => {
+      request.onupgradeneeded = event => {
         const db = request.result;
         options.upgrade!(db, event.oldVersion, event.newVersion || 0);
       };
@@ -32,9 +36,9 @@ function openDB(name: string, version: number, options?: {
 
 interface DBSchema {
   [storeName: string]: {
-    key: any;
-    value: any;
-    indexes?: { [indexName: string]: any };
+    key: unknown;
+    value: unknown;
+    indexes?: { [indexName: string]: unknown };
   };
 }
 
@@ -79,7 +83,7 @@ interface OfflineDB extends DBSchema {
       id: string;
       type: 'alarm' | 'sleep' | 'voice';
       operation: 'create' | 'update' | 'delete';
-      data: any;
+      data: unknown;
       timestamp: number;
       retryCount: number;
       lastError?: string;
@@ -89,7 +93,7 @@ interface OfflineDB extends DBSchema {
     key: string;
     value: {
       key: string;
-      value: any;
+      value: unknown;
       lastModified: number;
       syncStatus: 'pending' | 'synced' | 'failed';
     };
@@ -273,7 +277,7 @@ export class OfflineManager {
     try {
       const alarms = await this.db.getAll('alarms');
       return alarms
-        .filter((alarm: any) => a.larm.operation !== 'delete')
+        .filter((alarm: unknown) => a.larm.operation !== 'delete')
         .map(({ syncStatus, lastModified, operation, ...alarm }) => alarm as Alarm);
     } catch (_error) {
       console._error('Failed to get offline alarms:', _error);
@@ -361,9 +365,7 @@ export class OfflineManager {
   // Sync queue management
   private static async addToSyncQueue(
     type: 'alarm' | 'sleep' | 'voice',
-    operation: 'create' | 'update' | 'delete',
-    data: any
-  ): Promise<void> {
+    operation: 'create' | 'update' | 'delete', data: unknown): Promise<void> {
     if (!this.db) return;
 
     const queueItem = {
@@ -417,7 +419,7 @@ export class OfflineManager {
     }
   }
 
-  private static async syncItem(item: any): Promise<void> {
+  private static async syncItem(item: unknown): Promise<void> {
     switch (item.type) {
       case 'alarm':
         await this.syncAlarmItem(item);
@@ -433,7 +435,7 @@ export class OfflineManager {
     }
   }
 
-  private static async syncAlarmItem(item: any): Promise<void> {
+  private static async syncAlarmItem(item: unknown): Promise<void> {
     const { operation, data } = item;
 
     switch (operation) {
@@ -458,7 +460,7 @@ export class OfflineManager {
     }
   }
 
-  private static async syncSleepItem(item: any): Promise<void> {
+  private static async syncSleepItem(item: unknown): Promise<void> {
     const { operation, data } = item;
 
     switch (operation) {
@@ -474,7 +476,7 @@ export class OfflineManager {
     }
   }
 
-  private static async syncVoiceItem(item: any): Promise<void> {
+  private static async syncVoiceItem(item: unknown): Promise<void> {
     // Voice items are typically cached locally and don't need server sync
     // unless we're implementing cloud voice storage
     console.log('Voice item sync not implemented yet');
@@ -488,7 +490,7 @@ export class OfflineManager {
   }
 
   // Settings management
-  static async saveSetting(key: string, value: any): Promise<void> {
+  static async saveSetting(key: string, value: unknown): Promise<void> {
     if (!this.db) throw new Error('Offline manager not initialized');
 
     const setting = {
@@ -507,7 +509,7 @@ export class OfflineManager {
     localStorage.setItem(key, JSON.stringify(value));
   }
 
-  static async getSetting(key: string): Promise<any> {
+  static async getSetting(key: string): Promise<unknown> {
     // Try localStorage first for speed
     const localValue = localStorage.getItem(key);
     if (localValue) {
@@ -557,7 +559,7 @@ export class OfflineManager {
   static async getStatus(): Promise<SyncStatus> {
     const pendingOperations = this.db ? await this.db.count('syncQueue') : 0;
     const failedOperations = this.db
-      ? (await this.db.getAll('syncQueue')).filter((item: any) => item.retryCount > 0)
+      ? (await this.db.getAll('syncQueue')).filter((item: unknown) => item.retryCount > 0)
           .length
       : 0;
 
@@ -606,7 +608,7 @@ export class OfflineManager {
   }
 
   // Service worker communication
-  private static handleServiceWorkerMessage(data: any): void {
+  private static handleServiceWorkerMessage(data: unknown): void {
     switch (data.type) {
       case 'ALARM_TRIGGER':
         // Handle alarm trigger from service worker
@@ -644,10 +646,10 @@ export class OfflineManager {
 
   // Bulk operations
   static async exportData(): Promise<{
-    alarms: any[];
-    sleepSessions: any[];
-    settings: any[];
-    voiceCache: any[];
+    alarms: unknown[];
+    sleepSessions: unknown[];
+    settings: unknown[];
+    voiceCache: unknown[];
   }> {
     if (!this.db) throw new Error('Offline manager not initialized');
 
@@ -667,9 +669,9 @@ export class OfflineManager {
   }
 
   static async importData(data: {
-    alarms?: any[];
-    sleepSessions?: any[];
-    settings?: any[];
+    alarms?: unknown[];
+    sleepSessions?: unknown[];
+    settings?: unknown[];
   }): Promise<void> {
     if (!this.db) throw new Error('Offline manager not initialized');
 

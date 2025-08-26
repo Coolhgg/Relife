@@ -200,16 +200,16 @@ export class CrossPlatformIntegration {
     if (!this.platformConfigs.has(userId)) {
       this.platformConfigs.set(userId, new Map());
     }
-    
+
     const userConfigs = this.platformConfigs.get(userId)!;
     userConfigs.set(platform, config);
-    
+
     if (config.enabled) {
       await this.startPlatformSync(userId, platform, config);
     } else {
       this.stopPlatformSync(userId, platform);
     }
-    
+
     console.log(`[CrossPlatformIntegration] Configured ${platform} for user ${userId}`);
   }
 
@@ -223,7 +223,7 @@ export class CrossPlatformIntegration {
       await this.performFullSync(userId);
       return this.platformData.get(userId) || null;
     }
-    
+
     return data;
   }
 
@@ -247,12 +247,12 @@ export class CrossPlatformIntegration {
     // Sync each enabled platform
     for (const [platform, config] of userConfigs) {
       if (!config.enabled) continue;
-      
+
       enabledPlatforms++;
       try {
         const data = await this.syncPlatformData(platform, config, userId);
         if (data) {
-          crossPlatformData[platform as keyof CrossPlatformData] = data as any;
+          crossPlatformData[platform as keyof CrossPlatformData] = data as unknown;
           successfulSyncs++;
         }
       } catch (error) {
@@ -261,8 +261,9 @@ export class CrossPlatformIntegration {
     }
 
     // Calculate data quality
-    crossPlatformData.dataQuality = enabledPlatforms > 0 ? successfulSyncs / enabledPlatforms : 0;
-    
+    crossPlatformData.dataQuality =
+      enabledPlatforms > 0 ? successfulSyncs / enabledPlatforms : 0;
+
     this.platformData.set(userId, crossPlatformData);
     return crossPlatformData;
   }
@@ -274,7 +275,7 @@ export class CrossPlatformIntegration {
     platform: string,
     config: PlatformConfig,
     userId: string
-  ): Promise<any> {
+  ): Promise<unknown> {
     switch (platform) {
       case 'apple_health':
       case 'google_fit':
@@ -311,8 +312,10 @@ export class CrossPlatformIntegration {
     userId: string
   ): Promise<HealthPlatformData> {
     // Mock implementation - replace with actual API calls
-    console.log(`[CrossPlatformIntegration] Syncing health data from ${platform} for user ${userId}`);
-    
+    console.log(
+      `[CrossPlatformIntegration] Syncing health data from ${platform} for user ${userId}`
+    );
+
     // In production, this would make actual API calls to health platforms
     const mockHealthData: HealthPlatformData = {
       steps: Math.floor(Math.random() * 5000) + 8000,
@@ -348,11 +351,13 @@ export class CrossPlatformIntegration {
     config: PlatformConfig,
     userId: string
   ): Promise<CalendarPlatformData> {
-    console.log(`[CrossPlatformIntegration] Syncing calendar data from ${platform} for user ${userId}`);
-    
+    console.log(
+      `[CrossPlatformIntegration] Syncing calendar data from ${platform} for user ${userId}`
+    );
+
     const now = new Date();
     const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-    
+
     const mockCalendarData: CalendarPlatformData = {
       upcomingEvents: [
         {
@@ -400,8 +405,10 @@ export class CrossPlatformIntegration {
     config: PlatformConfig,
     userId: string
   ): Promise<WeatherPlatformData> {
-    console.log(`[CrossPlatformIntegration] Syncing weather data from ${platform} for user ${userId}`);
-    
+    console.log(
+      `[CrossPlatformIntegration] Syncing weather data from ${platform} for user ${userId}`
+    );
+
     const mockWeatherData: WeatherPlatformData = {
       current: {
         temperature: Math.floor(Math.random() * 30) + 10, // 10-40°C
@@ -410,7 +417,9 @@ export class CrossPlatformIntegration {
         windSpeed: Math.floor(Math.random() * 20) + 5, // 5-25 km/h
         uvIndex: Math.floor(Math.random() * 8) + 1, // 1-9
         visibility: Math.floor(Math.random() * 5) + 10, // 10-15 km
-        condition: ['sunny', 'cloudy', 'rainy', 'partly_cloudy'][Math.floor(Math.random() * 4)],
+        condition: ['sunny', 'cloudy', 'rainy', 'partly_cloudy'][
+          Math.floor(Math.random() * 4)
+        ],
         airQuality: Math.floor(Math.random() * 100) + 20, // 20-120 AQI
       },
       forecast: Array.from({ length: 7 }, (_, i) => ({
@@ -419,7 +428,9 @@ export class CrossPlatformIntegration {
           min: Math.floor(Math.random() * 10) + 15,
           max: Math.floor(Math.random() * 15) + 25,
         },
-        condition: ['sunny', 'cloudy', 'rainy', 'partly_cloudy'][Math.floor(Math.random() * 4)],
+        condition: ['sunny', 'cloudy', 'rainy', 'partly_cloudy'][
+          Math.floor(Math.random() * 4)
+        ],
         precipitationChance: Math.floor(Math.random() * 100),
         sunrise: new Date(Date.now() + i * 24 * 60 * 60 * 1000 + 6 * 60 * 60 * 1000),
         sunset: new Date(Date.now() + i * 24 * 60 * 60 * 1000 + 18 * 60 * 60 * 1000),
@@ -443,8 +454,10 @@ export class CrossPlatformIntegration {
     config: PlatformConfig,
     userId: string
   ): Promise<SocialPlatformData> {
-    console.log(`[CrossPlatformIntegration] Syncing social data from ${platform} for user ${userId}`);
-    
+    console.log(
+      `[CrossPlatformIntegration] Syncing social data from ${platform} for user ${userId}`
+    );
+
     const mockSocialData: SocialPlatformData = {
       recentActivity: {
         postsCount: Math.floor(Math.random() * 5) + 1,
@@ -480,12 +493,14 @@ export class CrossPlatformIntegration {
     config: PlatformConfig,
     userId: string
   ): Promise<LocationPlatformData> {
-    console.log(`[CrossPlatformIntegration] Syncing location data from ${platform} for user ${userId}`);
-    
+    console.log(
+      `[CrossPlatformIntegration] Syncing location data from ${platform} for user ${userId}`
+    );
+
     const mockLocationData: LocationPlatformData = {
       currentLocation: {
         latitude: 40.7128 + (Math.random() - 0.5) * 0.1,
-        longitude: -74.0060 + (Math.random() - 0.5) * 0.1,
+        longitude: -74.006 + (Math.random() - 0.5) * 0.1,
         city: 'New York',
         country: 'USA',
         timezone: 'America/New_York',
@@ -495,7 +510,7 @@ export class CrossPlatformIntegration {
           name: 'Home',
           type: 'home',
           latitude: 40.7128,
-          longitude: -74.0060,
+          longitude: -74.006,
           timeSpent: Math.random() * 6 + 10, // 10-16 hours
           lastVisit: new Date(),
         },
@@ -528,8 +543,10 @@ export class CrossPlatformIntegration {
     config: PlatformConfig,
     userId: string
   ): Promise<ProductivityPlatformData> {
-    console.log(`[CrossPlatformIntegration] Syncing productivity data from ${platform} for user ${userId}`);
-    
+    console.log(
+      `[CrossPlatformIntegration] Syncing productivity data from ${platform} for user ${userId}`
+    );
+
     const mockProductivityData: ProductivityPlatformData = {
       todayStats: {
         tasksCompleted: Math.floor(Math.random() * 10) + 5,
@@ -565,7 +582,7 @@ export class CrossPlatformIntegration {
     config: PlatformConfig
   ): Promise<void> {
     const syncKey = `${userId}_${platform}`;
-    
+
     // Clear existing interval
     const existingInterval = this.syncIntervals.get(syncKey);
     if (existingInterval) {
@@ -573,14 +590,22 @@ export class CrossPlatformIntegration {
     }
 
     // Start new sync interval
-    const interval = setInterval(async () => {
-      try {
-        await this.syncPlatformData(platform, config, userId);
-        console.log(`[CrossPlatformIntegration] Auto-synced ${platform} for user ${userId}`);
-      } catch (error) {
-        console.error(`[CrossPlatformIntegration] Auto-sync failed for ${platform}:`, error);
-      }
-    }, config.syncFrequency * 60 * 1000);
+    const interval = setInterval(
+      async () => {
+        try {
+          await this.syncPlatformData(platform, config, userId);
+          console.log(
+            `[CrossPlatformIntegration] Auto-synced ${platform} for user ${userId}`
+          );
+        } catch (error) {
+          console.error(
+            `[CrossPlatformIntegration] Auto-sync failed for ${platform}:`,
+            error
+          );
+        }
+      },
+      config.syncFrequency * 60 * 1000
+    );
 
     this.syncIntervals.set(syncKey, interval);
 
@@ -588,7 +613,10 @@ export class CrossPlatformIntegration {
     try {
       await this.syncPlatformData(platform, config, userId);
     } catch (error) {
-      console.error(`[CrossPlatformIntegration] Initial sync failed for ${platform}:`, error);
+      console.error(
+        `[CrossPlatformIntegration] Initial sync failed for ${platform}:`,
+        error
+      );
     }
   }
 
@@ -598,11 +626,13 @@ export class CrossPlatformIntegration {
   private stopPlatformSync(userId: string, platform: string): void {
     const syncKey = `${userId}_${platform}`;
     const interval = this.syncIntervals.get(syncKey);
-    
+
     if (interval) {
       clearInterval(interval);
       this.syncIntervals.delete(syncKey);
-      console.log(`[CrossPlatformIntegration] Stopped sync for ${platform} (user: ${userId})`);
+      console.log(
+        `[CrossPlatformIntegration] Stopped sync for ${platform} (user: ${userId})`
+      );
     }
   }
 
@@ -619,7 +649,13 @@ export class CrossPlatformIntegration {
   getAvailablePlatforms(): Array<{
     id: string;
     name: string;
-    category: 'health' | 'calendar' | 'weather' | 'social' | 'location' | 'productivity';
+    category:
+      | 'health'
+      | 'calendar'
+      | 'weather'
+      | 'social'
+      | 'location'
+      | 'productivity';
     description: string;
     features: string[];
     privacyImpact: 'low' | 'medium' | 'high';
@@ -654,7 +690,12 @@ export class CrossPlatformIntegration {
         name: 'Weather Data',
         category: 'weather',
         description: 'Local weather conditions and forecasts',
-        features: ['Current conditions', '7-day forecast', 'Seasonal patterns', 'Air quality'],
+        features: [
+          'Current conditions',
+          '7-day forecast',
+          'Seasonal patterns',
+          'Air quality',
+        ],
         privacyImpact: 'low',
       },
       {
@@ -680,8 +721,10 @@ export class CrossPlatformIntegration {
    * Initialize integration system
    */
   private initializeIntegrations(): void {
-    console.log('[CrossPlatformIntegration] Initializing cross-platform integration service...');
-    
+    console.log(
+      '[CrossPlatformIntegration] Initializing cross-platform integration service...'
+    );
+
     // Set up cleanup for intervals on app close
     if (typeof window !== 'undefined') {
       window.addEventListener('beforeunload', () => {
@@ -694,7 +737,7 @@ export class CrossPlatformIntegration {
    * Clean up all sync intervals
    */
   private cleanup(): void {
-    this.syncIntervals.forEach((interval) => {
+    this.syncIntervals.forEach(interval => {
       clearInterval(interval);
     });
     this.syncIntervals.clear();
@@ -712,7 +755,7 @@ export class CrossPlatformIntegration {
   } {
     const userConfigs = this.platformConfigs.get(userId);
     const userData = this.platformData.get(userId);
-    
+
     if (!userConfigs) {
       return {
         platforms: 0,
@@ -728,7 +771,7 @@ export class CrossPlatformIntegration {
 
     enabledPlatforms.forEach(config => {
       config.permissions.forEach(permission => dataTypes.add(permission));
-      
+
       // Calculate privacy impact
       switch (config.privacyLevel) {
         case 'basic':
@@ -743,7 +786,7 @@ export class CrossPlatformIntegration {
       }
     });
 
-    const privacyScore = Math.max(0, 1 - (totalPrivacyImpact / enabledPlatforms.length));
+    const privacyScore = Math.max(0, 1 - totalPrivacyImpact / enabledPlatforms.length);
 
     return {
       platforms: enabledPlatforms.length,

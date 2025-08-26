@@ -1,8 +1,8 @@
 // Subscription Management Service for Relife Alarm App
 // High-level subscription business logic, feature access, and user management
 
-import type {
 import { ErrorHandler } from './error-handler';
+import type {
   Subscription,
   SubscriptionPlan,
   SubscriptionTier,
@@ -512,8 +512,8 @@ class SubscriptionService {
       const limits = plan?.limits || this.getFreeTierLimits();
 
       // Map feature usage to billing format
-      usageData?.forEach((item: any) => {
-        const limit = (limits as any)[item.feature] || item.limit_count;
+      usageData?.forEach((item: unknown) => {
+        const limit = (limits as unknown)[item.feature] || item.limit_count;
         usage[item.feature] = {
           used: item.usage_count,
           limit,
@@ -779,7 +779,7 @@ class SubscriptionService {
     }
 
     this.planCache.clear();
-    plans?.forEach((plan: any) => {
+    plans?.forEach((plan: unknown) => {
       this.planCache.set(plan.id, this.mapDatabasePlan(plan));
     });
   }
@@ -833,7 +833,7 @@ class SubscriptionService {
       .eq('user_id', userId);
 
     return (
-      data?.map((item: any) => ({
+      data?.map((item: unknown) => ({
         id: item.id,
         userId: item.user_id,
         discountId: item.discount_id,
@@ -846,7 +846,7 @@ class SubscriptionService {
     );
   }
 
-  private async getReferralStats(userId: string): Promise<any> {
+  private async getReferralStats(userId: string): Promise<unknown> {
     // Implementation for referral statistics
     const { data } = await supabase
       .from('referrals')
@@ -854,9 +854,9 @@ class SubscriptionService {
       .eq('referrer_id', userId);
 
     const referrals = data?.length || 0;
-    const rewards = data?.filter((r: any) => r.status === 'rewarded').length || 0;
+    const rewards = data?.filter((r: unknown) => r.status === 'rewarded').length || 0;
     const pendingRewards =
-      data?.filter((r: any) => r.status === 'converted').length || 0;
+      data?.filter((r: unknown) => r.status === 'converted').length || 0;
 
     return {
       code: `REF-${userId.slice(-8).toUpperCase()}`, // Generate referral code

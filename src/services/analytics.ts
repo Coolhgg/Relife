@@ -37,7 +37,7 @@ export interface EventProperties {
   timestamp?: string;
   sessionId?: string;
   // Allow custom properties for flexible analytics
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 // Common event names as constants for consistency
@@ -371,11 +371,7 @@ class AnalyticsService {
   /**
    * Track errors (to correlate with Sentry)
    */
-  trackError(
-    _error: Error,
-    contextName?: string,
-    context: EventProperties = {}
-  ): void {
+  trackError(_error: Error, contextName?: string, context: EventProperties = {}): void {
     this.track(ANALYTICS_EVENTS.ERROR_OCCURRED, {
       error_message: _error.message,
       error_stack: _error.stack?.substring(0, 500), // Truncate for performance
@@ -535,7 +531,7 @@ class AnalyticsService {
    * Get enhanced system properties for context
    */
   private getSystemProperties(): Record<string, unknown> {
-    const connection = (navigator as any).connection;
+    const connection = (navigator as unknown).connection;
 
     return {
       // Display info
@@ -564,7 +560,7 @@ class AnalyticsService {
       touch_support: 'ontouchstart' in window,
       max_touch_points: navigator.maxTouchPoints || 0,
       hardware_concurrency: navigator.hardwareConcurrency || 1,
-      device_memory: (navigator as any).deviceMemory || 'unknown',
+      device_memory: (navigator as unknown).deviceMemory || 'unknown',
 
       // App environment context
       app_environment: config.env,
@@ -591,8 +587,8 @@ class AnalyticsService {
       page_loaded: document.readyState === 'complete',
 
       // Performance context
-      memory_used: (performance as any).memory?.usedJSHeapSize,
-      connection_type: (navigator as any).connection?.effectiveType,
+      memory_used: (performance as unknown).memory?.usedJSHeapSize,
+      connection_type: (navigator as unknown).connection?.effectiveType,
 
       // User context
       session_id: this.sessionId,
@@ -720,7 +716,7 @@ class AnalyticsService {
   trackBusinessMetric(
     metric: string,
     value: number,
-    metadata?: Record<string, any>
+    metadata?: Record<string, unknown>
   ): void {
     this.track('business_metric', {
       metric,

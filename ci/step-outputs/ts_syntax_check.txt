@@ -1,0 +1,7 @@
+=== Testing TypeScript files for syntax errors ===
+Testing backup/pre-encoding-fix-1756198213/src/components/NuclearModeBattle.tsx
+  ✓ No obvious syntax errors in first 20 lines
+  File size: 16256 bytes
+Testing backup/pre-encoding-fix-1756198213/src/components/PersonaDrivenUI.tsx
+  ✓ No obvious syntax errors in first 20 lines
+  File size: 14614 bytes

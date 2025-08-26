@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { TimeoutHandle } from '../types/timers';
-import {
 import AnalyticsService from '../services/analytics';
 // Note: persona should be derived from user analytics or context
+import {
   BarChart,
   Bar,
   XAxis,
@@ -321,7 +321,6 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
             </Pie>
             <Tooltip
               formatter={(value: any) => [
-                // auto: implicit any
                 `${((value as number) * 100).toFixed(1)}%`,
                 'Revenue Share',
               ]}

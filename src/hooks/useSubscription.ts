@@ -3,8 +3,8 @@
 // Manages subscription state, feature access, and billing operations
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import type {
 import { ErrorHandler } from '../services/error-handler';
+import type {
   Subscription,
   SubscriptionPlan,
   SubscriptionTier,
@@ -21,7 +21,6 @@ import { ErrorHandler } from '../services/error-handler';
 } from '../types/premium';
 import SubscriptionService from '../services/subscription-service';
 import StripeService from '../services/stripe-service';
-import { ErrorHandler } from '../services/error-handler';
 import AnalyticsService from '../services/analytics';
 import { TimeoutHandle } from '../types/timers';
 
@@ -155,7 +154,7 @@ function useSubscription(
     const initializeSubscription = async () => {
       if (!userId) return;
 
-      setState((prev: any) => ({ ...prev, isLoading: true, _error: null }));
+      setState((prev: unknown) => ({ ...prev, isLoading: true, _error: null }));
 
       try {
         const dashboardData =
@@ -164,7 +163,7 @@ function useSubscription(
           await subscriptionService.current.getFeatureAccess(userId);
         const userTier = await subscriptionService.current.getUserTier(userId);
 
-        setState((prev: any) => ({
+        setState((prev: unknown) => ({
           ...prev,
           subscription: dashboardData.subscription,
           currentPlan: dashboardData.currentPlan,
@@ -193,7 +192,7 @@ function useSubscription(
           { context: 'useSubscription_init', metadata: { userId } }
         );
 
-        setState((prev: any) => ({
+        setState((prev: unknown) => ({
           ...prev,
           isLoading: false,
           isInitialized: true,
@@ -228,7 +227,7 @@ function useSubscription(
   // Subscription actions
   const createSubscription = useCallback(
     async (request: CreateSubscriptionRequest) => {
-      setState((prev: any) => ({
+      setState((prev: unknown) => ({
         ...prev,
         uiState: {
           ...prev.uiState,
@@ -248,7 +247,7 @@ function useSubscription(
           // Refresh subscription data
           await refreshSubscription();
 
-          setState((prev: any) => ({
+          setState((prev: unknown) => ({
             ...prev,
             uiState: {
               ...prev.uiState,
@@ -280,7 +279,7 @@ function useSubscription(
             requiresAction: !!result.clientSecret,
           };
         } else {
-          setState((prev: any) => ({
+          setState((prev: unknown) => ({
             ...prev,
             uiState: {
               ...prev.uiState,
@@ -301,7 +300,7 @@ function useSubscription(
         const errorMessage =
           error instanceof Error ? error.message : 'An unexpected _error occurred';
 
-        setState((prev: any) => ({
+        setState((prev: unknown) => ({
           ...prev,
           uiState: {
             ...prev.uiState,
@@ -323,7 +322,7 @@ function useSubscription(
         return { success: false, _error: 'No active subscription found' };
       }
 
-      setState((prev: any) => ({ ...prev, isLoading: true, _error: null }));
+      setState((prev: unknown) => ({ ...prev, isLoading: true, _error: null }));
 
       try {
         const result = await subscriptionService.current.updateSubscription(
@@ -347,13 +346,13 @@ function useSubscription(
           }
         }
 
-        setState((prev: any) => ({ ...prev, isLoading: false }));
+        setState((prev: unknown) => ({ ...prev, isLoading: false }));
         return result;
       } catch (_error) {
         const errorMessage =
           error instanceof Error ? _error.message : 'Failed to update subscription';
 
-        setState((prev: any) => ({
+        setState((prev: unknown) => ({
           ...prev,
           isLoading: false,
           _error: errorMessage,
@@ -370,7 +369,7 @@ function useSubscription(
         return { success: false, _error: 'No active subscription found' };
       }
 
-      setState((prev: any) => ({ ...prev, isLoading: true, _error: null }));
+      setState((prev: unknown) => ({ ...prev, isLoading: true, _error: null }));
 
       try {
         const result = await subscriptionService.current.cancelSubscription(
@@ -394,13 +393,13 @@ function useSubscription(
           }
         }
 
-        setState((prev: any) => ({ ...prev, isLoading: false }));
+        setState((prev: unknown) => ({ ...prev, isLoading: false }));
         return result;
       } catch (_error) {
         const errorMessage =
           error instanceof Error ? _error.message : 'Failed to cancel subscription';
 
-        setState((prev: any) => ({
+        setState((prev: unknown) => ({
           ...prev,
           isLoading: false,
           _error: errorMessage,
@@ -442,7 +441,7 @@ function useSubscription(
           const updatedFeatureAccess =
             await subscriptionService.current.getFeatureAccess(userId);
 
-          setState((prev: any) => ({
+          setState((prev: unknown) => ({
             ...prev,
             featureAccess: updatedFeatureAccess,
           }));
@@ -560,7 +559,7 @@ function useSubscription(
         subscriptionService.current.getUserTier(userId),
       ]);
 
-      setState((prev: any) => ({
+      setState((prev: unknown) => ({
         ...prev,
         subscription: dashboardData.subscription,
         currentPlan: dashboardData.currentPlan,
@@ -577,11 +576,11 @@ function useSubscription(
   }, [userId]);
 
   const clearError = useCallback(() => {
-    setState((prev: any) => ({ ...prev, _error: null }));
+    setState((prev: unknown) => ({ ...prev, _error: null }));
   }, []);
 
   const resetUIState = useCallback(() => {
-    setState((prev: any) => ({
+    setState((prev: unknown) => ({
       ...prev,
       uiState: {
         selectedPlan: undefined,
@@ -611,8 +610,8 @@ function useSubscription(
       const currentLevel = tierHierarchy.indexOf(currentTier);
       const targetLevel = tierHierarchy.indexOf(targetTier);
 
-      const currentPlan = state.availablePlans.find((p: any) => p.tier === currentTier);
-      const targetPlan = state.availablePlans.find((p: any) => p.tier === targetTier);
+      const currentPlan = state.availablePlans.find((p: unknown) => p.tier === currentTier);
+      const targetPlan = state.availablePlans.find((p: unknown) => p.tier === targetTier);
 
       const currentPrice = currentPlan?.pricing.monthly?.amount || 0;
       const targetPrice = targetPlan?.pricing.monthly?.amount || 0;

@@ -1,0 +1,103 @@
+name: Code Cleanup Automation
+
+on:
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Weekly cleanup every Sunday at 4 AM UTC
+    - cron: "0 4 * * 0"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Cleanup mode"
+        required: true
+        default: "analysis"
+        type: choice
+        options:
+          - analysis
+          - dry-run
+          - full-cleanup
+
+jobs:
+  cleanup-analysis:
+    name: Code Cleanup Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create reports directory
+        run: mkdir -p reports
+
+      - name: Run intelligent code analysis
+        run: |
+          echo "🔍 Running code analysis..."
+          node scripts/intelligent-code-analyzer.mjs . || true
+          echo "Analysis complete"
+
+      - name: Upload analysis report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cleanup-analysis-report-${{ github.run_id }}
+          path: |
+            reports/
+            *.log
+          retention-days: 30
+
+      - name: Generate summary
+        if: always()
+        run: |
+          echo "## 📊 Cleanup Analysis Summary" >> $GITHUB_STEP_SUMMARY
+          if [ -f "reports/code-analysis-report.json" ]; then
+            echo "✅ Analysis completed successfully" >> $GITHUB_STEP_SUMMARY
+            echo "📋 Report available in workflow artifacts" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ Analysis report not found" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "**Trigger**: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+
+  dry-run-cleanup:
+    name: Dry Run Cleanup
+    runs-on: ubuntu-latest
+    if: github.event.inputs.mode == 'dry-run'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run dry-run cleanup
+        run: |
+          echo "🧪 Running dry-run cleanup..."
+          node scripts/smart-cleanup.mjs --mode=dry-run || true
+          echo "Dry-run completed"
+
+      - name: Upload dry-run results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cleanup-dry-run-${{ github.run_id }}
+          path: |
+            reports/
+            *.log
+          retention-days: 30

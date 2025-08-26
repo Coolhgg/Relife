@@ -1,9 +1,9 @@
 /// <reference types="node" />
 import type {
-// auto: restored by scout - verify import path
-// PerformanceEntryList is a native Web API type - available globally
-// auto: restored by scout - verify import path
-// PerformanceEntryList is a native Web API type - available globally
+  // auto: restored by scout - verify import path
+  // PerformanceEntryList is a native Web API type - available globally
+  // auto: restored by scout - verify import path
+  // PerformanceEntryList is a native Web API type - available globally
   PerformanceBudget,
   PerformanceThresholds,
   PerformanceAlert,
@@ -335,7 +335,7 @@ export class PerformanceBudgetManager {
     }
   }
 
-  private processLCPEntry(entry: any): void {
+  private processLCPEntry(entry: unknown): void {
     const budget = this.getCurrentBudget();
     if (budget && entry.startTime > budget.largestContentfulPaint) {
       this.createAlert(
@@ -347,7 +347,7 @@ export class PerformanceBudgetManager {
     }
   }
 
-  private processFIDEntry(entry: any): void {
+  private processFIDEntry(entry: unknown): void {
     const budget = this.getCurrentBudget();
     if (budget && entry.processingStart - entry.startTime > budget.firstInputDelay) {
       this.createAlert(
@@ -359,7 +359,7 @@ export class PerformanceBudgetManager {
     }
   }
 
-  private processCLSEntry(entry: any): void {
+  private processCLSEntry(entry: unknown): void {
     const budget = this.getCurrentBudget();
     if (budget && entry.value > budget.cumulativeLayoutShift) {
       this.createAlert(
@@ -411,7 +411,7 @@ export class PerformanceBudgetManager {
     this.notifyListeners(snapshot);
   }
 
-  private async getFrameRateMetrics(): Promise<any> {
+  private async getFrameRateMetrics(): Promise<unknown> {
     if (!this.frameRateTracker) {
       return {
         current: 60,
@@ -428,7 +428,7 @@ export class PerformanceBudgetManager {
   }
 
   private getMemoryMetrics(): any {
-    const memory = (performance as any).memory;
+    const memory = (performance as unknown).memory;
     if (!memory) {
       return {
         used: 100,
@@ -464,7 +464,7 @@ export class PerformanceBudgetManager {
   }
 
   private getNetworkMetrics(): any {
-    const connection = (navigator as any).connection;
+    const connection = (navigator as unknown).connection;
     const entries = performance.getEntriesByType(
       'navigation'
     ) as PerformanceNavigationTiming[];
@@ -581,7 +581,7 @@ export class PerformanceBudgetManager {
     return Math.max(0, Math.min(100, score));
   }
 
-  private calculateUXScore(ux: any): number {
+  private calculateUXScore(ux: unknown): number {
     const budget = this.getCurrentBudget();
     if (!budget) return 50;
 
@@ -709,7 +709,7 @@ export class PerformanceBudgetManager {
     id: string,
     severity: 'warning' | 'critical',
     message: string,
-    metrics?: any,
+    metrics?: unknown,
     suggestions: string[] = [],
     autoFix?: () => Promise<void>
   ): void {
@@ -747,7 +747,7 @@ export class PerformanceBudgetManager {
     return async () => {
       // Trigger garbage collection if available
       if ('gc' in window) {
-        (window as any).gc();
+        (window as unknown).gc();
       }
 
       // Clear performance entries

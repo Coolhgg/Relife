@@ -6,13 +6,13 @@ import { Input } from './ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Alert, AlertDescription } from './ui/alert';
 import { Separator } from './ui/separator';
-import { 
-  Settings, 
-  Webhook, 
-  Check, 
-  X, 
-  AlertTriangle, 
-  Clock, 
+import {
+  Settings,
+  Webhook,
+  Check,
+  X,
+  AlertTriangle,
+  Clock,
   Send,
   Database,
   Shield,
@@ -23,7 +23,7 @@ import {
   MessageSquare,
   Activity,
   Eye,
-  RefreshCw
+  RefreshCw,
 } from 'lucide-react';
 
 interface WebhookConfig {
@@ -75,22 +75,21 @@ export const WebhookManagementDashboard: React.FC = () => {
   const loadWebhookData = async () => {
     try {
       setIsLoading(true);
-      
+
       // Load webhook configurations
       const webhookResponse = await fetch('/api/webhooks/config');
       const webhookData = await webhookResponse.json();
       setWebhooks(webhookData.webhooks || []);
-      
+
       // Load recent events
       const eventsResponse = await fetch('/api/webhooks/events?limit=50');
       const eventsData = await eventsResponse.json();
       setRecentEvents(eventsData.events || []);
-      
+
       // Load statistics
       const statsResponse = await fetch('/api/webhooks/stats');
       const statsData = await statsResponse.json();
       setStats(statsData);
-      
     } catch (error) {
       console.error('Failed to load webhook data:', error);
     } finally {
@@ -101,14 +100,14 @@ export const WebhookManagementDashboard: React.FC = () => {
   const testWebhook = async (webhook: WebhookConfig) => {
     try {
       setTestResults(prev => ({ ...prev, [webhook.id]: undefined }));
-      
+
       const response = await fetch(`/api/webhooks/test/${webhook.id}`, {
-        method: 'POST'
+        method: 'POST',
       });
-      
+
       const success = response.ok;
       setTestResults(prev => ({ ...prev, [webhook.id]: success }));
-      
+
       if (success) {
         // Refresh events to show test result
         setTimeout(loadWebhookData, 1000);
@@ -123,12 +122,10 @@ export const WebhookManagementDashboard: React.FC = () => {
       await fetch(`/api/webhooks/config/${webhookId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ enabled })
+        body: JSON.stringify({ enabled }),
       });
-      
-      setWebhooks(prev => 
-        prev.map(w => w.id === webhookId ? { ...w, enabled } : w)
-      );
+
+      setWebhooks(prev => prev.map(w => (w.id === webhookId ? { ...w, enabled } : w)));
     } catch (error) {
       console.error('Failed to toggle webhook:', error);
     }
@@ -136,20 +133,24 @@ export const WebhookManagementDashboard: React.FC = () => {
 
   const getWebhookIcon = (type: string) => {
     switch (type) {
-      case 'stripe': return <CreditCard className="h-4 w-4" />;
-      case 'push': return <Smartphone className="h-4 w-4" />;
-      case 'monitoring': return <Activity className="h-4 w-4" />;
-      default: return <Webhook className="h-4 w-4" />;
+      case 'stripe':
+        return <CreditCard className="h-4 w-4" />;
+      case 'push':
+        return <Smartphone className="h-4 w-4" />;
+      case 'monitoring':
+        return <Activity className="h-4 w-4" />;
+      default:
+        return <Webhook className="h-4 w-4" />;
     }
   };
 
   const getStatusBadge = (status: string) => {
     const variants = {
       active: 'bg-green-500',
-      inactive: 'bg-gray-500', 
-      error: 'bg-red-500'
+      inactive: 'bg-gray-500',
+      error: 'bg-red-500',
     };
-    
+
     return (
       <Badge className={variants[status as keyof typeof variants] || variants.inactive}>
         {status}
@@ -157,7 +158,12 @@ export const WebhookManagementDashboard: React.FC = () => {
     );
   };
 
-  const StatCard = ({ title, value, icon, trend }: {
+  const StatCard = ({
+    title,
+    value,
+    icon,
+    trend,
+  }: {
     title: string;
     value: string | number;
     icon: React.ReactNode;
@@ -170,14 +176,14 @@ export const WebhookManagementDashboard: React.FC = () => {
             <p className="text-sm font-medium text-gray-600">{title}</p>
             <p className="text-2xl font-bold">{value}</p>
             {trend !== undefined && (
-              <p className={`text-xs ${trend >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+              <p
+                className={`text-xs ${trend >= 0 ? 'text-green-600' : 'text-red-600'}`}
+              >
                 {trend >= 0 ? '↗' : '↘'} {Math.abs(trend)}%
               </p>
             )}
           </div>
-          <div className="text-gray-400">
-            {icon}
-          </div>
+          <div className="text-gray-400">{icon}</div>
         </div>
       </CardContent>
     </Card>
@@ -251,7 +257,7 @@ export const WebhookManagementDashboard: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {webhooks.map((webhook) => (
+                {webhooks.map(webhook => (
                   <div key={webhook.id} className="border rounded-lg p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -280,7 +286,7 @@ export const WebhookManagementDashboard: React.FC = () => {
                         </Button>
                         <Button
                           size="sm"
-                          variant={webhook.enabled ? "secondary" : "default"}
+                          variant={webhook.enabled ? 'secondary' : 'default'}
                           onClick={() => toggleWebhook(webhook.id, !webhook.enabled)}
                         >
                           {webhook.enabled ? 'Disable' : 'Enable'}
@@ -291,7 +297,9 @@ export const WebhookManagementDashboard: React.FC = () => {
                     <div className="grid grid-cols-3 gap-4 text-sm">
                       <div>
                         <span className="text-gray-600">Success Rate:</span>
-                        <span className="ml-2 font-medium">{webhook.successRate.toFixed(1)}%</span>
+                        <span className="ml-2 font-medium">
+                          {webhook.successRate.toFixed(1)}%
+                        </span>
                       </div>
                       <div>
                         <span className="text-gray-600">Total Events:</span>
@@ -300,10 +308,9 @@ export const WebhookManagementDashboard: React.FC = () => {
                       <div>
                         <span className="text-gray-600">Last Triggered:</span>
                         <span className="ml-2 font-medium">
-                          {webhook.lastTriggered 
+                          {webhook.lastTriggered
                             ? new Date(webhook.lastTriggered).toLocaleDateString()
-                            : 'Never'
-                          }
+                            : 'Never'}
                         </span>
                       </div>
                     </div>
@@ -324,14 +331,21 @@ export const WebhookManagementDashboard: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                {recentEvents.map((event) => (
-                  <div key={event.id} className="flex items-center justify-between p-3 border rounded">
+                {recentEvents.map(event => (
+                  <div
+                    key={event.id}
+                    className="flex items-center justify-between p-3 border rounded"
+                  >
                     <div className="flex items-center gap-3">
-                      <div className={`w-3 h-3 rounded-full ${
-                        event.status === 'success' ? 'bg-green-500' :
-                        event.status === 'error' ? 'bg-red-500' :
-                        'bg-yellow-500'
-                      }`} />
+                      <div
+                        className={`w-3 h-3 rounded-full ${
+                          event.status === 'success'
+                            ? 'bg-green-500'
+                            : event.status === 'error'
+                              ? 'bg-red-500'
+                              : 'bg-yellow-500'
+                        }`}
+                      />
                       <div>
                         <p className="font-medium">{event.type}</p>
                         <p className="text-sm text-gray-600">
@@ -341,9 +355,7 @@ export const WebhookManagementDashboard: React.FC = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       {event.retryCount > 0 && (
-                        <Badge variant="outline">
-                          {event.retryCount} retries
-                        </Badge>
+                        <Badge variant="outline">{event.retryCount} retries</Badge>
                       )}
                       <Button size="sm" variant="outline">
                         <Eye className="h-4 w-4" />
@@ -419,8 +431,8 @@ export const WebhookManagementDashboard: React.FC = () => {
           <Alert>
             <Shield className="h-4 w-4" />
             <AlertDescription>
-              All webhooks are secured with signature validation and rate limiting.
-              Last security audit: {new Date().toLocaleDateString()}
+              All webhooks are secured with signature validation and rate limiting. Last
+              security audit: {new Date().toLocaleDateString()}
             </AlertDescription>
           </Alert>
         </TabsContent>
@@ -439,13 +451,11 @@ export const WebhookManagementDashboard: React.FC = () => {
                   <Input type="number" defaultValue="30" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Max Retries
-                  </label>
+                  <label className="block text-sm font-medium mb-2">Max Retries</label>
                   <Input type="number" defaultValue="3" />
                 </div>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium mb-2">
                   Rate Limit (requests per minute)
@@ -458,7 +468,9 @@ export const WebhookManagementDashboard: React.FC = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-medium">Enable Webhook Logging</h3>
-                  <p className="text-sm text-gray-600">Store webhook events in database</p>
+                  <p className="text-sm text-gray-600">
+                    Store webhook events in database
+                  </p>
                 </div>
                 <Button variant="outline">Configure</Button>
               </div>

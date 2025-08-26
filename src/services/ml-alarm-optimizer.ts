@@ -34,7 +34,7 @@ interface UserBehaviorPattern {
     | 'dismiss_method'
     | 'sleep_quality'
     | 'location';
-  data: Record<string, any>;
+  data: Record<string, unknown>;
   confidence: number;
   lastUpdated: Date;
   occurrences: number;
@@ -115,7 +115,7 @@ export class MLAlarmOptimizer {
   static async recordUserBehavior(
     userId: string,
     behaviorType: UserBehaviorPattern['patternType'],
-    data: Record<string, any>
+    data: Record<string, unknown>
   ): Promise<void> {
     try {
       const patterns = this.behaviorData.get(userId) || [];
@@ -642,7 +642,7 @@ export class MLAlarmOptimizer {
   private static async getCalendarEvents(
     userId: string,
     date: Date
-  ): Promise<any[] | null> {
+  ): Promise<unknown[] | null> {
     // Mock calendar data - replace with real calendar API
     const mockEvents = [
       { time: '09:00', title: 'Morning Meeting', duration: 60 },

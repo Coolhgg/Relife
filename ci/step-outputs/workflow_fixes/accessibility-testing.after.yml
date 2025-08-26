@@ -1,0 +1,320 @@
+name: Accessibility Testing
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - "src/**"
+      - "public/**"
+      - "tests/**"
+      - "package.json"
+      - "package-lock.json"
+      - "vite.config.ts"
+      - "playwright.config.ts"
+      - "lighthouserc.js"
+      - ".pa11yci"
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+  statuses: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit-a11y-tests:
+    name: Unit Accessibility Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit accessibility tests (jest-axe)
+        run: npm run test:a11y:unit
+        env:
+          CI: true
+
+      - name: Upload unit test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-a11y-reports
+          path: |
+            artifacts/a11y-reports/
+            coverage/
+
+  e2e-a11y-tests:
+    name: E2E Accessibility Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium
+
+      - name: Build application
+        run: npm run build
+
+      - name: Start preview server
+        run: npm run preview &
+        env:
+          CI: true
+
+      - name: Wait for server to be ready
+        run: |
+          timeout 60 bash -c 'until curl -f http://localhost:4173; do sleep 2; done'
+
+      - name: Run Playwright accessibility checks
+        run: npm run test:a11y:e2e
+        env:
+          CI: true
+
+      - name: Upload E2E test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-a11y-reports
+          path: |
+            playwright-report/
+            test-results/
+            artifacts/a11y-reports/
+
+  lighthouse-audits:
+    name: Lighthouse Accessibility Audits
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [unit-a11y-tests] # Only run if unit tests pass
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Start preview server
+        run: npm run preview &
+        env:
+          CI: true
+
+      - name: Wait for server to be ready
+        run: |
+          timeout 60 bash -c 'until curl -f http://localhost:4173; do sleep 2; done'
+
+      - name: Run Lighthouse CI
+        run: npm run test:a11y:lighthouse
+        env:
+          CI: true
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: |
+            .lighthouseci/
+            lhci_reports/
+
+  pa11y-audits:
+    name: pa11y WCAG Audits
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [unit-a11y-tests] # Only run if unit tests pass
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Start preview server
+        run: npm run preview &
+        env:
+          CI: true
+
+      - name: Wait for server to be ready
+        run: |
+          timeout 60 bash -c 'until curl -f http://localhost:4173; do sleep 2; done'
+
+      - name: Create artifacts directory
+        run: mkdir -p artifacts/a11y-reports
+
+      - name: Run pa11y-ci audits
+        run: npm run test:a11y:pa11y
+        env:
+          CI: true
+        continue-on-error: true
+
+      - name: Upload pa11y reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pa11y-reports
+          path: |
+            artifacts/a11y-reports/
+
+  comprehensive-report:
+    name: Generate Accessibility Report
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [unit-a11y-tests, e2e-a11y-tests, lighthouse-audits, pa11y-audits]
+    if: always()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts-download/
+
+      - name: Generate comprehensive accessibility report
+        run: |
+          node -e "
+          const fs = require('fs');
+          const path = require('path');
+
+          const report = {
+            timestamp: new Date().toISOString(),
+            pr: '${{ github.event.number }}',
+            commit: '${{ github.sha }}',
+            branch: '${{ github.ref_name }}',
+            results: {
+              unit: '${{ needs.unit-a11y-tests.result }}',
+              e2e: '${{ needs.e2e-a11y-tests.result }}',
+              lighthouse: '${{ needs.lighthouse-audits.result }}',
+              pa11y: '${{ needs.pa11y-audits.result }}'
+            },
+            summary: 'Accessibility test results for PR #${{ github.event.number || 'N/A' }}'
+          };
+
+          fs.mkdirSync('artifacts/a11y-reports', { recursive: true });
+          fs.writeFileSync('artifacts/a11y-reports/comprehensive-report.json', JSON.stringify(report, null, 2));
+
+          // Generate markdown summary
+          const markdown = \`# Accessibility Test Results 🔍
+
+          **PR:** #${{ github.event.number || 'N/A' }}  
+          **Branch:** \`${{ github.ref_name }}\`  
+          **Commit:** \`${{ github.sha }}\`  
+          **Timestamp:** \${new Date().toLocaleString()}
+
+          ## Test Results Summary
+
+          | Test Suite | Status | Notes |
+          |------------|--------|-------|
+          | Unit Tests (jest-axe) | ${{ needs.unit-a11y-tests.result == 'success' && '✅ Passed' || '❌ Failed' }} | Component-level accessibility checks |
+          | E2E Tests (Playwright + axe) | ${{ needs.e2e-a11y-tests.result == 'success' && '✅ Passed' || '❌ Failed' }} | Critical user flows accessibility |
+          | Lighthouse Audits | ${{ needs.lighthouse-audits.result == 'success' && '✅ Passed' || '❌ Failed' }} | Overall accessibility score (target: 90+) |
+          | pa11y WCAG Audits | ${{ needs.pa11y-audits.result == 'success' && '✅ Passed' || '❌ Failed' }} | WCAG 2.1 AA compliance |
+
+          ## Next Steps
+
+          - 📊 Download detailed reports from workflow artifacts
+          - 🔧 Fix any critical or serious violations before merging
+          - 📝 Document any accepted violations with justification
+          - ✅ Ensure accessibility score remains above 90%
+
+          ## Resources
+
+          - [Accessibility Testing Guide](./docs/A11Y-Guide.md)
+          - [Manual QA Checklist](./docs/manual-qa-checklist.md)
+          - [WCAG 2.1 Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
+          \`;
+
+          fs.writeFileSync('artifacts/a11y-reports/accessibility-summary.md', markdown);
+          "
+
+      - name: Comment on PR with accessibility results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const summaryPath = 'artifacts/a11y-reports/accessibility-summary.md';
+
+            if (fs.existsSync(summaryPath)) {
+              const summary = fs.readFileSync(summaryPath, 'utf8');
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: summary
+              });
+            }
+
+      - name: Upload comprehensive report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: comprehensive-a11y-report
+          path: |
+            artifacts/a11y-reports/
+          retention-days: 30
+
+      - name: Fail workflow on critical accessibility issues
+        if: needs.unit-a11y-tests.result == 'failure'
+        run: |
+          echo "❌ Critical accessibility issues detected in unit tests"
+          echo "Please review and fix accessibility violations before merging"
+          exit 1

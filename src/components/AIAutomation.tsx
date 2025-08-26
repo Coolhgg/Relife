@@ -577,7 +577,7 @@ export function AIAutomation({
                       {typeof recommendation.action === 'object' &&
                         recommendation.action &&
                         'reversible' in recommendation.action &&
-                        (recommendation.action as any).reversible && (
+                        (recommendation.action as unknown).reversible && (
                           <Badge variant="outline">
                             <RotateCcw className="h-3 w-3 mr-1" />
                             Reversible

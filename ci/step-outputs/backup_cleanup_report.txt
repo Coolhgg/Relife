@@ -1,0 +1,70 @@
+=== Backup Cleanup Report ===
+Date: Tue Aug 26 09:58:37 UTC 2025
+
+## Initial Analysis
+Found backup directories:
+pre-encoding-fix-1756198213
+pre-final-lint-20250825_093523
+pre-fix-hooks-deps-2-20250825_182605
+pre-fix-unsafe-fn-20250825_214002
+
+JSON files found: 22 (all in pre-final-lint directory)
+JSON parsing test: All tested files are valid JSON
+
+## Cleanup Actions
+Removing pre-final-lint-* directories (artifact noise)...
+78M	backup/pre-final-lint-20250825_093523
+✓ Removed backup/pre-final-lint-* directories
+
+## Remaining Backup Directories Analysis
+After cleanup, remaining directories:
+total 0
+drwxr-xr-x 1 root root   192 Aug 26 09:59 .
+drwxr-xr-x 1 root root 10186 Aug 26 09:50 ..
+drwxr-xr-x 1 root root     6 Aug 26 09:36 pre-encoding-fix-1756198213
+drwxr-xr-x 1 root root     6 Aug 26 09:36 pre-fix-hooks-deps-2-20250825_182605
+drwxr-xr-x 1 root root     6 Aug 26 09:36 pre-fix-unsafe-fn-20250825_214002
+
+Checking for potential issues in remaining directories...
+--- pre-encoding-fix-1756198213 ---
+File count: 54
+Directory size: 1.2M
+--- pre-fix-hooks-deps-2-20250825_182605 ---
+File count: 682
+Directory size: 12M
+--- pre-fix-unsafe-fn-20250825_214002 ---
+File count: 730
+Directory size: 13M
+
+## Prettier Compatibility Test
+Testing if remaining backup files would cause Prettier issues...
+Testing pre-encoding-fix-1756198213...
+  ✗ backup/pre-encoding-fix-1756198213/src/components/NuclearModeBattle.tsx - Prettier issues
+Checking formatting...
+[error] backup/pre-encoding-fix-1756198213/src/components/NuclearModeBattle.tsx: SyntaxError: Identifier expected. (6:1)
+  ✗ backup/pre-encoding-fix-1756198213/src/components/NuclearModeChallenge.tsx - Prettier issues
+Checking formatting...
+[error] backup/pre-encoding-fix-1756198213/src/components/NuclearModeChallenge.tsx: SyntaxError: Identifier expected. (11:1)
+  ✗ backup/pre-encoding-fix-1756198213/src/components/PersonaAnalyticsDashboard.tsx - Prettier issues
+Checking formatting...
+[error] backup/pre-encoding-fix-1756198213/src/components/PersonaAnalyticsDashboard.tsx: SyntaxError: Identifier expected. (3:1)
+Testing pre-fix-hooks-deps-2-20250825_182605...
+  ✓ backup/pre-fix-hooks-deps-2-20250825_182605/src/__tests__/api/api-testing-utilities.ts - OK
+  ✓ backup/pre-fix-hooks-deps-2-20250825_182605/src/__tests__/api/enhanced-msw-handlers.ts - OK
+  ✓ backup/pre-fix-hooks-deps-2-20250825_182605/src/__tests__/config/global-setup.ts - OK
+Testing pre-fix-unsafe-fn-20250825_214002...
+  ✓ backup/pre-fix-unsafe-fn-20250825_214002/src/__tests__/api/api-testing-utilities.ts - OK
+  ✓ backup/pre-fix-unsafe-fn-20250825_214002/src/__tests__/api/enhanced-msw-handlers.ts - OK
+  ✓ backup/pre-fix-unsafe-fn-20250825_214002/src/__tests__/config/global-setup.ts - OK
+
+## Final Status
+Cleanup completed at: Tue Aug 26 10:00:10 UTC 2025
+Directories deleted: 1 (pre-final-lint-20250825_093523)
+Directories remaining: 3
+Total files removed: 22 JSON files + other files in pre-final-lint directory
+
+## Summary
+- Successfully removed artifact noise directory (pre-final-lint-20250825_093523)
+- All JSON files tested were valid before removal
+- Remaining backup directories preserved as they contain legitimate backups
+- No corrupted JSON files requiring repair were found

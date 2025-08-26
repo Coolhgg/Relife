@@ -268,7 +268,7 @@ const VoiceAnalyticsDashboard: React.FC = () => {
               <select
                 value={timeRange}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setTimeRange(e.target.value as any)
+                  setTimeRange(e.target.value as unknown)
                 }
                 className="bg-white border border-slate-200 rounded-xl px-4 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
@@ -382,7 +382,7 @@ const VoiceAnalyticsDashboard: React.FC = () => {
           ].map(tab => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
+              onClick={() => setActiveTab(tab.id as unknown)}
               className={`flex items-center space-x-2 px-4 py-2 rounded-xl font-medium transition-all ${
                 activeTab === tab.id
                   ? 'bg-white shadow-md text-blue-600'
@@ -594,7 +594,7 @@ const VoiceAnalyticsDashboard: React.FC = () => {
                     Voice Mood Effectiveness
                   </h3>
                   <div className="space-y-4">
-                    {analytics.personalization.moodEffectiveness.map((mood: any) => (
+                    {analytics.personalization.moodEffectiveness.map((mood: unknown) => (
                       <div
                         key={mood.mood}
                         className="p-4 bg-gradient-to-r from-slate-50 to-purple-50 rounded-xl"

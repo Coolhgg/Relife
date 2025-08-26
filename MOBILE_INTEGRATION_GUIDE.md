@@ -21,10 +21,10 @@ const mobileStorage = MobileStorageService.getInstance();
 
 async function initApp() {
   await mobileStorage.initializeMobile({
-    enableNativePreferences: true,  // Backup to native storage
-    syncOnResume: true,            // Sync when app resumes
-    compressionEnabled: true,      // Optimize for mobile
-    batchSize: 50,                // Mobile batch size
+    enableNativePreferences: true, // Backup to native storage
+    syncOnResume: true, // Sync when app resumes
+    compressionEnabled: true, // Optimize for mobile
+    batchSize: 50, // Mobile batch size
   });
 }
 
@@ -47,16 +47,19 @@ const info = await mobileStorage.getMobileStorageInfo();
 ## Key Features
 
 ### 🔄 Automatic App Lifecycle Handling
+
 - **App Pause**: Saves critical data to native storage
-- **App Resume**: Syncs data and checks storage health  
+- **App Resume**: Syncs data and checks storage health
 - **Memory Warning**: Clears cache and optimizes performance
 
 ### 🛡️ Multi-Layer Fallback Strategy
+
 1. **IndexedDB** (primary, with type safety)
 2. **Native Capacitor Preferences** (critical data backup)
 3. **localStorage** (legacy fallback)
 
 ### 📱 Mobile-Specific Optimizations
+
 - Network status monitoring
 - Memory constraint handling
 - Intelligent cache management
@@ -70,28 +73,28 @@ const info = await mobileStorage.getMobileStorageInfo();
 import { useMobileStorage } from './mobile-integration-demo';
 
 function AlarmComponent() {
-  const { 
-    saveAlarmOptimized, 
+  const {
+    saveAlarmOptimized,
     getAlarmsWithFallback,
-    getStorageInfo 
+    getStorageInfo
   } = useMobileStorage();
-  
+
   const [alarms, setAlarms] = useState<Alarm[]>([]);
-  
+
   useEffect(() => {
     loadAlarms();
   }, []);
-  
+
   const loadAlarms = async () => {
     const enabledAlarms = await getAlarmsWithFallback();
     setAlarms(enabledAlarms);
   };
-  
+
   const saveAlarm = async (alarm: Alarm) => {
     await saveAlarmOptimized(alarm);
     await loadAlarms(); // Refresh
   };
-  
+
   return (
     <div>
       {alarms.map(alarm => (
@@ -112,13 +115,13 @@ const storage = UnifiedStorageService.getInstance();
 // Check and maintain storage health
 async function maintainStorage() {
   const health = await storage.checkStorageHealth();
-  
+
   if (!health.isHealthy) {
     console.warn('Storage issues:', health.issues);
-    
+
     // Automatic maintenance
     await storage.performMaintenance();
-    
+
     // Clear cache if needed
     if (health.recommendations.includes('clear cache')) {
       await storage.clearCache(['temp', 'preview']);
@@ -141,12 +144,12 @@ console.log(`${criticalAlarms.length} alarms backed up natively`);
 
 ```typescript
 mobileStorage.updateConfig({
-  enableNativePreferences: true,    // Enable native backup
-  enableBackgroundSync: false,      // Background sync (if supported)
-  compressionEnabled: true,         // Compress data
-  batchSize: 50,                   // Batch operation size
-  syncOnResume: true,              // Sync on app resume
-  offlineQueueSize: 1000,          // Max offline queue
+  enableNativePreferences: true, // Enable native backup
+  enableBackgroundSync: false, // Background sync (if supported)
+  compressionEnabled: true, // Compress data
+  batchSize: 50, // Batch operation size
+  syncOnResume: true, // Sync on app resume
+  offlineQueueSize: 1000, // Max offline queue
 });
 ```
 
@@ -197,8 +200,9 @@ console.log('Storage Performance:', {
 ## Demo Component
 
 See `mobile-integration-demo.tsx` for a complete working example showing:
+
 - Storage initialization
-- Mobile-optimized operations  
+- Mobile-optimized operations
 - Storage health monitoring
 - Native backup management
 - Performance optimizations
@@ -218,4 +222,5 @@ See `mobile-integration-demo.tsx` for a complete working example showing:
 - **Network issues**: Operations are queued for later sync
 - **Storage corruption**: Health monitoring detects and repairs
 
-Your mobile storage integration is production-ready with excellent type safety, performance, and reliability!
+Your mobile storage integration is production-ready with excellent type safety, performance, and
+reliability!

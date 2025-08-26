@@ -146,7 +146,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
     }
 
     // Apply filters
-    filtered = filtered.filter((combo: any) => {
+    filtered = filtered.filter((combo: unknown) => {
       if (selectedCategory !== 'all' && combo.category !== selectedCategory)
         return false;
       if (selectedIntensity !== 'all' && combo.difficulty !== selectedIntensity)
@@ -509,7 +509,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
               <span>Recommended for You</span>
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {contextualRecommendations.map((combo: any) => (
+              {contextualRecommendations.map((combo: unknown) => (
                 <ThemeCard
                   key={combo.id}
                   combination={combo}
@@ -536,7 +536,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
               exit={{ opacity: 0, y: -20 }}
               className="space-y-8"
             >
-              {collections.map((collection: any) => (
+              {collections.map((collection: unknown) => (
                 <CollectionView
                   key={collection.id}
                   collection={collection}
@@ -561,7 +561,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
               exit={{ opacity: 0, y: -20 }}
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
             >
-              {filteredCombinations.map((combo: any) => (
+              {filteredCombinations.map((combo: unknown) => (
                 <ThemeCard
                   key={combo.id}
                   combination={combo}
@@ -584,7 +584,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
               exit={{ opacity: 0, y: -20 }}
               className="space-y-4"
             >
-              {filteredCombinations.map((combo: any) => (
+              {filteredCombinations.map((combo: unknown) => (
                 <ThemeListItem
                   key={combo.id}
                   combination={combo}
@@ -739,7 +739,6 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
 
         <button
           onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-            // auto: implicit any
             e.stopPropagation();
             onPreview();
           }}
@@ -800,7 +799,7 @@ const CollectionView: React.FC<CollectionViewProps> = ({
     </div>
 
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-      {combinations.map((combo: any) => (
+      {combinations.map((combo: unknown) => (
         <ThemeCard
           key={combo.id}
           combination={combo}
@@ -901,7 +900,6 @@ const ThemeListItem: React.FC<ThemeListItemProps> = ({
       <div className="flex items-center space-x-2 ml-4">
         <button
           onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-            // auto: implicit any
             e.stopPropagation();
             onToggleFavorite();
           }}
@@ -914,7 +912,6 @@ const ThemeListItem: React.FC<ThemeListItemProps> = ({
 
         <button
           onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-            // auto: implicit any
             e.stopPropagation();
             onPreview();
           }}

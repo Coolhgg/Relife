@@ -1,0 +1,348 @@
+# Enhanced Dependency Review & Analysis
+# Comprehensive dependency change analysis for pull requests
+name: 📦 Dependency Review Plus
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - "package.json"
+      - "bun.lockb"
+      - "package-lock.json"
+      - "android/app/build.gradle"
+      - "android/build.gradle"
+      - "Dockerfile"
+
+permissions:
+  contents: read
+  pull-requests: write
+  security-events: read
+  actions: read
+
+jobs:
+  dependency-review:
+    name: 🔍 Enhanced Dependency Review
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch full history for comparison
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: GitHub Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: critical
+          allow-dependencies-licenses: "MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, 0BSD"
+          deny-licenses: "GPL-2.0, GPL-3.0"
+          comment-summary-in-pr: true
+
+      - name: Install current dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Analyze dependency changes
+        run: |
+          echo "📊 Analyzing dependency changes..."
+          mkdir -p dependency-analysis
+
+          # Get changed files
+          git diff --name-only origin/${{ github.base_ref }}...HEAD > dependency-analysis/changed-files.txt
+
+          # Check if package.json changed
+          if grep -q "package.json" dependency-analysis/changed-files.txt; then
+            echo "📝 package.json has been modified"
+            
+            # Compare package.json versions
+            echo "## Package.json Changes" > dependency-analysis/package-changes.md
+            echo "" >> dependency-analysis/package-changes.md
+            
+            # Show diff of package.json
+            echo "### Dependencies Diff" >> dependency-analysis/package-changes.md
+            echo '```diff' >> dependency-analysis/package-changes.md
+            git diff origin/${{ github.base_ref }}...HEAD package.json | head -100 >> dependency-analysis/package-changes.md || true
+            echo '```' >> dependency-analysis/package-changes.md
+            echo "" >> dependency-analysis/package-changes.md
+          fi
+
+      - name: Security audit on current state
+        run: |
+          echo "🔒 Running security audit on current dependencies..."
+
+          # Run audit and capture results
+          bun audit --json > dependency-analysis/audit-current.json 2>/dev/null || echo "No audit output"
+          bun audit > dependency-analysis/audit-current.txt 2>&1 || echo "Audit completed with findings"
+
+          # Parse audit results
+          if [ -f "dependency-analysis/audit-current.json" ]; then
+            echo "📈 Security Analysis Results" > dependency-analysis/security-summary.md
+            echo "=========================" >> dependency-analysis/security-summary.md
+            echo "" >> dependency-analysis/security-summary.md
+            
+            bun -e "
+              try {
+                const audit = JSON.parse(require('fs').readFileSync('dependency-analysis/audit-current.json', 'utf8'));
+                if (audit.vulnerabilities) {
+                  const counts = { critical: 0, high: 0, moderate: 0, low: 0, info: 0 };
+                  let totalVulns = 0;
+                  
+                  Object.values(audit.vulnerabilities).forEach(vuln => {
+                    if (vuln.severity) {
+                      counts[vuln.severity] = (counts[vuln.severity] || 0) + 1;
+                      totalVulns++;
+                    }
+                  });
+                  
+                  console.log('### Current Vulnerability Status');
+                  console.log('');
+                  console.log('| Severity | Count |');
+                  console.log('|----------|-------|');
+                  console.log('| Critical | ' + counts.critical + ' |');
+                  console.log('| High | ' + counts.high + ' |');
+                  console.log('| Moderate | ' + counts.moderate + ' |');
+                  console.log('| Low | ' + counts.low + ' |');
+                  console.log('| Info | ' + counts.info + ' |');
+                  console.log('| **Total** | **' + totalVulns + '** |');
+                  
+                  if (totalVulns > 0) {
+                    console.log('');
+                    console.log('⚠️ **Action Required**: ' + totalVulns + ' vulnerabilities found');
+                  } else {
+                    console.log('');
+                    console.log('✅ **No vulnerabilities found**');
+                  }
+                } else {
+                  console.log('✅ No vulnerabilities detected');
+                }
+              } catch (error) {
+                console.log('Error parsing audit results:', error.message);
+              }
+            " >> dependency-analysis/security-summary.md
+          fi
+
+      - name: Analyze bundle impact
+        run: |
+          echo "📦 Analyzing potential bundle size impact..."
+
+          # Install and analyze bundle
+          echo "### Bundle Analysis" > dependency-analysis/bundle-analysis.md
+          echo "" >> dependency-analysis/bundle-analysis.md
+
+          # Count total dependencies
+          TOTAL_DEPS=$(cat package.json | bun -e "
+            const pkg = JSON.parse(require('fs').readFileSync('/dev/stdin', 'utf8'));
+            const deps = Object.keys(pkg.dependencies || {}).length;
+            const devDeps = Object.keys(pkg.devDependencies || {}).length;
+            console.log('Total dependencies:', deps);
+            console.log('Development dependencies:', devDeps);
+            console.log('Combined total:', deps + devDeps);
+          ")
+
+          echo "**Dependency Count:**" >> dependency-analysis/bundle-analysis.md
+          echo '```' >> dependency-analysis/bundle-analysis.md
+          echo "$TOTAL_DEPS" >> dependency-analysis/bundle-analysis.md
+          echo '```' >> dependency-analysis/bundle-analysis.md
+
+      - name: Check for known problematic packages
+        run: |
+          echo "⚠️ Checking for known problematic packages..."
+
+          echo "### Package Risk Assessment" > dependency-analysis/risk-assessment.md
+          echo "" >> dependency-analysis/risk-assessment.md
+
+          # List of packages to check for
+          RISKY_PACKAGES=("node-sass" "node-gyp" "fsevents" "sharp" "canvas" "puppeteer" "chromium" "playwright")
+          DEPRECATED_PACKAGES=("request" "bower" "gulp" "grunt")
+
+          echo "**Large/Complex Dependencies:**" >> dependency-analysis/risk-assessment.md
+          for pkg in "${RISKY_PACKAGES[@]}"; do
+            if grep -q "\"$pkg\"" package.json; then
+              echo "- ⚠️ $pkg (large/complex dependency)" >> dependency-analysis/risk-assessment.md
+            fi
+          done
+
+          echo "" >> dependency-analysis/risk-assessment.md
+          echo "**Deprecated Dependencies:**" >> dependency-analysis/risk-assessment.md
+          for pkg in "${DEPRECATED_PACKAGES[@]}"; do
+            if grep -q "\"$pkg\"" package.json; then
+              echo "- ❌ $pkg (deprecated - consider alternatives)" >> dependency-analysis/risk-assessment.md
+            fi
+          done
+
+      - name: Generate license report
+        run: |
+          echo "📄 Generating license compliance report..."
+
+          # Check for license-checker or create basic license analysis
+          echo "### License Analysis" > dependency-analysis/license-report.md
+          echo "" >> dependency-analysis/license-report.md
+          echo "**Note**: This is a basic license check. For comprehensive license analysis, consider using tools like license-checker." >> dependency-analysis/license-report.md
+          echo "" >> dependency-analysis/license-report.md
+
+          # Basic license extraction from package.json dependencies
+          echo "**Dependencies with potential license concerns:**" >> dependency-analysis/license-report.md
+
+          # This is a placeholder - in a real scenario, you'd want to use license-checker or similar
+          if grep -i "gpl\|agpl\|copyleft" package.json; then
+            echo "- Found potential GPL/copyleft licenses - manual review required" >> dependency-analysis/license-report.md
+          else
+            echo "- No obvious problematic licenses detected in package.json" >> dependency-analysis/license-report.md
+          fi
+
+      - name: Create comprehensive PR comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+
+            // Read all analysis files
+            const readFileIfExists = (path) => {
+              try {
+                return fs.readFileSync(path, 'utf8');
+              } catch {
+                return '';
+              }
+            };
+
+            const packageChanges = readFileIfExists('dependency-analysis/package-changes.md');
+            const securitySummary = readFileIfExists('dependency-analysis/security-summary.md');
+            const bundleAnalysis = readFileIfExists('dependency-analysis/bundle-analysis.md');
+            const riskAssessment = readFileIfExists('dependency-analysis/risk-assessment.md');
+            const licenseReport = readFileIfExists('dependency-analysis/license-report.md');
+
+            const reportSections = [
+              packageChanges,
+              securitySummary, 
+              bundleAnalysis,
+              riskAssessment,
+              licenseReport
+            ].filter(section => section.trim().length > 0);
+
+            const report = `## 📦 Enhanced Dependency Review
+
+            **PR Analysis Date:** ${new Date().toISOString()}
+            **Base Branch:** ${context.payload.pull_request.base.ref}
+            **Head Branch:** ${context.payload.pull_request.head.ref}
+
+            ${reportSections.length > 0 ? reportSections.join('\n\n') : 'No significant dependency changes detected.'}
+
+            ## 🔍 Recommendations
+
+            - **Security**: Review all security vulnerabilities and update affected packages
+            - **Performance**: Monitor bundle size impact of new dependencies  
+            - **Maintenance**: Prefer well-maintained packages with active development
+            - **Licensing**: Ensure all new dependencies are compatible with project license
+
+            ## 🛠️ Next Steps
+
+            1. Review the dependency changes above
+            2. Run \`bun audit\` locally to verify security status
+            3. Test the application with new dependencies
+            4. Update documentation if needed
+
+            ---
+
+            *This analysis was generated automatically. For questions, check the [workflow run](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}).*
+            `;
+
+            // Post or update comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const existingComment = comments.find(comment => 
+              comment.user.type === 'Bot' && comment.body.includes('Enhanced Dependency Review')
+            );
+
+            if (existingComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: report
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: report
+              });
+            }
+
+      - name: Upload dependency analysis
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dependency-analysis-${{ github.event.pull_request.number }}
+          path: dependency-analysis/
+          retention-days: 30
+
+  # Check for dependency security in Android gradle files
+  android-dependency-check:
+    name: 🤖 Android Dependencies
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.changed_files, 'android/')
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Check Android dependencies
+        run: |
+          echo "🤖 Analyzing Android dependency changes..."
+
+          # Check if Gradle files changed
+          if git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E "\.gradle$"; then
+            echo "Gradle files have been modified:"
+            git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E "\.gradle$"
+            
+            # Show changes in gradle files
+            echo "## Android Dependency Changes" > android-deps.md
+            git diff origin/${{ github.base_ref }}...HEAD -- "*.gradle" > android-deps.md || true
+          else
+            echo "No Gradle file changes detected"
+          fi
+
+      - name: Comment Android changes
+        if: hashFiles('android-deps.md') != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const changes = fs.readFileSync('android-deps.md', 'utf8');
+
+            const comment = `## 🤖 Android Dependency Changes
+
+            Android Gradle files have been modified in this PR:
+
+            \`\`\`diff
+            ${changes}
+            \`\`\`
+
+            **Review checklist:**
+            - [ ] Verify new dependencies are from trusted sources
+            - [ ] Check for known security vulnerabilities in Android libraries
+            - [ ] Test on physical device after changes
+            - [ ] Verify app size impact
+            `;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: comment
+            });

@@ -2,10 +2,10 @@
 import { Capacitor } from '@capacitor/core';
 import { TimeoutHandle } from '../types/timers';
 import {
-// auto: restored by scout - verify import path
-// Note: alarmOrNotification should be defined as local type
-// auto: restored by scout - verify import path
-// Note: alarmOrNotification should be defined as local type
+  // auto: restored by scout - verify import path
+  // Note: alarmOrNotification should be defined as local type
+  // auto: restored by scout - verify import path
+  // Note: alarmOrNotification should be defined as local type
   LocalNotifications,
   ScheduleOptions,
   DeliveredNotifications,
@@ -84,7 +84,7 @@ class SmartNotificationService {
   private isInitialized = false;
   private _config: SmartNotificationConfig;
   private scheduledNotifications: Map<string, AdaptiveNotification> = new Map();
-  private userBehaviorPatterns: Map<string, any> = new Map();
+  private userBehaviorPatterns: Map<string, unknown> = new Map();
   private currentContext: NotificationContext;
   private adaptationHistory: Array<{
     originalTime: Date;
@@ -340,7 +340,7 @@ class SmartNotificationService {
   /**
    * Get location-based timing adjustments
    */
-  private getLocationBasedAdjustment(location: any, type: string): number {
+  private getLocationBasedAdjustment(location: unknown, type: string): number {
     let adjustment = 0;
 
     // Deliver earlier when moving (might lose connectivity)
@@ -493,7 +493,7 @@ class SmartNotificationService {
 
     // Battery monitoring (if supported)
     if ('getBattery' in navigator) {
-      (navigator as any).getBattery().then((battery: any) => {
+      (navigator as unknown).getBattery().then((battery: unknown) => {
         const updateBatteryInfo = () => {
           this.currentContext.batteryLevel = Math.round(battery.level * 100);
           this.currentContext.isCharging = battery.charging;
@@ -616,7 +616,7 @@ class SmartNotificationService {
   /**
    * Helper methods
    */
-  private generateTitle(alarm: any, type: string): string {
+  private generateTitle(alarm: unknown, type: string): string {
     if (type === 'alarm' && 'label' in alarm) {
       return `⏰ ${alarm.label}`;
     }
@@ -631,7 +631,7 @@ class SmartNotificationService {
     return titles[type] || '🔔 Notification';
   }
 
-  private generateBody(alarm: any, type: string): string {
+  private generateBody(alarm: unknown, type: string): string {
     if (type === 'alarm' && 'label' in alarm) {
       return `Time to wake up! ${alarm.label}`;
     }
@@ -687,7 +687,7 @@ class SmartNotificationService {
       high: 'urgent',
       urgent: 'urgent',
     };
-    return escalation[currentPriority as keyof typeof escalation] as any;
+    return escalation[currentPriority as keyof typeof escalation] as unknown;
   }
 
   private getEscalationDelay(level: number, type: string): number {
@@ -781,7 +781,7 @@ class SmartNotificationService {
   }
 
   // Notification event handlers
-  private handleNotificationReceived(notification: any): void {
+  private handleNotificationReceived(notification: unknown): void {
     const adaptiveNotification = this.scheduledNotifications.get(
       notification.extra?.notificationId
     );
@@ -791,7 +791,7 @@ class SmartNotificationService {
     }
   }
 
-  private handleNotificationAction(action: any): void {
+  private handleNotificationAction(action: unknown): void {
     const notificationId = action.notification.extra?.notificationId;
     if (notificationId) {
       const responseTime = Date.now() - action.notification.schedule.at.getTime();

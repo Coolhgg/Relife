@@ -1,30 +1,12 @@
 import { Capacitor } from '@capacitor/core';
+import path from 'path';
 import { AnyFn } from 'src/types/utility-types';
+import { KeepAwake } from '@capacitor/keep-awake';
+import { AppState, AppInfo } from '../types';
+import { Network } from '@capacitor/network';
+import App from '../App';
+import { BackgroundMode } from '@capacitor/background-mode';
 import {
-// auto: restored by scout - verify import path
-import { KeepAwake } from '@capacitor/keep-awake';
-// auto: restored by scout - verify import path
-import { AppState } from '@/types';
-// auto: restored by scout - verify import path
-import { Network } from '@capacitor/network';
-// auto: restored by scout - verify import path
-import { AppInfo } from '@/types';
-// auto: restored by scout - verify import path
-import App from '@/App';
-// auto: restored by scout - verify import path
-import { BackgroundMode } from '@capacitor/background-mode';
-// auto: restored by scout - verify import path
-import { BackgroundMode } from '@capacitor/background-mode';
-// auto: restored by scout - verify import path
-import { AppInfo } from '@/types';
-// auto: restored by scout - verify import path
-import App from '@/App';
-// auto: restored by scout - verify import path
-import { KeepAwake } from '@capacitor/keep-awake';
-// auto: restored by scout - verify import path
-import { AppState } from '@/types';
-// auto: restored by scout - verify import path
-import { Network } from '@capacitor/network';
   LocalNotifications,
   ActionPerformed,
   LocalNotificationSchema,

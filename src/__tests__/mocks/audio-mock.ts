@@ -20,17 +20,17 @@ class MockAudio {
   readyState: number = 4; // HAVE_ENOUGH_DATA
 
   // Event handlers
-  onplay: ((this: HTMLAudioElement, ev: Event) => any) | null = null;
-  onpause: ((this: HTMLAudioElement, ev: Event) => any) | null = null;
-  onended: ((this: HTMLAudioElement, ev: Event) => any) | null = null;
-  onloadstart: ((this: HTMLAudioElement, ev: Event) => any) | null = null;
-  onloadeddata: ((this: HTMLAudioElement, ev: Event) => any) | null = null;
-  onloadedmetadata: ((this: HTMLAudioElement, ev: Event) => any) | null = null;
-  oncanplay: ((this: HTMLAudioElement, ev: Event) => any) | null = null;
-  oncanplaythrough: ((this: HTMLAudioElement, ev: Event) => any) | null = null;
-  onerror: ((this: HTMLAudioElement, ev: ErrorEvent) => any) | null = null;
-  ontimeupdate: ((this: HTMLAudioElement, ev: Event) => any) | null = null;
-  onvolumechange: ((this: HTMLAudioElement, ev: Event) => any) | null = null;
+  onplay: ((this: HTMLAudioElement, ev: Event) => unknown) | null = null;
+  onpause: ((this: HTMLAudioElement, ev: Event) => unknown) | null = null;
+  onended: ((this: HTMLAudioElement, ev: Event) => unknown) | null = null;
+  onloadstart: ((this: HTMLAudioElement, ev: Event) => unknown) | null = null;
+  onloadeddata: ((this: HTMLAudioElement, ev: Event) => unknown) | null = null;
+  onloadedmetadata: ((this: HTMLAudioElement, ev: Event) => unknown) | null = null;
+  oncanplay: ((this: HTMLAudioElement, ev: Event) => unknown) | null = null;
+  oncanplaythrough: ((this: HTMLAudioElement, ev: Event) => unknown) | null = null;
+  onerror: ((this: HTMLAudioElement, ev: ErrorEvent) => unknown) | null = null;
+  ontimeupdate: ((this: HTMLAudioElement, ev: Event) => unknown) | null = null;
+  onvolumechange: ((this: HTMLAudioElement, ev: Event) => unknown) | null = null;
 
   constructor(src?: string) {
     if (src) {
@@ -71,19 +71,19 @@ class MockAudio {
     listener: EventListenerOrEventListenerObject | null
   ): void {
     if (listener && typeof listener === 'function') {
-      (this as any)[`on${type}`] = listener;
+      (this as unknown)[`on${type}`] = listener;
     }
   }
 
   removeEventListener(
     type: string,
-    _listener??: EventListenerOrEventListenerObject | null
+    _listener?: EventListenerOrEventListenerObject | null
   ): void {
-    (this as any)[`on${type}`] = null;
+    (this as unknown)[`on${type}`] = null;
   }
 
   dispatchEvent(_event: Event): boolean {
-    const handler = (this as any)[`on${event.type}`];
+    const handler = (this as unknown)[`on${event.type}`];
     if (handler) {
       handler.call(this, _event);
     }
@@ -110,15 +110,15 @@ class MockAudio {
 const audioMock = 'test-audio-file.mp3';
 
 // Attach MockAudio to global for direct audio testing
-(global as any).MockAudio = MockAudio;
+(global as unknown).MockAudio = MockAudio;
 
 // Override HTML Audio constructor for comprehensive audio testing
 if (typeof global !== 'undefined') {
-  (global as any).Audio = MockAudio;
+  (global as unknown).Audio = MockAudio;
 }
 
 if (typeof window !== 'undefined') {
-  (window as any).Audio = MockAudio;
+  (window as unknown).Audio = MockAudio;
 }
 
 export default audioMock;

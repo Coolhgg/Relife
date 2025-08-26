@@ -142,7 +142,7 @@ describe('WebSocket Real-time Integration Tests', () => {
 
       // Mock server authentication response
       const authResponsePromise = new Promise<WebSocketAuthResponse>(resolve => {
-        ws.addEventListener('message', (_event: any) => {
+        ws.addEventListener('message', (_event: unknown) => {
           try {
             const data = JSON.parse(_event.data);
             if (data.type === 'authentication_request') {
@@ -168,7 +168,7 @@ describe('WebSocket Real-time Integration Tests', () => {
           }
         });
 
-        ws.addEventListener('message', (_event: any) => {
+        ws.addEventListener('message', (_event: unknown) => {
           try {
             const data = JSON.parse(_event.data);
             if (data.type === 'authentication_response' && data.success) {
@@ -219,7 +219,7 @@ describe('WebSocket Real-time Integration Tests', () => {
           time: '07:00',
           enabled: true,
           days: [1, 2, 3, 4, 5],
-        } as any,
+        } as unknown,
         triggeredAt: new Date(),
         location: {
           latitude: 40.7128,
@@ -239,7 +239,7 @@ describe('WebSocket Real-time Integration Tests', () => {
       };
 
       const messageReceived = new Promise<AlarmTriggeredPayload>(resolve => {
-        ws.addEventListener('message', (_event: any) => {
+        ws.addEventListener('message', (_event: unknown) => {
           try {
             const message: WebSocketMessage<AlarmTriggeredPayload> = JSON.parse(
               _event.data
@@ -284,7 +284,7 @@ describe('WebSocket Real-time Integration Tests', () => {
       };
 
       const messageReceived = new Promise<AlarmDismissedPayload>(resolve => {
-        ws.addEventListener('message', (_event: any) => {
+        ws.addEventListener('message', (_event: unknown) => {
           try {
             const message: WebSocketMessage<AlarmDismissedPayload> = JSON.parse(
               _event.data
@@ -331,7 +331,7 @@ describe('WebSocket Real-time Integration Tests', () => {
     it('should track _user presence changes', async () => {
       const presenceUpdates: UserPresenceUpdatePayload[] = [];
 
-      ws.addEventListener('message', (_event: any) => {
+      ws.addEventListener('message', (_event: unknown) => {
         try {
           const message: WebSocketMessage<UserPresenceUpdatePayload> = JSON.parse(
             _event.data
@@ -412,7 +412,7 @@ describe('WebSocket Real-time Integration Tests', () => {
     it('should receive and process AI recommendations', async () => {
       const recommendations: RecommendationGeneratedPayload[] = [];
 
-      ws.addEventListener('message', (_event: any) => {
+      ws.addEventListener('message', (_event: unknown) => {
         try {
           const message: WebSocketMessage<RecommendationGeneratedPayload> = JSON.parse(
             _event.data
@@ -473,7 +473,7 @@ describe('WebSocket Real-time Integration Tests', () => {
     it('should handle AI analysis completion', async () => {
       const analysisResults: AIAnalysisCompletePayload[] = [];
 
-      ws.addEventListener('message', (_event: any) => {
+      ws.addEventListener('message', (_event: unknown) => {
         try {
           const message: WebSocketMessage<AIAnalysisCompletePayload> = JSON.parse(
             _event.data
@@ -621,7 +621,7 @@ describe('WebSocket Real-time Integration Tests', () => {
         ws.addEventListener('open', () => resolve());
       });
 
-      ws.addEventListener('message', (_event: any) => {
+      ws.addEventListener('message', (_event: unknown) => {
         try {
           const data = JSON.parse(_event.data);
           if (data.type === 'heartbeat_pong') {
@@ -674,7 +674,7 @@ describe('WebSocket Real-time Integration Tests', () => {
     it('should handle system notifications', async () => {
       const notifications: SystemNotificationPayload[] = [];
 
-      ws.addEventListener('message', (_event: any) => {
+      ws.addEventListener('message', (_event: unknown) => {
         try {
           const message: WebSocketMessage<SystemNotificationPayload> = JSON.parse(
             _event.data

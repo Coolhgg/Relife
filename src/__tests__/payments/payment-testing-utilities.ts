@@ -7,7 +7,7 @@ import { http, HttpResponse } from 'msw';
 
 // Mock Stripe Objects
 export class MockStripeObjects {
-  static createCustomer(overrides: Partial<any> = {}) {
+  static createCustomer(overrides: Partial<unknown> = {}) {
     return {
       id: `cus_${Date.now()}_mock`,
       object: 'customer',
@@ -32,7 +32,7 @@ export class MockStripeObjects {
     };
   }
 
-  static createSubscription(overrides: Partial<any> = {}) {
+  static createSubscription(overrides: Partial<unknown> = {}) {
     const startTime = Math.floor(Date.now() / 1000);
     return {
       id: `sub_${Date.now()}_mock`,
@@ -95,7 +95,7 @@ export class MockStripeObjects {
     };
   }
 
-  static createPaymentIntent(overrides: Partial<any> = {}) {
+  static createPaymentIntent(overrides: Partial<unknown> = {}) {
     return {
       id: `pi_${Date.now()}_mock`,
       object: 'payment_intent',
@@ -141,7 +141,7 @@ export class MockStripeObjects {
     };
   }
 
-  static createPaymentMethod(overrides: Partial<any> = {}) {
+  static createPaymentMethod(overrides: Partial<unknown> = {}) {
     return {
       id: `pm_${Date.now()}_mock`,
       object: 'payment_method',
@@ -190,7 +190,7 @@ export class MockStripeObjects {
     };
   }
 
-  static createInvoice(overrides: Partial<any> = {}) {
+  static createInvoice(overrides: Partial<unknown> = {}) {
     const created = Math.floor(Date.now() / 1000);
     return {
       id: `in_${Date.now()}_mock`,
@@ -296,7 +296,7 @@ export class MockStripeObjects {
     };
   }
 
-  static createWebhookEvent(type: string, data: any) {
+  static createWebhookEvent(type: string, data: unknown) {
     return {
       id: `evt_${Date.now()}_mock`,
       object: 'event',
@@ -319,7 +319,7 @@ export class MockStripeObjects {
 
 // Payment Flow Testing Utilities
 export class PaymentFlowTester {
-  private events: Array<{ type: string; data: any; timestamp: number }> = [];
+  private events: Array<{ type: string; data: unknown; timestamp: number }> = [];
 
   reset() {
     this.events = [];
@@ -329,7 +329,7 @@ export class PaymentFlowTester {
     return [...this.events];
   }
 
-  private logEvent(type: string, data: any) {
+  private logEvent(type: string, data: unknown) {
     this.events.push({ type, data, timestamp: Date.now() });
   }
 
@@ -533,7 +533,7 @@ export class PaymentFlowTester {
 // Webhook Testing Utilities
 export class WebhookTester {
   private receivedWebhooks: Array<{
-    event: any;
+    event: unknown;
     signature: string;
     timestamp: number;
     processed: boolean;
@@ -549,7 +549,7 @@ export class WebhookTester {
 
   simulateWebhook(
     eventType: string,
-    data: any,
+    data: unknown,
     endpoint: string = '/api/stripe/webhooks'
   ) {
     const webhook = MockStripeObjects.createWebhookEvent(eventType, data);
@@ -573,7 +573,7 @@ export class WebhookTester {
     };
   }
 
-  private generateWebhookSignature(webhook: any): string {
+  private generateWebhookSignature(webhook: unknown): string {
     const timestamp = Math.floor(Date.now() / 1000);
     const payload = JSON.stringify(webhook);
     // Mock signature format: t=timestamp,v1=signature

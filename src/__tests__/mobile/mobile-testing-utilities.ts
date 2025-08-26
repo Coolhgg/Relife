@@ -8,7 +8,7 @@ import { _mockCapacitorSetup } from '../mocks/capacitor.mock';
 // Mobile Platform Test Scenarios
 export class MobilePlatformTester {
   private platform: 'ios' | 'android' | 'web';
-  private testEvents: Array<{ type: string; data: any; timestamp: number }> = [];
+  private testEvents: Array<{ type: string; data: unknown; timestamp: number }> = [];
 
   constructor(platform: 'ios' | 'android' | 'web' = 'web') {
     this.platform = platform;
@@ -21,7 +21,7 @@ export class MobilePlatformTester {
     _mockCapacitorSetup.setPlatform(this.platform);
   }
 
-  private logEvent(type: string, data: any) {
+  private logEvent(type: string, data: unknown) {
     this.testEvents.push({ type, data, timestamp: Date.now() });
   }
 
@@ -114,7 +114,7 @@ export class MobilePlatformTester {
     this.logEvent('permission_flow_started', { platform: this.platform });
 
     const permissions = ['notifications', 'camera', 'microphone', 'location'] as const;
-    const results: Record<string, any> = {};
+    const results: Record<string, unknown> = {};
 
     for (const permission of permissions) {
       // Start with denied permission
@@ -194,7 +194,7 @@ export class MobilePlatformTester {
   async testPlatformSpecificBehavior() {
     this.logEvent('platform_specific_test_started', { platform: this.platform });
 
-    const behaviors: Record<string, any> = {};
+    const behaviors: Record<string, unknown> = {};
 
     switch (this.platform) {
       case 'ios':
@@ -355,7 +355,7 @@ export class MobilePlatformTester {
     const results = [];
 
     for (const state of notificationStates) {
-      _mockCapacitorSetup.setPermission('notifications', state as any);
+      _mockCapacitorSetup.setPermission('notifications', state as unknown);
       results.push({ permission: state, set: true });
     }
 
@@ -621,7 +621,7 @@ export class MobileDeviceSimulator {
     };
 
     Object.entries(permissions).forEach(([permission, state]) => {
-      _mockCapacitorSetup.setPermission(permission as any, state);
+      _mockCapacitorSetup.setPermission(permission as unknown, state);
     });
 
     return {

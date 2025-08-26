@@ -9,23 +9,29 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Slider } from './ui/slider';
 import { Switch } from './ui/switch';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from './ui/select';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Separator } from './ui/separator';
 import { Alert, AlertDescription } from './ui/alert';
 import { Progress } from './ui/progress';
-import { 
-  Brain, 
-  Mic, 
-  Trophy, 
-  Activity, 
+import {
+  Brain,
+  Mic,
+  Trophy,
+  Activity,
   Save,
   AlertTriangle,
   CheckCircle,
   Clock,
   Zap,
-  Target
+  Target,
 } from 'lucide-react';
 
 interface LiveParameterState {
@@ -68,33 +74,33 @@ const LiveAIParameterCustomizer: React.FC = () => {
       learningRate: 0.7,
       confidenceThreshold: 0.8,
       patternRecognitionSensitivity: 0.6,
-      contextualAwarenessLevel: 0.75
+      contextualAwarenessLevel: 0.75,
     },
     voiceAI: {
       personalityAdaptation: 0.65,
       responseComplexity: 'moderate',
       emotionalIntelligence: 0.7,
-      speechPatternLearning: true
+      speechPatternLearning: true,
     },
     behavioralIntelligence: {
       analysisDepth: 'standard',
       interventionSensitivity: 0.6,
       psychologicalProfiling: true,
-      predictiveAnalysis: false
+      predictiveAnalysis: false,
     },
     rewardsSystem: {
       personalizationLevel: 0.8,
       gamificationIntensity: 0.5,
       achievementComplexity: 'moderate',
-      motivationalBalance: 0.7
-    }
+      motivationalBalance: 0.7,
+    },
   });
 
   const [liveMetrics, setLiveMetrics] = useState<LiveMetrics>({
     responseTime: 150,
     accuracy: 0.92,
     userSatisfaction: 0.88,
-    systemLoad: 0.45
+    systemLoad: 0.45,
   });
 
   const [isLiveMode, setIsLiveMode] = useState(true);
@@ -108,25 +114,37 @@ const LiveAIParameterCustomizer: React.FC = () => {
     const interval = setInterval(() => {
       setLiveMetrics(prev => ({
         responseTime: Math.max(50, prev.responseTime + (Math.random() - 0.5) * 20),
-        accuracy: Math.max(0.7, Math.min(1, prev.accuracy + (Math.random() - 0.5) * 0.05)),
-        userSatisfaction: Math.max(0.6, Math.min(1, prev.userSatisfaction + (Math.random() - 0.5) * 0.03)),
-        systemLoad: Math.max(0.2, Math.min(0.9, prev.systemLoad + (Math.random() - 0.5) * 0.1))
+        accuracy: Math.max(
+          0.7,
+          Math.min(1, prev.accuracy + (Math.random() - 0.5) * 0.05)
+        ),
+        userSatisfaction: Math.max(
+          0.6,
+          Math.min(1, prev.userSatisfaction + (Math.random() - 0.5) * 0.03)
+        ),
+        systemLoad: Math.max(
+          0.2,
+          Math.min(0.9, prev.systemLoad + (Math.random() - 0.5) * 0.1)
+        ),
       }));
     }, 2000);
 
     return () => clearInterval(interval);
   }, [isLiveMode]);
 
-  const updateParameter = useCallback((category: keyof LiveParameterState, param: string, value: any) => {
-    setParameters(prev => ({
-      ...prev,
-      [category]: {
-        ...prev[category],
-        [param]: value
-      }
-    }));
-    setHasUnsavedChanges(true);
-  }, []);
+  const updateParameter = useCallback(
+    (category: keyof LiveParameterState, param: string, value: any) => {
+      setParameters(prev => ({
+        ...prev,
+        [category]: {
+          ...prev[category],
+          [param]: value,
+        },
+      }));
+      setHasUnsavedChanges(true);
+    },
+    []
+  );
 
   const handleSave = useCallback(async () => {
     setIsSaving(true);
@@ -153,10 +171,7 @@ const LiveAIParameterCustomizer: React.FC = () => {
             </div>
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
-                <Switch
-                  checked={isLiveMode}
-                  onCheckedChange={setIsLiveMode}
-                />
+                <Switch checked={isLiveMode} onCheckedChange={setIsLiveMode} />
                 <Label>Live Mode</Label>
               </div>
               <Button
@@ -173,19 +188,27 @@ const LiveAIParameterCustomizer: React.FC = () => {
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">{Math.round(liveMetrics.responseTime)}ms</div>
+              <div className="text-2xl font-bold text-blue-600">
+                {Math.round(liveMetrics.responseTime)}ms
+              </div>
               <div className="text-sm text-muted-foreground">Response Time</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">{Math.round(liveMetrics.accuracy * 100)}%</div>
+              <div className="text-2xl font-bold text-green-600">
+                {Math.round(liveMetrics.accuracy * 100)}%
+              </div>
               <div className="text-sm text-muted-foreground">Accuracy</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600">{Math.round(liveMetrics.userSatisfaction * 100)}%</div>
+              <div className="text-2xl font-bold text-purple-600">
+                {Math.round(liveMetrics.userSatisfaction * 100)}%
+              </div>
               <div className="text-sm text-muted-foreground">Satisfaction</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-orange-600">{Math.round(liveMetrics.systemLoad * 100)}%</div>
+              <div className="text-2xl font-bold text-orange-600">
+                {Math.round(liveMetrics.systemLoad * 100)}%
+              </div>
               <div className="text-sm text-muted-foreground">System Load</div>
             </div>
           </div>
@@ -196,7 +219,8 @@ const LiveAIParameterCustomizer: React.FC = () => {
         <Alert>
           <AlertTriangle className="w-4 h-4" />
           <AlertDescription>
-            You have unsaved changes. Click 'Save Changes' to apply them to the live system.
+            You have unsaved changes. Click 'Save Changes' to apply them to the live
+            system.
           </AlertDescription>
         </Alert>
       )}
@@ -218,7 +242,9 @@ const LiveAIParameterCustomizer: React.FC = () => {
               <Label>Learning Rate: {parameters.coreAI.learningRate.toFixed(2)}</Label>
               <Slider
                 value={[parameters.coreAI.learningRate]}
-                onValueChange={([value]) => updateParameter('coreAI', 'learningRate', value)}
+                onValueChange={([value]) =>
+                  updateParameter('coreAI', 'learningRate', value)
+                }
                 min={0.1}
                 max={1}
                 step={0.05}
@@ -226,10 +252,14 @@ const LiveAIParameterCustomizer: React.FC = () => {
               />
             </div>
             <div>
-              <Label>Confidence Threshold: {parameters.coreAI.confidenceThreshold.toFixed(2)}</Label>
+              <Label>
+                Confidence Threshold: {parameters.coreAI.confidenceThreshold.toFixed(2)}
+              </Label>
               <Slider
                 value={[parameters.coreAI.confidenceThreshold]}
-                onValueChange={([value]) => updateParameter('coreAI', 'confidenceThreshold', value)}
+                onValueChange={([value]) =>
+                  updateParameter('coreAI', 'confidenceThreshold', value)
+                }
                 min={0.5}
                 max={1}
                 step={0.05}
@@ -237,10 +267,15 @@ const LiveAIParameterCustomizer: React.FC = () => {
               />
             </div>
             <div>
-              <Label>Pattern Recognition Sensitivity: {parameters.coreAI.patternRecognitionSensitivity.toFixed(2)}</Label>
+              <Label>
+                Pattern Recognition Sensitivity:{' '}
+                {parameters.coreAI.patternRecognitionSensitivity.toFixed(2)}
+              </Label>
               <Slider
                 value={[parameters.coreAI.patternRecognitionSensitivity]}
-                onValueChange={([value]) => updateParameter('coreAI', 'patternRecognitionSensitivity', value)}
+                onValueChange={([value]) =>
+                  updateParameter('coreAI', 'patternRecognitionSensitivity', value)
+                }
                 min={0.1}
                 max={1}
                 step={0.05}
@@ -248,10 +283,15 @@ const LiveAIParameterCustomizer: React.FC = () => {
               />
             </div>
             <div>
-              <Label>Contextual Awareness Level: {parameters.coreAI.contextualAwarenessLevel.toFixed(2)}</Label>
+              <Label>
+                Contextual Awareness Level:{' '}
+                {parameters.coreAI.contextualAwarenessLevel.toFixed(2)}
+              </Label>
               <Slider
                 value={[parameters.coreAI.contextualAwarenessLevel]}
-                onValueChange={([value]) => updateParameter('coreAI', 'contextualAwarenessLevel', value)}
+                onValueChange={([value]) =>
+                  updateParameter('coreAI', 'contextualAwarenessLevel', value)
+                }
                 min={0.1}
                 max={1}
                 step={0.05}
@@ -276,10 +316,15 @@ const LiveAIParameterCustomizer: React.FC = () => {
         <CardContent className="space-y-6">
           <div className="space-y-4">
             <div>
-              <Label>Personality Adaptation: {parameters.voiceAI.personalityAdaptation.toFixed(2)}</Label>
+              <Label>
+                Personality Adaptation:{' '}
+                {parameters.voiceAI.personalityAdaptation.toFixed(2)}
+              </Label>
               <Slider
                 value={[parameters.voiceAI.personalityAdaptation]}
-                onValueChange={([value]) => updateParameter('voiceAI', 'personalityAdaptation', value)}
+                onValueChange={([value]) =>
+                  updateParameter('voiceAI', 'personalityAdaptation', value)
+                }
                 min={0}
                 max={1}
                 step={0.05}
@@ -288,9 +333,11 @@ const LiveAIParameterCustomizer: React.FC = () => {
             </div>
             <div>
               <Label>Response Complexity</Label>
-              <Select 
+              <Select
                 value={parameters.voiceAI.responseComplexity}
-                onValueChange={(value) => updateParameter('voiceAI', 'responseComplexity', value)}
+                onValueChange={value =>
+                  updateParameter('voiceAI', 'responseComplexity', value)
+                }
               >
                 <SelectTrigger className="mt-2">
                   <SelectValue />
@@ -303,10 +350,15 @@ const LiveAIParameterCustomizer: React.FC = () => {
               </Select>
             </div>
             <div>
-              <Label>Emotional Intelligence: {parameters.voiceAI.emotionalIntelligence.toFixed(2)}</Label>
+              <Label>
+                Emotional Intelligence:{' '}
+                {parameters.voiceAI.emotionalIntelligence.toFixed(2)}
+              </Label>
               <Slider
                 value={[parameters.voiceAI.emotionalIntelligence]}
-                onValueChange={([value]) => updateParameter('voiceAI', 'emotionalIntelligence', value)}
+                onValueChange={([value]) =>
+                  updateParameter('voiceAI', 'emotionalIntelligence', value)
+                }
                 min={0}
                 max={1}
                 step={0.05}
@@ -316,7 +368,9 @@ const LiveAIParameterCustomizer: React.FC = () => {
             <div className="flex items-center space-x-2">
               <Switch
                 checked={parameters.voiceAI.speechPatternLearning}
-                onCheckedChange={(checked) => updateParameter('voiceAI', 'speechPatternLearning', checked)}
+                onCheckedChange={checked =>
+                  updateParameter('voiceAI', 'speechPatternLearning', checked)
+                }
               />
               <Label>Speech Pattern Learning</Label>
             </div>
@@ -339,9 +393,11 @@ const LiveAIParameterCustomizer: React.FC = () => {
           <div className="space-y-4">
             <div>
               <Label>Analysis Depth</Label>
-              <Select 
+              <Select
                 value={parameters.behavioralIntelligence.analysisDepth}
-                onValueChange={(value) => updateParameter('behavioralIntelligence', 'analysisDepth', value)}
+                onValueChange={value =>
+                  updateParameter('behavioralIntelligence', 'analysisDepth', value)
+                }
               >
                 <SelectTrigger className="mt-2">
                   <SelectValue />
@@ -355,10 +411,19 @@ const LiveAIParameterCustomizer: React.FC = () => {
               </Select>
             </div>
             <div>
-              <Label>Intervention Sensitivity: {parameters.behavioralIntelligence.interventionSensitivity.toFixed(2)}</Label>
+              <Label>
+                Intervention Sensitivity:{' '}
+                {parameters.behavioralIntelligence.interventionSensitivity.toFixed(2)}
+              </Label>
               <Slider
                 value={[parameters.behavioralIntelligence.interventionSensitivity]}
-                onValueChange={([value]) => updateParameter('behavioralIntelligence', 'interventionSensitivity', value)}
+                onValueChange={([value]) =>
+                  updateParameter(
+                    'behavioralIntelligence',
+                    'interventionSensitivity',
+                    value
+                  )
+                }
                 min={0}
                 max={1}
                 step={0.05}
@@ -368,14 +433,26 @@ const LiveAIParameterCustomizer: React.FC = () => {
             <div className="flex items-center space-x-2">
               <Switch
                 checked={parameters.behavioralIntelligence.psychologicalProfiling}
-                onCheckedChange={(checked) => updateParameter('behavioralIntelligence', 'psychologicalProfiling', checked)}
+                onCheckedChange={checked =>
+                  updateParameter(
+                    'behavioralIntelligence',
+                    'psychologicalProfiling',
+                    checked
+                  )
+                }
               />
               <Label>Psychological Profiling</Label>
             </div>
             <div className="flex items-center space-x-2">
               <Switch
                 checked={parameters.behavioralIntelligence.predictiveAnalysis}
-                onCheckedChange={(checked) => updateParameter('behavioralIntelligence', 'predictiveAnalysis', checked)}
+                onCheckedChange={checked =>
+                  updateParameter(
+                    'behavioralIntelligence',
+                    'predictiveAnalysis',
+                    checked
+                  )
+                }
               />
               <Label>Predictive Analysis</Label>
             </div>
@@ -390,17 +467,20 @@ const LiveAIParameterCustomizer: React.FC = () => {
             <Trophy className="w-5 h-5" />
             Rewards System
           </CardTitle>
-          <CardDescription>
-            Gamification and motivation configuration
-          </CardDescription>
+          <CardDescription>Gamification and motivation configuration</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-4">
             <div>
-              <Label>Personalization Level: {parameters.rewardsSystem.personalizationLevel.toFixed(2)}</Label>
+              <Label>
+                Personalization Level:{' '}
+                {parameters.rewardsSystem.personalizationLevel.toFixed(2)}
+              </Label>
               <Slider
                 value={[parameters.rewardsSystem.personalizationLevel]}
-                onValueChange={([value]) => updateParameter('rewardsSystem', 'personalizationLevel', value)}
+                onValueChange={([value]) =>
+                  updateParameter('rewardsSystem', 'personalizationLevel', value)
+                }
                 min={0}
                 max={1}
                 step={0.05}
@@ -408,10 +488,15 @@ const LiveAIParameterCustomizer: React.FC = () => {
               />
             </div>
             <div>
-              <Label>Gamification Intensity: {parameters.rewardsSystem.gamificationIntensity.toFixed(2)}</Label>
+              <Label>
+                Gamification Intensity:{' '}
+                {parameters.rewardsSystem.gamificationIntensity.toFixed(2)}
+              </Label>
               <Slider
                 value={[parameters.rewardsSystem.gamificationIntensity]}
-                onValueChange={([value]) => updateParameter('rewardsSystem', 'gamificationIntensity', value)}
+                onValueChange={([value]) =>
+                  updateParameter('rewardsSystem', 'gamificationIntensity', value)
+                }
                 min={0}
                 max={1}
                 step={0.05}
@@ -420,9 +505,11 @@ const LiveAIParameterCustomizer: React.FC = () => {
             </div>
             <div>
               <Label>Achievement Complexity</Label>
-              <Select 
+              <Select
                 value={parameters.rewardsSystem.achievementComplexity}
-                onValueChange={(value) => updateParameter('rewardsSystem', 'achievementComplexity', value)}
+                onValueChange={value =>
+                  updateParameter('rewardsSystem', 'achievementComplexity', value)
+                }
               >
                 <SelectTrigger className="mt-2">
                   <SelectValue />
@@ -435,10 +522,15 @@ const LiveAIParameterCustomizer: React.FC = () => {
               </Select>
             </div>
             <div>
-              <Label>Motivational Balance: {parameters.rewardsSystem.motivationalBalance.toFixed(2)}</Label>
+              <Label>
+                Motivational Balance:{' '}
+                {parameters.rewardsSystem.motivationalBalance.toFixed(2)}
+              </Label>
               <Slider
                 value={[parameters.rewardsSystem.motivationalBalance]}
-                onValueChange={([value]) => updateParameter('rewardsSystem', 'motivationalBalance', value)}
+                onValueChange={([value]) =>
+                  updateParameter('rewardsSystem', 'motivationalBalance', value)
+                }
                 min={0}
                 max={1}
                 step={0.05}

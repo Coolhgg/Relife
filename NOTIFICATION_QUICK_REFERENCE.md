@@ -21,6 +21,7 @@ open notification-test-demo.html
 ## 📁 Key Files & Configuration
 
 ### **Environment Variables (.env.local)**
+
 ```env
 # Web Push (VAPID)
 VITE_VAPID_PUBLIC_KEY=your_key_here
@@ -41,6 +42,7 @@ NOTIFICATION_ENCRYPTION_KEY=auto_generated
 ```
 
 ### **Core Service Files**
+
 - `src/services/push-notifications.ts` - Main push notification service
 - `src/services/email-campaign.ts` - Email campaign management
 - `src/services/secure-push-notification.ts` - Security & validation
@@ -48,6 +50,7 @@ NOTIFICATION_ENCRYPTION_KEY=auto_generated
 - `src/components/PushNotificationSettings.tsx` - Settings UI
 
 ### **Configuration Files**
+
 - `capacitor.config.ts` - Mobile app notification config
 - `public/sw-unified.js` - Service worker for notifications
 - `NOTIFICATION_CONFIGURATION_GUIDE.md` - Complete setup guide
@@ -62,7 +65,7 @@ npm run notifications:setup && npm run test:notifications && open notification-t
 
 - ⏰ **Alarm Reminders** - Scheduled wake-up alerts
 - 💪 **Daily Motivation** - Encouraging messages
-- 📊 **Weekly Progress** - Achievement summaries  
+- 📊 **Weekly Progress** - Achievement summaries
 - 🔄 **System Updates** - App updates & news
 - 🚨 **Emergency Alerts** - Critical notifications
 - 🧠 **Emotional Support** - AI-driven personalized messages
@@ -92,14 +95,14 @@ npm run notifications:setup && npm run test:notifications && open notification-t
 
 ## 🆘 Common Issues & Fixes
 
-| Issue | Solution |
-|-------|----------|
-| No VAPID keys | Run `npm run notifications:setup` |
-| Permissions blocked | Clear browser data, request again |
-| Mobile not working | Run `npm run cap:sync` |
-| FCM errors | Check `google-services.json` location |
-| Email not sending | Verify ConvertKit API keys |
-| Rate limited | Adjust `RATE_LIMIT_MAX_REQUESTS` |
+| Issue               | Solution                              |
+| ------------------- | ------------------------------------- |
+| No VAPID keys       | Run `npm run notifications:setup`     |
+| Permissions blocked | Clear browser data, request again     |
+| Mobile not working  | Run `npm run cap:sync`                |
+| FCM errors          | Check `google-services.json` location |
+| Email not sending   | Verify ConvertKit API keys            |
+| Rate limited        | Adjust `RATE_LIMIT_MAX_REQUESTS`      |
 
 ## 📞 Support Resources
 

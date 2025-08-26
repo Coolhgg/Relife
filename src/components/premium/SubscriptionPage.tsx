@@ -2,9 +2,9 @@
 // Main page component that integrates all premium subscription functionality
 
 import React, { useState, useEffect } from 'react';
+// Replaced stub import with proper implementation
+import { ErrorHandler } from '../../services/error-handler';
 import {
-// Replaced stub import with proper implementation // auto: restored by scout - verify
-import { ErrorHandler } from '../services/error-handler';
   Crown,
   CreditCard,
   BarChart3,

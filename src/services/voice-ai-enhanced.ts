@@ -47,7 +47,7 @@ export interface VoiceLearningData {
     dayOfWeek: number;
     sleepQuality: number;
     responsiveness: number;
-    environmentalFactors: any;
+    environmentalFactors: unknown;
   };
   userResponse: {
     responseTime: number;
@@ -63,7 +63,7 @@ class VoiceAIEnhancedService {
   private performanceMonitor = PerformanceMonitor.getInstance();
   private personalities = new Map<VoiceMood, VoicePersonality>();
   private userLearningData = new Map<string, VoiceLearningData[]>();
-  private contextualMemory = new Map<string, any>();
+  private contextualMemory = new Map<string, unknown>();
   private elevenlabsApiKey: string | null = null;
   private openaiApiKey: string | null = null;
 
@@ -557,9 +557,9 @@ class VoiceAIEnhancedService {
     context: {
       sleepQuality?: number;
       timeOfDay: number;
-      weather?: any;
-      calendar?: any;
-      previousResponses?: any[];
+      weather?: unknown;
+      calendar?: unknown;
+      previousResponses?: unknown[];
     }
   ): Promise<ContextualResponse> {
     try {
@@ -647,7 +647,7 @@ class VoiceAIEnhancedService {
     alarm: Alarm,
     _user: User,
     personality: VoicePersonality,
-    context: any,
+    context: unknown,
     learningData: VoiceLearningData[]
   ): Promise<string> {
     const timeOfDay = context.timeOfDay;
@@ -721,7 +721,7 @@ class VoiceAIEnhancedService {
   private async enhanceWithAI(
     baseMessage: string,
     _user: User,
-    context: any,
+    context: unknown,
     learningData: VoiceLearningData[]
   ): Promise<string> {
     try {
@@ -875,7 +875,7 @@ class VoiceAIEnhancedService {
    */
   private predictEffectiveness(
     voiceMood: VoiceMood,
-    context: any,
+    context: unknown,
     learningData: VoiceLearningData[]
   ): number {
     if (learningData.length === 0) {
@@ -942,7 +942,7 @@ class VoiceAIEnhancedService {
     return greeting;
   }
 
-  private generateWeatherContext(weather: any, personality: VoicePersonality): string {
+  private generateWeatherContext(weather: unknown, personality: VoicePersonality): string {
     if (!weather) return '';
 
     if (weather.condition === 'sunny') {
@@ -1029,7 +1029,7 @@ class VoiceAIEnhancedService {
       if (_error) throw error;
 
       const learningData =
-        data?.map((row: any) => ({
+        data?.map((row: unknown) => ({
           userId: row.user_id,
           voiceMood: row.voice_mood,
           context: row.context,
@@ -1167,7 +1167,7 @@ class VoiceAIEnhancedService {
     return mostSuccessful ? mostSuccessful[0] : 'motivational';
   }
 
-  private summarizeContext(context: any): string {
+  private summarizeContext(context: unknown): string {
     const parts = [];
     if (context.timeOfDay < 6) parts.push('Very early morning');
     else if (context.timeOfDay < 9) parts.push('Early morning');
@@ -1187,7 +1187,7 @@ class VoiceAIEnhancedService {
 
   private generatePersonalizations(
     _user: User,
-    context: any,
+    context: unknown,
     learningData: VoiceLearningData[]
   ): string[] {
     const personalizations = [];
@@ -1251,7 +1251,11 @@ class VoiceAIEnhancedService {
     formalityFlexibility: 0.6,
     humorLevel: 'moderate' as 'none' | 'light' | 'moderate' | 'heavy',
     empathyLevel: 'high' as 'low' | 'medium' | 'high',
-    motivationStyle: 'encouraging' as 'gentle' | 'encouraging' | 'assertive' | 'aggressive',
+    motivationStyle: 'encouraging' as
+      | 'gentle'
+      | 'encouraging'
+      | 'assertive'
+      | 'aggressive',
     speechRate: 1.0, // 0.5 to 2.0
     pitchVariation: 0.5, // 0 to 1
     pauseDuration: 0.3, // seconds
@@ -1261,20 +1265,20 @@ class VoiceAIEnhancedService {
     moodSynchronization: 0.8,
     responsePersonalization: true,
     voiceCloning: false,
-    realTimeAdjustment: true
+    realTimeAdjustment: true,
   };
 
   /**
    * Get current parameter configuration
    */
-  async getCurrentConfiguration(): Promise<Record<string, any>> {
+  async getCurrentConfiguration(): Promise<Record<string, unknown>> {
     return { ...this.parameters };
   }
 
   /**
    * Update voice AI configuration with validation
    */
-  async updateConfiguration(newParameters: Record<string, any>): Promise<boolean> {
+  async updateConfiguration(newParameters: Record<string, unknown>): Promise<boolean> {
     try {
       for (const [key, value] of Object.entries(newParameters)) {
         if (key in this.parameters) {
@@ -1306,7 +1310,9 @@ class VoiceAIEnhancedService {
               }
               break;
             case 'motivationStyle':
-              if (['gentle', 'encouraging', 'assertive', 'aggressive'].includes(value)) {
+              if (
+                ['gentle', 'encouraging', 'assertive', 'aggressive'].includes(value)
+              ) {
                 this.parameters.motivationStyle = value;
               }
               break;
@@ -1326,7 +1332,10 @@ class VoiceAIEnhancedService {
               }
               break;
             default:
-              if (typeof this.parameters[key] === 'boolean' && typeof value === 'boolean') {
+              if (
+                typeof this.parameters[key] === 'boolean' &&
+                typeof value === 'boolean'
+              ) {
                 this.parameters[key] = value;
               } else if (typeof this.parameters[key] === typeof value) {
                 this.parameters[key] = value;
@@ -1367,14 +1376,14 @@ class VoiceAIEnhancedService {
       moodSynchronization: 0.8,
       responsePersonalization: true,
       voiceCloning: false,
-      realTimeAdjustment: true
+      realTimeAdjustment: true,
     };
   }
 
   /**
    * Get voice AI parameter metadata for UI configuration
    */
-  getConfigurationMetadata(): Record<string, any> {
+  getConfigurationMetadata(): Record<string, unknown> {
     return {
       personalityAdaptation: {
         type: 'slider',
@@ -1382,13 +1391,13 @@ class VoiceAIEnhancedService {
         max: 1,
         step: 0.1,
         description: 'How much the voice adapts to user personality',
-        impact: 'user_experience'
+        impact: 'user_experience',
       },
       responseComplexity: {
         type: 'select',
         options: ['simple', 'moderate', 'complex', 'adaptive'],
         description: 'Complexity level of voice responses',
-        impact: 'comprehension'
+        impact: 'comprehension',
       },
       emotionalIntelligence: {
         type: 'slider',
@@ -1396,7 +1405,7 @@ class VoiceAIEnhancedService {
         max: 1,
         step: 0.1,
         description: 'Emotional awareness and response capability',
-        impact: 'empathy'
+        impact: 'empathy',
       },
       voiceLearningRate: {
         type: 'slider',
@@ -1404,7 +1413,7 @@ class VoiceAIEnhancedService {
         max: 1,
         step: 0.05,
         description: 'Rate at which voice adapts to user preferences',
-        impact: 'adaptation'
+        impact: 'adaptation',
       },
       contextualAwareness: {
         type: 'slider',
@@ -1412,30 +1421,30 @@ class VoiceAIEnhancedService {
         max: 1,
         step: 0.05,
         description: 'Awareness of situational context',
-        impact: 'relevance'
+        impact: 'relevance',
       },
       energyAdaptation: {
         type: 'boolean',
         description: 'Adapt voice energy to time of day and user state',
-        impact: 'engagement'
+        impact: 'engagement',
       },
       humorLevel: {
         type: 'select',
         options: ['none', 'light', 'moderate', 'heavy'],
         description: 'Amount of humor in voice responses',
-        impact: 'personality'
+        impact: 'personality',
       },
       empathyLevel: {
         type: 'select',
         options: ['low', 'medium', 'high'],
         description: 'Level of empathetic responses',
-        impact: 'emotional_support'
+        impact: 'emotional_support',
       },
       motivationStyle: {
         type: 'select',
         options: ['gentle', 'encouraging', 'assertive', 'aggressive'],
         description: 'Style of motivational messaging',
-        impact: 'motivation'
+        impact: 'motivation',
       },
       speechRate: {
         type: 'slider',
@@ -1443,7 +1452,7 @@ class VoiceAIEnhancedService {
         max: 2.0,
         step: 0.1,
         description: 'Speed of voice delivery',
-        impact: 'comprehension'
+        impact: 'comprehension',
       },
       pitchVariation: {
         type: 'slider',
@@ -1451,30 +1460,30 @@ class VoiceAIEnhancedService {
         max: 1,
         step: 0.1,
         description: 'Amount of pitch variation for expressiveness',
-        impact: 'engagement'
+        impact: 'engagement',
       },
       vocabularyRichness: {
         type: 'select',
         options: ['simple', 'standard', 'rich', 'dynamic'],
         description: 'Complexity of vocabulary used',
-        impact: 'comprehension'
+        impact: 'comprehension',
       },
       culturalSensitivity: {
         type: 'boolean',
         description: 'Adapt language and references to cultural context',
-        impact: 'inclusivity'
+        impact: 'inclusivity',
       },
       voiceCloning: {
         type: 'boolean',
         description: 'Enable voice cloning for personalization',
         impact: 'privacy',
-        requiresConsent: true
+        requiresConsent: true,
       },
       realTimeAdjustment: {
         type: 'boolean',
         description: 'Allow real-time voice parameter adjustments',
-        impact: 'performance'
-      }
+        impact: 'performance',
+      },
     };
   }
 }

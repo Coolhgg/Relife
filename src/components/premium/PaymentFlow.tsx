@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-import { ErrorHandler } from '../services/error-handler';
+  ErrorHandler,
   CreditCard,
   CheckCircle,
   AlertCircle,
@@ -186,7 +186,7 @@ export function PaymentFlow({
     if (field.startsWith('billingAddress.')) {
       const addressField = field.replace('billingAddress.', '');
 
-      setFormData((prev: any) => ({
+      setFormData((prev: unknown) => ({
         ...prev,
         billingAddress: {
           ...prev.billingAddress,
@@ -194,7 +194,7 @@ export function PaymentFlow({
         },
       }));
     } else {
-      setFormData((prev: any) => ({
+      setFormData((prev: unknown) => ({
         ...prev,
         [field]: value,
       }));
@@ -202,7 +202,7 @@ export function PaymentFlow({
 
     // Clear validation error when user starts typing
     if (validationErrors[field]) {
-      setValidationErrors((prev: any) => ({
+      setValidationErrors((prev: unknown) => ({
         ...prev,
         [field]: '',
       }));

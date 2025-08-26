@@ -74,9 +74,9 @@ import type {
   SunSchedule,
 } from '../types/index';
 interface AdvancedAlarmSchedulingProps {
-  alarms: any[];
-  onCreateAlarm: (alarm: any) => void;
-  onUpdateAlarm: (id: string, alarm: any) => void;
+  alarms: unknown[];
+  onCreateAlarm: (alarm: unknown) => void;
+  onUpdateAlarm: (id: string, alarm: unknown) => void;
   onDeleteAlarm: (id: string) => void;
 }
 
@@ -94,7 +94,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
     new Set(['basic'])
   );
   const [showCreateDialog, setShowCreateDialog] = useState(false);
-  const [selectedAlarm, setSelectedAlarm] = useState<any>(null);
+  const [selectedAlarm, setSelectedAlarm] = useState<unknown>(null);
 
   const [formData, setFormData] = useState({
     time: '07:00',
@@ -177,7 +177,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
     return types[type as keyof typeof types] || type;
   };
 
-  const getNextOccurrence = (alarm: any) => {
+  const getNextOccurrence = ... as unknown) => {
     try {
       const occurrences = [new Date()]; // TODO: Implement calculateNextOccurrences(
       //   alarm,
@@ -190,100 +190,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
     }
   };
 
-  const renderAlarmsList = () => (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-lg font-semibold">Advanced Alarms</h3>
-          <p className="text-sm text-muted-foreground">
-            {alarms.length} active alarms with advanced scheduling
-          </p>
-        </div>
-        <Button onClick={() => setShowCreateDialog(true)} className="gap-2">
-          <Plus size={16} />
-          Create Advanced Alarm
-        </Button>
-      </div>
-
-      {}
-      {alarms.map((alarm: any) => (
-        <Card
-          key={alarm.id}
-          className={`transition-all ${!alarm.isActive ? 'opacity-60' : ''}`}
-        >
-          <CardContent className="p-4">
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="text-2xl font-bold">{alarm.time}</div>
-                  <div className="flex flex-col">
-                    <span className="font-medium">{alarm.label}</span>
-                    <Badge variant="secondary" className="w-fit">
-                      {formatScheduleType(alarm.scheduleType)}
-                    </Badge>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-1">
-                    <Calendar size={12} />
-                    <span>Next: {getNextOccurrence(alarm)}</span>
-                  </div>
-
-                  {alarm.smartOptimizations && alarm.smartOptimizations.length > 0 && (
-                    <div className="flex items-center gap-1">
-                      <Brain size={12} />
-                      <span>
-                        {
-                          alarm.smartOptimizations.filter((o: any) => o.isEnabled)
-                            .length
-                        }{' '}
-                        optimizations
-                      </span>
-                    </div>
-                  )}
-
-                  {alarm.conditionalRules && alarm.conditionalRules.length > 0 && (
-                    <div className="flex items-center gap-1">
-                      <Zap size={12} />
-                      <span>
-                        {alarm.conditionalRules.filter((r: any) => r.isActive).length}{' '}
-                        conditions
-                      </span>
-                    </div>
-                  )}
-
-                  {alarm.locationTriggers && alarm.locationTriggers.length > 0 && (
-                    <div className="flex items-center gap-1">
-                      <MapPin size={12} />
-                      <span>
-                        {alarm.locationTriggers.filter((t: any) => t.isActive).length}{' '}
-                        locations
-                      </span>
-                    </div>
-                  )}
-
-                  {alarm.calendarIntegration && alarm.calendarIntegration.isActive && (
-                    <div className="flex items-center gap-1">
-                      <Calendar size={12} />
-                      <span>Calendar synced</span>
-                    </div>
-                  )}
-
-                  {alarm.seasonalAdjustments &&
-                    alarm.seasonalAdjustments.length > 0 && (
-                      <div className="flex items-center gap-1">
-                        <Sun size={12} />
-                        <span>Seasonal adjustments</span>
-                      </div>
-                    )}
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Switch
-                  checked={alarm.isActive}
-                  onCheckedChange={(checked: any) =>
+  const renderAlarmsList = ... as unknown) =>
                     onUpdateAlarm(alarm.id, { isActive: checked })
                   }
                 />
@@ -309,193 +216,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
     </div>
   );
 
-  const renderCreateForm = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Create Advanced Alarm</h3>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={resetForm}>
-            <X size={16} className="mr-2" />
-            Reset
-          </Button>
-          <Button onClick={handleCreateAlarm}>
-            <Save size={16} className="mr-2" />
-            Create Alarm
-          </Button>
-        </div>
-      </div>
-
-      <Accordion
-        type="multiple"
-        value={Array.from(expandedSections)}
-        className="space-y-4"
-      >
-        {/* Basic Settings */}
-        <AccordionItem value="basic" className="border rounded-lg px-4">
-          <AccordionTrigger
-            onClick={() => toggleSection('basic')}
-            className="hover:no-underline"
-          >
-            <div className="flex items-center gap-2">
-              <Clock size={18} />
-              <span>Basic Settings</span>
-            </div>
-          </AccordionTrigger>
-          <AccordionContent className="space-y-4 pt-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="alarm-time">Time</Label>
-                <Input
-                  id="alarm-time"
-                  type="time"
-                  value={formData.time}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setFormData((prev: any) => ({ ...prev, time: e.target.value }))
-                  }
-                />
-              </div>
-              <div>
-                <Label htmlFor="alarm-label">Label</Label>
-                <Input
-                  id="alarm-label"
-                  value={formData.label}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setFormData((prev: any) => ({ ...prev, label: e.target.value }))
-                  }
-                  placeholder="Enter alarm name"
-                />
-              </div>
-              <div>
-                <Label htmlFor="schedule-type">Schedule Type</Label>
-                <Select
-                  value={formData.scheduleType}
-                  onValueChange={(value: any) =>
-                    setFormData((prev: any) => ({
-                      ...prev,
-                      scheduleType: value as any,
-                    }))
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="once">One Time</SelectItem>
-                    <SelectItem value="daily">Daily</SelectItem>
-                    <SelectItem value="weekly">Weekly</SelectItem>
-                    <SelectItem value="monthly">Monthly</SelectItem>
-                    <SelectItem value="yearly">Yearly</SelectItem>
-                    <SelectItem value="custom">Custom Pattern</SelectItem>
-                    <SelectItem value="conditional">Conditional</SelectItem>
-                    <SelectItem value="dynamic">Smart Dynamic</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label htmlFor="voice-mood">Voice Mood</Label>
-                <Select
-                  value={formData.voiceMood}
-                  onValueChange={(value: any) =>
-                    setFormData((prev: any) => ({ ...prev, voiceMood: value as any }))
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="drill-sergeant">Drill Sergeant 🪖</SelectItem>
-                    <SelectItem value="sweet-angel">Sweet Angel 😇</SelectItem>
-                    <SelectItem value="anime-hero">Anime Hero 🦸</SelectItem>
-                    <SelectItem value="savage-roast">Savage Roast 🔥</SelectItem>
-                    <SelectItem value="motivational">Motivational 💪</SelectItem>
-                    <SelectItem value="gentle">Gentle 🌸</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <Switch
-                checked={formData.isActive}
-                onCheckedChange={(checked: any) =>
-                  setFormData((prev: any) => ({ ...prev, isActive: checked }))
-                }
-              />
-              <Label>Enable alarm</Label>
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-
-        {/* Recurrence Pattern */}
-        <AccordionItem value="recurrence" className="border rounded-lg px-4">
-          <AccordionTrigger
-            onClick={() => toggleSection('recurrence')}
-            className="hover:no-underline"
-          >
-            <div className="flex items-center gap-2">
-              <Repeat size={18} />
-              <span>Recurrence Pattern</span>
-            </div>
-          </AccordionTrigger>
-          <AccordionContent className="space-y-4 pt-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label>Repeat Every</Label>
-                <div className="flex gap-2">
-                  <Input
-                    type="number"
-                    min="1"
-                    max="365"
-                    value={formData.recurrencePattern?.interval || 1}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setFormData((prev: any) => ({
-                        ...prev,
-                        recurrencePattern: {
-                          ...prev.recurrencePattern,
-                          interval: parseInt(e.target.value) || 1,
-                          type: prev.recurrencePattern?.type || 'daily',
-                        } as RecurrencePattern,
-                      }))
-                    }
-                    className="w-20"
-                  />
-                  <Select
-                    value={formData.recurrencePattern?.type || 'daily'}
-                    onValueChange={(value: any) =>
-                      setFormData((prev: any) => ({
-                        ...prev,
-                        recurrencePattern: {
-                          ...prev.recurrencePattern,
-                          type: value as any,
-                          interval: prev.recurrencePattern?.interval || 1,
-                        } as RecurrencePattern,
-                      }))
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="daily">Day(s)</SelectItem>
-                      <SelectItem value="weekly">Week(s)</SelectItem>
-                      <SelectItem value="monthly">Month(s)</SelectItem>
-                      <SelectItem value="yearly">Year(s)</SelectItem>
-                      <SelectItem value="workdays">Workdays</SelectItem>
-                      <SelectItem value="weekends">Weekends</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div>
-                <Label>End Condition</Label>
-                <div className="space-y-2">
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      checked={!!formData.recurrencePattern?.endDate}
-                      onCheckedChange={(checked: any) => {
-                        if (checked) {
-                          setFormData((prev: any) => ({
+  const renderCreateForm = ... as unknown) => ({
                             ...prev,
                             recurrencePattern: {
                               ...prev.recurrencePattern,
@@ -505,7 +226,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                             } as RecurrencePattern,
                           }));
                         } else {
-                          setFormData((prev: any) => ({
+                          setFormData((prev: unknown) => ({
                             ...prev,
                             recurrencePattern: {
                               ...prev.recurrencePattern,
@@ -526,7 +247,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                         formData.recurrencePattern.endDate.toISOString().split('T')[0]
                       }
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setFormData((prev: any) => ({
+                        setFormData((prev: unknown) => ({
                           ...prev,
                           recurrencePattern: {
                             ...prev.recurrencePattern!,
@@ -607,7 +328,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                             o => o.type === type && o.isEnabled
                           ) || false
                         }
-                        onCheckedChange={(checked: any) => {
+                        onCheckedChange={(checked: unknown) => {
                           const currentOptimizations =
                             formData.smartOptimizations || [];
                           const existingIndex = currentOptimizations.findIndex(
@@ -625,7 +346,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                             newOptimizations = [
                               ...currentOptimizations,
                               {
-                                type: type as any,
+                                type: type as unknown,
                                 isEnabled: true,
                                 parameters: {
                                   sensitivity: 0.5,
@@ -639,7 +360,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                             newOptimizations = currentOptimizations;
                           }
 
-                          setFormData((prev: any) => ({
+                          setFormData((prev: unknown) => ({
                             ...prev,
                             smartOptimizations: newOptimizations,
                           }));
@@ -834,128 +555,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
     </div>
   );
 
-  const renderSettings = () => (
-    <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-semibold">Advanced Scheduling Settings</h3>
-        <p className="text-sm text-muted-foreground">
-          Configure global settings for advanced alarm scheduling
-        </p>
-      </div>
-
-      {_config && (
-        <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Settings size={18} />
-                General Settings
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label>Default Wake Window (minutes)</Label>
-                  <Slider
-                    value={[_config.defaultWakeWindow]}
-                    onValueChange={(value: any) =>
-                      setConfig((prev: any) =>
-                        prev ? { ...prev, defaultWakeWindow: value[0] } : null
-                      )
-                    }
-                    max={120}
-                    min={5}
-                    step={5}
-                    className="mt-2"
-                  />
-                  <div className="text-sm text-muted-foreground mt-1">
-                    {_config.defaultWakeWindow} minutes before alarm
-                  </div>
-                </div>
-
-                <div>
-                  <Label>Max Daily Adjustment (minutes)</Label>
-                  <Slider
-                    value={[_config.maxDailyAdjustment]}
-                    onValueChange={(value: any) =>
-                      setConfig((prev: any) =>
-                        prev ? { ...prev, maxDailyAdjustment: value[0] } : null
-                      )
-                    }
-                    max={180}
-                    min={15}
-                    step={15}
-                    className="mt-2"
-                  />
-                  <div className="text-sm text-muted-foreground mt-1">
-                    {_config.maxDailyAdjustment} minutes maximum
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label>Enable Smart Adjustments</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Allow AI to optimize alarm times
-                    </p>
-                  </div>
-                  <Switch
-                    checked={_config.enableSmartAdjustments}
-                    onCheckedChange={(checked: any) =>
-                      setConfig((prev: any) =>
-                        prev ? { ...prev, enableSmartAdjustments: checked } : null
-                      )
-                    }
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label>Learning Mode</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Improve suggestions based on your patterns
-                    </p>
-                  </div>
-                  <Switch
-                    checked={_config.learningMode}
-                    onCheckedChange={(checked: any) =>
-                      setConfig((prev: any) =>
-                        prev ? { ...prev, learningMode: checked } : null
-                      )
-                    }
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label>Backup Alarms</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Automatically create backup alarms
-                    </p>
-                  </div>
-                  <Switch
-                    checked={_config.backupAlarms}
-                    onCheckedChange={(checked: any) =>
-                      setConfig((prev: any) =>
-                        prev ? { ...prev, backupAlarms: checked } : null
-                      )
-                    }
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label>Privacy Mode</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Limit data collection and sharing
-                    </p>
-                  </div>
-                  <Switch
-                    checked={_config.privacyMode}
-                    onCheckedChange={(checked: any) =>
-                      setConfig((prev: any) =>
+  const renderSettings = ... as unknown) =>
                         prev ? { ...prev, privacyMode: checked } : null
                       )
                     }
@@ -1083,7 +683,7 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
 
       <Tabs
         value={activeTab}
-        onValueChange={(value: any) => setActiveTab(value as any)}
+        onValueChange={(...args: unknown[]) => setActiveTab(value as unknown)}
       >
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="alarms" className="flex items-center gap-2">

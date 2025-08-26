@@ -20,7 +20,7 @@ import type {
 } from '../../types';
 
 // Mock data storage
-const mockStorage = new Map<string, any>();
+const mockStorage = new Map<string, unknown>();
 const mockTimers = new Map<string, NodeJS.Timeout>();
 
 // Utility functions for mock services
@@ -37,7 +37,7 @@ export class MockServiceUtils {
     return Math.random() < probability;
   }
 
-  static setCacheEntry(key: string, value: any, ttl: number = 300000): void {
+  static setCacheEntry(key: string, value: unknown, ttl: number = 300000): void {
     mockStorage.set(key, value);
     mockStorage.set(`${key}_expiry`, Date.now() + ttl);
   }
@@ -64,7 +64,7 @@ export class MockAlarmService {
   private static checkInterval: NodeJS.Timeout | null = null;
   private static callHistory: Array<{
     method: string;
-    args: any[];
+    args: unknown[];
     timestamp: number;
   }> = [];
 
@@ -85,11 +85,11 @@ export class MockAlarmService {
     MockServiceUtils.clearCache();
   }
 
-  static getCallHistory(): Array<{ method: string; args: any[]; timestamp: number }> {
+  static getCallHistory(): Array<{ method: string; args: unknown[]; timestamp: number }> {
     return [...this.callHistory];
   }
 
-  private static logCall(method: string, args: any[]): void {
+  private static logCall(method: string, args: unknown[]): void {
     this.callHistory.push({
       method,
       args: args.map(arg =>
@@ -277,11 +277,11 @@ export class MockAlarmService {
 
 // Mock SubscriptionService
 export class MockSubscriptionService {
-  private static cache = new Map<string, any>();
+  private static cache = new Map<string, unknown>();
   private static cacheExpiry = new Map<string, number>();
   private static callHistory: Array<{
     method: string;
-    args: any[];
+    args: unknown[];
     timestamp: number;
   }> = [];
   private static readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
@@ -292,11 +292,11 @@ export class MockSubscriptionService {
     this.callHistory = [];
   }
 
-  static getCallHistory(): Array<{ method: string; args: any[]; timestamp: number }> {
+  static getCallHistory(): Array<{ method: string; args: unknown[]; timestamp: number }> {
     return [...this.callHistory];
   }
 
-  private static logCall(method: string, args: any[]): void {
+  private static logCall(method: string, args: unknown[]): void {
     this.callHistory.push({
       method,
       args: args.map(arg =>
@@ -473,7 +473,7 @@ export class MockAnalyticsService {
   private static events: AnalyticsEvent[] = [];
   private static callHistory: Array<{
     method: string;
-    args: any[];
+    args: unknown[];
     timestamp: number;
   }> = [];
   private static isEnabled: boolean = true;
@@ -484,7 +484,7 @@ export class MockAnalyticsService {
     this.isEnabled = true;
   }
 
-  static getCallHistory(): Array<{ method: string; args: any[]; timestamp: number }> {
+  static getCallHistory(): Array<{ method: string; args: unknown[]; timestamp: number }> {
     return [...this.callHistory];
   }
 
@@ -496,7 +496,7 @@ export class MockAnalyticsService {
     this.isEnabled = enabled;
   }
 
-  private static logCall(method: string, args: any[]): void {
+  private static logCall(method: string, args: unknown[]): void {
     this.callHistory.push({
       method,
       args: args.map(arg =>
@@ -508,7 +508,7 @@ export class MockAnalyticsService {
 
   static async track(
     _event: string,
-    properties?: Record<string, any>,
+    properties?: Record<string, unknown>,
     userId?: string
   ): Promise<void> {
     this.logCall('track', [_event, properties, userId]);
@@ -530,7 +530,7 @@ export class MockAnalyticsService {
     await MockServiceUtils.delay(50);
   }
 
-  static async identify(userId: string, traits?: Record<string, any>): Promise<void> {
+  static async identify(userId: string, traits?: Record<string, unknown>): Promise<void> {
     this.logCall('identify', [userId, traits]);
 
     if (!this.isEnabled) {
@@ -542,7 +542,7 @@ export class MockAnalyticsService {
 
   static async page(
     name: string,
-    properties?: Record<string, any>,
+    properties?: Record<string, unknown>,
     userId?: string
   ): Promise<void> {
     this.logCall('page', [name, properties, userId]);
@@ -555,7 +555,7 @@ export class MockAnalyticsService {
   }
 
   static async batch(
-    events: Array<{ _event: string; properties?: Record<string, any>; userId?: string }>
+    events: Array<{ _event: string; properties?: Record<string, unknown>; userId?: string }>
   ): Promise<void> {
     this.logCall('batch', [events]);
 
@@ -581,7 +581,7 @@ export class MockBattleService {
   private static battles: Battle[] = [];
   private static callHistory: Array<{
     method: string;
-    args: any[];
+    args: unknown[];
     timestamp: number;
   }> = [];
   private static realTimeUpdates: Map<string, NodeJS.Timeout> = new Map();
@@ -593,7 +593,7 @@ export class MockBattleService {
     this.realTimeUpdates.clear();
   }
 
-  static getCallHistory(): Array<{ method: string; args: any[]; timestamp: number }> {
+  static getCallHistory(): Array<{ method: string; args: unknown[]; timestamp: number }> {
     return [...this.callHistory];
   }
 
@@ -601,7 +601,7 @@ export class MockBattleService {
     return [...this.battles];
   }
 
-  private static logCall(method: string, args: any[]): void {
+  private static logCall(method: string, args: unknown[]): void {
     this.callHistory.push({
       method,
       args: args.map(arg =>
@@ -703,9 +703,7 @@ export class MockBattleService {
 
   static async submitWakeProof(
     battleId: string,
-    userId: string,
-    proofData: any
-  ): Promise<{
+    userId: string, proofData: unknown): Promise<{
     pointsEarned: number;
     newScore: number;
     rank: number;

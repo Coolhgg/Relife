@@ -2,9 +2,9 @@
 // Offline Gaming Service for Relife App
 // Comprehensive offline support for battles, rewards, achievements, and social gaming features
 
-import type {
 import AnalyticsService from './analytics';
 import { ErrorHandler } from './error-handler';
+import type {
   Battle,
   User,
   Achievement,
@@ -16,7 +16,6 @@ import { ErrorHandler } from './error-handler';
   AIInsight,
 } from '../types/index';
 import { EnhancedOfflineStorage } from './enhanced-offline-storage';
-import { ErrorHandler } from './error-handler';
 import SecurityService from './security';
 import { TimeoutHandle } from '../types/timers';
 

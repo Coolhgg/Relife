@@ -1,6 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, {
-import { ErrorHandler } from '../services/error-handler';
   createContext,
   useContext,
   useState,
@@ -8,6 +7,7 @@ import { ErrorHandler } from '../services/error-handler';
   useCallback,
   useMemo,
 } from 'react';
+import { ErrorHandler } from '../services/error-handler';
 import { useTranslation } from 'react-i18next';
 import { Device } from '@capacitor/device';
 import { TimeoutHandle } from '../types/timers';

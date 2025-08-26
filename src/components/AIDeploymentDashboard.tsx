@@ -21,16 +21,16 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import { 
-  Activity, 
-  AlertTriangle, 
-  CheckCircle, 
-  Clock, 
-  Cpu, 
-  Database, 
-  Monitor, 
-  Rocket, 
-  Shield, 
+import {
+  Activity,
+  AlertTriangle,
+  CheckCircle,
+  Clock,
+  Cpu,
+  Database,
+  Monitor,
+  Rocket,
+  Shield,
   TrendingUp,
   Users,
   Zap,
@@ -94,7 +94,7 @@ const PHASE_NAMES = {
 export const AIDeploymentDashboard: React.FC<AIDeploymentDashboardProps> = ({
   className = '',
 }) => {
-  const [deploymentData, setDeploymentData] = useState<any>(null);
+  const [deploymentData, setDeploymentData] = useState<unknown>(null);
   const [loading, setLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState('overview');
   const [refreshing, setRefreshing] = useState(false);
@@ -118,10 +118,10 @@ export const AIDeploymentDashboard: React.FC<AIDeploymentDashboardProps> = ({
 
   useEffect(() => {
     fetchDeploymentData();
-    
+
     // Set up auto-refresh
     const interval = setInterval(fetchDeploymentData, 30000); // Every 30 seconds
-    
+
     return () => clearInterval(interval);
   }, []);
 
@@ -151,14 +151,23 @@ export const AIDeploymentDashboard: React.FC<AIDeploymentDashboardProps> = ({
   // Calculate overall statistics
   const overallStats = React.useMemo(() => {
     if (!deploymentData) return {};
-    
+
     const { phases, serviceHealth, metrics } = deploymentData;
-    const completedPhases = phases.filter((p: DeploymentStatus) => p.status === 'completed').length;
-    const failedPhases = phases.filter((p: DeploymentStatus) => p.status === 'failed').length;
-    const healthyServices = serviceHealth.filter((s: ServiceHealth) => s.status === 'healthy').length;
-    const avgUserAdoption = metrics.length > 0 ? 
-      metrics.reduce((sum: number, m: any) => sum + m.userAdoption, 0) / metrics.length : 0;
-    
+    const completedPhases = phases.filter(
+      (p: DeploymentStatus) => p.status === 'completed'
+    ).length;
+    const failedPhases = phases.filter(
+      (p: DeploymentStatus) => p.status === 'failed'
+    ).length;
+    const healthyServices = serviceHealth.filter(
+      (s: ServiceHealth) => s.status === 'healthy'
+    ).length;
+    const avgUserAdoption =
+      metrics.length > 0
+        ? metrics.reduce((sum: number, m: unknown) => sum + m.userAdoption, 0) /
+          metrics.length
+        : 0;
+
     return {
       completedPhases,
       failedPhases,
@@ -203,10 +212,7 @@ export const AIDeploymentDashboard: React.FC<AIDeploymentDashboardProps> = ({
             <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
             Refresh
           </Button>
-          <Button
-            onClick={handleStartDeployment}
-            disabled={loading}
-          >
+          <Button onClick={handleStartDeployment} disabled={loading}>
             <Rocket className="w-4 h-4 mr-2" />
             Start Deployment
           </Button>
@@ -296,14 +302,16 @@ export const AIDeploymentDashboard: React.FC<AIDeploymentDashboardProps> = ({
                   <Rocket className="w-5 h-5" />
                   <span>Deployment Progress</span>
                 </CardTitle>
-                <CardDescription>Current status of all deployment phases</CardDescription>
+                <CardDescription>
+                  Current status of all deployment phases
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {deploymentData?.phases?.map((phase: DeploymentStatus) => (
                     <div key={phase.phase} className="flex items-center space-x-3">
                       <div className="flex-shrink-0">
-                        <div 
+                        <div
                           className="w-3 h-3 rounded-full"
                           style={{ backgroundColor: STATUS_COLORS[phase.status] }}
                         />
@@ -311,7 +319,8 @@ export const AIDeploymentDashboard: React.FC<AIDeploymentDashboardProps> = ({
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-1">
                           <span className="text-sm font-medium">
-                            Phase {phase.phase}: {PHASE_NAMES[phase.phase as keyof typeof PHASE_NAMES]}
+                            Phase {phase.phase}:{' '}
+                            {PHASE_NAMES[phase.phase as keyof typeof PHASE_NAMES]}
                           </span>
                           <Badge variant="outline" className="text-xs">
                             {phase.status.replace('_', ' ')}
@@ -332,22 +341,31 @@ export const AIDeploymentDashboard: React.FC<AIDeploymentDashboardProps> = ({
                   <Activity className="w-5 h-5" />
                   <span>Service Health</span>
                 </CardTitle>
-                <CardDescription>Real-time health status of AI services</CardDescription>
+                <CardDescription>
+                  Real-time health status of AI services
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
                   {deploymentData?.serviceHealth?.map((service: ServiceHealth) => (
-                    <div key={service.serviceName} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div
+                      key={service.serviceName}
+                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                    >
                       <div className="flex items-center space-x-3">
-                        <div 
+                        <div
                           className="w-3 h-3 rounded-full"
                           style={{ backgroundColor: HEALTH_COLORS[service.status] }}
                         />
                         <span className="font-medium">{service.serviceName}</span>
                       </div>
                       <div className="text-right">
-                        <div className="text-sm font-medium">{service.responseTime}ms</div>
-                        <div className="text-xs text-gray-500">{service.uptime}% uptime</div>
+                        <div className="text-sm font-medium">
+                          {service.responseTime}ms
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          {service.uptime}% uptime
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -357,12 +375,17 @@ export const AIDeploymentDashboard: React.FC<AIDeploymentDashboardProps> = ({
           </div>
 
           {/* Alerts */}
-          {deploymentData?.phases?.some((p: DeploymentStatus) => p.status === 'failed') && (
+          {deploymentData?.phases?.some(
+            (p: DeploymentStatus) => p.status === 'failed'
+          ) && (
             <Alert className="border-red-200 bg-red-50">
               <AlertTriangle className="h-4 w-4 text-red-600" />
-              <AlertTitle className="text-red-800">Deployment Issues Detected</AlertTitle>
+              <AlertTitle className="text-red-800">
+                Deployment Issues Detected
+              </AlertTitle>
               <AlertDescription className="text-red-700">
-                Some phases have failed and may require attention. Check the Phases tab for details.
+                Some phases have failed and may require attention. Check the Phases tab
+                for details.
               </AlertDescription>
             </Alert>
           )}
@@ -376,16 +399,18 @@ export const AIDeploymentDashboard: React.FC<AIDeploymentDashboardProps> = ({
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                      <div 
+                      <div
                         className="w-4 h-4 rounded-full"
                         style={{ backgroundColor: STATUS_COLORS[phase.status] }}
                       />
                       <div>
                         <CardTitle>
-                          Phase {phase.phase}: {PHASE_NAMES[phase.phase as keyof typeof PHASE_NAMES]}
+                          Phase {phase.phase}:{' '}
+                          {PHASE_NAMES[phase.phase as keyof typeof PHASE_NAMES]}
                         </CardTitle>
                         <CardDescription>
-                          Status: {phase.status.replace('_', ' ')} • Progress: {phase.progress}%
+                          Status: {phase.status.replace('_', ' ')} • Progress:{' '}
+                          {phase.progress}%
                         </CardDescription>
                       </div>
                     </div>
@@ -400,7 +425,9 @@ export const AIDeploymentDashboard: React.FC<AIDeploymentDashboardProps> = ({
                           Rollback
                         </Button>
                       )}
-                      <Badge variant={phase.status === 'completed' ? 'default' : 'secondary'}>
+                      <Badge
+                        variant={phase.status === 'completed' ? 'default' : 'secondary'}
+                      >
                         {phase.status.replace('_', ' ')}
                       </Badge>
                     </div>
@@ -409,22 +436,27 @@ export const AIDeploymentDashboard: React.FC<AIDeploymentDashboardProps> = ({
                 <CardContent>
                   <div className="space-y-4">
                     <Progress value={phase.progress} className="h-3" />
-                    
+
                     {phase.startTime && (
                       <div className="flex items-center justify-between text-sm text-gray-600">
                         <span>Started: {phase.startTime.toLocaleString()}</span>
                         {phase.completionTime && (
-                          <span>Completed: {phase.completionTime.toLocaleString()}</span>
+                          <span>
+                            Completed: {phase.completionTime.toLocaleString()}
+                          </span>
                         )}
                       </div>
                     )}
-                    
+
                     {phase.errors && phase.errors.length > 0 && (
                       <div className="mt-3">
                         <h4 className="font-medium text-red-800 mb-2">Errors:</h4>
                         <div className="space-y-1">
                           {phase.errors.map((error, index) => (
-                            <div key={index} className="text-sm text-red-600 bg-red-50 p-2 rounded">
+                            <div
+                              key={index}
+                              className="text-sm text-red-600 bg-red-50 p-2 rounded"
+                            >
                               {error}
                             </div>
                           ))}
@@ -449,7 +481,7 @@ export const AIDeploymentDashboard: React.FC<AIDeploymentDashboardProps> = ({
                       <Monitor className="w-5 h-5" />
                       <span>{service.serviceName}</span>
                     </CardTitle>
-                    <Badge 
+                    <Badge
                       variant={service.status === 'healthy' ? 'default' : 'destructive'}
                       className="capitalize"
                     >
@@ -461,19 +493,27 @@ export const AIDeploymentDashboard: React.FC<AIDeploymentDashboardProps> = ({
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <p className="text-sm font-medium text-gray-600">Response Time</p>
-                      <p className="text-2xl font-bold text-gray-900">{service.responseTime}ms</p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {service.responseTime}ms
+                      </p>
                     </div>
                     <div>
                       <p className="text-sm font-medium text-gray-600">Error Rate</p>
-                      <p className="text-2xl font-bold text-gray-900">{service.errorRate}%</p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {service.errorRate}%
+                      </p>
                     </div>
                     <div>
                       <p className="text-sm font-medium text-gray-600">Uptime</p>
-                      <p className="text-2xl font-bold text-gray-900">{service.uptime}%</p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {service.uptime}%
+                      </p>
                     </div>
                     <div>
                       <p className="text-sm font-medium text-gray-600">Last Check</p>
-                      <p className="text-sm text-gray-900">{service.lastCheck.toLocaleTimeString()}</p>
+                      <p className="text-sm text-gray-900">
+                        {service.lastCheck.toLocaleTimeString()}
+                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -522,10 +562,10 @@ export const AIDeploymentDashboard: React.FC<AIDeploymentDashboardProps> = ({
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Line 
-                      type="monotone" 
-                      dataKey="successRate" 
-                      stroke="#10b981" 
+                    <Line
+                      type="monotone"
+                      dataKey="successRate"
+                      stroke="#10b981"
                       strokeWidth={2}
                       name="Success Rate"
                     />

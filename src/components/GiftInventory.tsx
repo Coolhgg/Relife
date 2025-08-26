@@ -38,7 +38,9 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
   const [inventory, setInventory] = useState<UserGiftInventory[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<GiftType | 'all'>('all');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [sortBy, setSortBy] = useState<'recent' | 'name' | 'type' | 'equipped'>('recent');
+  const [sortBy, setSortBy] = useState<'recent' | 'name' | 'type' | 'equipped'>(
+    'recent'
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedGift, setSelectedGift] = useState<UserGiftInventory | null>(null);
@@ -63,10 +65,7 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
   const handleRefresh = async () => {
     setIsRefreshing(true);
     try {
-      await Promise.all([
-        loadInventory(),
-        onRefresh(),
-      ]);
+      await Promise.all([loadInventory(), onRefresh()]);
     } finally {
       setIsRefreshing(false);
     }
@@ -137,7 +136,7 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
 
   const getRarityBadge = (rarity?: string) => {
     if (!rarity) return null;
-    
+
     const rarityColors = {
       common: 'text-gray-600 bg-gray-100',
       rare: 'text-blue-600 bg-blue-100',
@@ -146,7 +145,9 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
     };
 
     return (
-      <span className={`px-2 py-1 text-xs rounded-full ${rarityColors[rarity as keyof typeof rarityColors] || rarityColors.common}`}>
+      <span
+        className={`px-2 py-1 text-xs rounded-full ${rarityColors[rarity as keyof typeof rarityColors] || rarityColors.common}`}
+      >
         {rarity.toUpperCase()}
       </span>
     );
@@ -180,12 +181,13 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
 
   const filteredInventory = sortInventory(
     inventory.filter(item => {
-      const matchesCategory = selectedCategory === 'all' || item.gift?.type === selectedCategory;
+      const matchesCategory =
+        selectedCategory === 'all' || item.gift?.type === selectedCategory;
       return matchesCategory;
     })
   );
 
-  const giftCategories: { id: GiftType | 'all'; label: string; icon: any }[] = [
+  const giftCategories: { id: GiftType | 'all'; label: string; icon: unknown }[] = [
     { id: 'all', label: 'All Items', icon: Package },
     { id: 'theme', label: 'Themes', icon: Palette },
     { id: 'sound_pack', label: 'Sounds', icon: Music },
@@ -197,12 +199,15 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
     { id: 'feature_unlock', label: 'Features', icon: Unlock },
   ];
 
-  const equippedByType = inventory.reduce((acc, item) => {
-    if (item.is_equipped && item.gift?.type) {
-      acc[item.gift.type] = item;
-    }
-    return acc;
-  }, {} as Record<GiftType, UserGiftInventory>);
+  const equippedByType = inventory.reduce(
+    (acc, item) => {
+      if (item.is_equipped && item.gift?.type) {
+        acc[item.gift.type] = item;
+      }
+      return acc;
+    },
+    {} as Record<GiftType, UserGiftInventory>
+  );
 
   if (isLoading) {
     return (
@@ -233,7 +238,9 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
             <button
               onClick={() => setViewMode('grid')}
               className={`p-1 rounded transition-colors ${
-                viewMode === 'grid' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500'
+                viewMode === 'grid'
+                  ? 'bg-white text-blue-600 shadow-sm'
+                  : 'text-gray-500'
               }`}
             >
               <Grid className="h-4 w-4" />
@@ -241,7 +248,9 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
             <button
               onClick={() => setViewMode('list')}
               className={`p-1 rounded transition-colors ${
-                viewMode === 'list' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500'
+                viewMode === 'list'
+                  ? 'bg-white text-blue-600 shadow-sm'
+                  : 'text-gray-500'
               }`}
             >
               <List className="h-4 w-4" />
@@ -269,14 +278,23 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
             {Object.entries(equippedByType).map(([type, item]) => {
               const TypeIcon = getGiftTypeIcon(type as GiftType);
               return (
-                <div key={item.id} className="bg-white rounded-lg p-3 border border-blue-200">
+                <div
+                  key={item.id}
+                  className="bg-white rounded-lg p-3 border border-blue-200"
+                >
                   <div className="flex items-center space-x-3">
-                    <div className={`p-2 rounded-lg ${getGiftTypeColor(type as GiftType)}`}>
+                    <div
+                      className={`p-2 rounded-lg ${getGiftTypeColor(type as GiftType)}`}
+                    >
                       <TypeIcon className="h-4 w-4" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-gray-900 truncate">{item.gift?.name}</p>
-                      <p className="text-sm text-gray-500 capitalize">{type.replace('_', ' ')}</p>
+                      <p className="font-medium text-gray-900 truncate">
+                        {item.gift?.name}
+                      </p>
+                      <p className="text-sm text-gray-500 capitalize">
+                        {type.replace('_', ' ')}
+                      </p>
                     </div>
                     <Check className="h-4 w-4 text-green-600" />
                   </div>
@@ -293,10 +311,11 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
           {giftCategories.map(category => {
             const Icon = category.icon;
             const isSelected = selectedCategory === category.id;
-            const count = category.id === 'all' 
-              ? inventory.length 
-              : inventory.filter(item => item.gift?.type === category.id).length;
-            
+            const count =
+              category.id === 'all'
+                ? inventory.length
+                : inventory.filter(item => item.gift?.type === category.id).length;
+
             return (
               <button
                 key={category.id}
@@ -309,7 +328,9 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
               >
                 <Icon className="h-4 w-4" />
                 <span>{category.label}</span>
-                <span className="bg-black bg-opacity-20 px-1 rounded text-xs">{count}</span>
+                <span className="bg-black bg-opacity-20 px-1 rounded text-xs">
+                  {count}
+                </span>
               </button>
             );
           })}
@@ -317,7 +338,7 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
 
         <select
           value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as any)}
+          onChange={e => setSortBy(e.target.value as unknown)}
           className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         >
           <option value="recent">Recently Added</option>
@@ -344,10 +365,12 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
               >
                 {/* Item Header */}
                 <div className="flex items-start justify-between mb-3">
-                  <div className={`p-2 rounded-lg ${getGiftTypeColor(item.gift?.type as GiftType)}`}>
+                  <div
+                    className={`p-2 rounded-lg ${getGiftTypeColor(item.gift?.type as GiftType)}`}
+                  >
                     <TypeIcon className="h-5 w-5" />
                   </div>
-                  
+
                   <div className="flex flex-col items-end space-y-1">
                     {getRarityBadge(item.gift?.rarity)}
                     {isEquipped && (
@@ -361,11 +384,17 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
 
                 {/* Item Info */}
                 <div className="space-y-2">
-                  <h3 className="font-semibold text-gray-900 line-clamp-1">{item.gift?.name}</h3>
-                  <p className="text-sm text-gray-600 line-clamp-2">{item.gift?.description}</p>
-                  
+                  <h3 className="font-semibold text-gray-900 line-clamp-1">
+                    {item.gift?.name}
+                  </h3>
+                  <p className="text-sm text-gray-600 line-clamp-2">
+                    {item.gift?.description}
+                  </p>
+
                   <div className="flex items-center justify-between text-xs text-gray-500">
-                    <span className="capitalize">{item.gift?.type.replace('_', ' ')}</span>
+                    <span className="capitalize">
+                      {item.gift?.type.replace('_', ' ')}
+                    </span>
                     <span>Added {formatDate(item.unlocked_at)}</span>
                   </div>
                 </div>
@@ -373,7 +402,7 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
                 {/* Quick Actions */}
                 <div className="mt-3 pt-3 border-t border-gray-100">
                   <button
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       handleEquipGift(item, !isEquipped);
                     }}
@@ -388,7 +417,11 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
                       <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-current"></div>
                     ) : (
                       <>
-                        {isEquipped ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
+                        {isEquipped ? (
+                          <EyeOff className="h-3 w-3" />
+                        ) : (
+                          <Eye className="h-3 w-3" />
+                        )}
                         <span>{isEquipped ? 'Unequip' : 'Equip'}</span>
                       </>
                     )}
@@ -413,14 +446,18 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
                 onClick={() => setSelectedGift(item)}
               >
                 {/* Icon */}
-                <div className={`p-3 rounded-lg ${getGiftTypeColor(item.gift?.type as GiftType)}`}>
+                <div
+                  className={`p-3 rounded-lg ${getGiftTypeColor(item.gift?.type as GiftType)}`}
+                >
                   <TypeIcon className="h-5 w-5" />
                 </div>
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center space-x-2 mb-1">
-                    <h3 className="font-semibold text-gray-900 truncate">{item.gift?.name}</h3>
+                    <h3 className="font-semibold text-gray-900 truncate">
+                      {item.gift?.name}
+                    </h3>
                     {getRarityBadge(item.gift?.rarity)}
                     {isEquipped && (
                       <div className="flex items-center space-x-1 text-blue-600">
@@ -429,12 +466,18 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
                       </div>
                     )}
                   </div>
-                  <p className="text-sm text-gray-600 line-clamp-1">{item.gift?.description}</p>
+                  <p className="text-sm text-gray-600 line-clamp-1">
+                    {item.gift?.description}
+                  </p>
                   <div className="flex items-center space-x-4 text-xs text-gray-500 mt-1">
-                    <span className="capitalize">{item.gift?.type.replace('_', ' ')}</span>
+                    <span className="capitalize">
+                      {item.gift?.type.replace('_', ' ')}
+                    </span>
                     <span>Added {formatDate(item.unlocked_at)}</span>
                     {item.payment_method && (
-                      <span className="capitalize">Paid with {item.payment_method}</span>
+                      <span className="capitalize">
+                        Paid with {item.payment_method}
+                      </span>
                     )}
                   </div>
                 </div>
@@ -442,7 +485,7 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
                 {/* Actions */}
                 <div className="flex items-center space-x-2">
                   <button
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       handleEquipGift(item, !isEquipped);
                     }}
@@ -457,14 +500,18 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
                       <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-current"></div>
                     ) : (
                       <>
-                        {isEquipped ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
+                        {isEquipped ? (
+                          <EyeOff className="h-3 w-3" />
+                        ) : (
+                          <Eye className="h-3 w-3" />
+                        )}
                         <span>{isEquipped ? 'Unequip' : 'Equip'}</span>
                       </>
                     )}
                   </button>
 
                   <button
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       setSelectedGift(item);
                     }}
@@ -484,7 +531,9 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
         <div className="text-center py-12">
           <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">
-            {inventory.length === 0 ? 'No items in inventory' : 'No items match your filters'}
+            {inventory.length === 0
+              ? 'No items in inventory'
+              : 'No items match your filters'}
           </h3>
           <p className="text-gray-600">
             {inventory.length === 0
@@ -502,11 +551,17 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
               {/* Header */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center space-x-3">
-                  <div className={`p-3 rounded-lg ${getGiftTypeColor(selectedGift.gift.type)}`}>
-                    {React.createElement(getGiftTypeIcon(selectedGift.gift.type), { className: 'h-6 w-6' })}
+                  <div
+                    className={`p-3 rounded-lg ${getGiftTypeColor(selectedGift.gift.type)}`}
+                  >
+                    {React.createElement(getGiftTypeIcon(selectedGift.gift.type), {
+                      className: 'h-6 w-6',
+                    })}
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-gray-900">{selectedGift.gift.name}</h3>
+                    <h3 className="text-xl font-bold text-gray-900">
+                      {selectedGift.gift.name}
+                    </h3>
                     <div className="flex items-center space-x-2 mt-1">
                       {getRarityBadge(selectedGift.gift.rarity)}
                       <span className="text-sm text-gray-500 capitalize">
@@ -521,13 +576,23 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
                     </div>
                   </div>
                 </div>
-                
+
                 <button
                   onClick={() => setSelectedGift(null)}
                   className="text-gray-400 hover:text-gray-600 transition-colors"
                 >
-                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               </div>
@@ -543,19 +608,22 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Unlocked:</span>
-                    <span className="text-gray-900">{formatDate(selectedGift.unlocked_at)}</span>
+                    <span className="text-gray-900">
+                      {formatDate(selectedGift.unlocked_at)}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Payment Method:</span>
-                    <span className="text-gray-900 capitalize">{selectedGift.payment_method}</span>
+                    <span className="text-gray-900 capitalize">
+                      {selectedGift.payment_method}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Cost Paid:</span>
                     <span className="text-gray-900">
-                      {selectedGift.payment_method === 'points' 
+                      {selectedGift.payment_method === 'points'
                         ? `${selectedGift.cost_paid} points`
-                        : `$${selectedGift.cost_paid}`
-                      }
+                        : `$${selectedGift.cost_paid}`}
                     </span>
                   </div>
                 </div>
@@ -564,7 +632,9 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
               {/* Actions */}
               <div className="space-y-3">
                 <button
-                  onClick={() => handleEquipGift(selectedGift, !selectedGift.is_equipped)}
+                  onClick={() =>
+                    handleEquipGift(selectedGift, !selectedGift.is_equipped)
+                  }
                   disabled={equipLoading === selectedGift.id}
                   className={`w-full flex items-center justify-center space-x-2 py-3 px-4 rounded-lg font-medium transition-colors ${
                     selectedGift.is_equipped
@@ -576,26 +646,33 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
                   ) : (
                     <>
-                      {selectedGift.is_equipped ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      {selectedGift.is_equipped ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
                       <span>{selectedGift.is_equipped ? 'Unequip' : 'Equip'}</span>
                     </>
                   )}
                 </button>
 
                 {/* Additional metadata */}
-                {selectedGift.metadata && Object.keys(selectedGift.metadata).length > 0 && (
-                  <div className="p-3 bg-gray-50 rounded-lg">
-                    <h4 className="font-medium text-gray-900 mb-2 text-sm">Additional Info</h4>
-                    <div className="space-y-1 text-xs text-gray-600">
-                      {Object.entries(selectedGift.metadata).map(([key, value]) => (
-                        <div key={key} className="flex justify-between">
-                          <span className="capitalize">{key.replace('_', ' ')}:</span>
-                          <span>{String(value)}</span>
-                        </div>
-                      ))}
+                {selectedGift.metadata &&
+                  Object.keys(selectedGift.metadata).length > 0 && (
+                    <div className="p-3 bg-gray-50 rounded-lg">
+                      <h4 className="font-medium text-gray-900 mb-2 text-sm">
+                        Additional Info
+                      </h4>
+                      <div className="space-y-1 text-xs text-gray-600">
+                        {Object.entries(selectedGift.metadata).map(([key, value]) => (
+                          <div key={key} className="flex justify-between">
+                            <span className="capitalize">{key.replace('_', ' ')}:</span>
+                            <span>{String(value)}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
               </div>
             </div>
           </div>

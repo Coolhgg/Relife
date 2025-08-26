@@ -1,9 +1,0 @@
-ESLint Cleanup Summary:
-======================
-Before: 2,126 problems (475 errors, 1,651 warnings)
-After:  2,153 problems (476 errors, 1,677 warnings)
-
-Reduction:
-- Total problems: -27 fewer (-1.3% reduction)
-- Errors: -1 fewer (-0.2% reduction)
-- Warnings: -26 fewer (-1.6% reduction)

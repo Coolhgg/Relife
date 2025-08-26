@@ -4,8 +4,8 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import AccessibilityPreferencesService, {
 import { config } from '../config/environment';
+import AccessibilityPreferencesService, {
   AccessibilityPreferences,
   AccessibilityState,
 } from '../services/accessibility-preferences';

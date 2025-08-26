@@ -4,7 +4,8 @@ Let me walk you through setting up Stripe for subscription billing in your Relif
 
 ## 🎯 What We'll Set Up
 
-Your Relife app already has a complete payment system built in. We just need to connect it to your Stripe account:
+Your Relife app already has a complete payment system built in. We just need to connect it to your
+Stripe account:
 
 - **Subscription Plans**: Free, Basic ($4.99), Premium ($9.99), Pro ($19.99)
 - **Payment Processing**: Credit cards, bank accounts, Apple Pay, Google Pay
@@ -96,8 +97,9 @@ Webhooks allow Stripe to notify your app about payment events in real-time.
 ### 4.2 Select Events
 
 Choose these essential events:
+
 - ✅ `customer.subscription.created`
-- ✅ `customer.subscription.updated` 
+- ✅ `customer.subscription.updated`
 - ✅ `customer.subscription.deleted`
 - ✅ `invoice.payment_succeeded`
 - ✅ `invoice.payment_failed`
@@ -153,6 +155,7 @@ npm run dev
 Stripe provides test cards that simulate different scenarios:
 
 **✅ Successful Payment:**
+
 ```
 Card: 4242 4242 4242 4242
 Expiry: Any future date (e.g., 12/25)
@@ -161,12 +164,14 @@ ZIP: Any 5 digits (e.g., 12345)
 ```
 
 **❌ Declined Payment:**
+
 ```
 Card: 4000 0000 0000 0002
 (Same expiry, CVC, ZIP as above)
 ```
 
 **🔐 Authentication Required:**
+
 ```
 Card: 4000 0025 0000 3155
 (Simulates 3D Secure authentication)
@@ -175,6 +180,7 @@ Card: 4000 0025 0000 3155
 ### 6.3 Verify Success
 
 After a successful test payment:
+
 1. Check your Stripe Dashboard → **Payments** (you'll see the test payment)
 2. Check your app's database (subscription should be created)
 3. User should see premium features unlocked
@@ -199,6 +205,7 @@ npm run test:payment
 ### 7.2 Check Logs
 
 Monitor your API server logs for successful webhook processing:
+
 ```bash
 # You should see logs like:
 # "Webhook received: customer.subscription.created"
@@ -211,12 +218,12 @@ Monitor your API server logs for successful webhook processing:
 
 Your Relife app comes with these pre-configured plans:
 
-| Plan | Price | Features | Stripe Price ID |
-|------|-------|----------|-----------------|
-| **Free** | $0 | 3 alarms, basic sounds | N/A |
-| **Basic** | $4.99/month | Unlimited alarms, custom sounds | `price_basic_monthly` |
-| **Premium** | $9.99/month | Smart features, analytics | `price_premium_monthly` |
-| **Pro** | $19.99/month | AI coach, advanced features | `price_pro_monthly` |
+| Plan        | Price        | Features                        | Stripe Price ID         |
+| ----------- | ------------ | ------------------------------- | ----------------------- |
+| **Free**    | $0           | 3 alarms, basic sounds          | N/A                     |
+| **Basic**   | $4.99/month  | Unlimited alarms, custom sounds | `price_basic_monthly`   |
+| **Premium** | $9.99/month  | Smart features, analytics       | `price_premium_monthly` |
+| **Pro**     | $19.99/month | AI coach, advanced features     | `price_pro_monthly`     |
 
 ### Create Products in Stripe (Optional)
 
@@ -232,21 +239,25 @@ If you want to customize pricing:
 ## 🔧 Troubleshooting
 
 ### "Invalid API key provided"
+
 - ✅ Check your `.env.local` file has the correct keys
 - ✅ Make sure you're using test keys (start with `pk_test_` and `sk_test_`)
 - ✅ Restart your servers after updating environment variables
 
 ### "Webhook signature verification failed"
+
 - ✅ Check `STRIPE_WEBHOOK_SECRET` matches your Stripe dashboard
 - ✅ Ensure webhook endpoint URL is correct
 - ✅ For local testing, use ngrok or similar tunneling service
 
 ### "Customer not found"
+
 - ✅ Check your Supabase database connection
 - ✅ Ensure user authentication is working
 - ✅ Verify customer creation in your API logs
 
 ### "Payment method required"
+
 - ✅ Use valid test card numbers from Stripe docs
 - ✅ Check that payment method is attached to customer
 - ✅ Verify checkout session configuration
@@ -256,12 +267,14 @@ If you want to customize pricing:
 ## 🚀 Next Steps
 
 ### For Development
+
 1. ✅ Test all subscription plans
 2. ✅ Test payment failures and retries
 3. ✅ Test subscription cancellation flow
 4. ✅ Verify feature access controls work
 
 ### For Production
+
 1. 🔄 Switch to live Stripe keys (`pk_live_...` and `sk_live_...`)
 2. 🔄 Update webhook endpoint to production domain
 3. 🔄 Test with real payment methods
@@ -272,18 +285,21 @@ If you want to customize pricing:
 ## 💡 Pro Tips
 
 ### Security Best Practices
+
 - Never expose secret keys in frontend code
 - Use HTTPS for all webhook endpoints
 - Verify webhook signatures to prevent spoofing
 - Log all payment events for auditing
 
 ### User Experience
+
 - Provide clear pricing information
 - Handle payment errors gracefully
 - Send confirmation emails for successful payments
 - Offer easy cancellation and refund options
 
 ### Monitoring
+
 - Set up alerts for failed payments
 - Monitor subscription churn rates
 - Track conversion from free to paid plans
@@ -295,15 +311,13 @@ If you want to customize pricing:
 
 Once you complete these steps, your Relife Smart Alarm app will have:
 
-✅ **Complete payment processing** with Stripe
-✅ **Subscription billing** with automatic renewals
-✅ **Webhook integration** for real-time updates
-✅ **Feature gating** based on subscription tiers
-✅ **Professional checkout** experience
-✅ **Comprehensive error handling**
+✅ **Complete payment processing** with Stripe ✅ **Subscription billing** with automatic renewals
+✅ **Webhook integration** for real-time updates ✅ **Feature gating** based on subscription tiers
+✅ **Professional checkout** experience ✅ **Comprehensive error handling**
 
 Your users can now subscribe to premium features and you'll start generating revenue! 🚀
 
 ---
 
-**Need help?** Check the comprehensive `PAYMENT_SETUP_GUIDE.md` in your project for more detailed information, or run the interactive configuration wizard: `node configure-integrations.js`
+**Need help?** Check the comprehensive `PAYMENT_SETUP_GUIDE.md` in your project for more detailed
+information, or run the interactive configuration wizard: `node configure-integrations.js`

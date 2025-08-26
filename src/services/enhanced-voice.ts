@@ -7,9 +7,9 @@ import type { Alarm, VoiceMood } from '../types';
 import { formatTime } from '../utils';
 import { BaseService } from './base/BaseService';
 import { CacheProvider, getCacheManager } from './base/CacheManager';
-import {
 import { config } from '../config/environment';
 import { ErrorHandler } from './error-handler';
+import {
   VoiceServiceInterface,
   ServiceConfig,
   ServiceHealth,
@@ -38,10 +38,10 @@ export interface VoiceServiceConfig extends ServiceConfig {
 
 export interface VoiceServiceDependencies {
   analyticsService?: AnalyticsServiceInterface;
-  premiumVoiceService?: any;
-  subscriptionService?: any;
-  cloudTTSService?: any;
-  errorHandler?: any;
+  premiumVoiceService?: unknown;
+  subscriptionService?: unknown;
+  cloudTTSService?: unknown;
+  errorHandler?: unknown;
 }
 
 export interface VoiceSettings {
@@ -209,7 +209,7 @@ export class EnhancedVoiceService extends BaseService implements VoiceServiceInt
   // VoiceServiceInterface Implementation
   // ============================================================================
 
-  public async speak(text: string, options: any = {}): Promise<void> {
+  public async speak(text: string, options: unknown = {}): Promise<void> {
     const timerId = this.startTimer('speak');
 
     try {

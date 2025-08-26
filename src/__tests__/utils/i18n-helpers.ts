@@ -24,7 +24,7 @@ interface TranslationData {
 
 interface I18nContextValue {
   locale: string;
-  t: (key: string, options?: any) => string;
+  t: (key: string, options?: unknown) => string;
   changeLanguage: (locale: string) => void;
   dir: 'ltr' | 'rtl';
   ready: boolean;
@@ -292,9 +292,9 @@ export const _i18nMocks = {
    * Create mock i18n context
    */
   createMockI18nContext(locale: string = 'en'): I18nContextValue {
-    const t = (key: string, options: any = {}) => {
+    const t = (key: string, options: unknown = {}) => {
       const keys = key.split('.');
-      let value: any = mockTranslations[locale];
+      let value: unknown = mockTranslations[locale];
 
       for (const k of keys) {
         if (value && typeof value === 'object') {
@@ -334,9 +334,9 @@ export const _i18nMocks = {
         mockI18n.language = lng;
         return Promise.resolve();
       }),
-      t: (key: string, options: any = {}) => {
+      t: (key: string, options: unknown = {}) => {
         const keys = key.split('.');
-        let value: any =
+        let value: unknown =
           mockTranslations[mockI18n.language] || mockTranslations[defaultLocale];
 
         for (const k of keys) {
@@ -358,7 +358,7 @@ export const _i18nMocks = {
       dir: () => localeConfigs[mockI18n.language]?.direction || 'ltr',
       exists: (key: string) => {
         const keys = key.split('.');
-        let value: any = mockTranslations[mockI18n.language];
+        let value: unknown = mockTranslations[mockI18n.language];
 
         for (const k of keys) {
           if (value && typeof value === 'object') {
@@ -465,7 +465,7 @@ export const _i18nUtils = {
    */
   testTranslationExists(key: string, locale: string = 'en'): void {
     const keys = key.split('.');
-    let value: any = mockTranslations[locale];
+    let value: unknown = mockTranslations[locale];
 
     for (const k of keys) {
       expect(value).toBeDefined();
@@ -770,8 +770,8 @@ export const _i18nCleanup = {
    * Restore browser language settings
    */
   restoreBrowserLanguage(): void {
-    delete (navigator as any).language;
-    delete (navigator as any).languages;
+    delete (navigator as unknown).language;
+    delete (navigator as unknown).languages;
   },
 
   /**

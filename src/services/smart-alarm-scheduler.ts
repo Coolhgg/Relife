@@ -1,5 +1,5 @@
 import {
-import { ErrorHandler } from './error-handler';
+  ErrorHandler,
   SleepAnalysisService,
   SmartAlarmRecommendation,
   SleepPattern,
@@ -395,7 +395,7 @@ export class SmartAlarmScheduler {
     }
   }
 
-  private static calculateSleepDebt(sessions: any[]): number {
+  private static calculateSleepDebt(sessions: unknown[]): number {
     if (!this.sleepGoal) return 0;
 
     const last7Days = sessions.slice(0, 7);
@@ -410,7 +410,7 @@ export class SmartAlarmScheduler {
     return totalSleepDeficit;
   }
 
-  private static calculateSleepConsistency(sessions: any[]): number {
+  private static calculateSleepConsistency(sessions: unknown[]): number {
     if (sessions.length < 7) return 0;
 
     const bedtimes = sessions.slice(0, 7).map(s => {
@@ -520,7 +520,7 @@ export class SmartAlarmScheduler {
 
   private static generateScheduleRecommendations(
     pattern: SleepPattern,
-    sessions: any[],
+    sessions: unknown[],
     alarms: SmartAlarm[]
   ): ScheduleRecommendation[] {
     const recommendations: ScheduleRecommendation[] = [];
@@ -609,7 +609,7 @@ export class SmartAlarmScheduler {
       const { data, _error } = await query;
       if (_error) throw error;
 
-      return data.map((item: any) => ({
+      return data.map((item: unknown) => ({
         alarmId: item.alarm_id,
         optimizationType: item.optimization_type,
         oldTime: item.old_time,
@@ -625,7 +625,7 @@ export class SmartAlarmScheduler {
   }
 
   // Utility methods
-  private static mapDatabaseToSmartAlarm(data: any): SmartAlarm {
+  private static mapDatabaseToSmartAlarm(data: unknown): SmartAlarm {
     return {
       id: data.id,
       time: data.time,

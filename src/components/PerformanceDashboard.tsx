@@ -24,10 +24,10 @@ interface DashboardState {
     slowResources: number;
   };
   analyticsData: {
-    currentSession: any;
+    currentSession: unknown;
     totalEvents: number;
     featuresUsed: number;
-    behavior: any;
+    behavior: unknown;
   };
   isLoading: boolean;
   autoRefresh: boolean;
@@ -64,7 +64,7 @@ const PerformanceDashboard: React.FC = () => {
       const performanceSummary = performanceMonitor.getPerformanceSummary();
       const analyticsSummary = analytics.getAnalyticsSummary();
 
-      setState((prev: any) => ({
+      setState((prev: unknown) => ({
         ...prev,
         performanceData: {
           webVitals: [
@@ -125,7 +125,7 @@ const PerformanceDashboard: React.FC = () => {
     } catch (_error) {
       console._error('Failed to refresh dashboard data:', _error);
 
-      setState((prev: any) => ({ ...prev, isLoading: false }));
+      setState((prev: unknown) => ({ ...prev, isLoading: false }));
     }
   }, []);
 
@@ -246,7 +246,7 @@ const PerformanceDashboard: React.FC = () => {
         <div className="flex gap-3">
           <button
             onClick={() =>
-              setState((prev: any) => ({ ...prev, autoRefresh: !prev.autoRefresh }))
+              setState((prev: unknown) => ({ ...prev, autoRefresh: !prev.autoRefresh }))
             }
             className={`px-4 py-2 rounded-lg font-medium ${
               state.autoRefresh
@@ -304,7 +304,7 @@ const PerformanceDashboard: React.FC = () => {
               Core Web Vitals
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-              {state.performanceData.webVitals.map((vital: any) => (
+              {state.performanceData.webVitals.map((vital: unknown) => (
                 <MetricCard
                   key={vital.name}
                   title={vital.name}

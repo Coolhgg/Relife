@@ -385,7 +385,7 @@ export class PushNotificationService {
   /**
    * Send weekly progress notification
    */
-  static async sendWeeklyProgress(stats: any): Promise<void> {
+  static async sendWeeklyProgress(stats: unknown): Promise<void> {
     if (!this.hasPermission || !this.settings.weeklyProgress) {
       return;
     }
@@ -531,7 +531,7 @@ export class PushNotificationService {
   /**
    * Handle validated push notification received
    */
-  private static handleSecurePushReceived(notification: any): void {
+  private static handleSecurePushReceived(notification: unknown): void {
     console.log('Processing validated push notification:', notification);
 
     // Track notification received with security metrics
@@ -562,7 +562,7 @@ export class PushNotificationService {
   /**
    * Handle suspicious notifications
    */
-  private static handleSuspiciousNotification(notification: any): void {
+  private static handleSuspiciousNotification(notification: unknown): void {
     console.warn('Suspicious push notification blocked:', notification);
 
     this.logSecurityEvent('suspicious_notification_blocked', {
@@ -586,7 +586,7 @@ export class PushNotificationService {
   /**
    * Handle validated push notification action
    */
-  private static handleSecurePushAction(notification: any): void {
+  private static handleSecurePushAction(notification: unknown): void {
     console.log('Processing validated push notification action:', notification);
 
     // Track notification action with security context
@@ -783,7 +783,7 @@ export class PushNotificationService {
     }
   }
 
-  private static trackSecureNotificationEvent(_event: string, data: any): void {
+  private static trackSecureNotificationEvent(_event: string, data: unknown): void {
     // Track notification events for analytics with security context
     window.dispatchEvent(
       new CustomEvent('secure-notification-analytics', {
@@ -798,12 +798,12 @@ export class PushNotificationService {
     );
   }
 
-  private static trackNotificationEvent(_event: string, data: any): void {
+  private static trackNotificationEvent(_event: string, data: unknown): void {
     // Legacy tracking for backwards compatibility
     this.trackSecureNotificationEvent(_event, data);
   }
 
-  private static handleAlarmPushReceived(notification: any): void {
+  private static handleAlarmPushReceived(notification: unknown): void {
     const alarmId = notification.data?.alarmId;
     if (alarmId) {
       // Trigger alarm in the app
@@ -815,7 +815,7 @@ export class PushNotificationService {
     }
   }
 
-  private static handleEmergencyPushReceived(notification: any): void {
+  private static handleEmergencyPushReceived(notification: unknown): void {
     // Emergency notifications bypass quiet hours and show immediately
     NotificationService.showNotification({
       title: notification.title,
@@ -825,7 +825,7 @@ export class PushNotificationService {
     });
   }
 
-  private static handleDismissAction(data: any): void {
+  private static handleDismissAction(data: unknown): void {
     if (data.alarmId) {
       window.dispatchEvent(
         new CustomEvent('alarm-dismissed', {
@@ -835,7 +835,7 @@ export class PushNotificationService {
     }
   }
 
-  private static handleSnoozeAction(data: any): void {
+  private static handleSnoozeAction(data: unknown): void {
     if (data.alarmId) {
       window.dispatchEvent(
         new CustomEvent('alarm-snoozed', {
@@ -845,7 +845,7 @@ export class PushNotificationService {
     }
   }
 
-  private static handleViewAction(data: any): void {
+  private static handleViewAction(data: unknown): void {
     // Navigate to relevant section based on notification type
     switch (data.type) {
       case 'progress':
@@ -859,7 +859,7 @@ export class PushNotificationService {
     }
   }
 
-  private static handleDefaultAction(data: any): void {
+  private static handleDefaultAction(data: unknown): void {
     window.focus();
 
     if (data.alarmId) {
@@ -897,7 +897,7 @@ export class PushNotificationService {
    * Validate notification security
    */
   private static async validateNotificationSecurity(
-    notification: any
+    notification: unknown
   ): Promise<boolean> {
     try {
       const data = notification.data || {};
@@ -939,7 +939,7 @@ export class PushNotificationService {
   /**
    * Validate action security
    */
-  private static validateActionSecurity(action: string, data: any): boolean {
+  private static validateActionSecurity(action: string, data: unknown): boolean {
     // Validate that actions are legitimate
     const validActions = ['dismiss', 'snooze', 'view', 'default'];
     if (!validActions.includes(action)) {
@@ -957,7 +957,7 @@ export class PushNotificationService {
   /**
    * Log security events
    */
-  private static logSecurityEvent(_event: string, details: any): void {
+  private static logSecurityEvent(_event: string, details: unknown): void {
     const logEntry = {
       event,
       details,
@@ -978,7 +978,7 @@ export class PushNotificationService {
   /**
    * Handle general push notifications
    */
-  private static handleGeneralPushReceived(notification: any): void {
+  private static handleGeneralPushReceived(notification: unknown): void {
     console.log('General push notification processed securely');
   }
 

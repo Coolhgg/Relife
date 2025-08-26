@@ -8,11 +8,9 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Switch } from '../ui/switch';
+import path from 'path';
+import { Zap } from 'lucide-react';
 import {
-// auto: restored by scout - verify import path
-import { Zap } from 'lucide-react';
-// auto: restored by scout - verify import path
-import { Zap } from 'lucide-react';
   Select,
   SelectContent,
   SelectItem,
@@ -61,7 +59,7 @@ function SmartWakeUpFeature({
             <div className="mt-2">
               <Slider
                 value={[smartWindow]}
-                onValueChange={(value: any) => setSmartWindow(value[0])}
+                onValueChange={(value: unknown) => setSmartWindow(value[0])}
                 max={60}
                 min={5}
                 step={5}

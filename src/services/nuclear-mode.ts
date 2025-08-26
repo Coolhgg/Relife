@@ -1,6 +1,6 @@
-import type {
 import { ErrorHandler } from './error-handler';
 // Note: User data should come from auth context or be passed as parameter
+import type {
   Alarm,
   NuclearModeChallenge,
   NuclearChallengeType,
@@ -12,7 +12,6 @@ import { ErrorHandler } from './error-handler';
 } from '../types';
 import { premiumService } from './premium';
 import { supabase } from './supabase';
-import { ErrorHandler } from './error-handler';
 import AppAnalyticsService from './app-analytics';
 import { Preferences } from '@capacitor/preferences';
 
@@ -288,9 +287,9 @@ export class NuclearModeService {
               'thursday',
               'friday',
               'saturday',
-            ][d] as any
+            ][d] as unknown
         ),
-        voiceMood: alarmData.voiceMood as any,
+        voiceMood: alarmData.voiceMood as unknown,
         sound: 'nuclear_alert',
         difficulty: 'nuclear',
         snoozeEnabled: false, // Nuclear mode doesn't allow snoozing
@@ -420,7 +419,7 @@ export class NuclearModeService {
       timeToComplete?: number;
       hintsUsed?: number;
       errorsMade?: number;
-      details?: Record<string, any>;
+      details?: Record<string, unknown>;
     }
   ): Promise<{
     continueSession: boolean;

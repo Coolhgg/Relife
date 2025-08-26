@@ -24,7 +24,7 @@ interface BehaviorPattern {
     | 'dismissal_method'
     | 'frequency';
   strength: number; // 0-1
-  data: Record<string, any>;
+  data: Record<string, unknown>;
 }
 
 interface PersonalityProfile {
@@ -114,7 +114,7 @@ export class AIRewardsService {
   private analyzeBehaviorPatterns(
     alarms: Alarm[],
     alarmEvents: AlarmEvent[],
-    behavior: any
+    behavior: unknown
   ): BehaviorPattern[] {
     const patterns: BehaviorPattern[] = [];
 
@@ -236,7 +236,7 @@ export class AIRewardsService {
    */
   private generatePersonalityProfile(
     patterns: BehaviorPattern[],
-    behavior: any
+    behavior: unknown
   ): PersonalityProfile {
     const traits: string[] = [];
     const timePattern = patterns.find(p => p.type === 'time_preference');
@@ -363,7 +363,7 @@ export class AIRewardsService {
           primary: 'fitness',
           confidence: 0.9,
           traits: ['health-conscious'],
-          preferences: {} as any,
+          preferences: {} as unknown,
         },
         lastAnalyzed: new Date(),
       });
@@ -632,7 +632,7 @@ export class AIRewardsService {
 
   private inferPrimaryNiche(
     traits: string[],
-    frequencyData: any,
+    frequencyData: unknown,
     morningPerson: boolean
   ): UserNiche['primary'] {
     if (traits.some(t => t.includes('discipline') || t.includes('goal'))) {
@@ -659,7 +659,7 @@ export class AIRewardsService {
         primary: 'fitness',
         confidence: 0.8,
         traits: ['health-conscious'],
-        preferences: {} as any,
+        preferences: {} as unknown,
       };
     }
     if (
@@ -671,7 +671,7 @@ export class AIRewardsService {
         primary: 'work',
         confidence: 0.8,
         traits: ['professional'],
-        preferences: {} as any,
+        preferences: {} as unknown,
       };
     }
     if (
@@ -683,7 +683,7 @@ export class AIRewardsService {
         primary: 'study',
         confidence: 0.8,
         traits: ['academic'],
-        preferences: {} as any,
+        preferences: {} as unknown,
       };
     }
 
@@ -691,7 +691,7 @@ export class AIRewardsService {
       primary: 'health',
       confidence: 0.5,
       traits: ['routine-focused'],
-      preferences: {} as any,
+      preferences: {} as unknown,
     };
   }
 
@@ -945,18 +945,26 @@ export class AIRewardsService {
     gamificationIntensity: 70, // 0-100
     rewardFrequency: 'balanced' as 'minimal' | 'balanced' | 'frequent' | 'abundant',
     personalizationLevel: 0.8, // 0-1
-    motivationStyle: 'positive' as 'neutral' | 'positive' | 'competitive' | 'achievement',
+    motivationStyle: 'positive' as
+      | 'neutral'
+      | 'positive'
+      | 'competitive'
+      | 'achievement',
     difficultyAdaptation: true,
     socialFeatures: true,
     streakMultiplier: 1.5, // 1.0-3.0
-    achievementThreshold: 'adaptive' as 'easy' | 'moderate' | 'challenging' | 'adaptive',
+    achievementThreshold: 'adaptive' as
+      | 'easy'
+      | 'moderate'
+      | 'challenging'
+      | 'adaptive',
     pointInflation: 'controlled' as 'none' | 'controlled' | 'moderate' | 'dynamic',
     categoryWeights: {
       consistency: 1.0,
       achievement: 1.2,
       explorer: 0.9,
       social: 0.8,
-      milestone: 1.5
+      milestone: 1.5,
     },
     behaviorReinforcement: 0.7,
     noveltyBonus: 0.3,
@@ -967,20 +975,20 @@ export class AIRewardsService {
     seasonalEvents: true,
     communityRewards: false,
     premiumRewards: true,
-    analyticsTracking: true
+    analyticsTracking: true,
   };
 
   /**
    * Get current reward system configuration
    */
-  async getCurrentConfiguration(): Promise<Record<string, any>> {
+  async getCurrentConfiguration(): Promise<Record<string, unknown>> {
     return { ...this.parameters };
   }
 
   /**
    * Update reward system configuration with validation
    */
-  async updateConfiguration(newParameters: Record<string, any>): Promise<boolean> {
+  async updateConfiguration(newParameters: Record<string, unknown>): Promise<boolean> {
     try {
       for (const [key, value] of Object.entries(newParameters)) {
         if (key in this.parameters) {
@@ -1004,7 +1012,9 @@ export class AIRewardsService {
               }
               break;
             case 'motivationStyle':
-              if (['neutral', 'positive', 'competitive', 'achievement'].includes(value)) {
+              if (
+                ['neutral', 'positive', 'competitive', 'achievement'].includes(value)
+              ) {
                 this.parameters.motivationStyle = value;
               }
               break;
@@ -1032,11 +1042,17 @@ export class AIRewardsService {
                     validWeights[category] = weight;
                   }
                 }
-                this.parameters.categoryWeights = { ...this.parameters.categoryWeights, ...validWeights };
+                this.parameters.categoryWeights = {
+                  ...this.parameters.categoryWeights,
+                  ...validWeights,
+                };
               }
               break;
             default:
-              if (typeof this.parameters[key] === 'boolean' && typeof value === 'boolean') {
+              if (
+                typeof this.parameters[key] === 'boolean' &&
+                typeof value === 'boolean'
+              ) {
                 this.parameters[key] = value;
               } else if (typeof this.parameters[key] === typeof value) {
                 this.parameters[key] = value;
@@ -1072,7 +1088,7 @@ export class AIRewardsService {
         achievement: 1.2,
         explorer: 0.9,
         social: 0.8,
-        milestone: 1.5
+        milestone: 1.5,
       },
       behaviorReinforcement: 0.7,
       noveltyBonus: 0.3,
@@ -1083,14 +1099,14 @@ export class AIRewardsService {
       seasonalEvents: true,
       communityRewards: false,
       premiumRewards: true,
-      analyticsTracking: true
+      analyticsTracking: true,
     };
   }
 
   /**
    * Get reward system parameter metadata for UI configuration
    */
-  getConfigurationMetadata(): Record<string, any> {
+  getConfigurationMetadata(): Record<string, unknown> {
     return {
       gamificationIntensity: {
         type: 'slider',
@@ -1098,13 +1114,13 @@ export class AIRewardsService {
         max: 100,
         step: 5,
         description: 'Overall intensity of gamification features',
-        impact: 'engagement'
+        impact: 'engagement',
       },
       rewardFrequency: {
         type: 'select',
         options: ['minimal', 'balanced', 'frequent', 'abundant'],
         description: 'How often rewards are given',
-        impact: 'motivation'
+        impact: 'motivation',
       },
       personalizationLevel: {
         type: 'slider',
@@ -1112,23 +1128,23 @@ export class AIRewardsService {
         max: 1,
         step: 0.1,
         description: 'Level of reward personalization',
-        impact: 'relevance'
+        impact: 'relevance',
       },
       motivationStyle: {
         type: 'select',
         options: ['neutral', 'positive', 'competitive', 'achievement'],
         description: 'Style of motivational rewards',
-        impact: 'user_psychology'
+        impact: 'user_psychology',
       },
       difficultyAdaptation: {
         type: 'boolean',
         description: 'Automatically adjust reward difficulty',
-        impact: 'engagement'
+        impact: 'engagement',
       },
       socialFeatures: {
         type: 'boolean',
         description: 'Enable social comparison and sharing',
-        impact: 'social_engagement'
+        impact: 'social_engagement',
       },
       streakMultiplier: {
         type: 'slider',
@@ -1136,19 +1152,19 @@ export class AIRewardsService {
         max: 3.0,
         step: 0.1,
         description: 'Multiplier for streak-based rewards',
-        impact: 'consistency'
+        impact: 'consistency',
       },
       achievementThreshold: {
         type: 'select',
         options: ['easy', 'moderate', 'challenging', 'adaptive'],
         description: 'Difficulty level for achievement unlocks',
-        impact: 'achievement_rate'
+        impact: 'achievement_rate',
       },
       pointInflation: {
         type: 'select',
         options: ['none', 'controlled', 'moderate', 'dynamic'],
         description: 'Strategy for managing point value over time',
-        impact: 'long_term_engagement'
+        impact: 'long_term_engagement',
       },
       behaviorReinforcement: {
         type: 'slider',
@@ -1156,7 +1172,7 @@ export class AIRewardsService {
         max: 1,
         step: 0.1,
         description: 'Strength of behavior reinforcement',
-        impact: 'habit_formation'
+        impact: 'habit_formation',
       },
       noveltyBonus: {
         type: 'slider',
@@ -1164,12 +1180,12 @@ export class AIRewardsService {
         max: 1,
         step: 0.05,
         description: 'Bonus for trying new behaviors',
-        impact: 'exploration'
+        impact: 'exploration',
       },
       longTermMotivation: {
         type: 'boolean',
         description: 'Focus on long-term vs immediate rewards',
-        impact: 'sustainability'
+        impact: 'sustainability',
       },
       instantGratification: {
         type: 'slider',
@@ -1177,38 +1193,38 @@ export class AIRewardsService {
         max: 1,
         step: 0.1,
         description: 'Balance of instant vs delayed rewards',
-        impact: 'satisfaction'
+        impact: 'satisfaction',
       },
       progressTransparency: {
         type: 'boolean',
         description: 'Show detailed progress toward rewards',
-        impact: 'clarity'
+        impact: 'clarity',
       },
       customGoals: {
         type: 'boolean',
         description: 'Allow users to set custom reward goals',
-        impact: 'personalization'
+        impact: 'personalization',
       },
       seasonalEvents: {
         type: 'boolean',
         description: 'Enable seasonal and special event rewards',
-        impact: 'variety'
+        impact: 'variety',
       },
       communityRewards: {
         type: 'boolean',
         description: 'Enable community-based rewards',
-        impact: 'social_engagement'
+        impact: 'social_engagement',
       },
       premiumRewards: {
         type: 'boolean',
         description: 'Include premium-tier rewards',
-        impact: 'monetization'
+        impact: 'monetization',
       },
       analyticsTracking: {
         type: 'boolean',
         description: 'Track detailed reward analytics',
-        impact: 'optimization'
-      }
+        impact: 'optimization',
+      },
     };
   }
 }

@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import {
-import { AlertTriangle } from 'lucide-react'; // auto: restored by scout - verify
+  AlertTriangle,
   Bell,
   BellOff,
   Settings,
@@ -51,14 +51,14 @@ export const PushNotificationSettingsComponent: React.FC<
   );
 
   const handleSettingChange = useCallback(
-    async (key: keyof PushNotificationSettings, value: any) => {
+    async (key: keyof PushNotificationSettings, value: unknown) => {
       await updateSettings({ [key]: value });
     },
     [updateSettings]
   );
 
   const handleQuietHoursChange = useCallback(
-    async (field: 'enabled' | 'start' | 'end', value: any) => {
+    async (field: 'enabled' | 'start' | 'end', value: unknown) => {
       const quietHours = { ...status.settings.quietHours, [field]: value };
       await updateSettings({ quietHours });
     },

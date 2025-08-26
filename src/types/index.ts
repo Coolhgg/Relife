@@ -1,35 +1,20 @@
-// auto: restored by scout - verify import path
-import { HttpError } from '@/types';
-// auto: restored by scout - verify import path
-import { PaginatedResponse } from '@/types';
-// auto: restored by scout - verify import path
-import { HttpClient } from '@/types';
-// auto: restored by scout - verify import path
-import { ApiError } from '@/types';
-// auto: restored by scout - verify import path
-import { ApiResponse } from '@/types';
-// auto: restored by scout - verify import path
-import { WebhookPayload } from '@/types';
-// auto: restored by scout - verify import path
-import { PaginationParams } from '@/types';
-// auto: restored by scout - verify import path
-import { ApiResponse } from '@/types';
-// auto: restored by scout - verify import path
-import { HttpClient } from '@/types';
-// auto: restored by scout - verify import path
-import { HttpError } from '@/types';
-// auto: restored by scout - verify import path
-import { ApiError } from '@/types';
-// auto: restored by scout - verify import path
-import { PaginationParams } from '@/types';
-// auto: restored by scout - verify import path
-import { PaginatedResponse } from '@/types';
-// auto: restored by scout - verify import path
-import { WebhookPayload } from '@/types';
 /**
- * Centralized exports for all API and service interfaces
- * This file provides a single entry point for all TypeScript interfaces
+ * Centralized exports for all TypeScript interfaces
+ * This file provides a single entry point for all types used in the Relife application
  */
+
+// Core domain types
+export * from './domain';
+
+// App state management
+export * from './app-state';
+export * from './app-state-extensions';
+
+// User types
+export * from './user';
+
+// Email campaign and persona types
+export * from './email-campaigns';
 
 // Core API interfaces
 export * from './api';
@@ -48,23 +33,25 @@ export * from './alarm-scheduling';
 // Reward system interfaces
 export * from './reward-system';
 
-// Domain-specific state interfaces
-export * from './app-state';
-
 // API response interfaces
 export * from './api-responses';
 
 // Configuration interfaces
 export * from './configuration-interfaces';
 
-// Domain-specific state interfaces
-export * from './app-state';
+// Service Interface Exports
+export * from './service-interfaces';
+export * from './domain-service-interfaces';
 
-// API response interfaces
-export * from './api-responses';
-
-// Configuration interfaces
-export * from './configuration-interfaces';
+// Additional commonly used type definitions
+export type DayOfWeek = 
+  | 'sunday'
+  | 'monday' 
+  | 'tuesday'
+  | 'wednesday'
+  | 'thursday'
+  | 'friday'
+  | 'saturday';
 
 // Re-export commonly used interfaces with descriptive names
 export type {
@@ -240,6 +227,9 @@ export interface HealthCheckResponse {
   timestamp: string;
   version: string;
 }
+// Common type definitions for reducing any usage
+export * from './common-types';
+
 // Service Interface Exports
 export * from './service-interfaces';
 export * from './domain-service-interfaces';

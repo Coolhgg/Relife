@@ -12,7 +12,7 @@ interface PerformanceMetric {
   name: string;
   value: number;
   timestamp: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 interface WebVitalsMetrics {
@@ -28,7 +28,7 @@ interface UserInteraction {
   target: string;
   timestamp: number;
   duration?: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 interface PerformanceReport {
@@ -117,7 +117,7 @@ export class PerformanceMonitor {
       try {
         const fidObserver = new PerformanceObserver(list => {
           const entries = list.getEntries();
-          entries.forEach((entry: any) => {
+          entries.forEach((entry: unknown) => {
             this.webVitals.FID = entry.processingStart - entry.startTime;
             this.trackCustomMetric('FID', this.webVitals.FID);
           });
@@ -133,7 +133,7 @@ export class PerformanceMonitor {
         let clsValue = 0;
         const clsObserver = new PerformanceObserver(list => {
           const entries = list.getEntries();
-          entries.forEach((entry: any) => {
+          entries.forEach((entry: unknown) => {
             if (!entry.hadRecentInput) {
               clsValue += entry.value;
               this.webVitals.CLS = clsValue;
@@ -151,7 +151,7 @@ export class PerformanceMonitor {
     // First Contentful Paint (FCP) and Time to First Byte (TTFB)
     if (performance.getEntriesByType) {
       const observer = new PerformanceObserver(list => {
-        list.getEntries().forEach((entry: any) => {
+        list.getEntries().forEach((entry: unknown) => {
           if (entry.name === 'first-contentful-paint') {
             this.webVitals.FCP = entry.startTime;
             this.trackCustomMetric('FCP', entry.startTime);
@@ -263,7 +263,7 @@ export class PerformanceMonitor {
   private setupMemoryTracking(): void {
     if ('memory' in performance) {
       const trackMemory = () => {
-        const memory = (performance as any).memory;
+        const memory = (performance as unknown).memory;
         this.trackCustomMetric('memory_used', memory.usedJSHeapSize, {
           total: memory.totalJSHeapSize,
           limit: memory.jsHeapSizeLimit,
@@ -298,7 +298,7 @@ export class PerformanceMonitor {
   trackUserInteraction(
     type: UserInteraction['type'],
     target: string,
-    metadata?: Record<string, any>,
+    metadata?: Record<string, unknown>,
     duration?: number
   ): void {
     const interaction: UserInteraction = {
@@ -320,7 +320,7 @@ export class PerformanceMonitor {
   }
 
   // Enhanced custom metric tracking with aggregation and real-time alerts
-  trackCustomMetric(name: string, value: number, metadata?: Record<string, any>): void {
+  trackCustomMetric(name: string, value: number, metadata?: Record<string, unknown>): void {
     const metric: PerformanceMetric = {
       name,
       value,
@@ -353,7 +353,7 @@ export class PerformanceMonitor {
   private checkPerformanceThresholds(
     name: string,
     value: number,
-    metadata?: Record<string, any>
+    metadata?: Record<string, unknown>
   ): void {
     const thresholds = {
       LCP: 2500, // Largest Contentful Paint should be < 2.5s
@@ -394,7 +394,7 @@ export class PerformanceMonitor {
   trackAlarmAction(
     action: 'create' | 'edit' | 'delete' | 'toggle' | 'trigger' | 'dismiss' | 'snooze',
     duration?: number,
-    metadata?: Record<string, any>
+    metadata?: Record<string, unknown>
   ): void {
     this.trackUserInteraction(
       'alarm_action',
@@ -443,8 +443,8 @@ export class PerformanceMonitor {
         width: window.innerWidth,
         height: window.innerHeight,
       },
-      connection: (navigator as any).connection?.effectiveType || 'unknown',
-      memory: (navigator as any).deviceMemory || 'unknown',
+      connection: (navigator as unknown).connection?.effectiveType || 'unknown',
+      memory: (navigator as unknown).deviceMemory || 'unknown',
     };
   }
 

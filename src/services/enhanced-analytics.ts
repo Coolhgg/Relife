@@ -8,8 +8,8 @@ import { config as envConfig, isEnvironment } from '../config/environment';
 import { BaseService } from './base/BaseService';
 import { CacheProvider, getCacheManager } from './base/CacheManager';
 // NavigationTiming is a native Web API type - available globally
-import {
 import AnalyticsService from './analytics';
+import {
   AnalyticsServiceInterface,
   ServiceConfig,
   ServiceHealth,
@@ -48,7 +48,7 @@ export interface UserProperties {
   isSubscribed?: boolean;
   deviceType?: string;
   preferredWakeTime?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface EventProperties {
@@ -61,7 +61,7 @@ export interface EventProperties {
   sessionId?: string;
   performanceMetrics?: PerformanceMetrics;
   userJourney?: UserJourneyStep[];
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface AnalyticsEvent {
@@ -100,9 +100,9 @@ export interface UserJourneyStep {
 
 export interface AnalyticsServiceDependencies {
   performanceMonitor?: PerformanceTracker;
-  errorHandler?: any;
-  offlineManager?: any;
-  securityService?: any;
+  errorHandler?: unknown;
+  offlineManager?: unknown;
+  securityService?: unknown;
 }
 
 // Analytics events constants
@@ -350,7 +350,7 @@ export class EnhancedAnalyticsService
 
   public async identify(
     userId: string,
-    traits: Record<string, any> = {}
+    traits: Record<string, unknown> = {}
   ): Promise<void> {
     const timerId = this.startTimer('identify');
 
@@ -611,7 +611,7 @@ export class EnhancedAnalyticsService
     // Monitor FID (First Input Delay)
     new PerformanceObserver(entryList => {
       const entries = entryList.getEntries();
-      entries.forEach((entry: any) => {
+      entries.forEach((entry: unknown) => {
         this.trackWebVitals({ fid: entry.processingStart - entry.startTime });
       });
     }).observe({ entryTypes: ['first-input'] });
@@ -619,7 +619,7 @@ export class EnhancedAnalyticsService
     // Monitor CLS (Cumulative Layout Shift)
     new PerformanceObserver(entryList => {
       let cls = 0;
-      entryList.getEntries().forEach((entry: any) => {
+      entryList.getEntries().forEach((entry: unknown) => {
         if (!entry.hadRecentInput) {
           cls += entry.value;
         }
@@ -713,7 +713,7 @@ export class EnhancedAnalyticsService
 
       // Memory usage (if available)
       if ('memory' in window.performance) {
-        const memory = (window.performance as any).memory;
+        const memory = (window.performance as unknown).memory;
         metrics.memoryUsage = memory.usedJSHeapSize;
       }
     }
@@ -721,7 +721,7 @@ export class EnhancedAnalyticsService
     return metrics;
   }
 
-  private getContextualProperties(): Record<string, any> {
+  private getContextualProperties(): Record<string, unknown> {
     return {
       user_agent: navigator.userAgent,
       screen_resolution: `${window.screen.width}x${window.screen.height}`,
@@ -746,7 +746,7 @@ export class EnhancedAnalyticsService
     return 'desktop';
   }
 
-  private getSystemProperties(): Record<string, any> {
+  private getSystemProperties(): Record<string, unknown> {
     return {
       platform: navigator.platform,
       cookies_enabled: navigator.cookieEnabled,
@@ -757,7 +757,7 @@ export class EnhancedAnalyticsService
 
   private getConnectionType(): string {
     if ('connection' in navigator) {
-      const connection = (navigator as any).connection;
+      const connection = (navigator as unknown).connection;
       return connection?.effectiveType || 'unknown';
     }
     return 'unknown';

@@ -1,10 +1,8 @@
 /// <reference lib="dom" />
 import React, { useState, useRef } from 'react';
+import path from 'path';
+import { Textarea } from '../ui/textarea';
 import {
-// auto: restored by scout - verify import path
-import { Textarea } from '@/components/ui/textarea';
-// auto: restored by scout - verify import path
-import { Textarea } from '@/components/ui/textarea';
   Dialog,
   DialogContent,
   DialogHeader,
@@ -13,7 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { Progress } from '../ui/textarea';
+import { Progress } from '../ui/progress';
 import { Label } from '../ui/label';
 import { Badge } from '../ui/badge';
 import { Card, CardContent } from '../ui/card';

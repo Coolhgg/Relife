@@ -1,10 +1,12 @@
 # Mobile Storage Integration Guide
 
-This guide shows how to integrate your existing IndexedDB storage system with your Capacitor mobile app for optimal performance and reliability.
+This guide shows how to integrate your existing IndexedDB storage system with your Capacitor mobile
+app for optimal performance and reliability.
 
 ## Overview
 
 Your project already includes:
+
 - ✅ **IndexedDB with type safety** using the `idb` package
 - ✅ **Unified Storage Service** that handles IndexedDB/localStorage fallback
 - ✅ **Mobile Storage Service** with Capacitor integration
@@ -32,7 +34,7 @@ async function initializeApp() {
       compressionEnabled: true,
       batchSize: 50,
     });
-    
+
     console.log('Mobile storage initialized successfully');
   } catch (error) {
     console.error('Failed to initialize mobile storage:', error);
@@ -100,12 +102,12 @@ import { Network } from '@capacitor/network';
 // Check network status before sync operations
 async function performSyncWithNetworkCheck() {
   const status = await Network.getStatus();
-  
+
   if (status.connected) {
     // Perform sync operations
     const pendingChanges = await storage.getPendingChanges();
     console.log(`Syncing ${pendingChanges.length} changes`);
-    
+
     // Your sync logic here
     await performServerSync(pendingChanges);
   } else {
@@ -123,7 +125,7 @@ const mobileInfo = await mobileStorage.getMobileStorageInfo();
 if (mobileInfo.deviceCapabilities?.memoryWarning) {
   // Reduce cache usage
   await storage.clearCache(['temp', 'images']);
-  
+
   // Use smaller batch sizes
   mobileStorage.updateConfig({
     batchSize: 10,
@@ -145,7 +147,7 @@ import { Preferences } from '@capacitor/preferences';
 // Save critical app state to native storage
 async function backupCriticalData() {
   const enabledAlarms = await storage.getEnabledAlarms();
-  
+
   await Preferences.set({
     key: 'critical-alarms-backup',
     value: JSON.stringify({
@@ -195,16 +197,16 @@ async function loadAppSettings() {
 // Save multiple alarms efficiently
 async function saveMultipleAlarms(alarms: Alarm[]) {
   const batchSize = 20; // Mobile-optimized batch size
-  
+
   for (let i = 0; i < alarms.length; i += batchSize) {
     const batch = alarms.slice(i, i + batchSize);
-    
+
     // Save batch with delay to prevent blocking UI
-    await Promise.all(batch.map(alarm => storage.saveAlarm(alarm)));
-    
+    await Promise.all(batch.map((alarm) => storage.saveAlarm(alarm)));
+
     // Small delay between batches
     if (i + batchSize < alarms.length) {
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
     }
   }
 }
@@ -220,14 +222,14 @@ async function cacheWithMobileOptimization<T>(
   priority: 'high' | 'medium' | 'low' = 'medium'
 ) {
   const mobileInfo = await mobileStorage.getMobileStorageInfo();
-  
+
   // Adjust TTL based on memory constraints
   let ttl = 60 * 60 * 1000; // 1 hour default
-  
+
   if (mobileInfo.deviceCapabilities?.memoryWarning) {
     ttl = priority === 'high' ? 30 * 60 * 1000 : 10 * 60 * 1000; // Shorter TTL
   }
-  
+
   const tags = [`priority-${priority}`, 'mobile-cache'];
   await storage.setCache(key, data, ttl, tags);
 }
@@ -241,19 +243,19 @@ async function cacheWithMobileOptimization<T>(
 // Regular storage health checks
 async function performStorageHealthCheck() {
   const health = await storage.checkStorageHealth();
-  
+
   if (!health.isHealthy) {
     console.warn('Storage health issues:', health.issues);
-    
+
     // Automatic recovery
     if (health.issues.includes('High number of conflicts')) {
       await storage.clearPendingChanges();
     }
-    
+
     if (health.recommendations.includes('Consider clearing cache')) {
       await storage.clearCache(['temp', 'preview']);
     }
-    
+
     // Notify user if manual intervention needed
     if (health.issues.length > 2) {
       showStorageHealthWarning(health);
@@ -277,14 +279,14 @@ async function getAlarmWithFallback(id: string): Promise<Alarm | null> {
     return await storage.getAlarm(id);
   } catch (indexedDBError) {
     console.warn('IndexedDB failed, trying native storage:', indexedDBError);
-    
+
     try {
       // Try native storage backup
       const criticalAlarms = await mobileStorage.getCriticalAlarmsFromNative();
-      return criticalAlarms.find(alarm => alarm.id === id) || null;
+      return criticalAlarms.find((alarm) => alarm.id === id) || null;
     } catch (nativeError) {
       console.error('All storage methods failed:', nativeError);
-      
+
       // Last resort: check localStorage
       const legacyData = localStorage.getItem(`alarm-${id}`);
       if (legacyData) {
@@ -294,7 +296,7 @@ async function getAlarmWithFallback(id: string): Promise<Alarm | null> {
           return null;
         }
       }
-      
+
       return null;
     }
   }
@@ -313,7 +315,7 @@ import { MobileStorageService } from '../services/mobile-storage';
 export function MobileStorageStatus() {
   const [storageInfo, setStorageInfo] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   useEffect(() => {
     async function loadStorageInfo() {
       try {
@@ -326,12 +328,12 @@ export function MobileStorageStatus() {
         setIsLoading(false);
       }
     }
-    
+
     loadStorageInfo();
   }, []);
-  
+
   if (isLoading) return <div>Loading storage info...</div>;
-  
+
   return (
     <div className="mobile-storage-status">
       <h3>Storage Status</h3>
@@ -341,13 +343,13 @@ export function MobileStorageStatus() {
         <p>Total Alarms: {storageInfo?.storageStats?.alarms}</p>
         <p>Native Backup: {storageInfo?.criticalAlarmsCount} alarms</p>
         <p>Network: {storageInfo?.networkStatus?.connected ? 'Online' : 'Offline'}</p>
-        
+
         {storageInfo?.deviceCapabilities?.memoryWarning && (
           <div className="memory-warning">
             ⚠️ Low memory detected - cache optimization active
           </div>
         )}
-        
+
         {!storageInfo?.storageStats?.isHealthy && (
           <div className="health-warning">
             ⚠️ Storage health issues detected
@@ -369,48 +371,48 @@ import { MobileStorageService } from '../services/mobile-storage';
 export function MobileStorageSettings() {
   const mobileStorage = MobileStorageService.getInstance();
   const config = mobileStorage.getConfig();
-  
+
   const handleConfigUpdate = (updates: any) => {
     mobileStorage.updateConfig(updates);
   };
-  
+
   return (
     <div className="mobile-storage-settings">
       <h3>Mobile Storage Settings</h3>
-      
+
       <label>
         <input
           type="checkbox"
           checked={config.enableNativePreferences}
-          onChange={(e) => handleConfigUpdate({ 
-            enableNativePreferences: e.target.checked 
+          onChange={(e) => handleConfigUpdate({
+            enableNativePreferences: e.target.checked
           })}
         />
         Enable native storage backup
       </label>
-      
+
       <label>
         <input
           type="checkbox"
           checked={config.syncOnResume}
-          onChange={(e) => handleConfigUpdate({ 
-            syncOnResume: e.target.checked 
+          onChange={(e) => handleConfigUpdate({
+            syncOnResume: e.target.checked
           })}
         />
         Sync on app resume
       </label>
-      
+
       <label>
         <input
           type="checkbox"
           checked={config.compressionEnabled}
-          onChange={(e) => handleConfigUpdate({ 
-            compressionEnabled: e.target.checked 
+          onChange={(e) => handleConfigUpdate({
+            compressionEnabled: e.target.checked
           })}
         />
         Enable data compression
       </label>
-      
+
       <label>
         Batch size:
         <input
@@ -418,8 +420,8 @@ export function MobileStorageSettings() {
           min="10"
           max="100"
           value={config.batchSize}
-          onChange={(e) => handleConfigUpdate({ 
-            batchSize: parseInt(e.target.value) 
+          onChange={(e) => handleConfigUpdate({
+            batchSize: parseInt(e.target.value)
           })}
         />
         {config.batchSize}
@@ -454,21 +456,21 @@ vi.mock('@capacitor/preferences', () => ({
 
 describe('MobileStorageService', () => {
   let mobileStorage: MobileStorageService;
-  
+
   beforeEach(() => {
     mobileStorage = MobileStorageService.getInstance();
   });
-  
+
   it('should initialize mobile storage', async () => {
     await mobileStorage.initializeMobile({
       enableNativePreferences: true,
       syncOnResume: true,
     });
-    
+
     const info = await mobileStorage.getMobileStorageInfo();
     expect(info.nativeStorageAvailable).toBe(true);
   });
-  
+
   it('should save alarms with native backup', async () => {
     const alarm = {
       id: 'test-alarm',
@@ -479,9 +481,9 @@ describe('MobileStorageService', () => {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    
+
     await mobileStorage.saveAlarmOptimized(alarm);
-    
+
     // Verify native backup was created
     const criticalAlarms = await mobileStorage.getCriticalAlarmsFromNative();
     expect(criticalAlarms).toContainEqual(alarm);
@@ -501,11 +503,11 @@ describe('Mobile Storage Integration', () => {
   it('should handle storage fallbacks correctly', async () => {
     const mobileStorage = MobileStorageService.getInstance();
     const unifiedStorage = UnifiedStorageService.getInstance();
-    
+
     // Initialize both services
     await mobileStorage.initializeMobile();
     await unifiedStorage.initialize();
-    
+
     // Test alarm with fallback
     const testAlarm = {
       id: 'integration-test',
@@ -516,13 +518,13 @@ describe('Mobile Storage Integration', () => {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    
+
     // Save alarm
     await mobileStorage.saveAlarmOptimized(testAlarm);
-    
+
     // Retrieve with fallback
     const alarms = await mobileStorage.getEnabledAlarmsWithFallback();
-    
+
     expect(alarms).toContainEqual(testAlarm);
   });
 });
@@ -536,34 +538,34 @@ If you're migrating existing web storage to mobile:
 // Migration helper
 async function migrateToMobileStorage() {
   console.log('Starting migration to mobile storage...');
-  
+
   const unifiedStorage = UnifiedStorageService.getInstance();
   const mobileStorage = MobileStorageService.getInstance();
-  
+
   // Initialize mobile storage
   await mobileStorage.initializeMobile();
-  
+
   // Check if migration is needed
   const migrationStatus = await unifiedStorage.getMigrationStatus();
-  
+
   if (migrationStatus.isRequired) {
     console.log('Performing storage migration...');
-    
+
     const result = await unifiedStorage.performMigration({
       createBackup: true,
       clearLegacyData: false, // Keep legacy as fallback initially
     });
-    
+
     if (result.success) {
       console.log('Migration completed successfully');
-      
+
       // Sync critical data to native storage
       await mobileStorage.syncCriticalDataToNative();
     } else {
       console.error('Migration failed:', result.errors);
     }
   }
-  
+
   console.log('Mobile storage migration complete');
 }
 ```
@@ -583,7 +585,8 @@ async function migrateToMobileStorage() {
 
 ### Common Issues
 
-1. **IndexedDB not available**: The mobile storage service automatically falls back to localStorage and native storage
+1. **IndexedDB not available**: The mobile storage service automatically falls back to localStorage
+   and native storage
 2. **Memory warnings**: Reduce cache size and batch operations
 3. **Storage quota exceeded**: Clear old cache and implement data archival
 4. **Sync failures**: Check network connectivity and retry logic
@@ -595,14 +598,14 @@ async function migrateToMobileStorage() {
 async function getDebugInfo() {
   const mobileStorage = MobileStorageService.getInstance();
   const unifiedStorage = UnifiedStorageService.getInstance();
-  
+
   const info = {
     mobile: await mobileStorage.getMobileStorageInfo(),
     stats: await unifiedStorage.getStorageStats(),
     health: await unifiedStorage.checkStorageHealth(),
     config: mobileStorage.getConfig(),
   };
-  
+
   console.log('Debug Info:', JSON.stringify(info, null, 2));
   return info;
 }
@@ -616,4 +619,5 @@ async function getDebugInfo() {
 4. **Test on real devices** with different memory and network conditions
 5. **Monitor performance** and adjust configuration as needed
 
-Your mobile storage integration is now ready for production use with excellent type safety, performance optimizations, and reliability features!
+Your mobile storage integration is now ready for production use with excellent type safety,
+performance optimizations, and reliability features!

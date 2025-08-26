@@ -3,17 +3,22 @@
 
 import express from 'express';
 import cors from 'cors';
-import { createExpressWebhookHandler, handleHealthCheck } from './src/backend/webhook-endpoint.js';
+import {
+  createExpressWebhookHandler,
+  handleHealthCheck,
+} from './src/backend/webhook-endpoint.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 // CORS configuration
-app.use(cors({
-  origin: process.env.FRONTEND_URL || '*',
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type', 'stripe-signature'],
-}));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || '*',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'stripe-signature'],
+  })
+);
 
 // Health check endpoint
 app.get('/health', async (req, res) => {
@@ -31,10 +36,13 @@ app.get('/health', async (req, res) => {
 });
 
 // Raw body parser for Stripe webhooks (must be before JSON parser)
-app.use('/api/stripe/webhooks', express.raw({ 
-  type: 'application/json',
-  limit: '1mb'
-}));
+app.use(
+  '/api/stripe/webhooks',
+  express.raw({
+    type: 'application/json',
+    limit: '1mb',
+  })
+);
 
 // Stripe webhook endpoint
 app.post('/api/stripe/webhooks', createExpressWebhookHandler());
@@ -50,8 +58,8 @@ app.get('/', (req, res) => {
     timestamp: new Date().toISOString(),
     endpoints: {
       webhooks: '/api/stripe/webhooks',
-      health: '/health'
-    }
+      health: '/health',
+    },
   });
 });
 
@@ -59,7 +67,7 @@ app.get('/', (req, res) => {
 app.use('*', (req, res) => {
   res.status(404).json({
     error: 'Endpoint not found',
-    message: `${req.method} ${req.originalUrl} is not a valid endpoint`
+    message: `${req.method} ${req.originalUrl} is not a valid endpoint`,
   });
 });
 
@@ -68,7 +76,7 @@ app.use((error, req, res, next) => {
   console.error('Server error:', error);
   res.status(500).json({
     error: 'Internal server error',
-    message: error.message
+    message: error.message,
   });
 });
 

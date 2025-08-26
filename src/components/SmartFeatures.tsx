@@ -760,7 +760,7 @@ export function SmartFeatures({
                 <Switch
                   id="weather-enabled"
                   checked={settings.weatherEnabled}
-                  onCheckedChange={(checked: any) =>
+                  onCheckedChange={(checked: unknown) =>
                     handleSettingChange('weatherEnabled', checked)
                   }
                 />
@@ -776,7 +776,7 @@ export function SmartFeatures({
                 <Switch
                   id="location-enabled"
                   checked={settings.locationEnabled}
-                  onCheckedChange={(checked: any) =>
+                  onCheckedChange={(checked: unknown) =>
                     handleSettingChange('locationEnabled', checked)
                   }
                 />
@@ -792,7 +792,7 @@ export function SmartFeatures({
                 <Switch
                   id="fitness-enabled"
                   checked={settings.fitnessEnabled}
-                  onCheckedChange={(checked: any) =>
+                  onCheckedChange={(checked: unknown) =>
                     handleSettingChange('fitnessEnabled', checked)
                   }
                 />
@@ -808,7 +808,7 @@ export function SmartFeatures({
                 <Switch
                   id="adaptive-difficulty"
                   checked={settings.adaptiveDifficulty}
-                  onCheckedChange={(checked: any) =>
+                  onCheckedChange={(checked: unknown) =>
                     handleSettingChange('adaptiveDifficulty', checked)
                   }
                 />
@@ -823,7 +823,7 @@ export function SmartFeatures({
                   id="smart-wake-window"
                   type="number"
                   value={settings.smartWakeWindow}
-                  onChange={(e: any) =>
+                  onChange={(e: unknown) =>
                     handleSettingChange(
                       'smartWakeWindow',
                       parseInt(e.target.value) || 30

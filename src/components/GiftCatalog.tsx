@@ -20,7 +20,12 @@ import {
   Filter,
   RefreshCw,
 } from 'lucide-react';
-import type { GiftCatalog, UserGiftInventory, GiftType, UserRewardAnalytics } from '../types/reward-system';
+import type {
+  GiftCatalog,
+  UserGiftInventory,
+  GiftType,
+  UserRewardAnalytics,
+} from '../types/reward-system';
 import { rewardService } from '../services/reward-service';
 
 interface GiftCatalogProps {
@@ -74,17 +79,16 @@ const GiftCatalog: React.FC<GiftCatalogProps> = ({
   const handleRefresh = async () => {
     setIsRefreshing(true);
     try {
-      await Promise.all([
-        loadGifts(),
-        loadUserInventory(),
-        onRefresh(),
-      ]);
+      await Promise.all([loadGifts(), loadUserInventory(), onRefresh()]);
     } finally {
       setIsRefreshing(false);
     }
   };
 
-  const handlePurchase = async (gift: GiftCatalog, paymentMethod: 'points' | 'premium') => {
+  const handlePurchase = async (
+    gift: GiftCatalog,
+    paymentMethod: 'points' | 'premium'
+  ) => {
     if (purchaseLoading === gift.id) return;
 
     setPurchaseLoading(gift.id);
@@ -156,7 +160,7 @@ const GiftCatalog: React.FC<GiftCatalogProps> = ({
 
   const getRarityBadge = (rarity?: string) => {
     if (!rarity) return null;
-    
+
     const rarityColors = {
       common: 'text-gray-600 bg-gray-100',
       rare: 'text-blue-600 bg-blue-100',
@@ -165,7 +169,9 @@ const GiftCatalog: React.FC<GiftCatalogProps> = ({
     };
 
     return (
-      <span className={`px-2 py-1 text-xs rounded-full ${rarityColors[rarity as keyof typeof rarityColors] || rarityColors.common}`}>
+      <span
+        className={`px-2 py-1 text-xs rounded-full ${rarityColors[rarity as keyof typeof rarityColors] || rarityColors.common}`}
+      >
         {rarity.toUpperCase()}
       </span>
     );
@@ -184,15 +190,17 @@ const GiftCatalog: React.FC<GiftCatalogProps> = ({
   };
 
   const filteredGifts = gifts.filter(gift => {
-    const matchesCategory = selectedCategory === 'all' || gift.type === selectedCategory;
-    const matchesSearch = searchQuery === '' || 
+    const matchesCategory =
+      selectedCategory === 'all' || gift.type === selectedCategory;
+    const matchesSearch =
+      searchQuery === '' ||
       gift.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       gift.description.toLowerCase().includes(searchQuery.toLowerCase());
-    
+
     return matchesCategory && matchesSearch;
   });
 
-  const giftCategories: { id: GiftType | 'all'; label: string; icon: any }[] = [
+  const giftCategories: { id: GiftType | 'all'; label: string; icon: unknown }[] = [
     { id: 'all', label: 'All Items', icon: Package },
     { id: 'theme', label: 'Themes', icon: Palette },
     { id: 'sound_pack', label: 'Sounds', icon: Music },
@@ -255,7 +263,7 @@ const GiftCatalog: React.FC<GiftCatalogProps> = ({
             type="text"
             placeholder="Search gifts..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={e => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
@@ -264,7 +272,7 @@ const GiftCatalog: React.FC<GiftCatalogProps> = ({
           {giftCategories.map(category => {
             const Icon = category.icon;
             const isSelected = selectedCategory === category.id;
-            
+
             return (
               <button
                 key={category.id}
@@ -302,7 +310,7 @@ const GiftCatalog: React.FC<GiftCatalogProps> = ({
                 <div className={`p-2 rounded-lg ${getGiftTypeColor(gift.type)}`}>
                   <TypeIcon className="h-5 w-5" />
                 </div>
-                
+
                 <div className="flex flex-col items-end space-y-1">
                   {getRarityBadge(gift.rarity)}
                   {isOwned && (
@@ -316,7 +324,9 @@ const GiftCatalog: React.FC<GiftCatalogProps> = ({
 
               {/* Gift Info */}
               <div className="space-y-2">
-                <h3 className="font-semibold text-gray-900 line-clamp-1">{gift.name}</h3>
+                <h3 className="font-semibold text-gray-900 line-clamp-1">
+                  {gift.name}
+                </h3>
                 <p className="text-sm text-gray-600 line-clamp-2">{gift.description}</p>
 
                 {/* Pricing */}
@@ -325,7 +335,9 @@ const GiftCatalog: React.FC<GiftCatalogProps> = ({
                     {gift.cost_points && gift.cost_points > 0 && (
                       <div className="flex items-center space-x-1">
                         <Coins className="h-4 w-4 text-blue-600" />
-                        <span className={`text-sm font-medium ${canAffordPoints ? 'text-gray-900' : 'text-red-500'}`}>
+                        <span
+                          className={`text-sm font-medium ${canAffordPoints ? 'text-gray-900' : 'text-red-500'}`}
+                        >
                           {gift.cost_points}
                         </span>
                       </div>
@@ -333,7 +345,9 @@ const GiftCatalog: React.FC<GiftCatalogProps> = ({
                     {gift.cost_premium && gift.cost_premium > 0 && (
                       <div className="flex items-center space-x-1">
                         <CreditCard className="h-4 w-4 text-purple-600" />
-                        <span className={`text-sm font-medium ${canAffordPremium ? 'text-gray-900' : 'text-red-500'}`}>
+                        <span
+                          className={`text-sm font-medium ${canAffordPremium ? 'text-gray-900' : 'text-red-500'}`}
+                        >
                           ${gift.cost_premium}
                         </span>
                       </div>
@@ -373,24 +387,42 @@ const GiftCatalog: React.FC<GiftCatalogProps> = ({
               {/* Header */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center space-x-3">
-                  <div className={`p-3 rounded-lg ${getGiftTypeColor(selectedGift.type)}`}>
-                    {React.createElement(getGiftTypeIcon(selectedGift.type), { className: 'h-6 w-6' })}
+                  <div
+                    className={`p-3 rounded-lg ${getGiftTypeColor(selectedGift.type)}`}
+                  >
+                    {React.createElement(getGiftTypeIcon(selectedGift.type), {
+                      className: 'h-6 w-6',
+                    })}
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-gray-900">{selectedGift.name}</h3>
+                    <h3 className="text-xl font-bold text-gray-900">
+                      {selectedGift.name}
+                    </h3>
                     <div className="flex items-center space-x-2 mt-1">
                       {getRarityBadge(selectedGift.rarity)}
-                      <span className="text-sm text-gray-500 capitalize">{selectedGift.type.replace('_', ' ')}</span>
+                      <span className="text-sm text-gray-500 capitalize">
+                        {selectedGift.type.replace('_', ' ')}
+                      </span>
                     </div>
                   </div>
                 </div>
-                
+
                 <button
                   onClick={() => setSelectedGift(null)}
                   className="text-gray-400 hover:text-gray-600 transition-colors"
                 >
-                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               </div>
@@ -408,9 +440,11 @@ const GiftCatalog: React.FC<GiftCatalogProps> = ({
                     {/* Render preview based on gift type */}
                     {selectedGift.type === 'theme' && (
                       <div className="flex space-x-2">
-                        {Object.entries(selectedGift.preview_data as Record<string, string>).map(([color, value]) => (
+                        {Object.entries(
+                          selectedGift.preview_data as Record<string, string>
+                        ).map(([color, value]) => (
                           <div key={color} className="flex flex-col items-center">
-                            <div 
+                            <div
                               className="w-8 h-8 rounded-full border border-gray-300"
                               style={{ backgroundColor: value }}
                             />
@@ -421,12 +455,14 @@ const GiftCatalog: React.FC<GiftCatalogProps> = ({
                     )}
                     {selectedGift.type === 'sound_pack' && (
                       <div className="space-y-1">
-                        {(selectedGift.preview_data as any)?.tracks?.map((track: string, index: number) => (
-                          <div key={index} className="flex items-center space-x-2">
-                            <Music className="h-3 w-3 text-gray-400" />
-                            <span>{track}</span>
-                          </div>
-                        ))}
+                        {(selectedGift.preview_data as unknown)?.tracks?.map(
+                          (track: string, index: number) => (
+                            <div key={index} className="flex items-center space-x-2">
+                              <Music className="h-3 w-3 text-gray-400" />
+                              <span>{track}</span>
+                            </div>
+                          )
+                        )}
                       </div>
                     )}
                   </div>
@@ -434,19 +470,22 @@ const GiftCatalog: React.FC<GiftCatalogProps> = ({
               )}
 
               {/* Requirements */}
-              {selectedGift.requirements && Object.keys(selectedGift.requirements).length > 0 && (
-                <div className="mb-6 p-4 bg-blue-50 rounded-lg">
-                  <h4 className="font-medium text-blue-900 mb-2">Requirements</h4>
-                  <ul className="text-sm text-blue-700 space-y-1">
-                    {Object.entries(selectedGift.requirements).map(([req, value]) => (
-                      <li key={req} className="flex items-center space-x-2">
-                        <Star className="h-3 w-3" />
-                        <span className="capitalize">{req.replace('_', ' ')}: {String(value)}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+              {selectedGift.requirements &&
+                Object.keys(selectedGift.requirements).length > 0 && (
+                  <div className="mb-6 p-4 bg-blue-50 rounded-lg">
+                    <h4 className="font-medium text-blue-900 mb-2">Requirements</h4>
+                    <ul className="text-sm text-blue-700 space-y-1">
+                      {Object.entries(selectedGift.requirements).map(([req, value]) => (
+                        <li key={req} className="flex items-center space-x-2">
+                          <Star className="h-3 w-3" />
+                          <span className="capitalize">
+                            {req.replace('_', ' ')}: {String(value)}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
               {/* Purchase Options */}
               {!isGiftOwned(selectedGift.id) && (
@@ -457,7 +496,8 @@ const GiftCatalog: React.FC<GiftCatalogProps> = ({
                       onClick={() => handlePurchase(selectedGift, 'points')}
                       disabled={!canAffordPoints || purchaseLoading === selectedGift.id}
                       className={`w-full flex items-center justify-center space-x-2 py-3 px-4 rounded-lg font-medium transition-colors ${
-                        canAffordGift(selectedGift, 'points') && purchaseLoading !== selectedGift.id
+                        canAffordGift(selectedGift, 'points') &&
+                        purchaseLoading !== selectedGift.id
                           ? 'bg-blue-600 text-white hover:bg-blue-700'
                           : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                       }`}
@@ -477,9 +517,12 @@ const GiftCatalog: React.FC<GiftCatalogProps> = ({
                   {selectedGift.cost_premium && selectedGift.cost_premium > 0 && (
                     <button
                       onClick={() => handlePurchase(selectedGift, 'premium')}
-                      disabled={!canAffordPremium || purchaseLoading === selectedGift.id}
+                      disabled={
+                        !canAffordPremium || purchaseLoading === selectedGift.id
+                      }
                       className={`w-full flex items-center justify-center space-x-2 py-3 px-4 rounded-lg font-medium transition-colors ${
-                        canAffordGift(selectedGift, 'premium') && purchaseLoading !== selectedGift.id
+                        canAffordGift(selectedGift, 'premium') &&
+                        purchaseLoading !== selectedGift.id
                           ? 'bg-purple-600 text-white hover:bg-purple-700'
                           : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                       }`}
@@ -496,11 +539,15 @@ const GiftCatalog: React.FC<GiftCatalogProps> = ({
                   )}
 
                   {/* Insufficient Funds Message */}
-                  {!canAffordGift(selectedGift, 'points') && selectedGift.cost_points && (
-                    <p className="text-sm text-red-600 text-center">
-                      Need {(selectedGift.cost_points || 0) - (userAnalytics?.total_points || 0)} more points
-                    </p>
-                  )}
+                  {!canAffordGift(selectedGift, 'points') &&
+                    selectedGift.cost_points && (
+                      <p className="text-sm text-red-600 text-center">
+                        Need{' '}
+                        {(selectedGift.cost_points || 0) -
+                          (userAnalytics?.total_points || 0)}{' '}
+                        more points
+                      </p>
+                    )}
                 </div>
               )}
 

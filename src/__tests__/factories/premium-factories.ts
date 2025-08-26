@@ -649,16 +649,16 @@ export const createTestAnalytics = _createTestAnalytics;
 // ===============================
 
 // Placeholder exports to satisfy imports - please refine
-export const _createTestSubscriptionPlan = (_options: any = {}) => {
-  return {} as any;
+export const _createTestSubscriptionPlan = (_options: unknown = {}) => {
+  return {} as unknown;
 };
 
-export const _createTestPaymentMethod = (_options: any = {}) => {
-  return {} as any;
+export const _createTestPaymentMethod = (_options: unknown = {}) => {
+  return {} as unknown;
 };
 
-export const _createTestPricing = (_options: any = {}) => {
-  return {} as any;
+export const _createTestPricing = (_options: unknown = {}) => {
+  return {} as unknown;
 };
 
 // Placeholder exports

@@ -13,7 +13,7 @@ export interface NetworkRequest {
   id: string;
   url: string;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
-  body?: any;
+  body?: unknown;
   headers?: Record<string, string>;
   priority?: 'low' | 'normal' | 'high' | 'critical';
   retries?: number;
@@ -50,7 +50,7 @@ export interface NetworkStats {
 class NetworkOptimizer {
   private requestQueue: Map<string, NetworkRequest[]> = new Map();
   private cache = new Map<string, CacheEntry>();
-  private inFlightRequests = new Map<string, Promise<any>>();
+  private inFlightRequests = new Map<string, Promise<unknown>>();
   private batchTimers = new Map<string, TimeoutHandle>();
   private stats: NetworkStats = {
     requestCount: 0,
@@ -80,7 +80,7 @@ class NetworkOptimizer {
 
     // Monitor connection changes
     if ('connection' in navigator) {
-      const connection = (navigator as any).connection;
+      const connection = (navigator as unknown).connection;
       this.updateConnectionStats(connection);
 
       connection.addEventListener('change', () => {
@@ -102,7 +102,7 @@ class NetworkOptimizer {
   /**
    * Update connection statistics
    */
-  private updateConnectionStats(connection: any) {
+  private updateConnectionStats(connection: unknown) {
     this.stats.connectionType = connection.type || 'unknown';
     this.stats.effectiveType = connection.effectiveType || 'unknown';
     this.stats.downlink = connection.downlink || 0;
@@ -236,7 +236,7 @@ class NetworkOptimizer {
     }
 
     // Return the first result (for single request batches)
-    return queue[0] as any;
+    return queue[0] as unknown;
   }
 
   /**
@@ -307,7 +307,7 @@ class NetworkOptimizer {
         return response.json();
       }
 
-      return response.text() as any;
+      return response.text() as unknown;
     } finally {
       clearTimeout(timeoutId);
     }
@@ -495,8 +495,8 @@ class NetworkOptimizer {
 // Extend NetworkRequest with resolve/reject for batch processing
 declare module './network-optimization' {
   interface NetworkRequest {
-    resolve?: (value: any) => void;
-    reject?: (reason: any) => void;
+    resolve?: (value: unknown) => void;
+    reject?: (reason: unknown) => void;
   }
 }
 

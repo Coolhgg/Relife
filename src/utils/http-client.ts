@@ -3,9 +3,9 @@
  * Provides standardized HTTP operations with error handling, caching, and monitoring
  */
 
-import {
 import { config } from '../config/environment';
 import { ErrorHandler } from '../services/error-handler';
+import {
   HttpClient,
   HttpClientConfig,
   HttpRequestConfig,

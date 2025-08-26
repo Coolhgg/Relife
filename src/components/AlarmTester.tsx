@@ -115,7 +115,7 @@ export function AlarmTester({ onClose, userId = 'demo-_user' }: AlarmTesterProps
           </label>
           <Select
             value={selectedDifficulty}
-            onValueChange={(value: any) =>
+            onValueChange={(value: unknown) =>
               setSelectedDifficulty(value as AlarmDifficulty)
             }
           >

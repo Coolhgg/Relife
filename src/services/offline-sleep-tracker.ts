@@ -71,7 +71,7 @@ interface SleepInsight {
   type: 'pattern' | 'recommendation' | 'achievement' | 'warning';
   title: string;
   description: string;
-  data: Record<string, any>;
+  data: Record<string, unknown>;
   confidence: number; // 0-1
   priority: 'low' | 'medium' | 'high';
   actionable: boolean;
@@ -780,7 +780,7 @@ export class OfflineSleepTracker {
     console.log('[OfflineSleepTracker] Going offline, continuing offline tracking...');
   }
 
-  private handleSyncComplete(data: any): void {
+  private handleSyncComplete(data: unknown): void {
     console.log('[OfflineSleepTracker] Sync completed via service worker:', data);
   }
 

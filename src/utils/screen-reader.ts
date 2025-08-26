@@ -354,8 +354,8 @@ export class ScreenReaderService {
    */
   announceStateChange(
     componentName: string,
-    previousState: any,
-    newState: any,
+    previousState: unknown,
+    newState: unknown,
     customMessage?: string
   ): void {
     if (!this.state.isEnabled || !this.state.autoAnnounceChanges) return;

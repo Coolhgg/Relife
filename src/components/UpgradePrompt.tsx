@@ -1,9 +1,7 @@
 import React from 'react';
+import path from 'path';
+import { PremiumFeature } from '@/types';
 import {
-// auto: restored by scout - verify import path
-import { PremiumFeature } from '@/types';
-// auto: restored by scout - verify import path
-import { PremiumFeature } from '@/types';
   Crown,
   Star,
   Zap,

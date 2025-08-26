@@ -955,13 +955,13 @@ class SoundEffectsService {
         downloads: 0,
         popularity: 0,
         sounds: {
-          ui: {} as any,
-          notifications: {} as any,
-          alarms: {} as any,
+          ui: {} as unknown,
+          notifications: {} as unknown,
+          alarms: {} as unknown,
         },
         metadata: {} as CustomSoundThemeMetadata,
-        preview: {} as any,
-        permissions: {} as any,
+        preview: {} as unknown,
+        permissions: {} as unknown,
         isPremium: false,
         requiresSubscription: false,
       },
@@ -1046,8 +1046,8 @@ class SoundEffectsService {
   async validateCustomTheme(
     theme: Partial<CustomSoundTheme>
   ): Promise<ValidationResult> {
-    const issues: any[] = [];
-    const suggestions: any[] = [];
+    const issues: unknown[] = [];
+    const suggestions: unknown[] = [];
     let completeness = 0;
 
     // Basic validation
@@ -1805,22 +1805,22 @@ class SoundEffectsService {
     };
   }
 
-  getCommunityThemes(): Promise<any> {
+  getCommunityThemes(): Promise<unknown> {
     // Placeholder implementation
     return Promise.resolve([]);
   }
 
-  shareThemeWithCommunity(theme: any): Promise<any> {
+  shareThemeWithCommunity(theme: unknown): Promise<unknown> {
     // Placeholder implementation
     return Promise.resolve({});
   }
 
-  rateTheme(themeId: string, rating: number): Promise<any> {
+  rateTheme(themeId: string, rating: number): Promise<unknown> {
     // Placeholder implementation
     return Promise.resolve({});
   }
 
-  incrementThemeDownloads(themeId: string): Promise<any> {
+  incrementThemeDownloads(themeId: string): Promise<unknown> {
     // Placeholder implementation
     return Promise.resolve({});
   }

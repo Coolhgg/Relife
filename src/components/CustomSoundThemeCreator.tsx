@@ -384,7 +384,7 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
     }
   };
 
-  const updateThemeField = (field: keyof CustomSoundTheme, value: any) => {
+  const updateThemeField = (field: keyof CustomSoundTheme, value: unknown) => {
     if (!session) return;
 
     const updatedTheme = {
@@ -598,7 +598,7 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
                   Fix Issues
                 </Button>
                 {validationResult.issues.every(
-                  (issue: any) => issue.type === 'warning'
+                  (issue: unknown) => issue.type === 'warning'
                 ) && (
                   <Button
                     onClick={() => {
@@ -622,7 +622,7 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
 
 const InfoStep: React.FC<{
   theme: Partial<CustomSoundTheme>;
-  onUpdate: (field: keyof CustomSoundTheme, value: any) => void;
+  onUpdate: (field: keyof CustomSoundTheme, value: unknown) => void;
 }> = ({ theme, onUpdate }) => (
   <div className="space-y-4">
     <div>
@@ -691,9 +691,9 @@ const SoundsStep: React.FC<{
   <div>
     <SoundUploader
       userId={userId}
-      onSoundUploaded={(sound: any) => onSoundsUpdated([...uploadedSounds, sound])}
-      onSoundDeleted={(soundId: any) =>
-        onSoundsUpdated(uploadedSounds.filter((s: any) => s.id !== soundId))
+      onSoundUploaded={(sound: unknown) => onSoundsUpdated([...uploadedSounds, sound])}
+      onSoundDeleted={(soundId: unknown) =>
+        onSoundsUpdated(uploadedSounds.filter((s: unknown) => s.id !== soundId))
       }
       maxFiles={20}
     />
@@ -703,7 +703,7 @@ const SoundsStep: React.FC<{
 const AssignmentStep: React.FC<{
   theme: Partial<CustomSoundTheme>;
   availableSounds: CustomSound[];
-  onUpdate: (field: keyof CustomSoundTheme, value: any) => void;
+  onUpdate: (field: keyof CustomSoundTheme, value: unknown) => void;
 }> = ({ _theme, _availableSounds, _onUpdate }) => (
   <div className="space-y-6">
     <Alert>
@@ -758,7 +758,7 @@ const AssignmentStep: React.FC<{
 
 const CustomizationStep: React.FC<{
   theme: Partial<CustomSoundTheme>;
-  onUpdate: (field: keyof CustomSoundTheme, value: any) => void;
+  onUpdate: (field: keyof CustomSoundTheme, value: unknown) => void;
 }> = ({ _theme, _onUpdate }) => (
   <div className="text-center py-12 text-gray-500">
     <Settings className="w-12 h-12 mx-auto mb-4 opacity-50" />
@@ -783,7 +783,7 @@ const PreviewStep: React.FC<{
 
 const MetadataStep: React.FC<{
   theme: Partial<CustomSoundTheme>;
-  onUpdate: (field: keyof CustomSoundTheme, value: any) => void;
+  onUpdate: (field: keyof CustomSoundTheme, value: unknown) => void;
 }> = ({ theme, onUpdate }) => (
   <div className="space-y-4">
     <div>
@@ -796,7 +796,7 @@ const MetadataStep: React.FC<{
             'tags',
             e.target.value
               .split(',')
-              .map((tag: any) => tag.trim())
+              .map((tag: unknown) => tag.trim())
               .filter(Boolean)
           )
         }
@@ -809,7 +809,7 @@ const MetadataStep: React.FC<{
 
 const SharingStep: React.FC<{
   theme: Partial<CustomSoundTheme>;
-  onUpdate: (field: keyof CustomSoundTheme, value: any) => void;
+  onUpdate: (field: keyof CustomSoundTheme, value: unknown) => void;
 }> = ({ _theme, _onUpdate }) => (
   <div className="text-center py-12 text-gray-500">
     <Share className="w-12 h-12 mx-auto mb-4 opacity-50" />

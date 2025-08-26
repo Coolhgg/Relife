@@ -1,6 +1,6 @@
 /**
  * Service Bootstrap and Initialization System
- * 
+ *
  * This file provides the main entry point for initializing the dependency injection
  * container and all enhanced services in the correct order.
  */
@@ -12,7 +12,7 @@ import {
   initializeAllEnhancedServices,
   validateEnhancedServiceConfiguration,
   getEnhancedServiceStats,
-  generateDependencyGraph
+  generateDependencyGraph,
 } from './factories/EnhancedServiceRegistry';
 
 // ============================================================================
@@ -26,7 +26,9 @@ let globalServiceContainer: ServiceContainer | null = null;
  */
 export function getServiceContainer(): ServiceContainer {
   if (!globalServiceContainer) {
-    throw new Error('Service container not initialized. Call initializeServices() first.');
+    throw new Error(
+      'Service container not initialized. Call initializeServices() first.'
+    );
   }
   return globalServiceContainer;
 }
@@ -46,20 +48,22 @@ export function createServiceContainer(): ServiceContainer {
  * Initialize the complete service system
  * This is the main function to call during app startup
  */
-export async function initializeServices(options: {
-  skipNonCritical?: boolean;
-  logDependencyGraph?: boolean;
-  validateConfiguration?: boolean;
-} = {}): Promise<ServiceContainer> {
+export async function initializeServices(
+  options: {
+    skipNonCritical?: boolean;
+    logDependencyGraph?: boolean;
+    validateConfiguration?: boolean;
+  } = {}
+): Promise<ServiceContainer> {
   const {
     skipNonCritical = false,
     logDependencyGraph = true,
-    validateConfiguration = true
+    validateConfiguration = true,
   } = options;
-  
+
   console.log('🎬 Starting Relife Service Initialization...');
   console.log('==========================================');
-  
+
   try {
     // Step 1: Validate configuration
     if (validateConfiguration) {
@@ -69,50 +73,51 @@ export async function initializeServices(options: {
       }
       console.log('✅ Configuration validation passed');
     }
-    
+
     // Step 2: Log dependency graph if requested
     if (logDependencyGraph) {
       console.log(generateDependencyGraph());
     }
-    
+
     // Step 3: Create and configure container
     console.log('🏗️ Step 3: Creating service container...');
     globalServiceContainer = new ServiceContainer();
-    
+
     // Step 4: Register all services
     console.log('📦 Step 4: Registering services...');
     await registerEnhancedServices(globalServiceContainer);
-    
+
     // Step 5: Initialize critical services
     console.log('🔥 Step 5: Initializing critical services...');
     await initializeEnhancedCriticalServices(globalServiceContainer);
-    
+
     // Step 6: Initialize container
     console.log('⚙️ Step 6: Initializing service container...');
     await globalServiceContainer.initialize();
-    
+
     // Step 7: Initialize non-critical enhanced services (optional)
     if (!skipNonCritical) {
       console.log('⚡ Step 7: Initializing enhanced services...');
       await initializeAllEnhancedServices(globalServiceContainer);
     }
-    
+
     // Step 8: Log statistics
     const stats = getEnhancedServiceStats();
     console.log('📊 Service Initialization Complete!');
     console.log('===================================');
     console.log(`✅ Total Services: ${stats.total}`);
-    console.log(`⚡ Enhanced Services: ${stats.enhanced} (${stats.enhancedPercentage}%)`);
+    console.log(
+      `⚡ Enhanced Services: ${stats.enhanced} (${stats.enhancedPercentage}%)`
+    );
     console.log(`🔥 Critical Services: ${stats.critical}`);
     console.log(`🏗️ Infrastructure Services: ${stats.infrastructure}`);
     console.log(`💼 Business Services: ${stats.business}`);
     console.log('===================================');
-    
+
     return globalServiceContainer;
-    
   } catch (error) {
     console.error('❌ Service initialization failed:', error);
-    
+
     // Clean up on failure
     if (globalServiceContainer) {
       try {
@@ -122,7 +127,7 @@ export async function initializeServices(options: {
       }
       globalServiceContainer = null;
     }
-    
+
     throw error;
   }
 }
@@ -132,7 +137,7 @@ export async function initializeServices(options: {
  */
 export async function initializeTestServices(): Promise<ServiceContainer> {
   console.log('🧪 Initializing services for testing...');
-  
+
   return initializeServices({
     skipNonCritical: true,
     logDependencyGraph: false,
@@ -145,7 +150,7 @@ export async function initializeTestServices(): Promise<ServiceContainer> {
  */
 export async function initializeDevServices(): Promise<ServiceContainer> {
   console.log('🛠️ Initializing services for development...');
-  
+
   return initializeServices({
     skipNonCritical: false,
     logDependencyGraph: true,
@@ -158,7 +163,7 @@ export async function initializeDevServices(): Promise<ServiceContainer> {
  */
 export async function initializeProdServices(): Promise<ServiceContainer> {
   console.log('🚀 Initializing services for production...');
-  
+
   return initializeServices({
     skipNonCritical: false,
     logDependencyGraph: false,
@@ -210,9 +215,9 @@ export async function disposeServices(): Promise<void> {
     console.warn('⚠️ Service container not initialized, nothing to dispose');
     return;
   }
-  
+
   console.log('🧹 Disposing of services...');
-  
+
   try {
     await globalServiceContainer.dispose();
     console.log('✅ Services disposed successfully');
@@ -240,75 +245,76 @@ export async function performHealthCheck(): Promise<{
     return {
       healthy: false,
       services: {},
-      stats: { error: 'Service container not initialized' }
+      stats: { error: 'Service container not initialized' },
     };
   }
-  
+
   console.log('🏥 Performing service health check...');
-  
+
   try {
     const stats = getEnhancedServiceStats();
     const services: Record<string, any> = {};
     let overallHealthy = true;
-    
+
     // Check critical services
     const criticalServices = stats.services.critical;
     for (const serviceName of criticalServices) {
       try {
         const service = globalServiceContainer.get(serviceName);
-        const health = await (service as any).getHealth?.() || { status: 'unknown' };
+        const health = (await (service as any).getHealth?.()) || { status: 'unknown' };
         services[serviceName] = {
           status: 'healthy',
           critical: true,
           enhanced: stats.services.enhanced.includes(serviceName),
-          health
+          health,
         };
       } catch (error) {
         services[serviceName] = {
           status: 'unhealthy',
           critical: true,
           enhanced: stats.services.enhanced.includes(serviceName),
-          error: (error as Error).message
+          error: (error as Error).message,
         };
         overallHealthy = false;
       }
     }
-    
+
     // Check enhanced services
-    const enhancedServices = stats.services.enhanced.filter(s => !criticalServices.includes(s));
+    const enhancedServices = stats.services.enhanced.filter(
+      s => !criticalServices.includes(s)
+    );
     for (const serviceName of enhancedServices) {
       try {
         const service = globalServiceContainer.get(serviceName);
-        const health = await (service as any).getHealth?.() || { status: 'unknown' };
+        const health = (await (service as any).getHealth?.()) || { status: 'unknown' };
         services[serviceName] = {
           status: 'healthy',
           critical: false,
           enhanced: true,
-          health
+          health,
         };
       } catch (error) {
         services[serviceName] = {
           status: 'unhealthy',
           critical: false,
           enhanced: true,
-          error: (error as Error).message
+          error: (error as Error).message,
         };
         // Don't mark overall as unhealthy for non-critical services
       }
     }
-    
+
     return {
       healthy: overallHealthy,
       services,
-      stats
+      stats,
     };
-    
   } catch (error) {
     console.error('❌ Health check failed:', error);
     return {
       healthy: false,
       services: {},
-      stats: { error: (error as Error).message }
+      stats: { error: (error as Error).message },
     };
   }
 }
@@ -324,14 +330,14 @@ export function getDebugInfo(): any {
   if (!globalServiceContainer) {
     return { error: 'Service container not initialized' };
   }
-  
+
   return {
     stats: getEnhancedServiceStats(),
     dependencyGraph: generateDependencyGraph(),
     containerState: {
       initialized: true,
       serviceCount: Object.keys(getEnhancedServiceStats().services).length,
-    }
+    },
   };
 }
 

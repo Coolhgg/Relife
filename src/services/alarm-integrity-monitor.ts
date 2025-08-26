@@ -28,7 +28,7 @@ interface IntegrityIssue {
   affectedAlarmIds: string[];
   severity: 'low' | 'medium' | 'high' | 'critical';
   timestamp: Date;
-  metadata?: any;
+  metadata?: unknown;
 }
 
 interface TamperDetectionEvent {
@@ -72,7 +72,7 @@ export class AlarmIntegrityMonitor {
   };
 
   private alertCallbacks: Array<(_event: TamperDetectionEvent) => void> = [];
-  private recoveryCallbacks: Array<(result: any) => void> = [];
+  private recoveryCallbacks: Array<(result: unknown) => void> = [];
 
   private constructor() {
     this.initializeMonitoring();
@@ -91,7 +91,7 @@ export class AlarmIntegrityMonitor {
   private initializeMonitoring(): void {
     // Register for storage tamper detection events
     const secureStorage = SecureAlarmStorageService.getInstance();
-    secureStorage.onTamperDetected((details: any) => {
+    secureStorage.onTamperDetected((details: unknown) => {
       this.handleStorageTamperDetection(details);
     });
 
@@ -538,7 +538,7 @@ export class AlarmIntegrityMonitor {
   /**
    * Handle storage tamper detection from SecureAlarmStorageService
    */
-  private handleStorageTamperDetection(details: any): void {
+  private handleStorageTamperDetection(details: unknown): void {
     const tamperEvent: TamperDetectionEvent = {
       type: details.type,
       description: details.details?._error || 'Storage tamper detected',
@@ -567,7 +567,7 @@ export class AlarmIntegrityMonitor {
   /**
    * Handle general security events
    */
-  private handleSecurityEvent(eventDetail: any): void {
+  private handleSecurityEvent(eventDetail: unknown): void {
     // Log and analyze security events for patterns
     this.logSecurityEvent('security_event_received', eventDetail);
 
@@ -687,7 +687,7 @@ export class AlarmIntegrityMonitor {
     return 'low';
   }
 
-  private detectSuspiciousPatterns(eventDetail: any): boolean {
+  private detectSuspiciousPatterns(eventDetail: unknown): boolean {
     // Simple pattern detection - could be enhanced with ML
     const suspiciousEvents = ['alarm_deleted', 'alarm_updated', 'alarm_toggled'];
 
@@ -725,7 +725,7 @@ export class AlarmIntegrityMonitor {
     }
   }
 
-  private logSecurityEvent(_event: string, details: any): void {
+  private logSecurityEvent(_event: string, details: unknown): void {
     const logEntry = {
       event,
       details,
@@ -748,7 +748,7 @@ export class AlarmIntegrityMonitor {
     this.alertCallbacks.push(callback);
   }
 
-  onRecoveryAttempt(callback: (result: any) => void): void {
+  onRecoveryAttempt(callback: (result: unknown) => void): void {
     this.recoveryCallbacks.push(callback);
   }
 

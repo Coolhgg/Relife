@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-// Replaced stub import with proper implementation // auto: restored by scout - verify
+  // Replaced stub import with proper implementation // auto: restored by scout - verify
   Mic,
   Bot,
   Speaker,
@@ -120,8 +120,8 @@ function AIWakeUpCoach() {
               </div>
               <Slider
                 value={[voiceSettings.speed]}
-                onValueChange={(value: any) =>
-                  setVoiceSettings((prev: any) => ({ ...prev, speed: value[0] }))
+                onValueChange={(value: unknown) =>
+                  setVoiceSettings((prev: unknown) => ({ ...prev, speed: value[0] }))
                 }
                 min={0.5}
                 max={2.0}
@@ -135,8 +135,8 @@ function AIWakeUpCoach() {
               </div>
               <Slider
                 value={[voiceSettings.pitch]}
-                onValueChange={(value: any) =>
-                  setVoiceSettings((prev: any) => ({ ...prev, pitch: value[0] }))
+                onValueChange={(value: unknown) =>
+                  setVoiceSettings((prev: unknown) => ({ ...prev, pitch: value[0] }))
                 }
                 min={0.5}
                 max={2.0}
@@ -152,8 +152,8 @@ function AIWakeUpCoach() {
               </div>
               <Slider
                 value={[voiceSettings.volume]}
-                onValueChange={(value: any) =>
-                  setVoiceSettings((prev: any) => ({ ...prev, volume: value[0] }))
+                onValueChange={(value: unknown) =>
+                  setVoiceSettings((prev: unknown) => ({ ...prev, volume: value[0] }))
                 }
                 min={0.1}
                 max={1.0}
@@ -180,12 +180,11 @@ function AIWakeUpCoach() {
                   id={goal}
                   checked={coachingGoals.includes(goal)}
                   onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                    // auto: implicit any
                     if (e.target.checked) {
-                      setCoachingGoals((prev: any) => [...prev, goal]);
+                      setCoachingGoals((prev: unknown) => [...prev, goal]);
                     } else {
-                      setCoachingGoals((prev: any) =>
-                        prev.filter((g: any) => g !== goal)
+                      setCoachingGoals((prev: unknown) =>
+                        prev.filter((g: unknown) => g !== goal)
                       );
                     }
                   }}
@@ -248,7 +247,7 @@ function VoiceCommandRecognition() {
           <div className="mt-2">
             <Slider
               value={[sensitivity]}
-              onValueChange={(value: any) => setSensitivity(value[0])}
+              onValueChange={(value: unknown) => setSensitivity(value[0])}
               min={0.1}
               max={1.0}
               step={0.1}
@@ -288,14 +287,14 @@ function VoiceCommandRecognition() {
             placeholder="Say this phrase..."
             value={newCommand.phrase}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setNewCommand((prev: any) => ({ ...prev, phrase: e.target.value }))
+              setNewCommand((prev: unknown) => ({ ...prev, phrase: e.target.value }))
             }
           />
           <Input
             placeholder="To do this action..."
             value={newCommand.action}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setNewCommand((prev: any) => ({ ...prev, action: e.target.value }))
+              setNewCommand((prev: unknown) => ({ ...prev, action: e.target.value }))
             }
           />
           <Button size="sm" className="w-full">
@@ -354,8 +353,8 @@ function PersonalizedAudioMessages() {
                 </span>
                 <Switch
                   checked={enabled}
-                  onCheckedChange={(checked: any) =>
-                    setMessageTypes((prev: any) => ({ ...prev, [key]: checked }))
+                  onCheckedChange={(checked: unknown) =>
+                    setMessageTypes((prev: unknown) => ({ ...prev, [key]: checked }))
                   }
                 />
               </div>
@@ -413,7 +412,7 @@ function PersonalizedAudioMessages() {
               size="sm"
               onClick={() => {
                 if (newMessage.trim()) {
-                  setCustomMessages((prev: any) => [...prev, newMessage]);
+                  setCustomMessages((prev: unknown) => [...prev, newMessage]);
                   setNewMessage('');
                 }
               }}
@@ -493,7 +492,7 @@ function VoiceControlledSnooze() {
           <div className="mt-2">
             <Slider
               value={[customSnoozeTime]}
-              onValueChange={(value: any) => setCustomSnoozeTime(value[0])}
+              onValueChange={(value: unknown) => setCustomSnoozeTime(value[0])}
               min={1}
               max={60}
               step={1}

@@ -212,7 +212,7 @@ const PremiumThemeShowcase: React.FC = () => {
               <button
                 key={category.key}
                 className={`category-button ${selectedCategory === category.key ? 'active' : ''}`}
-                onClick={() => setSelectedCategory(category.key as any)}
+                onClick={() => setSelectedCategory(category.key as unknown)}
               >
                 {category.label}
                 <span className="category-count">{category.count}</span>
@@ -233,7 +233,7 @@ const PremiumThemeShowcase: React.FC = () => {
               <button
                 key={intensity.key}
                 className={`intensity-button ${animationIntensity === intensity.key ? 'active' : ''}`}
-                onClick={() => handleAnimationIntensityChange(intensity.key as any)}
+                onClick={() => handleAnimationIntensityChange(intensity.key as unknown)}
               >
                 <span className="intensity-icon">{intensity.icon}</span>
                 <span className="intensity-label">{intensity.label}</span>

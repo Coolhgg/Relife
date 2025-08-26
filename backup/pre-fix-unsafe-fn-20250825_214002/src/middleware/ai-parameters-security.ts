@@ -46,7 +46,7 @@ const securityConfig: SecurityConfig = {
   maxLoginAttempts: 5,
   lockoutDuration: 15 * 60 * 1000, // 15 minutes
   enableAuditLogging: true,
-  csrfProtection: true
+  csrfProtection: true,
 };
 
 // Audit logging service
@@ -72,7 +72,7 @@ class AuditLogger {
       userAgent: req.headers['user-agent'],
       endpoint: `${req.method} ${req.path}`,
       details,
-      sessionId: (req as AuthenticatedRequest).user?.sessionId
+      sessionId: (req as AuthenticatedRequest).user?.sessionId,
     };
 
     this.logs.push(logEntry);
@@ -99,11 +99,11 @@ const createRateLimiter = (windowMs: number, max: number, message: string) => {
     message: { error: message, retryAfter: Math.ceil(windowMs / 1000) },
     standardHeaders: true,
     legacyHeaders: false,
-    skip: (req) => {
+    skip: req => {
       // Skip rate limiting for admin users with special permissions
       const user = (req as AuthenticatedRequest).user;
       return user?.role === 'admin' && user.permissions.includes('bypass_rate_limit');
-    }
+    },
   });
 };
 
@@ -135,7 +135,7 @@ export const rateLimiters = {
     60 * 60 * 1000, // 1 hour
     10, // 10 critical operations per hour
     'Too many critical operations, please contact support'
-  )
+  ),
 };
 
 // Security headers middleware
@@ -145,19 +145,19 @@ export const securityHeaders = helmet({
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'", "data:", "https:"],
+      imgSrc: ["'self'", 'data:', 'https:'],
       connectSrc: ["'self'"],
       fontSrc: ["'self'"],
       objectSrc: ["'none'"],
       mediaSrc: ["'self'"],
-      frameSrc: ["'none'"]
-    }
+      frameSrc: ["'none'"],
+    },
   },
   hsts: {
     maxAge: 31536000, // 1 year
     includeSubDomains: true,
-    preload: true
-  }
+    preload: true,
+  },
 });
 
 // CORS configuration
@@ -166,11 +166,15 @@ export const corsOptions = {
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key', 'X-CSRF-Token'],
   credentials: true,
-  maxAge: 86400 // 24 hours
+  maxAge: 86400, // 24 hours
 };
 
 // JWT Authentication middleware
-export const authenticateJWT = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+export const authenticateJWT = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
@@ -179,18 +183,18 @@ export const authenticateJWT = async (req: AuthenticatedRequest, res: Response, 
       return res.status(401).json({
         success: false,
         error: 'Access token required',
-        code: 'MISSING_TOKEN'
+        code: 'MISSING_TOKEN',
       });
     }
 
     const decoded = jwt.verify(token, securityConfig.jwtSecret) as any;
-    
+
     // Check token expiration
     if (decoded.exp * 1000 < Date.now()) {
       return res.status(401).json({
         success: false,
         error: 'Token expired',
-        code: 'TOKEN_EXPIRED'
+        code: 'TOKEN_EXPIRED',
       });
     }
 
@@ -200,7 +204,7 @@ export const authenticateJWT = async (req: AuthenticatedRequest, res: Response, 
       email: decoded.email,
       role: decoded.role || 'user',
       permissions: decoded.permissions || [],
-      sessionId: decoded.sessionId
+      sessionId: decoded.sessionId,
     };
 
     // Log authentication
@@ -208,21 +212,30 @@ export const authenticateJWT = async (req: AuthenticatedRequest, res: Response, 
 
     next();
   } catch (error) {
-    AuditLogger.getInstance().log('auth_failure', 'unknown', { 
-      error: error.message,
-      method: 'jwt'
-    }, req);
+    AuditLogger.getInstance().log(
+      'auth_failure',
+      'unknown',
+      {
+        error: error.message,
+        method: 'jwt',
+      },
+      req
+    );
 
     return res.status(401).json({
       success: false,
       error: 'Invalid token',
-      code: 'INVALID_TOKEN'
+      code: 'INVALID_TOKEN',
     });
   }
 };
 
 // API Key authentication middleware
-export const authenticateAPIKey = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+export const authenticateAPIKey = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const apiKey = req.headers['x-api-key'] as string;
 
@@ -230,23 +243,28 @@ export const authenticateAPIKey = async (req: AuthenticatedRequest, res: Respons
       return res.status(401).json({
         success: false,
         error: 'API key required',
-        code: 'MISSING_API_KEY'
+        code: 'MISSING_API_KEY',
       });
     }
 
     // Verify API key (in production, check against database)
     const validApiKeys = process.env.VALID_API_KEYS?.split(',') || [];
-    
+
     if (!validApiKeys.includes(apiKey)) {
-      AuditLogger.getInstance().log('auth_failure', 'unknown', {
-        error: 'Invalid API key',
-        method: 'api_key'
-      }, req);
+      AuditLogger.getInstance().log(
+        'auth_failure',
+        'unknown',
+        {
+          error: 'Invalid API key',
+          method: 'api_key',
+        },
+        req
+      );
 
       return res.status(401).json({
         success: false,
         error: 'Invalid API key',
-        code: 'INVALID_API_KEY'
+        code: 'INVALID_API_KEY',
       });
     }
 
@@ -255,23 +273,32 @@ export const authenticateAPIKey = async (req: AuthenticatedRequest, res: Respons
       id: crypto.createHash('sha256').update(apiKey).digest('hex').substring(0, 16),
       name: 'API Client',
       permissions: ['parameter_read', 'parameter_write'],
-      rateLimit: 100
+      rateLimit: 100,
     };
 
-    AuditLogger.getInstance().log('auth_success', req.apiKey.id, { method: 'api_key' }, req);
+    AuditLogger.getInstance().log(
+      'auth_success',
+      req.apiKey.id,
+      { method: 'api_key' },
+      req
+    );
 
     next();
   } catch (error) {
     return res.status(401).json({
       success: false,
       error: 'API key authentication failed',
-      code: 'API_KEY_AUTH_FAILED'
+      code: 'API_KEY_AUTH_FAILED',
     });
   }
 };
 
 // Combined authentication middleware (JWT or API Key)
-export const authenticate = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+export const authenticate = (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) => {
   const authHeader = req.headers.authorization;
   const apiKey = req.headers['x-api-key'];
 
@@ -283,7 +310,7 @@ export const authenticate = (req: AuthenticatedRequest, res: Response, next: Nex
     return res.status(401).json({
       success: false,
       error: 'Authentication required. Provide either Bearer token or API key.',
-      code: 'NO_AUTH_METHOD'
+      code: 'NO_AUTH_METHOD',
     });
   }
 };
@@ -312,12 +339,13 @@ export const authorize = (requiredPermissions: string[]) => {
     );
 
     if (!hasPermission) {
-      AuditLogger.getInstance().log('authorization_failure', 
-        user?.id || apiKey?.id || 'unknown', 
-        { 
+      AuditLogger.getInstance().log(
+        'authorization_failure',
+        user?.id || apiKey?.id || 'unknown',
+        {
           required: requiredPermissions,
-          available: userPermissions
-        }, 
+          available: userPermissions,
+        },
         req
       );
 
@@ -325,7 +353,7 @@ export const authorize = (requiredPermissions: string[]) => {
         success: false,
         error: 'Insufficient permissions',
         code: 'INSUFFICIENT_PERMISSIONS',
-        required: requiredPermissions
+        required: requiredPermissions,
       });
     }
 
@@ -336,13 +364,20 @@ export const authorize = (requiredPermissions: string[]) => {
 // Input validation middleware
 export const validateParameterUpdate = [
   body('category')
-    .isIn(['core_ai', 'voice_ai', 'behavioral_intelligence', 'rewards', 'platform', 'deployment'])
+    .isIn([
+      'core_ai',
+      'voice_ai',
+      'behavioral_intelligence',
+      'rewards',
+      'platform',
+      'deployment',
+    ])
     .withMessage('Invalid parameter category'),
-  
+
   body('parameters')
     .isObject()
     .withMessage('Parameters must be an object')
-    .custom((value) => {
+    .custom(value => {
       if (Object.keys(value).length === 0) {
         throw new Error('Parameters object cannot be empty');
       }
@@ -354,10 +389,7 @@ export const validateParameterUpdate = [
     .isLength({ min: 1, max: 255 })
     .withMessage('Valid userId is required'),
 
-  body('immediate')
-    .optional()
-    .isBoolean()
-    .withMessage('Immediate must be a boolean'),
+  body('immediate').optional().isBoolean().withMessage('Immediate must be a boolean'),
 
   // Sanitize and validate individual parameters
   body('parameters.*').custom((value, { path }) => {
@@ -365,7 +397,7 @@ export const validateParameterUpdate = [
     if (typeof value === 'string' && value.length > 1000) {
       throw new Error(`Parameter ${path} is too long`);
     }
-    
+
     // Block potentially dangerous values
     if (typeof value === 'string') {
       const dangerousPatterns = [
@@ -373,16 +405,16 @@ export const validateParameterUpdate = [
         /javascript:/i,
         /on\w+\s*=/i,
         /eval\s*\(/i,
-        /function\s*\(/i
+        /function\s*\(/i,
       ];
-      
+
       if (dangerousPatterns.some(pattern => pattern.test(value))) {
         throw new Error(`Parameter ${path} contains potentially dangerous content`);
       }
     }
-    
+
     return true;
-  })
+  }),
 ];
 
 export const validateUserId = [
@@ -390,7 +422,7 @@ export const validateUserId = [
     .isString()
     .isLength({ min: 1, max: 255 })
     .matches(/^[a-zA-Z0-9_-]+$/)
-    .withMessage('Invalid userId format')
+    .withMessage('Invalid userId format'),
 ];
 
 export const validateSessionId = [
@@ -398,15 +430,20 @@ export const validateSessionId = [
     .isString()
     .isLength({ min: 1, max: 255 })
     .matches(/^session_[0-9]+_[a-zA-Z0-9]+$/)
-    .withMessage('Invalid sessionId format')
+    .withMessage('Invalid sessionId format'),
 ];
 
 // Validation error handler
-export const handleValidationErrors = (req: Request, res: Response, next: NextFunction) => {
+export const handleValidationErrors = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const errors = validationResult(req);
-  
+
   if (!errors.isEmpty()) {
-    AuditLogger.getInstance().log('validation_failure', 
+    AuditLogger.getInstance().log(
+      'validation_failure',
       (req as AuthenticatedRequest).user?.id || 'unknown',
       { errors: errors.array() },
       req
@@ -416,10 +453,10 @@ export const handleValidationErrors = (req: Request, res: Response, next: NextFu
       success: false,
       error: 'Validation failed',
       code: 'VALIDATION_ERROR',
-      details: errors.array()
+      details: errors.array(),
     });
   }
-  
+
   next();
 };
 
@@ -441,7 +478,7 @@ export const csrfProtection = (req: Request, res: Response, next: NextFunction) 
     return res.status(403).json({
       success: false,
       error: 'CSRF token required',
-      code: 'MISSING_CSRF_TOKEN'
+      code: 'MISSING_CSRF_TOKEN',
     });
   }
 
@@ -456,7 +493,7 @@ export const csrfProtection = (req: Request, res: Response, next: NextFunction) 
     return res.status(403).json({
       success: false,
       error: 'Invalid CSRF token',
-      code: 'INVALID_CSRF_TOKEN'
+      code: 'INVALID_CSRF_TOKEN',
     });
   }
 
@@ -464,17 +501,22 @@ export const csrfProtection = (req: Request, res: Response, next: NextFunction) 
 };
 
 // Security logging middleware
-export const securityLogger = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+export const securityLogger = (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) => {
   const startTime = Date.now();
 
   // Log request
-  AuditLogger.getInstance().log('api_request', 
+  AuditLogger.getInstance().log(
+    'api_request',
     req.user?.id || req.apiKey?.id || 'anonymous',
     {
       method: req.method,
       path: req.path,
       query: req.query,
-      body: req.method !== 'GET' ? '[REDACTED]' : undefined
+      body: req.method !== 'GET' ? '[REDACTED]' : undefined,
     },
     req
   );
@@ -483,13 +525,14 @@ export const securityLogger = (req: AuthenticatedRequest, res: Response, next: N
   const originalJson = res.json;
   res.json = function (body: any) {
     const duration = Date.now() - startTime;
-    
-    AuditLogger.getInstance().log('api_response',
+
+    AuditLogger.getInstance().log(
+      'api_response',
       req.user?.id || req.apiKey?.id || 'anonymous',
       {
         statusCode: res.statusCode,
         duration,
-        success: res.statusCode < 400
+        success: res.statusCode < 400,
       },
       req
     );
@@ -501,27 +544,33 @@ export const securityLogger = (req: AuthenticatedRequest, res: Response, next: N
 };
 
 // Error handling middleware
-export const securityErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
+export const securityErrorHandler = (
+  err: any,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   // Log security-related errors
-  AuditLogger.getInstance().log('security_error',
+  AuditLogger.getInstance().log(
+    'security_error',
     (req as AuthenticatedRequest).user?.id || 'unknown',
     {
       error: err.message,
       stack: err.stack?.split('\n').slice(0, 3),
-      type: err.name
+      type: err.name,
     },
     req
   );
 
   // Don't leak internal error details in production
   const isDevelopment = process.env.NODE_ENV === 'development';
-  
+
   if (err.name === 'ValidationError') {
     return res.status(400).json({
       success: false,
       error: 'Invalid request data',
       code: 'VALIDATION_ERROR',
-      details: isDevelopment ? err.details : undefined
+      details: isDevelopment ? err.details : undefined,
     });
   }
 
@@ -529,7 +578,7 @@ export const securityErrorHandler = (err: any, req: Request, res: Response, next
     return res.status(401).json({
       success: false,
       error: 'Invalid authentication token',
-      code: 'INVALID_TOKEN'
+      code: 'INVALID_TOKEN',
     });
   }
 
@@ -538,7 +587,7 @@ export const securityErrorHandler = (err: any, req: Request, res: Response, next
       success: false,
       error: 'Rate limit exceeded',
       code: 'RATE_LIMIT_EXCEEDED',
-      retryAfter: err.retryAfter
+      retryAfter: err.retryAfter,
     });
   }
 
@@ -547,7 +596,7 @@ export const securityErrorHandler = (err: any, req: Request, res: Response, next
     success: false,
     error: 'Internal server error',
     code: 'INTERNAL_ERROR',
-    details: isDevelopment ? err.message : undefined
+    details: isDevelopment ? err.message : undefined,
   });
 };
 
@@ -582,7 +631,7 @@ export const SecurityUtils = {
   // Get audit logs
   getAuditLogs: (limit?: number) => {
     return AuditLogger.getInstance().getRecentLogs(limit);
-  }
+  },
 };
 
 export default {
@@ -599,5 +648,5 @@ export default {
   securityLogger,
   securityErrorHandler,
   generateCSRFToken,
-  SecurityUtils
+  SecurityUtils,
 };

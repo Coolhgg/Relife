@@ -538,7 +538,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
   };
 
   // Nuclear mode challenge handlers
-  const handleChallengeComplete = async (successful: boolean, data?: any) => {
+  const handleChallengeComplete = async (successful: boolean, data?: unknown) => {
     if (!nuclearSession || !currentChallenge) return;
 
     try {

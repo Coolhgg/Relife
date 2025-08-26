@@ -2,7 +2,7 @@
 
 /**
  * Relife Smart Alarm - Interactive Integration Configuration Wizard
- * 
+ *
  * This script provides a guided setup for all integrations and external services.
  * Run with: node configure-integrations.js
  */
@@ -35,17 +35,18 @@ const rl = readline.createInterface({
 
 // Logging utilities
 const log = {
-  title: (msg) => console.log(`${colors.cyan}${colors.bright}${msg}${colors.reset}`),
-  section: (msg) => console.log(`${colors.magenta}${colors.bright}🔧 ${msg}${colors.reset}`),
-  info: (msg) => console.log(`${colors.blue}ℹ️  ${msg}${colors.reset}`),
-  success: (msg) => console.log(`${colors.green}✅ ${msg}${colors.reset}`),
-  warning: (msg) => console.log(`${colors.yellow}⚠️  ${msg}${colors.reset}`),
-  error: (msg) => console.log(`${colors.red}❌ ${msg}${colors.reset}`),
+  title: msg => console.log(`${colors.cyan}${colors.bright}${msg}${colors.reset}`),
+  section: msg =>
+    console.log(`${colors.magenta}${colors.bright}🔧 ${msg}${colors.reset}`),
+  info: msg => console.log(`${colors.blue}ℹ️  ${msg}${colors.reset}`),
+  success: msg => console.log(`${colors.green}✅ ${msg}${colors.reset}`),
+  warning: msg => console.log(`${colors.yellow}⚠️  ${msg}${colors.reset}`),
+  error: msg => console.log(`${colors.red}❌ ${msg}${colors.reset}`),
   step: (step, msg) => console.log(`${colors.cyan}${step}.${colors.reset} ${msg}`),
 };
 
 // Promisify readline question
-const question = (query) => new Promise((resolve) => rl.question(query, resolve));
+const question = query => new Promise(resolve => rl.question(query, resolve));
 
 // Configuration profiles
 const integrationProfiles = {
@@ -64,7 +65,15 @@ const integrationProfiles = {
   complete: {
     name: '🏆 Complete Setup (Full Featured)',
     description: 'All integrations including monitoring and mobile',
-    services: ['supabase', 'basic-env', 'posthog', 'sentry', 'stripe', 'mobile', 'monitoring'],
+    services: [
+      'supabase',
+      'basic-env',
+      'posthog',
+      'sentry',
+      'stripe',
+      'mobile',
+      'monitoring',
+    ],
     estimated_time: '30 minutes',
   },
   custom: {
@@ -188,7 +197,7 @@ function loadEnvFile(filePath = '.env.local') {
   const content = fs.readFileSync(filePath, 'utf8');
   const env = {};
 
-  content.split('\n').forEach((line) => {
+  content.split('\n').forEach(line => {
     line = line.trim();
     if (line && !line.startsWith('#')) {
       const [key, ...valueParts] = line.split('=');
@@ -205,10 +214,10 @@ function loadEnvFile(filePath = '.env.local') {
 function saveEnvVar(key, value, filePath = '.env.local') {
   const envContent = fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf8') : '';
   const lines = envContent.split('\n');
-  
+
   // Find existing line or add new one
   let found = false;
-  const updatedLines = lines.map((line) => {
+  const updatedLines = lines.map(line => {
     if (line.startsWith(`${key}=`)) {
       found = true;
       return `${key}=${value}`;
@@ -227,7 +236,7 @@ function saveEnvVar(key, value, filePath = '.env.local') {
 function isServiceConfigured(serviceKey) {
   const service = services[serviceKey];
   const env = loadEnvFile();
-  
+
   return service.envVars.every(varName => {
     const value = env[varName];
     return value && !value.includes('your_') && !value.includes('_here');
@@ -237,7 +246,7 @@ function isServiceConfigured(serviceKey) {
 // Configure a specific service
 async function configureService(serviceKey) {
   const service = services[serviceKey];
-  
+
   log.section(`Configuring ${service.name}`);
   console.log(`📝 ${service.description}`);
   console.log(`🌐 Setup URL: ${service.setupUrl || 'N/A'}`);
@@ -245,14 +254,16 @@ async function configureService(serviceKey) {
 
   // Show instructions
   log.info('Setup Instructions:');
-  service.instructions.forEach((instruction) => {
+  service.instructions.forEach(instruction => {
     console.log(`   ${instruction}`);
   });
   console.log();
 
   // Check if already configured
   if (isServiceConfigured(serviceKey)) {
-    const reconfigure = await question('⚡ This service is already configured. Reconfigure? (y/N): ');
+    const reconfigure = await question(
+      '⚡ This service is already configured. Reconfigure? (y/N): '
+    );
     if (!reconfigure.toLowerCase().startsWith('y')) {
       log.info('Skipping reconfiguration');
       return;
@@ -262,12 +273,12 @@ async function configureService(serviceKey) {
   // Get configuration values
   for (const envVar of service.envVars) {
     const currentValue = loadEnvFile()[envVar] || '';
-    const promptText = currentValue 
+    const promptText = currentValue
       ? `Enter ${envVar} (current: ${currentValue.substring(0, 20)}...): `
       : `Enter ${envVar}: `;
-    
+
     const value = await question(promptText);
-    
+
     if (value.trim()) {
       saveEnvVar(envVar, value.trim());
       log.success(`Set ${envVar}`);
@@ -289,21 +300,21 @@ async function postSetupActions(serviceKey) {
       log.info('1. Import database schema: npm run db:migrate');
       log.info('2. Test connection: npm run test:database');
       break;
-      
+
     case 'stripe':
       log.info('Next steps:');
       log.info('1. Set up webhooks in Stripe dashboard');
       log.info('2. Test payments: npm run test:payment');
       log.info('3. Start API server: npm run api:dev');
       break;
-      
+
     case 'mobile':
       log.info('Next steps:');
       log.info('1. Install platform tools (Android Studio/Xcode)');
       log.info('2. Run: npm run mobile:setup');
       log.info('3. Test: npm run mobile:dev:android');
       break;
-      
+
     case 'monitoring':
       log.info('Next steps:');
       log.info('1. Start services: docker-compose up -d');
@@ -316,14 +327,14 @@ async function postSetupActions(serviceKey) {
 // Validate current configuration
 function validateConfiguration() {
   log.section('Configuration Validation');
-  
+
   const env = loadEnvFile();
   let criticalMissing = false;
   let warningCount = 0;
-  
+
   Object.entries(services).forEach(([key, service]) => {
     const configured = isServiceConfigured(key);
-    
+
     if (configured) {
       log.success(`${service.name}: Configured`);
     } else {
@@ -340,7 +351,7 @@ function validateConfiguration() {
   });
 
   console.log();
-  
+
   if (criticalMissing) {
     log.error('Critical services are missing! App may not function properly.');
   } else if (warningCount > 0) {
@@ -348,7 +359,7 @@ function validateConfiguration() {
   } else {
     log.success('All critical services are configured!');
   }
-  
+
   return { criticalMissing, warningCount };
 }
 
@@ -356,10 +367,12 @@ function validateConfiguration() {
 async function runConfigurationWizard() {
   // Header
   log.title('🚀 Relife Smart Alarm - Integration Configuration Wizard');
-  console.log('=' .repeat(70));
+  console.log('='.repeat(70));
   console.log();
-  
-  log.info('This wizard will help you configure all external integrations and services.');
+
+  log.info(
+    'This wizard will help you configure all external integrations and services.'
+  );
   console.log();
 
   // Show current status
@@ -407,7 +420,9 @@ async function runConfigurationWizard() {
     });
     console.log();
 
-    const serviceChoices = await question('Select services (comma-separated numbers, e.g., 1,2,3): ');
+    const serviceChoices = await question(
+      'Select services (comma-separated numbers, e.g., 1,2,3): '
+    );
     const serviceIndices = serviceChoices.split(',').map(n => parseInt(n.trim()) - 1);
     servicesToConfigure = serviceIndices
       .filter(i => i >= 0 && i < Object.keys(services).length)
@@ -430,7 +445,7 @@ async function runConfigurationWizard() {
 
   // Post-setup instructions
   log.section('Next Steps');
-  console.log('Your integration configuration is complete! Here\'s what to do next:');
+  console.log("Your integration configuration is complete! Here's what to do next:");
   console.log();
 
   log.step(1, 'Test your configuration:');
@@ -483,9 +498,9 @@ async function runConfigurationWizard() {
 function checkEnvironmentFiles() {
   const requiredFiles = ['.env.example'];
   const optionalFiles = ['.env.local', '.env.development', '.env.production'];
-  
+
   log.section('Environment File Check');
-  
+
   // Check required files
   requiredFiles.forEach(file => {
     if (fs.existsSync(file)) {
@@ -503,7 +518,7 @@ function checkEnvironmentFiles() {
       log.info(`${file} not found (will be created if needed)`);
     }
   });
-  
+
   console.log();
 }
 
@@ -514,7 +529,7 @@ function ensureEnvFile() {
       fs.copyFileSync('.env.example', '.env.local');
       log.success('Created .env.local from .env.example');
     } else {
-      log.error('.env.example not found! Please ensure you\'re in the project root.');
+      log.error(".env.example not found! Please ensure you're in the project root.");
       process.exit(1);
     }
   }
@@ -523,7 +538,7 @@ function ensureEnvFile() {
 // Test connectivity to external services
 async function testConnectivity() {
   log.section('Testing Service Connectivity');
-  
+
   const tests = [
     { name: 'Supabase', url: 'https://supabase.com' },
     { name: 'PostHog', url: 'https://app.posthog.com' },
@@ -548,13 +563,12 @@ async function main() {
     // Preliminary checks
     checkEnvironmentFiles();
     ensureEnvFile();
-    
+
     // Test internet connectivity
     await testConnectivity();
-    
+
     // Run the main wizard
     await runConfigurationWizard();
-    
   } catch (error) {
     log.error(`Configuration failed: ${error.message}`);
     console.log();
@@ -570,7 +584,7 @@ async function main() {
 // Handle script arguments
 if (process.argv.includes('--validate-only')) {
   log.title('🔍 Configuration Validation Only');
-  console.log('=' .repeat(50));
+  console.log('='.repeat(50));
   console.log();
   validateConfiguration();
   process.exit(0);
@@ -580,8 +594,12 @@ if (process.argv.includes('--help')) {
   console.log('Relife Integration Configuration Wizard');
   console.log();
   console.log('Usage:');
-  console.log('  node configure-integrations.js                 # Run interactive wizard');
-  console.log('  node configure-integrations.js --validate-only # Validate current config');
+  console.log(
+    '  node configure-integrations.js                 # Run interactive wizard'
+  );
+  console.log(
+    '  node configure-integrations.js --validate-only # Validate current config'
+  );
   console.log('  node configure-integrations.js --help          # Show this help');
   console.log();
   console.log('For detailed documentation, see:');

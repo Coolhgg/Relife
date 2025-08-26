@@ -8,7 +8,7 @@ import { generateAlarmId, getNextAlarmTime } from '../utils';
 import { BaseService } from './base/BaseService';
 import { CacheProvider, getCacheManager } from './base/CacheManager';
 import {
-import { ErrorHandler } from './error-handler';
+  ErrorHandler,
   AlarmServiceInterface,
   ServiceConfig,
   ServiceHealth,
@@ -24,12 +24,12 @@ export interface AlarmServiceConfig extends ServiceConfig {
 }
 
 export interface AlarmServiceDependencies {
-  capacitorService?: any;
-  analyticsService?: any;
-  secureStorageService?: any;
-  securityService?: any;
-  errorHandler?: any;
-  battleIntegrationService?: any;
+  capacitorService?: unknown;
+  analyticsService?: unknown;
+  secureStorageService?: unknown;
+  securityService?: unknown;
+  errorHandler?: unknown;
+  battleIntegrationService?: unknown;
 }
 
 export class EnhancedAlarmService extends BaseService implements AlarmServiceInterface {
@@ -187,11 +187,11 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
               'thursday',
               'friday',
               'saturday',
-            ][d] as any
+            ][d] as unknown
         ),
         voiceMood: alarmData.voiceMood,
         sound: alarmData.sound || 'default',
-        difficulty: (alarmData.difficulty || 'medium') as any,
+        difficulty: (alarmData.difficulty || 'medium') as unknown,
         snoozeEnabled: alarmData.snoozeEnabled ?? true,
         snoozeInterval: alarmData.snoozeInterval || 5,
         snoozeCount: 0,
@@ -617,7 +617,7 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
       const alarmData = await storage.retrieveAlarms();
 
       // Convert and validate loaded alarms
-      alarmData.forEach((alarmObj: any) => {
+      alarmData.forEach((alarmObj: unknown) => {
         try {
           const alarm: Alarm = {
             ...alarmObj,
@@ -665,7 +665,7 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
     }
   }
 
-  private validateAlarmData(data: any): void {
+  private validateAlarmData(data: unknown): void {
     if (!data.time || !/^([01]?\d|2[0-3]):[0-5]\d$/.test(data.time)) {
       throw new Error('Invalid time format');
     }
@@ -679,7 +679,7 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
     }
 
     if (
-      !data.days.every((day: any) => typeof day === 'number' && day >= 0 && day <= 6)
+      !data.days.every((day: unknown) => typeof day === 'number' && day >= 0 && day <= 6)
     ) {
       throw new Error('Invalid day values');
     }
@@ -852,7 +852,7 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
     }
   }
 
-  private async logSecurityEvent(_event: string, details: any): Promise<void> {
+  private async logSecurityEvent(_event: string, details: unknown): Promise<void> {
     if (!(this._config as AlarmServiceConfig).enableSecurityLogging) return;
 
     try {
@@ -875,7 +875,7 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
     }
   }
 
-  private async trackAnalyticsEvent(_event: string, data: any): Promise<void> {
+  private async trackAnalyticsEvent(_event: string, data: unknown): Promise<void> {
     if (!(this._config as AlarmServiceConfig).enablePerformanceTracking) return;
 
     try {

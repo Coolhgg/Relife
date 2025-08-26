@@ -52,7 +52,7 @@ export interface HealthInsight {
   recommendation: string;
   confidence: number;
   impact: 'low' | 'medium' | 'high';
-  data: any;
+  data: unknown;
   actionable: boolean;
   expiresAt?: Date;
   createdAt: Date;
@@ -428,7 +428,7 @@ class HealthTrackerIntegration {
   /**
    * Helper methods
    */
-  private async syncFromDevice(device: any): Promise<void> {
+  private async syncFromDevice(device: unknown): Promise<void> {
     // This would implement actual device API calls
     // For now, generate mock data
     const mockSleepData = this.generateMockSleepData();
@@ -473,7 +473,7 @@ class HealthTrackerIntegration {
       restingHeartRate: 60 + Math.random() * 20,
       sleepQuality: ['fair', 'good', 'good', 'excellent'][
         Math.floor(Math.random() * 4)
-      ] as any,
+      ] as unknown,
       sleepScore: 60 + Math.random() * 35,
     };
   }
@@ -487,7 +487,7 @@ class HealthTrackerIntegration {
       exerciseMinutes: Math.random() * 60,
       activityLevel: ['sedentary', 'lightly_active', 'fairly_active'][
         Math.floor(Math.random() * 3)
-      ] as any,
+      ] as unknown,
       stressLevel: Math.random() * 100,
       energyLevel: 50 + Math.random() * 50,
     };

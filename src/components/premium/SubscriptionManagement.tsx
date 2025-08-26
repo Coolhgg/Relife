@@ -2,15 +2,10 @@
 // Handles subscription cancellation, upgrades, downgrades, and plan changes
 
 import React, { useState } from 'react';
+import path from 'path';
+import { SubscriptionTier } from '@/types';
+import { Textarea } from '../ui/textarea';
 import {
-// auto: restored by scout - verify import path
-import { SubscriptionTier } from '@/types';
-// auto: restored by scout - verify import path
-import { Textarea } from '@/components/ui/textarea';
-// auto: restored by scout - verify import path
-import { Textarea } from '@/components/ui/textarea';
-// auto: restored by scout - verify import path
-import { SubscriptionTier } from '@/types';
   Alert,
   ArrowUpCircle,
   ArrowDownCircle,
@@ -38,7 +33,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { Progress } from '../ui/textarea';
+import { Progress } from './ui/progress';
 import { Label } from '../ui/label';
 import { Checkbox } from '../ui/checkbox';
 import PricingTable from './PricingTable';
@@ -228,7 +223,7 @@ export function SubscriptionManagement({
   };
 
   const handleAcceptRetentionOffer = (offerId: string) => {
-    setCancellationData((prev: any) => ({
+    setCancellationData((prev: unknown) => ({
       ...prev,
       retentionOfferAccepted: true,
     }));
@@ -363,8 +358,8 @@ export function SubscriptionManagement({
                         <Label htmlFor="reason">Reason for canceling</Label>
                         <Select
                           value={cancellationData.reason}
-                          onValueChange={(value: any) =>
-                            setCancellationData((prev: any) => ({
+                          onValueChange={(value: unknown) =>
+                            setCancellationData((prev: unknown) => ({
                               ...prev,
                               reason: value,
                             }))
@@ -389,7 +384,7 @@ export function SubscriptionManagement({
                           id="feedback"
                           value={cancellationData.feedback}
                           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            setCancellationData((prev: any) => ({
+                            setCancellationData((prev: unknown) => ({
                               ...prev,
                               feedback: e.target.value,
                             }))
@@ -409,7 +404,7 @@ export function SubscriptionManagement({
                               name="effectiveDate"
                               checked={cancellationData.effectiveDate === 'period_end'}
                               onChange={() =>
-                                setCancellationData((prev: any) => ({
+                                setCancellationData((prev: unknown) => ({
                                   ...prev,
                                   effectiveDate: 'period_end',
                                 }))
@@ -427,7 +422,7 @@ export function SubscriptionManagement({
                               name="effectiveDate"
                               checked={cancellationData.effectiveDate === 'immediate'}
                               onChange={() =>
-                                setCancellationData((prev: any) => ({
+                                setCancellationData((prev: unknown) => ({
                                   ...prev,
                                   effectiveDate: 'immediate',
                                 }))

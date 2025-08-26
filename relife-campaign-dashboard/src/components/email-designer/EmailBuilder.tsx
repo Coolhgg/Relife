@@ -215,7 +215,8 @@ export function EmailBuilder({
     setSelectedBlockId(null);
   }, []);
 
-  const duplicateBlock = useCallback((blockId: string) => {
+  const duplicateBlock = useCallback(
+    (blockId: string) => {
       const blockToDuplicate = template.blocks.find(b => b.id === blockId);
       if (blockToDuplicate) {
         const newBlock: EmailBlock = {
