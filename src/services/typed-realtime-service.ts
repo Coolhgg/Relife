@@ -5,10 +5,9 @@
 
 import { EventEmitter } from 'events';
 import type { SupabaseClient } from '@supabase/supabase-js';
-
-import type {
 import { ErrorHandler } from './error-handler';
 import { config } from '../config/environment';
+import type {
   RealtimeService,
   RealtimeServiceConfig,
   ConnectionStatus,
