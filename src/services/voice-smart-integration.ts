@@ -1,9 +1,9 @@
 // Smart Voice Integration Service for Relife Smart Alarm
 // Comprehensive voice control with smart home, calendar, and advanced integrations
 
-import VoiceRecognitionEnhancedService, {
 import { ErrorHandler } from './error-handler';
 // Note: User data should be passed as parameters or retrieved from auth context
+import VoiceRecognitionEnhancedService, {
   EnhancedVoiceCommand,
 } from './voice-recognition-enhanced';
 import VoiceAIEnhancedService from './voice-ai-enhanced';

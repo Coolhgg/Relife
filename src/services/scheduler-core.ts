@@ -1,8 +1,8 @@
 /**
  * SchedulerCore - Main orchestrator for the advanced alarm scheduling system
  */
-import type {
 import { ErrorHandler } from './error-handler';
+import type {
   Alarm,
   SchedulingConfig,
   SchedulingStats,

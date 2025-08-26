@@ -3,8 +3,8 @@
 
 import { supabase } from './supabase';
 import AnalyticsService from './analytics';
-import type {
 import { ErrorHandler } from './error-handler';
+import type {
   BillingInterval,
   SubscriptionStatus,
   PaymentStatus,

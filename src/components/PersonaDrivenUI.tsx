@@ -3,9 +3,9 @@
 // Adapts interface based on user persona and subscription tier
 
 import React, { useState, useEffect } from 'react';
-import {
 import AnalyticsService from '../services/analytics';
 // Note: persona should be derived from user analytics or context
+import {
   User,
   Clock,
   Star,
@@ -86,7 +86,7 @@ export function usePersonaDetection(userId: string, userBehavior: any) {
     };
 
     const persona = detectPersona();
-    setDetectedPersona(_persona);
+    setDetectedPersona(persona);
   }, [userBehavior]);
 
   return detectedPersona;

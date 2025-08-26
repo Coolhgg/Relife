@@ -3,8 +3,8 @@
 // Manages subscription state, feature access, and billing operations
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import type {
 import { ErrorHandler } from '../services/error-handler';
+import type {
   Subscription,
   SubscriptionPlan,
   SubscriptionTier,
@@ -21,7 +21,6 @@ import { ErrorHandler } from '../services/error-handler';
 } from '../types/premium';
 import SubscriptionService from '../services/subscription-service';
 import StripeService from '../services/stripe-service';
-import { ErrorHandler } from '../services/error-handler';
 import AnalyticsService from '../services/analytics';
 import { TimeoutHandle } from '../types/timers';
 

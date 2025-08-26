@@ -1,8 +1,8 @@
 // Subscription Management Service for Relife Alarm App
 // High-level subscription business logic, feature access, and user management
 
-import type {
 import { ErrorHandler } from './error-handler';
+import type {
   Subscription,
   SubscriptionPlan,
   SubscriptionTier,

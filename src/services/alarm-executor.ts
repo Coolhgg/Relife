@@ -1,8 +1,8 @@
 /**
  * AlarmExecutor - Handles smart optimizations, conditional rules, and advanced execution logic
  */
-import type {
 import { config } from '../config/environment';
+import type {
   Alarm,
   SmartOptimization,
   SeasonalAdjustment,

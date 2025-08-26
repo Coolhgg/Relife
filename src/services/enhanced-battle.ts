@@ -3,11 +3,10 @@
  * Refactored to use standardized service architecture with real persistence and improved testing
  */
 
-import {
-  config,
-  import { ErrorHandler
-} from './error-handler';
+import { config } from '../config/environment';
+import { ErrorHandler } from './error-handler';
 // Note: _index should be implemented locally or passed as parameter
+import {
   Battle,
   BattleType,
   BattleStatus,

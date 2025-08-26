@@ -2,11 +2,9 @@
 // Comprehensive view of subscription status, billing, and feature usage
 
 import React, { useState } from 'react';
+import path from 'path';
+import { SubscriptionTier } from '@/types';
 import {
-import path
-import { SubscriptionTier } from '@/types';
-import path
-import { SubscriptionTier } from '@/types';
   Calendar,
   CreditCard,
   TrendingUp,

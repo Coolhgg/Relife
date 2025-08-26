@@ -3,8 +3,8 @@
  * Handles comprehensive theme data storage, backup, and recovery
  */
 
-import type {
 import { ErrorHandler } from './error-handler';
+import type {
   Theme,
   ThemeConfig,
   PersonalizationSettings,

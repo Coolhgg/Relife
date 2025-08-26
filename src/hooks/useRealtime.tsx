@@ -1,6 +1,4 @@
-import path
-import React from 'react';
-import path
+import path from 'path';
 import React from 'react';
 /* eslint-disable react-refresh/only-export-components */
 /**
@@ -8,10 +6,9 @@ import React from 'react';
  * React hook for managing real-time WebSocket connections, push notifications, and Supabase real-time features
  */
 
+import { config } from '../config/environment';
+import { ErrorHandler } from '../services/error-handler';
 import {
-  config,
-  import { ErrorHandler
-} from '../services/error-handler';
   useEffect,
   useRef,
   useState,

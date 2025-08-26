@@ -2,14 +2,10 @@
 // Handles subscription cancellation, upgrades, downgrades, and plan changes
 
 import React, { useState } from 'react';
+import path from 'path';
+import { SubscriptionTier } from '@/types';
+import { Textarea } from '../ui/textarea';
 import {
-import path
-import { SubscriptionTier } from '@/types';
-import path
-import { Textarea } from './ui/textarea';
-import path
-import path
-import { SubscriptionTier } from '@/types';
   Alert,
   ArrowUpCircle,
   ArrowDownCircle,

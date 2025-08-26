@@ -1,9 +1,7 @@
 import { supabase, createClient } from './supabase';
+import path from 'path';
+import { SubscriptionTier } from '../types';
 import type {
-import path
-import { SubscriptionTier } from '@/types';
-import path
-import { SubscriptionTier } from '@/types';
   Subscription,
   SubscriptionStatus,
   PremiumFeatureAccess,

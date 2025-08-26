@@ -4,8 +4,8 @@ import { lazyAudioLoader } from '../services/lazy-audio-loader';
 import type { AudioLoadProgress, AudioCacheEntry } from '../services/audio-manager';
 import type { CustomSound, Playlist, LoadingState } from '../services/types/media';
 import { TimeoutHandle } from '../types/timers';
-import type {
 import { ErrorHandler } from '../services/error-handler';
+import type {
   PreloadingStatus,
   PerformanceHistoryEntry,
 } from '../types/state-updaters';

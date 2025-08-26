@@ -3,18 +3,6 @@
 // Provides feature access state and controls throughout the React component tree
 
 import React, {
-import path
-import { SubscriptionTier } from '@/types';
-import path
-// Replaced stub import with proper implementation
-import path
-// Replaced stub import with proper implementation
-import path
-import { SubscriptionTier } from '@/types';
-import path
-// Replaced stub import with proper implementation
-import path
-// Replaced stub import with proper implementation
   createContext,
   useContext,
   useEffect,
@@ -22,6 +10,8 @@ import path
   ReactNode,
   useCallback,
 } from 'react';
+import path from 'path';
+import { SubscriptionTier } from '../types';
 import FeatureGateService from '../services/feature-gate-service';
 import SubscriptionService from '../services/subscription-service';
 import { ErrorHandler } from '../services/error-handler';

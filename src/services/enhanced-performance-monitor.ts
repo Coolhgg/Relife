@@ -5,10 +5,8 @@
 
 import { BaseService } from './base/BaseService';
 import { CacheProvider, getCacheManager } from './base/CacheManager';
+import { config } from '../config/environment';
 import {
-  config,
-  import { config
-} from '../config/environment';
   PerformanceMonitorInterface,
   ServiceConfig,
   ServiceHealth,
