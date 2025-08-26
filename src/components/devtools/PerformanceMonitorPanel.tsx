@@ -1,6 +1,6 @@
 /**
  * Performance Monitor Panel - Real-time Performance Metrics
- * 
+ *
  * Tracks and displays performance metrics including:
  * - Component render times
  * - Memory usage
@@ -64,7 +64,7 @@ export const PerformanceMonitorPanel: React.FC = () => {
   const [isMonitoring, setIsMonitoring] = useState(true);
   const [renderTimes, setRenderTimes] = useState<RenderTimeEntry[]>([]);
   const [alerts, setAlerts] = useState<string[]>([]);
-  
+
   const frameCountRef = useRef(0);
   const lastTimeRef = useRef(performance.now());
   const animationFrameRef = useRef<number>();
@@ -76,21 +76,23 @@ export const PerformanceMonitorPanel: React.FC = () => {
     const measureFPS = () => {
       frameCountRef.current++;
       const currentTime = performance.now();
-      
+
       if (currentTime - lastTimeRef.current >= 1000) {
-        const fps = Math.round((frameCountRef.current * 1000) / (currentTime - lastTimeRef.current));
-        
+        const fps = Math.round(
+          (frameCountRef.current * 1000) / (currentTime - lastTimeRef.current)
+        );
+
         setMetrics(prev => ({ ...prev, fps }));
-        
+
         // Add alert for low FPS
         if (fps < 30) {
           setAlerts(prev => [...prev.slice(-4), `Low FPS detected: ${fps}`]);
         }
-        
+
         frameCountRef.current = 0;
         lastTimeRef.current = currentTime;
       }
-      
+
       animationFrameRef.current = requestAnimationFrame(measureFPS);
     };
 
@@ -116,7 +118,7 @@ export const PerformanceMonitorPanel: React.FC = () => {
 
         setMetrics(prev => ({
           ...prev,
-          memoryUsage: { used, total, percentage }
+          memoryUsage: { used, total, percentage },
         }));
 
         // Add alert for high memory usage
@@ -140,7 +142,7 @@ export const PerformanceMonitorPanel: React.FC = () => {
 
     try {
       // Largest Contentful Paint
-      lcpObserver = new PerformanceObserver((entryList) => {
+      lcpObserver = new PerformanceObserver(entryList => {
         const entries = entryList.getEntries();
         const lcp = entries[entries.length - 1]?.startTime || 0;
         setMetrics(prev => ({ ...prev, vitals: { ...prev.vitals, lcp } }));
@@ -148,7 +150,7 @@ export const PerformanceMonitorPanel: React.FC = () => {
       lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
 
       // First Input Delay
-      fidObserver = new PerformanceObserver((entryList) => {
+      fidObserver = new PerformanceObserver(entryList => {
         const entries = entryList.getEntries();
         const fid = entries[0]?.processingStart - entries[0]?.startTime || 0;
         setMetrics(prev => ({ ...prev, vitals: { ...prev.vitals, fid } }));
@@ -156,7 +158,7 @@ export const PerformanceMonitorPanel: React.FC = () => {
       fidObserver.observe({ entryTypes: ['first-input'] });
 
       // Cumulative Layout Shift
-      clsObserver = new PerformanceObserver((entryList) => {
+      clsObserver = new PerformanceObserver(entryList => {
         let cls = 0;
         for (const entry of entryList.getEntries()) {
           if (!(entry as any).hadRecentInput) {
@@ -166,7 +168,6 @@ export const PerformanceMonitorPanel: React.FC = () => {
         setMetrics(prev => ({ ...prev, vitals: { ...prev.vitals, cls } }));
       });
       clsObserver.observe({ entryTypes: ['layout-shift'] });
-
     } catch (error) {
       console.warn('Performance observers not supported:', error);
     }
@@ -207,7 +208,9 @@ export const PerformanceMonitorPanel: React.FC = () => {
     };
 
     return (
-      <div className={`p-4 border rounded-lg ${status ? statusColors[status] : 'border-gray-200 bg-white'}`}>
+      <div
+        className={`p-4 border rounded-lg ${status ? statusColors[status] : 'border-gray-200 bg-white'}`}
+      >
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
             {icon}
@@ -216,7 +219,9 @@ export const PerformanceMonitorPanel: React.FC = () => {
           {status && (
             <div className="flex items-center">
               {status === 'good' && <CheckCircle className="w-4 h-4 text-green-500" />}
-              {status === 'warning' && <AlertCircle className="w-4 h-4 text-yellow-500" />}
+              {status === 'warning' && (
+                <AlertCircle className="w-4 h-4 text-yellow-500" />
+              )}
               {status === 'error' && <AlertCircle className="w-4 h-4 text-red-500" />}
             </div>
           )}
@@ -232,9 +237,13 @@ export const PerformanceMonitorPanel: React.FC = () => {
       {/* Control Panel */}
       <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
         <div className="flex items-center gap-2">
-          <Activity className={`w-5 h-5 ${isMonitoring ? 'text-green-500' : 'text-gray-400'}`} />
+          <Activity
+            className={`w-5 h-5 ${isMonitoring ? 'text-green-500' : 'text-gray-400'}`}
+          />
           <span className="font-medium">Performance Monitor</span>
-          <span className={`text-xs px-2 py-1 rounded ${isMonitoring ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}`}>
+          <span
+            className={`text-xs px-2 py-1 rounded ${isMonitoring ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}`}
+          >
             {isMonitoring ? 'ACTIVE' : 'PAUSED'}
           </span>
         </div>
@@ -242,8 +251,8 @@ export const PerformanceMonitorPanel: React.FC = () => {
           <button
             onClick={() => setIsMonitoring(!isMonitoring)}
             className={`px-3 py-1 rounded text-sm font-medium ${
-              isMonitoring 
-                ? 'bg-red-100 text-red-700 hover:bg-red-200' 
+              isMonitoring
+                ? 'bg-red-100 text-red-700 hover:bg-red-200'
                 : 'bg-green-100 text-green-700 hover:bg-green-200'
             }`}
           >
@@ -270,23 +279,31 @@ export const PerformanceMonitorPanel: React.FC = () => {
           metrics.fps >= 60 ? 'good' : metrics.fps >= 30 ? 'warning' : 'error',
           'Frames per second'
         )}
-        
+
         {renderMetricCard(
           'Memory',
           `${metrics.memoryUsage.percentage}%`,
           <Memory className="w-4 h-4 text-purple-500" />,
-          metrics.memoryUsage.percentage < 50 ? 'good' : metrics.memoryUsage.percentage < 80 ? 'warning' : 'error',
+          metrics.memoryUsage.percentage < 50
+            ? 'good'
+            : metrics.memoryUsage.percentage < 80
+              ? 'warning'
+              : 'error',
           `${metrics.memoryUsage.used}MB / ${metrics.memoryUsage.total}MB`
         )}
-        
+
         {renderMetricCard(
           'Render Time',
           `${metrics.renderTime.toFixed(1)}ms`,
           <Clock className="w-4 h-4 text-green-500" />,
-          metrics.renderTime < 16 ? 'good' : metrics.renderTime < 33 ? 'warning' : 'error',
+          metrics.renderTime < 16
+            ? 'good'
+            : metrics.renderTime < 33
+              ? 'warning'
+              : 'error',
           'Average render duration'
         )}
-        
+
         {renderMetricCard(
           'Components',
           metrics.componentCount,
@@ -310,7 +327,7 @@ export const PerformanceMonitorPanel: React.FC = () => {
             getVitalStatus('lcp', metrics.vitals.lcp) as any,
             'Largest Contentful Paint'
           )}
-          
+
           {renderMetricCard(
             'FID',
             `${metrics.vitals.fid.toFixed(1)}ms`,
@@ -318,7 +335,7 @@ export const PerformanceMonitorPanel: React.FC = () => {
             getVitalStatus('fid', metrics.vitals.fid) as any,
             'First Input Delay'
           )}
-          
+
           {renderMetricCard(
             'CLS',
             metrics.vitals.cls.toFixed(3),
@@ -338,7 +355,10 @@ export const PerformanceMonitorPanel: React.FC = () => {
           </h4>
           <div className="space-y-1">
             {alerts.map((alert, index) => (
-              <div key={index} className="text-sm text-yellow-700 flex items-center gap-2">
+              <div
+                key={index}
+                className="text-sm text-yellow-700 flex items-center gap-2"
+              >
                 <div className="w-1 h-1 bg-yellow-500 rounded-full" />
                 {alert}
               </div>

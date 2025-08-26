@@ -51,71 +51,89 @@ export class AIParametersSecurityService {
       failedAuthentications: 0,
       rateLimitHits: 0,
       securityViolations: 0,
-      activeSessions: 0
+      activeSessions: 0,
     };
   }
 
   private initializeDefaultPermissions(): void {
     // Default permission sets
     const adminPermissions = [
-      'session_create', 'session_read', 'session_delete',
-      'parameter_read', 'parameter_write', 'parameter_validate',
-      'parameter_export', 'parameter_import', 'parameter_batch_write',
-      'parameter_rollback', 'metrics_read', 'audit_read',
-      'security_read', 'security_write', 'bypass_rate_limit'
+      'session_create',
+      'session_read',
+      'session_delete',
+      'parameter_read',
+      'parameter_write',
+      'parameter_validate',
+      'parameter_export',
+      'parameter_import',
+      'parameter_batch_write',
+      'parameter_rollback',
+      'metrics_read',
+      'audit_read',
+      'security_read',
+      'security_write',
+      'bypass_rate_limit',
     ];
 
     const userPermissions = [
-      'session_create', 'session_read', 'session_delete',
-      'parameter_read', 'parameter_write', 'parameter_validate',
-      'parameter_export', 'metrics_read'
+      'session_create',
+      'session_read',
+      'session_delete',
+      'parameter_read',
+      'parameter_write',
+      'parameter_validate',
+      'parameter_export',
+      'metrics_read',
     ];
 
     const developerPermissions = [
       ...userPermissions,
-      'parameter_import', 'parameter_batch_write',
-      'audit_read', 'security_read'
+      'parameter_import',
+      'parameter_batch_write',
+      'audit_read',
+      'security_read',
     ];
 
-    const readonlyPermissions = [
-      'session_read', 'parameter_read', 'metrics_read'
-    ];
+    const readonlyPermissions = ['session_read', 'parameter_read', 'metrics_read'];
 
     // Set default permissions for common roles
     this.setUserPermissions('admin-default', {
       userId: 'admin-default',
       role: 'admin',
       permissions: adminPermissions,
-      securityLevel: 'maximum'
+      securityLevel: 'maximum',
     });
 
     this.setUserPermissions('user-default', {
       userId: 'user-default',
       role: 'user',
       permissions: userPermissions,
-      securityLevel: 'standard'
+      securityLevel: 'standard',
     });
 
     this.setUserPermissions('developer-default', {
       userId: 'developer-default',
       role: 'developer',
       permissions: developerPermissions,
-      securityLevel: 'enhanced'
+      securityLevel: 'enhanced',
     });
   }
 
   private startSecurityMonitoring(): void {
     // Reset metrics every hour
-    setInterval(() => {
-      this.securityMetrics = {
-        ...this.securityMetrics,
-        authenticationAttempts: 0,
-        successfulAuthentications: 0,
-        failedAuthentications: 0,
-        rateLimitHits: 0,
-        securityViolations: 0
-      };
-    }, 60 * 60 * 1000);
+    setInterval(
+      () => {
+        this.securityMetrics = {
+          ...this.securityMetrics,
+          authenticationAttempts: 0,
+          successfulAuthentications: 0,
+          failedAuthentications: 0,
+          rateLimitHits: 0,
+          securityViolations: 0,
+        };
+      },
+      60 * 60 * 1000
+    );
   }
 
   // Permission management
@@ -145,7 +163,7 @@ export class AIParametersSecurityService {
       createdAt: new Date(),
       expiresAt: new Date(Date.now() + this.parseExpiration(expiresIn)),
       lastUsed: null,
-      usageCount: 0
+      usageCount: 0,
     });
 
     return apiKey;
@@ -175,12 +193,12 @@ export class AIParametersSecurityService {
   // Security monitoring
   recordAuthenticationAttempt(success: boolean, userId?: string): void {
     this.securityMetrics.authenticationAttempts++;
-    
+
     if (success) {
       this.securityMetrics.successfulAuthentications++;
     } else {
       this.securityMetrics.failedAuthentications++;
-      
+
       // Track potential security threats
       if (this.securityMetrics.failedAuthentications > 10) {
         this.securityMetrics.lastSecurityIncident = new Date();
@@ -190,7 +208,7 @@ export class AIParametersSecurityService {
 
   recordRateLimitHit(ip: string): void {
     this.securityMetrics.rateLimitHits++;
-    
+
     // Block IP after excessive rate limit hits
     const recentHits = this.securityMetrics.rateLimitHits;
     if (recentHits > 50) {
@@ -201,14 +219,14 @@ export class AIParametersSecurityService {
   recordSecurityViolation(type: string, details: any): void {
     this.securityMetrics.securityViolations++;
     this.securityMetrics.lastSecurityIncident = new Date();
-    
+
     console.warn('[SECURITY VIOLATION]', { type, details, timestamp: new Date() });
   }
 
   // IP blocking
   blockIP(ip: string, duration: number): void {
     this.blockedIPs.add(ip);
-    
+
     setTimeout(() => {
       this.blockedIPs.delete(ip);
     }, duration);
@@ -226,12 +244,12 @@ export class AIParametersSecurityService {
   // Utility methods
   private parseExpiration(expiration: string): number {
     const units = {
-      's': 1000,
-      'm': 60 * 1000,
-      'h': 60 * 60 * 1000,
-      'd': 24 * 60 * 60 * 1000,
-      'w': 7 * 24 * 60 * 60 * 1000,
-      'y': 365 * 24 * 60 * 60 * 1000
+      s: 1000,
+      m: 60 * 1000,
+      h: 60 * 60 * 1000,
+      d: 24 * 60 * 60 * 1000,
+      w: 7 * 24 * 60 * 60 * 1000,
+      y: 365 * 24 * 60 * 60 * 1000,
     };
 
     const match = expiration.match(/^(\d+)([smhdwy])$/);
@@ -249,7 +267,7 @@ export class AIParametersSecurityService {
       permissions,
       sessionId: crypto.randomUUID(),
       iat: Math.floor(Date.now() / 1000),
-      exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60) // 24 hours
+      exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60, // 24 hours
     };
 
     return jwt.sign(payload, process.env.JWT_SECRET || 'ai-params-secret-key');
@@ -272,7 +290,7 @@ export class AIParametersSecurityService {
       activeAPIKeys: this.activeApiKeys.size,
       blockedIPs: this.blockedIPs.size,
       metrics: this.securityMetrics,
-      lastCheck: new Date().toISOString()
+      lastCheck: new Date().toISOString(),
     };
   }
 }

@@ -76,46 +76,59 @@ export const useI18n = (namespace?: string) => {
   };
 
   // Weekday translations - memoized to avoid array recreation
-  const getWeekdayNames = useMemo(() => (short: boolean = false) => {
-    const baseKey = short ? 'common:weekdays' : 'common:weekdays';
-    const suffix = short ? '_short' : '';
+  const getWeekdayNames = useMemo(
+    () =>
+      (short: boolean = false) => {
+        const baseKey = short ? 'common:weekdays' : 'common:weekdays';
+        const suffix = short ? '_short' : '';
 
-    return [
-      t(`${baseKey}.sunday${suffix}`),
-      t(`${baseKey}.monday${suffix}`),
-      t(`${baseKey}.tuesday${suffix}`),
-      t(`${baseKey}.wednesday${suffix}`),
-      t(`${baseKey}.thursday${suffix}`),
-      t(`${baseKey}.friday${suffix}`),
-      t(`${baseKey}.saturday${suffix}`),
-    ];
-  }, [t, language.current]);
+        return [
+          t(`${baseKey}.sunday${suffix}`),
+          t(`${baseKey}.monday${suffix}`),
+          t(`${baseKey}.tuesday${suffix}`),
+          t(`${baseKey}.wednesday${suffix}`),
+          t(`${baseKey}.thursday${suffix}`),
+          t(`${baseKey}.friday${suffix}`),
+          t(`${baseKey}.saturday${suffix}`),
+        ];
+      },
+    [t, language.current]
+  );
 
   // Time period translations - memoized to avoid object recreation
-  const getTimePeriods = useMemo(() => ({
-    morning: t('common:time.morning'),
-    afternoon: t('common:time.afternoon'),
-    evening: t('common:time.evening'),
-    night: t('common:time.night'),
-  }), [t, language.current]);
+  const getTimePeriods = useMemo(
+    () => ({
+      morning: t('common:time.morning'),
+      afternoon: t('common:time.afternoon'),
+      evening: t('common:time.evening'),
+      night: t('common:time.night'),
+    }),
+    [t, language.current]
+  );
 
   // Voice mood translations for alarms - memoized to avoid object recreation
-  const getVoiceMoods = useMemo(() => ({
-    gentle: t('alarms:create.moods.gentle'),
-    energetic: t('alarms:create.moods.energetic'),
-    motivational: t('alarms:create.moods.motivational'),
-    'drill-sergeant': t('alarms:create.moods.drill-sergeant'),
-    funny: t('alarms:create.moods.funny'),
-    calm: t('alarms:create.moods.calm'),
-  }), [t, language.current]);
+  const getVoiceMoods = useMemo(
+    () => ({
+      gentle: t('alarms:create.moods.gentle'),
+      energetic: t('alarms:create.moods.energetic'),
+      motivational: t('alarms:create.moods.motivational'),
+      'drill-sergeant': t('alarms:create.moods.drill-sergeant'),
+      funny: t('alarms:create.moods.funny'),
+      calm: t('alarms:create.moods.calm'),
+    }),
+    [t, language.current]
+  );
 
   // Difficulty level translations - memoized to avoid object recreation
-  const getDifficultyLevels = useMemo(() => ({
-    easy: t('alarms:create.difficulties.easy'),
-    medium: t('alarms:create.difficulties.medium'),
-    hard: t('alarms:create.difficulties.hard'),
-    nuclear: t('alarms:create.difficulties.nuclear'),
-  }), [t, language.current]);
+  const getDifficultyLevels = useMemo(
+    () => ({
+      easy: t('alarms:create.difficulties.easy'),
+      medium: t('alarms:create.difficulties.medium'),
+      hard: t('alarms:create.difficulties.hard'),
+      nuclear: t('alarms:create.difficulties.nuclear'),
+    }),
+    [t, language.current]
+  );
 
   // Error message helper
   const getErrorMessage = (errorKey: string, fallback?: string) => {
@@ -136,11 +149,14 @@ export const useI18n = (namespace?: string) => {
   };
 
   // Language direction helpers for styling - memoized to avoid object recreation
-  const getDirectionStyles = useMemo(() => ({
-    textAlign: language.isRTL ? ('right' as const) : ('left' as const),
-    direction: language.getTextDirection(),
-    flexDirection: language.getFlexDirection(),
-  }), [language]);
+  const getDirectionStyles = useMemo(
+    () => ({
+      textAlign: language.isRTL ? ('right' as const) : ('left' as const),
+      direction: language.getTextDirection(),
+      flexDirection: language.getFlexDirection(),
+    }),
+    [language]
+  );
 
   // Responsive text helper based on language
   const getResponsiveText = (
@@ -152,36 +168,45 @@ export const useI18n = (namespace?: string) => {
   };
 
   // Navigation text helper - memoized to avoid object recreation
-  const getNavigationLabels = useMemo(() => ({
-    dashboard: t('common:navigation.dashboard'),
-    alarms: t('common:navigation.alarms'),
-    advanced: t('common:navigation.advanced'),
-    gaming: t('common:navigation.gaming'),
-    settings: t('common:navigation.settings'),
-    premium: t('common:navigation.premium'),
-  }), [t, language.current]);
+  const getNavigationLabels = useMemo(
+    () => ({
+      dashboard: t('common:navigation.dashboard'),
+      alarms: t('common:navigation.alarms'),
+      advanced: t('common:navigation.advanced'),
+      gaming: t('common:navigation.gaming'),
+      settings: t('common:navigation.settings'),
+      premium: t('common:navigation.premium'),
+    }),
+    [t, language.current]
+  );
 
   // Action button labels - memoized to avoid object recreation
-  const getActionLabels = useMemo(() => ({
-    save: t('common:app.save'),
-    cancel: t('common:app.cancel'),
-    delete: t('common:app.delete'),
-    edit: t('common:app.edit'),
-    add: t('common:app.add'),
-    close: t('common:app.close'),
-    confirm: t('common:app.confirm'),
-    retry: t('common:app.retry'),
-    refresh: t('common:app.refresh'),
-  }), [t, language.current]);
+  const getActionLabels = useMemo(
+    () => ({
+      save: t('common:app.save'),
+      cancel: t('common:app.cancel'),
+      delete: t('common:app.delete'),
+      edit: t('common:app.edit'),
+      add: t('common:app.add'),
+      close: t('common:app.close'),
+      confirm: t('common:app.confirm'),
+      retry: t('common:app.retry'),
+      refresh: t('common:app.refresh'),
+    }),
+    [t, language.current]
+  );
 
   // Accessibility labels - memoized to avoid object recreation
-  const getA11yLabels = useMemo(() => ({
-    skipToContent: t('common:accessibility.skipToContent'),
-    mainContent: t('common:accessibility.mainContent'),
-    navigation: t('common:accessibility.navigation'),
-    loading: t('common:accessibility.loading'),
-    _error: t('common:accessibility._error'),
-  }), [t, language.current]);
+  const getA11yLabels = useMemo(
+    () => ({
+      skipToContent: t('common:accessibility.skipToContent'),
+      mainContent: t('common:accessibility.mainContent'),
+      navigation: t('common:accessibility.navigation'),
+      loading: t('common:accessibility.loading'),
+      _error: t('common:accessibility._error'),
+    }),
+    [t, language.current]
+  );
 
   return {
     // Basic translation functions

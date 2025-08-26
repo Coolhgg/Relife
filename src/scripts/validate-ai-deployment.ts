@@ -29,28 +29,36 @@ class AIDeploymentValidator {
     };
 
     const allPassed = Object.values(results).every(result => result);
-    
+
     console.log('\n📊 Validation Results Summary:');
     console.log(`Services: ${results.serviceTests ? '✅ PASS' : '❌ FAIL'}`);
     console.log(`Orchestrator: ${results.orchestratorTests ? '✅ PASS' : '❌ FAIL'}`);
     console.log(`Integration: ${results.integrationTests ? '✅ PASS' : '❌ FAIL'}`);
     console.log(`Alerting: ${results.alertingTests ? '✅ PASS' : '❌ FAIL'}`);
-    
-    console.log(`\n${allPassed ? '✅' : '❌'} Overall Status: ${allPassed ? 'ALL TESTS PASSED' : 'SOME TESTS FAILED'}`);
-    
+
+    console.log(
+      `\n${allPassed ? '✅' : '❌'} Overall Status: ${allPassed ? 'ALL TESTS PASSED' : 'SOME TESTS FAILED'}`
+    );
+
     return allPassed;
   }
 
   private async validateServices(): Promise<boolean> {
     console.log('🔧 Validating AI Services...');
-    
+
     try {
       // Test AdvancedBehavioralIntelligence
       const behavioral = AdvancedBehavioralIntelligence.getInstance();
       const mockAlarms = [{ id: '1', time: '07:00', enabled: true, userId: 'test' }];
-      const mockEvents = [{ id: '1', alarmId: '1', firedAt: new Date(), dismissed: true, snoozed: false }];
-      
-      const analysis = await behavioral.generateAdvancedBehavioralAnalysis('test', mockAlarms, mockEvents);
+      const mockEvents = [
+        { id: '1', alarmId: '1', firedAt: new Date(), dismissed: true, snoozed: false },
+      ];
+
+      const analysis = await behavioral.generateAdvancedBehavioralAnalysis(
+        'test',
+        mockAlarms,
+        mockEvents
+      );
       if (!analysis.insights || !analysis.psychologicalProfile) {
         throw new Error('Invalid behavioral analysis response');
       }
@@ -68,7 +76,11 @@ class AIDeploymentValidator {
 
       // Test EnhancedRecommendationEngine
       const recommendations = EnhancedRecommendationEngine.getInstance();
-      const recs = await recommendations.generatePersonalizedRecommendations('test', mockAlarms, mockEvents);
+      const recs = await recommendations.generatePersonalizedRecommendations(
+        'test',
+        mockAlarms,
+        mockEvents
+      );
       if (!recs.recommendations) {
         throw new Error('Invalid recommendations response');
       }
@@ -83,7 +95,7 @@ class AIDeploymentValidator {
 
   private async validateOrchestrator(): Promise<boolean> {
     console.log('🎯 Validating Deployment Orchestrator...');
-    
+
     try {
       // Test deployment status retrieval
       const status = this.orchestrator.getDeploymentStatus();
@@ -110,7 +122,7 @@ class AIDeploymentValidator {
 
   private async validateIntegration(): Promise<boolean> {
     console.log('🔗 Validating System Integration...');
-    
+
     try {
       // Test full deployment flow
       const result = await this.orchestrator.startDeployment('validation-test');
@@ -139,10 +151,15 @@ class AIDeploymentValidator {
 
   private async validateAlerting(): Promise<boolean> {
     console.log('🚨 Validating Alerting System...');
-    
+
     try {
       // Test alert creation
-      await this.alerting.sendAlert('low', 'Validation Test Alert', 'This is a test alert', 'validator');
+      await this.alerting.sendAlert(
+        'low',
+        'Validation Test Alert',
+        'This is a test alert',
+        'validator'
+      );
       const activeAlerts = this.alerting.getActiveAlerts();
       if (activeAlerts.length === 0) {
         throw new Error('Alert was not created');
@@ -177,13 +194,14 @@ export default AIDeploymentValidator;
 // CLI execution
 if (require.main === module) {
   const validator = new AIDeploymentValidator();
-  
-  validator.runValidationSuite()
-    .then(async (success) => {
+
+  validator
+    .runValidationSuite()
+    .then(async success => {
       await validator.cleanup();
       process.exit(success ? 0 : 1);
     })
-    .catch(async (error) => {
+    .catch(async error => {
       console.error('💥 Validation suite crashed:', error);
       await validator.cleanup();
       process.exit(1);

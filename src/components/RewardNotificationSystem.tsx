@@ -14,13 +14,13 @@ import {
   Volume2,
   VolumeX,
 } from 'lucide-react';
-import type { 
-  UserReward, 
-  UserGiftInventory, 
-  RewardCategory, 
-  GiftType, 
+import type {
+  UserReward,
+  UserGiftInventory,
+  RewardCategory,
+  GiftType,
   UserAIInsight,
-  RewardRarity 
+  RewardRarity,
 } from '../types/reward-system';
 import { useGamingAnnouncements } from '../hooks/useGamingAnnouncements';
 
@@ -74,81 +74,89 @@ const RewardNotificationSystem: React.FC<NotificationSystemProps> = ({
     };
   }, []);
 
-  const playSound = useCallback((soundType: string) => {
-    if (!soundEnabled || !audioRef.current) return;
+  const playSound = useCallback(
+    (soundType: string) => {
+      if (!soundEnabled || !audioRef.current) return;
 
-    // Map sound types to actual sound files
-    const soundMap: Record<string, string> = {
-      achievement: '/sounds/achievement.mp3',
-      reward: '/sounds/reward.mp3',
-      gift: '/sounds/gift.mp3',
-      milestone: '/sounds/milestone.mp3',
-      level_up: '/sounds/level-up.mp3',
-      epic: '/sounds/epic-reward.mp3',
-      legendary: '/sounds/legendary.mp3',
-    };
+      // Map sound types to actual sound files
+      const soundMap: Record<string, string> = {
+        achievement: '/sounds/achievement.mp3',
+        reward: '/sounds/reward.mp3',
+        gift: '/sounds/gift.mp3',
+        milestone: '/sounds/milestone.mp3',
+        level_up: '/sounds/level-up.mp3',
+        epic: '/sounds/epic-reward.mp3',
+        legendary: '/sounds/legendary.mp3',
+      };
 
-    const soundFile = soundMap[soundType] || soundMap.reward;
-    
-    try {
-      audioRef.current.src = soundFile;
-      audioRef.current.volume = 0.3;
-      audioRef.current.play().catch(() => {
-        // Fail silently if sound can't play
+      const soundFile = soundMap[soundType] || soundMap.reward;
+
+      try {
+        audioRef.current.src = soundFile;
+        audioRef.current.volume = 0.3;
+        audioRef.current.play().catch(() => {
+          // Fail silently if sound can't play
+        });
+      } catch (error) {
+        // Fail silently
+      }
+    },
+    [soundEnabled]
+  );
+
+  const addNotification = useCallback(
+    (notification: Omit<RewardNotification, 'id' | 'timestamp'>) => {
+      const id = `notification-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const newNotification: RewardNotification = {
+        ...notification,
+        id,
+        timestamp: new Date(),
+        duration: notification.duration || defaultDuration,
+      };
+
+      setNotifications(prev => {
+        const updated = [newNotification, ...prev];
+        // Keep only the most recent notifications
+        return updated.slice(0, maxVisible);
       });
-    } catch (error) {
-      // Fail silently
-    }
-  }, [soundEnabled]);
 
-  const addNotification = useCallback((notification: Omit<RewardNotification, 'id' | 'timestamp'>) => {
-    const id = `notification-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    const newNotification: RewardNotification = {
-      ...notification,
-      id,
-      timestamp: new Date(),
-      duration: notification.duration || defaultDuration,
-    };
+      // Play sound effect
+      if (notification.soundEffect) {
+        playSound(notification.soundEffect);
+      } else if (notification.rarity === 'legendary') {
+        playSound('legendary');
+      } else if (notification.rarity === 'epic') {
+        playSound('epic');
+      } else {
+        playSound(notification.type);
+      }
 
-    setNotifications(prev => {
-      const updated = [newNotification, ...prev];
-      // Keep only the most recent notifications
-      return updated.slice(0, maxVisible);
-    });
+      // Auto-remove notification (unless persistent)
+      if (!notification.persistent) {
+        const timeout = setTimeout(() => {
+          removeNotification(id);
+        }, newNotification.duration);
 
-    // Play sound effect
-    if (notification.soundEffect) {
-      playSound(notification.soundEffect);
-    } else if (notification.rarity === 'legendary') {
-      playSound('legendary');
-    } else if (notification.rarity === 'epic') {
-      playSound('epic');
-    } else {
-      playSound(notification.type);
-    }
+        timeoutRefs.current.set(id, timeout);
+      }
 
-    // Auto-remove notification (unless persistent)
-    if (!notification.persistent) {
-      const timeout = setTimeout(() => {
-        removeNotification(id);
-      }, newNotification.duration);
-      
-      timeoutRefs.current.set(id, timeout);
-    }
-
-    // Announce to screen readers
-    announceGaming({
-      type: 'achievement',
-      customMessage: `${notification.title}. ${notification.description}`,
-      priority: notification.celebrationLevel === 'epic' || notification.celebrationLevel === 'high' 
-        ? 'assertive' 
-        : 'polite',
-    });
-  }, [defaultDuration, maxVisible, playSound, announceGaming]);
+      // Announce to screen readers
+      announceGaming({
+        type: 'achievement',
+        customMessage: `${notification.title}. ${notification.description}`,
+        priority:
+          notification.celebrationLevel === 'epic' ||
+          notification.celebrationLevel === 'high'
+            ? 'assertive'
+            : 'polite',
+      });
+    },
+    [defaultDuration, maxVisible, playSound, announceGaming]
+  );
 
   const removeNotification = useCallback((id: string) => {
     setNotifications(prev => prev.filter(n => n.id !== id));
-    
+
     const timeout = timeoutRefs.current.get(id);
     if (timeout) {
       clearTimeout(timeout);
@@ -216,7 +224,7 @@ const RewardNotificationSystem: React.FC<NotificationSystemProps> = ({
         premium_trial: Crown,
         feature_unlock: CheckCircle2,
       };
-      
+
       if (categoryIcons[category]) {
         return categoryIcons[category];
       }
@@ -239,106 +247,138 @@ const RewardNotificationSystem: React.FC<NotificationSystemProps> = ({
   };
 
   // Public methods for creating notifications
-  const showRewardNotification = useCallback((userReward: UserReward) => {
-    const reward = userReward.reward;
-    if (!reward) return;
+  const showRewardNotification = useCallback(
+    (userReward: UserReward) => {
+      const reward = userReward.reward;
+      if (!reward) return;
 
-    addNotification({
-      type: 'reward',
-      title: `🏆 ${reward.name}`,
-      description: reward.description || 'Achievement unlocked!',
-      category: reward.category,
-      rarity: reward.rarity,
-      celebrationLevel: reward.rarity === 'legendary' ? 'epic' : 
-                       reward.rarity === 'epic' ? 'high' :
-                       reward.rarity === 'rare' ? 'medium' : 'low',
-      soundEffect: reward.rarity,
-      data: userReward,
-    });
-  }, [addNotification]);
+      addNotification({
+        type: 'reward',
+        title: `🏆 ${reward.name}`,
+        description: reward.description || 'Achievement unlocked!',
+        category: reward.category,
+        rarity: reward.rarity,
+        celebrationLevel:
+          reward.rarity === 'legendary'
+            ? 'epic'
+            : reward.rarity === 'epic'
+              ? 'high'
+              : reward.rarity === 'rare'
+                ? 'medium'
+                : 'low',
+        soundEffect: reward.rarity,
+        data: userReward,
+      });
+    },
+    [addNotification]
+  );
 
-  const showGiftNotification = useCallback((userGift: UserGiftInventory) => {
-    const gift = userGift.gift;
-    if (!gift) return;
+  const showGiftNotification = useCallback(
+    (userGift: UserGiftInventory) => {
+      const gift = userGift.gift;
+      if (!gift) return;
 
-    addNotification({
-      type: 'gift',
-      title: `🎁 ${gift.name}`,
-      description: `New ${gift.type.replace('_', ' ')} unlocked!`,
-      category: gift.type,
-      rarity: gift.rarity as RewardRarity,
-      celebrationLevel: 'medium',
-      soundEffect: 'gift',
-      data: userGift,
-    });
-  }, [addNotification]);
+      addNotification({
+        type: 'gift',
+        title: `🎁 ${gift.name}`,
+        description: `New ${gift.type.replace('_', ' ')} unlocked!`,
+        category: gift.type,
+        rarity: gift.rarity as RewardRarity,
+        celebrationLevel: 'medium',
+        soundEffect: 'gift',
+        data: userGift,
+      });
+    },
+    [addNotification]
+  );
 
-  const showMilestoneNotification = useCallback((milestone: string, description: string, data?: any) => {
-    addNotification({
-      type: 'milestone',
-      title: `⭐ ${milestone}`,
-      description,
-      celebrationLevel: 'high',
-      soundEffect: 'milestone',
-      data,
-    });
-  }, [addNotification]);
+  const showMilestoneNotification = useCallback(
+    (milestone: string, description: string, data?: any) => {
+      addNotification({
+        type: 'milestone',
+        title: `⭐ ${milestone}`,
+        description,
+        celebrationLevel: 'high',
+        soundEffect: 'milestone',
+        data,
+      });
+    },
+    [addNotification]
+  );
 
-  const showStreakNotification = useCallback((streakDays: number, category?: string) => {
-    const celebrationLevel = streakDays >= 30 ? 'epic' :
-                            streakDays >= 14 ? 'high' :
-                            streakDays >= 7 ? 'medium' : 'low';
+  const showStreakNotification = useCallback(
+    (streakDays: number, category?: string) => {
+      const celebrationLevel =
+        streakDays >= 30
+          ? 'epic'
+          : streakDays >= 14
+            ? 'high'
+            : streakDays >= 7
+              ? 'medium'
+              : 'low';
 
-    addNotification({
-      type: 'streak',
-      title: `🔥 ${streakDays} Day Streak!`,
-      description: `Amazing consistency${category ? ` in ${category}` : ''}!`,
-      celebrationLevel,
-      soundEffect: streakDays >= 30 ? 'epic' : 'achievement',
-      data: { streakDays, category },
-    });
-  }, [addNotification]);
+      addNotification({
+        type: 'streak',
+        title: `🔥 ${streakDays} Day Streak!`,
+        description: `Amazing consistency${category ? ` in ${category}` : ''}!`,
+        celebrationLevel,
+        soundEffect: streakDays >= 30 ? 'epic' : 'achievement',
+        data: { streakDays, category },
+      });
+    },
+    [addNotification]
+  );
 
-  const showLevelUpNotification = useCallback((newLevel: number, previousLevel: number) => {
-    addNotification({
-      type: 'level_up',
-      title: `👑 Level ${newLevel}!`,
-      description: `Leveled up from ${previousLevel} to ${newLevel}!`,
-      celebrationLevel: 'high',
-      soundEffect: 'level_up',
-      data: { newLevel, previousLevel },
-    });
-  }, [addNotification]);
+  const showLevelUpNotification = useCallback(
+    (newLevel: number, previousLevel: number) => {
+      addNotification({
+        type: 'level_up',
+        title: `👑 Level ${newLevel}!`,
+        description: `Leveled up from ${previousLevel} to ${newLevel}!`,
+        celebrationLevel: 'high',
+        soundEffect: 'level_up',
+        data: { newLevel, previousLevel },
+      });
+    },
+    [addNotification]
+  );
 
-  const showInsightNotification = useCallback((insight: UserAIInsight) => {
-    addNotification({
-      type: 'insight',
-      title: `💡 ${insight.title}`,
-      description: insight.description,
-      celebrationLevel: 'low',
-      duration: 8000, // Longer for insights
-      data: insight,
-    });
-  }, [addNotification]);
+  const showInsightNotification = useCallback(
+    (insight: UserAIInsight) => {
+      addNotification({
+        type: 'insight',
+        title: `💡 ${insight.title}`,
+        description: insight.description,
+        celebrationLevel: 'low',
+        duration: 8000, // Longer for insights
+        data: insight,
+      });
+    },
+    [addNotification]
+  );
 
   // Expose methods for external use
-  React.useImperativeHandle(React.forwardRef(() => null), () => ({
-    showRewardNotification,
-    showGiftNotification,
-    showMilestoneNotification,
-    showStreakNotification,
-    showLevelUpNotification,
-    showInsightNotification,
-    clearAllNotifications,
-  }), [
-    showRewardNotification,
-    showGiftNotification,
-    showMilestoneNotification,
-    showStreakNotification,
-    showLevelUpNotification,
-    showInsightNotification,
-    clearAllNotifications,
-  ]);
+  React.useImperativeHandle(
+    React.forwardRef(() => null),
+    () => ({
+      showRewardNotification,
+      showGiftNotification,
+      showMilestoneNotification,
+      showStreakNotification,
+      showLevelUpNotification,
+      showInsightNotification,
+      clearAllNotifications,
+    }),
+    [
+      showRewardNotification,
+      showGiftNotification,
+      showMilestoneNotification,
+      showStreakNotification,
+      showLevelUpNotification,
+      showInsightNotification,
+      clearAllNotifications,
+    ]
+  );
 
   return (
     <>
@@ -362,14 +402,16 @@ const RewardNotificationSystem: React.FC<NotificationSystemProps> = ({
               onClick={() => removeNotification(notification.id)}
             >
               {/* Celebration Effects */}
-              {enableAnimations && (notification.celebrationLevel === 'epic' || notification.celebrationLevel === 'high') && (
-                <div className="absolute inset-0 pointer-events-none">
-                  <div className="absolute -top-1 -left-1 w-3 h-3 bg-white opacity-60 rounded-full animate-ping"></div>
-                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-white opacity-60 rounded-full animate-ping animation-delay-200"></div>
-                  <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-white opacity-60 rounded-full animate-ping animation-delay-400"></div>
-                  <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-white opacity-60 rounded-full animate-ping animation-delay-600"></div>
-                </div>
-              )}
+              {enableAnimations &&
+                (notification.celebrationLevel === 'epic' ||
+                  notification.celebrationLevel === 'high') && (
+                  <div className="absolute inset-0 pointer-events-none">
+                    <div className="absolute -top-1 -left-1 w-3 h-3 bg-white opacity-60 rounded-full animate-ping"></div>
+                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-white opacity-60 rounded-full animate-ping animation-delay-200"></div>
+                    <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-white opacity-60 rounded-full animate-ping animation-delay-400"></div>
+                    <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-white opacity-60 rounded-full animate-ping animation-delay-600"></div>
+                  </div>
+                )}
 
               {/* Sparkle Effect for Legendary */}
               {enableAnimations && notification.rarity === 'legendary' && (
@@ -379,7 +421,7 @@ const RewardNotificationSystem: React.FC<NotificationSystemProps> = ({
                       key={i}
                       className="absolute w-1 h-1 bg-white rounded-full animate-twinkle"
                       style={{
-                        left: `${20 + (i * 15)}%`,
+                        left: `${20 + i * 15}%`,
                         top: `${20 + (i % 3) * 20}%`,
                         animationDelay: `${i * 200}ms`,
                       }}
@@ -399,9 +441,13 @@ const RewardNotificationSystem: React.FC<NotificationSystemProps> = ({
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
-                  <h4 className="font-semibold text-sm leading-5">{notification.title}</h4>
-                  <p className="text-sm opacity-90 mt-1 leading-5">{notification.description}</p>
-                  
+                  <h4 className="font-semibold text-sm leading-5">
+                    {notification.title}
+                  </h4>
+                  <p className="text-sm opacity-90 mt-1 leading-5">
+                    {notification.description}
+                  </p>
+
                   {/* Rarity Badge */}
                   {notification.rarity && notification.rarity !== 'common' && (
                     <div className="mt-2">
@@ -415,7 +461,7 @@ const RewardNotificationSystem: React.FC<NotificationSystemProps> = ({
 
                 {/* Close Button */}
                 <button
-                  onClick={(e) => {
+                  onClick={e => {
                     e.stopPropagation();
                     removeNotification(notification.id);
                   }}
@@ -428,7 +474,7 @@ const RewardNotificationSystem: React.FC<NotificationSystemProps> = ({
               {/* Progress Bar */}
               {!notification.persistent && notification.duration && (
                 <div className="absolute bottom-0 left-0 w-full h-1 bg-white bg-opacity-20">
-                  <div 
+                  <div
                     className="h-full bg-white bg-opacity-60 animate-shrink-width"
                     style={{ animationDuration: `${notification.duration}ms` }}
                   />
@@ -445,7 +491,11 @@ const RewardNotificationSystem: React.FC<NotificationSystemProps> = ({
           onClick={() => setSoundEnabled(!soundEnabled)}
           className="fixed bottom-4 right-4 z-40 w-12 h-12 bg-gray-800 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-gray-700 transition-colors"
         >
-          {soundEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+          {soundEnabled ? (
+            <Volume2 className="w-5 h-5" />
+          ) : (
+            <VolumeX className="w-5 h-5" />
+          )}
         </button>
       )}
 
@@ -463,13 +513,24 @@ const RewardNotificationSystem: React.FC<NotificationSystemProps> = ({
         }
 
         @keyframes twinkle {
-          0%, 100% { opacity: 0; transform: scale(0); }
-          50% { opacity: 1; transform: scale(1); }
+          0%,
+          100% {
+            opacity: 0;
+            transform: scale(0);
+          }
+          50% {
+            opacity: 1;
+            transform: scale(1);
+          }
         }
 
         @keyframes shrink-width {
-          from { width: 100%; }
-          to { width: 0%; }
+          from {
+            width: 100%;
+          }
+          to {
+            width: 0%;
+          }
         }
 
         .animate-slide-in-right {
@@ -505,29 +566,47 @@ const RewardNotificationSystem: React.FC<NotificationSystemProps> = ({
 export const useRewardNotifications = () => {
   const [notificationSystem, setNotificationSystem] = useState<any>(null);
 
-  const showRewardUnlocked = useCallback((userReward: UserReward) => {
-    notificationSystem?.showRewardNotification(userReward);
-  }, [notificationSystem]);
+  const showRewardUnlocked = useCallback(
+    (userReward: UserReward) => {
+      notificationSystem?.showRewardNotification(userReward);
+    },
+    [notificationSystem]
+  );
 
-  const showGiftUnlocked = useCallback((userGift: UserGiftInventory) => {
-    notificationSystem?.showGiftNotification(userGift);
-  }, [notificationSystem]);
+  const showGiftUnlocked = useCallback(
+    (userGift: UserGiftInventory) => {
+      notificationSystem?.showGiftNotification(userGift);
+    },
+    [notificationSystem]
+  );
 
-  const showMilestone = useCallback((milestone: string, description: string, data?: any) => {
-    notificationSystem?.showMilestoneNotification(milestone, description, data);
-  }, [notificationSystem]);
+  const showMilestone = useCallback(
+    (milestone: string, description: string, data?: any) => {
+      notificationSystem?.showMilestoneNotification(milestone, description, data);
+    },
+    [notificationSystem]
+  );
 
-  const showStreak = useCallback((streakDays: number, category?: string) => {
-    notificationSystem?.showStreakNotification(streakDays, category);
-  }, [notificationSystem]);
+  const showStreak = useCallback(
+    (streakDays: number, category?: string) => {
+      notificationSystem?.showStreakNotification(streakDays, category);
+    },
+    [notificationSystem]
+  );
 
-  const showLevelUp = useCallback((newLevel: number, previousLevel: number) => {
-    notificationSystem?.showLevelUpNotification(newLevel, previousLevel);
-  }, [notificationSystem]);
+  const showLevelUp = useCallback(
+    (newLevel: number, previousLevel: number) => {
+      notificationSystem?.showLevelUpNotification(newLevel, previousLevel);
+    },
+    [notificationSystem]
+  );
 
-  const showInsight = useCallback((insight: UserAIInsight) => {
-    notificationSystem?.showInsightNotification(insight);
-  }, [notificationSystem]);
+  const showInsight = useCallback(
+    (insight: UserAIInsight) => {
+      notificationSystem?.showInsightNotification(insight);
+    },
+    [notificationSystem]
+  );
 
   const clearAll = useCallback(() => {
     notificationSystem?.clearAllNotifications();
@@ -536,11 +615,11 @@ export const useRewardNotifications = () => {
   return {
     NotificationSystem: React.forwardRef<any, NotificationSystemProps>((props, ref) => {
       React.useImperativeHandle(ref, () => notificationSystem, [notificationSystem]);
-      
+
       return (
         <RewardNotificationSystem
           {...props}
-          ref={(instance) => setNotificationSystem(instance)}
+          ref={instance => setNotificationSystem(instance)}
         />
       );
     }),

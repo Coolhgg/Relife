@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { TimeoutHandle } from '../types/timers';
 // Note: timer should be implemented locally using React hooks
 import {
-// Replaced stub import with proper implementation // auto: restored by scout - verify
+  // Replaced stub import with proper implementation // auto: restored by scout - verify
   Crown,
   Star,
   Zap,

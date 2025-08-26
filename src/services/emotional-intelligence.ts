@@ -1,7 +1,7 @@
 import { supabase } from './supabase';
 import { AnalyticsService } from './analytics';
 import type {
-// Note: User data should come from auth context or be passed as parameter
+  // Note: User data should come from auth context or be passed as parameter
   EmotionalState,
   EmotionalContext,
   EmotionalMessage,

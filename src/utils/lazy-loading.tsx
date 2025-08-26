@@ -127,12 +127,16 @@ export const SmartAlarmDashboard = lazyWithPreload(
 // TODO: Performance optimization - Advanced analytics and scheduling
 export const AdvancedAnalytics = lazyWithPreload(
   () => import('../components/AdvancedAnalytics'),
-  () => window.location.pathname.includes('/analytics') || window.location.pathname.includes('/advanced')
+  () =>
+    window.location.pathname.includes('/analytics') ||
+    window.location.pathname.includes('/advanced')
 );
 
 export const AdvancedAlarmScheduling = lazyWithPreload(
   () => import('../components/AdvancedAlarmScheduling'),
-  () => localStorage.getItem('premium_features_enabled') === 'true' && window.location.pathname.includes('/scheduling')
+  () =>
+    localStorage.getItem('premium_features_enabled') === 'true' &&
+    window.location.pathname.includes('/scheduling')
 );
 
 // TODO: Performance optimization - Settings and theme browsing
@@ -143,7 +147,9 @@ export const SettingsPage = lazyWithPreload(
 
 export const AlarmThemeBrowser = lazyWithPreload(
   () => import('../components/AlarmThemeBrowser'),
-  () => window.location.pathname.includes('/themes') || window.location.pathname.includes('/browse')
+  () =>
+    window.location.pathname.includes('/themes') ||
+    window.location.pathname.includes('/browse')
 );
 
 // TODO: Performance optimization - PWA and diagnostic components

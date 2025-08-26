@@ -1,12 +1,18 @@
 /**
  * Enhanced Alarm Service Implementation
- * 
+ *
  * Extends BaseService and implements IAlarmService interface
  * Provides dependency-injected alarm management with proper lifecycle
  */
 
 import { BaseService } from '../base/BaseService';
-import { IAlarmService, IStorageService, ISecurityService, IAnalyticsService, IBattleService } from '../../types/service-interfaces';
+import {
+  IAlarmService,
+  IStorageService,
+  ISecurityService,
+  IAnalyticsService,
+  IBattleService,
+} from '../../types/service-interfaces';
 import { ServiceConfig } from '../../types/service-architecture';
 import { Alarm, VoiceMood, User } from '../../types';
 import { generateAlarmId, getNextAlarmTime } from '../../utils';
@@ -32,7 +38,7 @@ export class EnhancedAlarmService extends BaseService implements IAlarmService {
     config: ServiceConfig;
   }) {
     super(dependencies.config);
-    
+
     this.storageService = dependencies.storageService;
     this.securityService = dependencies.securityService;
     this.analyticsService = dependencies.analyticsService;
@@ -45,17 +51,18 @@ export class EnhancedAlarmService extends BaseService implements IAlarmService {
 
   async initialize(config?: ServiceConfig): Promise<void> {
     await super.initialize(config);
-    
+
     try {
       // Load existing alarms
       await this.loadAlarms();
-      
+
       // Start alarm monitoring
       this.startAlarmMonitoring();
-      
+
       this.markReady();
-      console.log(`${this.name} initialized successfully with ${this.alarms.length} alarms`);
-      
+      console.log(
+        `${this.name} initialized successfully with ${this.alarms.length} alarms`
+      );
     } catch (error) {
       console.error(`${this.name} initialization failed:`, error);
       throw error;
@@ -100,12 +107,12 @@ export class EnhancedAlarmService extends BaseService implements IAlarmService {
 
     try {
       // Security validation
-      if (data.userId && !await this.securityService.validateUser(data.userId)) {
+      if (data.userId && !(await this.securityService.validateUser(data.userId))) {
         throw new Error('Invalid user ID');
       }
 
       // Rate limiting
-      if (!await this.securityService.checkRateLimit('create_alarm', 10, 300000)) {
+      if (!(await this.securityService.checkRateLimit('create_alarm', 10, 300000))) {
         throw new Error('Rate limit exceeded for alarm creation');
       }
 
@@ -149,7 +156,6 @@ export class EnhancedAlarmService extends BaseService implements IAlarmService {
 
       this.emit('alarm:created', alarm);
       return alarm;
-
     } catch (error) {
       await this.handleError(error as Error, 'createAlarm');
       throw error;
@@ -170,7 +176,9 @@ export class EnhancedAlarmService extends BaseService implements IAlarmService {
       // Security validation
       if (data.userId && existingAlarm.userId !== data.userId) {
         if (!this.validateAlarmOwnership(alarmId, data.userId)) {
-          throw new Error('Permission denied: Cannot update alarm owned by another user');
+          throw new Error(
+            'Permission denied: Cannot update alarm owned by another user'
+          );
         }
       }
 
@@ -199,7 +207,6 @@ export class EnhancedAlarmService extends BaseService implements IAlarmService {
 
       this.emit('alarm:updated', updatedAlarm);
       return updatedAlarm;
-
     } catch (error) {
       await this.handleError(error as Error, 'updateAlarm');
       throw error;
@@ -242,7 +249,6 @@ export class EnhancedAlarmService extends BaseService implements IAlarmService {
       });
 
       this.emit('alarm:deleted', alarmId);
-
     } catch (error) {
       await this.handleError(error as Error, 'deleteAlarm');
       throw error;
@@ -279,7 +285,6 @@ export class EnhancedAlarmService extends BaseService implements IAlarmService {
 
       this.emit('alarm:toggled', { alarm, enabled });
       return alarm;
-
     } catch (error) {
       await this.handleError(error as Error, 'toggleAlarm');
       throw error;
@@ -295,15 +300,15 @@ export class EnhancedAlarmService extends BaseService implements IAlarmService {
 
     try {
       // Rate limiting
-      if (!await this.securityService.checkRateLimit('load_alarms', 20, 60000)) {
+      if (!(await this.securityService.checkRateLimit('load_alarms', 20, 60000))) {
         throw new Error('Rate limit exceeded for alarm loading');
       }
 
       // Load from storage
-      const alarmData = await this.storageService.get('alarms') || [];
-      
+      const alarmData = (await this.storageService.get('alarms')) || [];
+
       // Filter by user if specified
-      const filteredAlarms = userId 
+      const filteredAlarms = userId
         ? alarmData.filter((alarm: any) => alarm.userId === userId)
         : alarmData;
 
@@ -313,12 +318,13 @@ export class EnhancedAlarmService extends BaseService implements IAlarmService {
           ...alarm,
           createdAt: new Date(alarm.createdAt),
           updatedAt: new Date(alarm.updatedAt),
-          lastTriggered: alarm.lastTriggered ? new Date(alarm.lastTriggered) : undefined,
+          lastTriggered: alarm.lastTriggered
+            ? new Date(alarm.lastTriggered)
+            : undefined,
         }))
         .filter((alarm: any) => this.validateAlarmData(alarm));
 
       return this.alarms;
-
     } catch (error) {
       await this.handleError(error as Error, 'loadAlarms');
       throw error;
@@ -342,23 +348,23 @@ export class EnhancedAlarmService extends BaseService implements IAlarmService {
 
   getBattleAlarms(userId: string): Alarm[] {
     this.ensureReady();
-    return this.alarms.filter(alarm => 
-      alarm.userId === userId && alarm.battleId
-    );
+    return this.alarms.filter(alarm => alarm.userId === userId && alarm.battleId);
   }
 
   getNonBattleAlarms(userId: string): Alarm[] {
     this.ensureReady();
-    return this.alarms.filter(alarm => 
-      alarm.userId === userId && !alarm.battleId
-    );
+    return this.alarms.filter(alarm => alarm.userId === userId && !alarm.battleId);
   }
 
   // ============================================================================
   // Alarm Actions
   // ============================================================================
 
-  async dismissAlarm(alarmId: string, method: 'voice' | 'button' | 'shake' | 'challenge', user?: User): Promise<void> {
+  async dismissAlarm(
+    alarmId: string,
+    method: 'voice' | 'button' | 'shake' | 'challenge',
+    user?: User
+  ): Promise<void> {
     this.ensureInitialized();
 
     try {
@@ -369,7 +375,9 @@ export class EnhancedAlarmService extends BaseService implements IAlarmService {
 
       // Security validation
       if (user && alarm.userId !== user.id) {
-        throw new Error('Permission denied: Cannot dismiss alarm owned by another user');
+        throw new Error(
+          'Permission denied: Cannot dismiss alarm owned by another user'
+        );
       }
 
       alarm.dismissed = true;
@@ -382,7 +390,11 @@ export class EnhancedAlarmService extends BaseService implements IAlarmService {
 
       // Handle battle integration
       if (alarm.battleId && user) {
-        await this.battleService.completeBattleChallenge(alarm.battleId, user.id, method);
+        await this.battleService.completeBattleChallenge(
+          alarm.battleId,
+          user.id,
+          method
+        );
       }
 
       // Track analytics
@@ -394,7 +406,6 @@ export class EnhancedAlarmService extends BaseService implements IAlarmService {
       });
 
       this.emit('alarm:dismissed', { alarm, method, user });
-
     } catch (error) {
       await this.handleError(error as Error, 'dismissAlarm');
       throw error;
@@ -430,7 +441,7 @@ export class EnhancedAlarmService extends BaseService implements IAlarmService {
       // Schedule snooze notification
       const snoozeTime = new Date();
       snoozeTime.setMinutes(snoozeTime.getMinutes() + minutes);
-      
+
       await scheduleLocalNotification({
         id: `${alarmId}_snooze_${alarm.snoozeCount}`,
         title: `Snoozed: ${alarm.label}`,
@@ -449,7 +460,6 @@ export class EnhancedAlarmService extends BaseService implements IAlarmService {
       });
 
       this.emit('alarm:snoozed', { alarm, minutes, user });
-
     } catch (error) {
       await this.handleError(error as Error, 'snoozeAlarm');
       throw error;
@@ -502,7 +512,6 @@ export class EnhancedAlarmService extends BaseService implements IAlarmService {
       });
 
       this.emit('alarm:battle_unlinked', { alarm, previousBattleId });
-
     } catch (error) {
       await this.handleError(error as Error, 'unlinkAlarmFromBattle');
       throw error;
@@ -536,7 +545,7 @@ export class EnhancedAlarmService extends BaseService implements IAlarmService {
 
     try {
       const nextTrigger = getNextAlarmTime(alarm.time, alarm.days);
-      
+
       await scheduleLocalNotification({
         id: alarm.id,
         title: alarm.label,
@@ -576,7 +585,7 @@ export class EnhancedAlarmService extends BaseService implements IAlarmService {
 
   private async checkActiveAlarms(): Promise<void> {
     const now = new Date();
-    
+
     for (const alarm of this.alarms) {
       if (!alarm.enabled || alarm.dismissed) continue;
 
@@ -584,7 +593,7 @@ export class EnhancedAlarmService extends BaseService implements IAlarmService {
       if (nextTrigger <= now && !alarm.isActive) {
         alarm.isActive = true;
         alarm.lastTriggered = now;
-        
+
         this.emit('alarm:triggered', alarm);
       }
     }
