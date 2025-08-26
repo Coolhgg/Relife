@@ -80,7 +80,8 @@ function main() {
       type: notificationType,
       summary: {
         totalLanguages: languages.length,
-        averageQuality: Math.round(_languages.reduce(
+        averageQuality: Math.round(
+          _languages.reduce(
             (sum, [_, lang]) => sum + (lang.qualityScore?.overall || 0),
             0
           ) / languages.length
@@ -90,11 +91,11 @@ function main() {
         stale: staleLanguages.length,
       },
       alerts: qualityAlerts,
-      criticalLanguages: criticalLanguages.map(_([code, lang]) => ({
+      criticalLanguages: criticalLanguages.map(([code, lang]) => ({
         language: code,
         quality: Math.round(lang.qualityScore?.overall || 0),
       })),
-      staleLanguages: staleLanguages.map(_([code, lang]) => ({
+      staleLanguages: staleLanguages.map(([code, lang]) => ({
         language: code,
         lastUpdate: lang.lastUpdated,
       })),

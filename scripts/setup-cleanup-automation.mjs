@@ -1,5 +1,5 @@
-import { _setupSuccess } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 #!/usr/bin/env node
+import { _setupSuccess } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
 
 /**
  * Setup Script for Cleanup Automation
