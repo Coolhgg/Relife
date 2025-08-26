@@ -8,7 +8,7 @@ import { AlertTriangle, AlertDescription } from './ui/alert';
 import { Separator } from './ui/separator';
 import { Label } from './ui/label';
 import {
-import { Alert } from 'lucide-react'; // auto: restored by scout - verify
+  Alert,
   Zap,
   Clock,
   Target,
