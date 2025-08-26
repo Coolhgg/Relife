@@ -72,7 +72,7 @@ class BundleSizeMonitor {
     }
 
     // Analyze each file pattern
-    Object.entries(this.options.limits).forEach(_([pattern, _limit]) => {
+    Object.entries(this.options.limits).forEach(([pattern, limit]) => {
       const files = this.findMatchingFiles(pattern);
 
       files.forEach(file => {

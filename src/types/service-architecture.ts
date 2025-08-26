@@ -43,7 +43,8 @@ export interface ServiceError {
 // Base Service Interface
 // ============================================================================
 
-export interface BaseService { [key: string]: unknown[]): void;
+export interface BaseService {
+  [key: string]: unknown;
 }
 
 // ============================================================================
