@@ -93,7 +93,7 @@ export class MailchimpService {
 
     try {
       const response = await mailchimp.lists.getAllLists();
-      return response.lists.map(_(list: any) => ({
+      return response.lists.map((list: any) => ({
         id: list.id,
         name: list.name,
         member_count: list.stats.member_count,

@@ -11,18 +11,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import {
-  Users,
+  Users as _Users,
   Mail,
   TrendingUp,
   Settings,
-  Target,
+  Target as _Target,
   Brain,
   Zap,
   ArrowUpRight,
   Send,
   Eye,
   MousePointer,
-  CheckCircle,
+  CheckCircle as _CheckCircle,
 } from 'lucide-react';
 
 // Mock data for demonstrations
@@ -254,7 +254,7 @@ export default function CampaignDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {Object.entries(personaData).map(_([persona, data]) => (
+                  {Object.entries(personaData).map(([persona, data]) => (
                     <Card key={persona}>
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
@@ -427,9 +427,9 @@ export default function CampaignDashboard() {
                       emails: 3,
                       conversion: '8%',
                     },
-                  ].map(_(template, _index) => (
+                  ].map((template, _index) => (
                     <Card
-                      key={index}
+                      key={_index}
                       className="cursor-pointer hover:shadow-md transition-shadow"
                     >
                       <CardHeader className="pb-3">
@@ -485,7 +485,7 @@ export default function CampaignDashboard() {
                       campaigns: 0,
                     },
                   ].map((platform, _index) => (
-                    <Card key={index}>
+                    <Card key={_index}>
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
                           <CardTitle className="text-sm">{platform.platform}</CardTitle>
@@ -551,9 +551,9 @@ export default function CampaignDashboard() {
                       status: 'paused',
                       triggered: 89,
                     },
-                  ].map(_(rule, _index) => (
+                  ].map((rule, _index) => (
                     <div
-                      key={index}
+                      key={_index}
                       className="flex items-center justify-between p-4 border rounded-lg"
                     >
                       <div className="flex items-center gap-3">

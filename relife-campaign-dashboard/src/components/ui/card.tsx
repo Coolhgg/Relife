@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
-function Card(_{ className, _...props }: React.ComponentProps<'div'>) {
+function Card({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="card"
@@ -16,7 +16,7 @@ function Card(_{ className, _...props }: React.ComponentProps<'div'>) {
   );
 }
 
-function CardHeader(_{ className, _...props }: React.ComponentProps<'div'>) {
+function CardHeader({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-header"
@@ -29,7 +29,7 @@ function CardHeader(_{ className, _...props }: React.ComponentProps<'div'>) {
   );
 }
 
-function CardTitle(_{ className, _...props }: React.ComponentProps<'div'>) {
+function CardTitle({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-title"
@@ -39,7 +39,7 @@ function CardTitle(_{ className, _...props }: React.ComponentProps<'div'>) {
   );
 }
 
-function CardDescription(_{ className, _...props }: React.ComponentProps<'div'>) {
+function CardDescription({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-description"
@@ -49,7 +49,7 @@ function CardDescription(_{ className, _...props }: React.ComponentProps<'div'>)
   );
 }
 
-function CardAction(_{ className, _...props }: React.ComponentProps<'div'>) {
+function CardAction({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-action"
@@ -62,11 +62,11 @@ function CardAction(_{ className, _...props }: React.ComponentProps<'div'>) {
   );
 }
 
-function CardContent(_{ className, _...props }: React.ComponentProps<'div'>) {
+function CardContent({ className, ...props }: React.ComponentProps<'div'>) {
   return <div data-slot="card-content" className={cn('px-6', className)} {...props} />;
 }
 
-function CardFooter(_{ className, _...props }: React.ComponentProps<'div'>) {
+function CardFooter({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-footer"

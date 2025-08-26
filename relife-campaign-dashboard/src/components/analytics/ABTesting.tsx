@@ -71,7 +71,7 @@ interface ABTestingProps {
   className?: string;
 }
 
-export function ABTesting(_{ className }: ABTestingProps) {
+export function ABTesting({ className }: ABTestingProps) {
   const [activeTab, setActiveTab] = useState<'overview' | 'create' | 'results'>(
     'overview'
   );
@@ -216,7 +216,7 @@ export function ABTesting(_{ className }: ABTestingProps) {
     return null;
   };
 
-  return (_<Card className={className}>
+  return (<Card className={className}>
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
@@ -414,7 +414,7 @@ export function ABTesting(_{ className }: ABTestingProps) {
 
                   {/* Variants Comparison */}
                   <div className="grid grid-cols-2 gap-4">
-                    {test.variants.map(_(variant, _index) => (
+                    {test.variants.map((variant, _index) => (
                       <div key={index} className="p-3 bg-gray-50 rounded">
                         <div className="flex items-center justify-between mb-2">
                           <h5 className="font-medium">{variant.name}</h5>
