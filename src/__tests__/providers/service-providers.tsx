@@ -19,7 +19,7 @@ export interface MockAlarmService {
   createAlarm: jest.MockedFunction<(alarm: unknown) => Promise<unknown>>;
   updateAlarm: jest.MockedFunction<(id: string, updates: unknown) => Promise<unknown>>;
   deleteAlarm: jest.MockedFunction<(id: string) => Promise<void>>;
-  getAlarms: jest.MockedFunction<() => Promise<AlarmData[]>>>;
+  getAlarms: jest.MockedFunction<() => Promise<AlarmData[]>>;
   getAlarm: jest.MockedFunction<(id: string) => Promise<AlarmData | null>>>;
   scheduleAlarm: jest.MockedFunction<(alarm: unknown) => Promise<void>>;
   cancelAlarm: jest.MockedFunction<(id: string) => Promise<void>>;
