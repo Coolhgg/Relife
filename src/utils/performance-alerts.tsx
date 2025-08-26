@@ -312,7 +312,11 @@ class PerformanceAlertManager {
   /**
    * Create and process alert
    */
-  private createAlert(rule: AlertRule, value: number, metadata?: Record<string, unknown>) {
+  private createAlert(
+    rule: AlertRule,
+    value: number,
+    metadata?: Record<string, unknown>
+  ) {
     const alertId = `${rule.id}-${Date.now()}`;
 
     const alert: PerformanceAlert = {
@@ -481,7 +485,10 @@ class PerformanceAlertManager {
   /**
    * Trigger optimization based on alert
    */
-  private triggerOptimization(alert: PerformanceAlert, _config: Record<string, unknown>) {
+  private triggerOptimization(
+    alert: PerformanceAlert,
+    _config: Record<string, unknown>
+  ) {
     switch (_config.type) {
       case 'memory_cleanup':
         this.triggerMemoryCleanup();

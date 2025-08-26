@@ -4,10 +4,8 @@
  */
 
 import React, { useState, useRef, useEffect as _useEffect } from 'react';
+import { EventHandler } from '../types/common-types';
 import {
-import {
-  EventHandler
-} from '../types/common-types';
   Eye,
   EyeOff,
   Volume2,

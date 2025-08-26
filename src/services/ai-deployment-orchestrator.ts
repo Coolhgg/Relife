@@ -965,7 +965,8 @@ export class AIDeploymentOrchestrator {
 
   private async sendDeploymentNotification(
     status: string,
-    report?: unknown): Promise<void> {
+    report?: unknown
+  ): Promise<void> {
     // In a real implementation, this would send notifications via email, Slack, etc.
     console.log(`[Notification] Deployment ${status}`, report ? { report } : '');
   }

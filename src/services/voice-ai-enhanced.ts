@@ -942,7 +942,10 @@ class VoiceAIEnhancedService {
     return greeting;
   }
 
-  private generateWeatherContext(weather: unknown, personality: VoicePersonality): string {
+  private generateWeatherContext(
+    weather: unknown,
+    personality: VoicePersonality
+  ): string {
     if (!weather) return '';
 
     if (weather.condition === 'sunny') {

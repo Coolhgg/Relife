@@ -180,7 +180,9 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
   };
 
   const handleThemeUpdated = (theme: CustomSoundTheme) => {
-    setThemes((prev: unknown) => prev.map((t: unknown) => (t.id === theme.id ? theme : t)));
+    setThemes((prev: unknown) =>
+      prev.map((t: unknown) => (t.id === theme.id ? theme : t))
+    );
     setEditingTheme(null);
   };
 
@@ -287,7 +289,9 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
 
   const handleExportMultipleThemes = async (themeIds: string[]) => {
     try {
-      const themesToExport = themes.filter((theme: unknown) => themeIds.includes(theme.id));
+      const themesToExport = themes.filter((theme: unknown) =>
+        themeIds.includes(theme.id)
+      );
       const exportData = {
         version: '1.0',
         exportedAt: new Date().toISOString(),

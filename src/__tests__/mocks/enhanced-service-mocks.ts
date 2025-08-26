@@ -2,10 +2,7 @@
  * Enhanced Service Mocks - New Architecture
  * Implements the enhanced service interfaces with dependency injection patterns
  */
-import {
-  MockDataRecord, MockDataStore
-} from '../../types/common-types';
-
+import { MockDataRecord, MockDataStore } from '../../types/common-types';
 
 import type {
   BaseService,
@@ -46,7 +43,8 @@ export abstract class MockBaseService implements BaseService {
   protected initialized: boolean = false;
   protected ready: boolean = false;
   protected errors: ServiceError[] = [];
-  protected eventHandlers: Map<string, Array<(...args: MockDataRecord[]) => void>> = new Map();
+  protected eventHandlers: Map<string, Array<(...args: MockDataRecord[]) => void>> =
+    new Map();
   protected startTime: Date = new Date();
   protected dependencies: Map<string, BaseService> = new Map();
 
@@ -280,7 +278,11 @@ export class MockCacheProvider implements CacheProvider {
 export class MockAlarmService extends MockBaseService implements AlarmServiceInterface {
   private alarms: Alarm[] = [];
   private cache = new MockCacheProvider();
-  private callHistory: Array<{ method: string; args: MockDataRecord[]; timestamp: number }> = [];
+  private callHistory: Array<{
+    method: string;
+    args: MockDataRecord[];
+    timestamp: number;
+  }> = [];
 
   constructor(dependencies?: Map<string, BaseService>, _config?: ServiceConfig) {
     super('MockAlarmService', '1.0.0', _config || {}, dependencies);
@@ -348,7 +350,11 @@ export class MockAlarmService extends MockBaseService implements AlarmServiceInt
     });
   }
 
-  public getCallHistory(): Array<{ method: string; args: MockDataRecord[]; timestamp: number }> {
+  public getCallHistory(): Array<{
+    method: string;
+    args: MockDataRecord[];
+    timestamp: number;
+  }> {
     return [...this.callHistory];
   }
 
@@ -474,7 +480,11 @@ export class MockAnalyticsService
 {
   private events: AnalyticsEvent[] = [];
   private cache = new MockCacheProvider();
-  private callHistory: Array<{ method: string; args: MockDataRecord[]; timestamp: number }> = [];
+  private callHistory: Array<{
+    method: string;
+    args: MockDataRecord[];
+    timestamp: number;
+  }> = [];
   private queue: Array<{
     event: string;
     properties?: Record<string, unknown>;
@@ -537,7 +547,11 @@ export class MockAnalyticsService
     }
   }
 
-  public getCallHistory(): Array<{ method: string; args: MockDataRecord[]; timestamp: number }> {
+  public getCallHistory(): Array<{
+    method: string;
+    args: MockDataRecord[];
+    timestamp: number;
+  }> {
     return [...this.callHistory];
   }
 
@@ -549,7 +563,10 @@ export class MockAnalyticsService
     return this.queue.length;
   }
 
-  public async track(_event: string, properties?: Record<string, unknown>): Promise<void> {
+  public async track(
+    _event: string,
+    properties?: Record<string, unknown>
+  ): Promise<void> {
     this.logCall('track', [_event, properties]);
 
     if (!this._config.enabled) {
@@ -561,7 +578,10 @@ export class MockAnalyticsService
     await this.delay(25);
   }
 
-  public async identify(userId: string, traits?: Record<string, unknown>): Promise<void> {
+  public async identify(
+    userId: string,
+    traits?: Record<string, unknown>
+  ): Promise<void> {
     this.logCall('identify', [userId, traits]);
 
     if (!this._config.enabled) {
@@ -599,7 +619,11 @@ export class MockSubscriptionService
 {
   private subscriptions = new Map<string, Subscription>();
   private cache = new MockCacheProvider();
-  private callHistory: Array<{ method: string; args: MockDataRecord[]; timestamp: number }> = [];
+  private callHistory: Array<{
+    method: string;
+    args: MockDataRecord[];
+    timestamp: number;
+  }> = [];
 
   constructor(dependencies?: Map<string, BaseService>, _config?: ServiceConfig) {
     super('MockSubscriptionService', '1.0.0', _config || {}, dependencies);
@@ -658,7 +682,11 @@ export class MockSubscriptionService
     });
   }
 
-  public getCallHistory(): Array<{ method: string; args: MockDataRecord[]; timestamp: number }> {
+  public getCallHistory(): Array<{
+    method: string;
+    args: MockDataRecord[];
+    timestamp: number;
+  }> {
     return [...this.callHistory];
   }
 
@@ -756,7 +784,11 @@ export class MockBattleService
   implements BattleServiceInterface
 {
   private battles: Battle[] = [];
-  private callHistory: Array<{ method: string; args: MockDataRecord[]; timestamp: number }> = [];
+  private callHistory: Array<{
+    method: string;
+    args: MockDataRecord[];
+    timestamp: number;
+  }> = [];
 
   constructor(dependencies?: Map<string, BaseService>, _config?: ServiceConfig) {
     super('MockBattleService', '1.0.0', _config || {}, dependencies);
@@ -789,7 +821,11 @@ export class MockBattleService
     });
   }
 
-  public getCallHistory(): Array<{ method: string; args: MockDataRecord[]; timestamp: number }> {
+  public getCallHistory(): Array<{
+    method: string;
+    args: MockDataRecord[];
+    timestamp: number;
+  }> {
     return [...this.callHistory];
   }
 
@@ -883,7 +919,10 @@ export class MockBattleService
     return { success: true };
   }
 
-  public async updateBattleProgress(battleId: string, progress: unknown): Promise<void> {
+  public async updateBattleProgress(
+    battleId: string,
+    progress: unknown
+  ): Promise<void> {
     this.logCall('updateBattleProgress', [battleId, progress]);
 
     const battle = this.battles.find(b => b.id === battleId);
@@ -930,7 +969,11 @@ export class MockBattleService
 // ============================================================================
 
 export class MockVoiceService extends MockBaseService implements VoiceServiceInterface {
-  private callHistory: Array<{ method: string; args: MockDataRecord[]; timestamp: number }> = [];
+  private callHistory: Array<{
+    method: string;
+    args: MockDataRecord[];
+    timestamp: number;
+  }> = [];
   private availableVoices: MockDataRecord[] = [];
   private currentVoice: string = 'default';
   private speaking: boolean = false;
@@ -970,7 +1013,11 @@ export class MockVoiceService extends MockBaseService implements VoiceServiceInt
     });
   }
 
-  public getCallHistory(): Array<{ method: string; args: MockDataRecord[]; timestamp: number }> {
+  public getCallHistory(): Array<{
+    method: string;
+    args: MockDataRecord[];
+    timestamp: number;
+  }> {
     return [...this.callHistory];
   }
 

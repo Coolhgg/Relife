@@ -205,7 +205,11 @@ function AppContent() {
       );
       updateServiceWorkerAlarms(appState.alarm.alarms);
     }
-  }, [appState.alarm.alarms, serviceWorkerState.isInitialized, updateServiceWorkerAlarms]);
+  }, [
+    appState.alarm.alarms,
+    serviceWorkerState.isInitialized,
+    updateServiceWorkerAlarms,
+  ]);
 
   // Emotional Intelligence Notifications Hook
   const [_emotionalState, emotionalActions] = useEmotionalNotifications({
@@ -216,7 +220,12 @@ function AppContent() {
   // Tab Protection Announcements Hook
   const tabProtectionSettings = useTabProtectionSettings();
   const { announceProtectionWarning } = useTabProtectionAnnouncements({
-    activeAlarm: appState.alarm.currentlyTriggering.length > 0 ? appState.alarm.alarms.find(a => appState.alarm.currentlyTriggering.includes(a.id)) || null : null,
+    activeAlarm:
+      appState.alarm.currentlyTriggering.length > 0
+        ? appState.alarm.alarms.find(a =>
+            appState.alarm.currentlyTriggering.includes(a.id)
+          ) || null
+        : null,
     // TODO: Performance optimization - Move to useMemo to prevent re-renders
     // const enabledAlarms = useMemo(() => appState.alarms.filter(alarm => alarm.enabled), [appState.alarms]);
     enabledAlarms: appState.alarms.filter((alarm: unknown) => alarm.enabled),
@@ -243,10 +252,10 @@ function AppContent() {
         // Update user habits based on current alarms
         if (alarms.length > 0) {
           const habitData = {
-            habit_name: "daily_alarms",
+            habit_name: 'daily_alarms',
             current_count: alarms.filter(a => a.enabled).length,
             target_count: alarms.length,
-            last_activity: new Date().toISOString()
+            last_activity: new Date().toISOString(),
           };
           await rewardService.updateUserHabits(auth.user?.id!, habitData);
         }
@@ -268,7 +277,9 @@ function AppContent() {
           level: analytics?.current_level || 1,
           experience: analytics?.total_points || 0, // Using points as experience
           streakDays: analytics?.current_streak || 0,
-          unlockedRewards: (userRewards || []).map(r => r.reward_id || r.id || String(r)),
+          unlockedRewards: (userRewards || []).map(
+            r => r.reward_id || r.id || String(r)
+          ),
         };
 
         setAppState((prev: AppState) => ({
@@ -1188,7 +1199,11 @@ function AppContent() {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, [
-    appState.alarm.currentlyTriggering.length > 0 ? appState.alarm.alarms.find(a => appState.alarm.currentlyTriggering.includes(a.id)) || null : null,
+    appState.alarm.currentlyTriggering.length > 0
+      ? appState.alarm.alarms.find(a =>
+          appState.alarm.currentlyTriggering.includes(a.id)
+        ) || null
+      : null,
     appState.alarm.alarms,
     announceProtectionWarning,
     tabProtectionSettings.settings,
@@ -2260,7 +2275,9 @@ function AppContent() {
                   }}
                   role="tab"
                   aria-selected={appState.navigation.currentView === 'alarms'}
-                  aria-current={appState.navigation.currentView === 'alarms' ? 'page' : undefined}
+                  aria-current={
+                    appState.navigation.currentView === 'alarms' ? 'page' : undefined
+                  }
                   aria-label="Alarms - Manage your alarm list"
                   aria-controls="main-content"
                 >
@@ -2291,9 +2308,13 @@ function AppContent() {
                       : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
                   }`}
                   role="tab"
-                  aria-selected={appState.navigation.currentView === 'advanced-scheduling'}
+                  aria-selected={
+                    appState.navigation.currentView === 'advanced-scheduling'
+                  }
                   aria-current={
-                    appState.navigation.currentView === 'advanced-scheduling' ? 'page' : undefined
+                    appState.navigation.currentView === 'advanced-scheduling'
+                      ? 'page'
+                      : undefined
                   }
                   aria-label="Advanced Scheduling - Create smart alarms with AI optimization"
                   aria-controls="main-content"
@@ -2326,7 +2347,9 @@ function AppContent() {
                   }`}
                   role="tab"
                   aria-selected={appState.navigation.currentView === 'gaming'}
-                  aria-current={appState.navigation.currentView === 'gaming' ? 'page' : undefined}
+                  aria-current={
+                    appState.navigation.currentView === 'gaming' ? 'page' : undefined
+                  }
                   aria-label="Gaming - Rewards, battles, and community challenges"
                   aria-controls="main-content"
                 >
@@ -2415,7 +2438,9 @@ function AppContent() {
                   }`}
                   role="tab"
                   aria-selected={appState.navigation.currentView === 'pricing'}
-                  aria-current={appState.navigation.currentView === 'pricing' ? 'page' : undefined}
+                  aria-current={
+                    appState.navigation.currentView === 'pricing' ? 'page' : undefined
+                  }
                   aria-label="Premium - Subscription plans and premium features"
                   aria-controls="main-content"
                 >

@@ -54,7 +54,9 @@ export interface ThemeContextValue {
   // Theme presets and customization
   availableThemes: ThemePreset[];
   createCustomTheme: (
-    baseTheme: Theme, customizations: unknown) => Promise<CustomThemeConfig>;
+    baseTheme: Theme,
+    customizations: unknown
+  ) => Promise<CustomThemeConfig>;
   saveThemePreset: (preset: ThemePreset) => Promise<void>;
   loadThemePreset: (presetId: string) => Promise<void>;
 

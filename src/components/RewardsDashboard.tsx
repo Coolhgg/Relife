@@ -416,7 +416,9 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
               {rewardSystem.availableRewards
                 .filter(
                   reward =>
-                    !rewardSystem.unlockedRewards.find((ur: unknown) => ur.id === reward.id)
+                    !rewardSystem.unlockedRewards.find(
+                      (ur: unknown) => ur.id === reward.id
+                    )
                 )
                 .map((reward: unknown) => {
                   const CategoryIcon = getCategoryIcon(reward.category);

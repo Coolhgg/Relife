@@ -405,7 +405,8 @@ export class EnhancedOfflineStorage extends OfflineStorage {
   async resolveConflict(
     conflictId: string,
     resolution: 'client' | 'server' | 'merged',
-    mergedData?: unknown): Promise<boolean> {
+    mergedData?: unknown
+  ): Promise<boolean> {
     try {
       const conflicts = await this.getConflicts();
       const conflictIndex = conflicts.findIndex(c => c.id === conflictId);

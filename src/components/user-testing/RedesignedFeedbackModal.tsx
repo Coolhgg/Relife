@@ -365,7 +365,10 @@ export function RedesignedFeedbackModal({
             <button
               key={type.id}
               onClick={() =>
-                setFeedbackData((prev: unknown) => ({ ...prev, type: type.id as unknown }))
+                setFeedbackData((prev: unknown) => ({
+                  ...prev,
+                  type: type.id as unknown,
+                }))
               }
               className={`group relative p-6 rounded-2xl border-2 transition-all duration-300 hover:scale-105 ${
                 isSelected
@@ -527,7 +530,10 @@ export function RedesignedFeedbackModal({
             id="description"
             value={feedbackData.description}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setFeedbackData((prev: unknown) => ({ ...prev, description: e.target.value }))
+              setFeedbackData((prev: unknown) => ({
+                ...prev,
+                description: e.target.value,
+              }))
             }
             placeholder="Tell us more about your experience, what you liked, what could be improved..."
             className="mt-2 min-h-[120px] text-base"
@@ -655,7 +661,10 @@ export function RedesignedFeedbackModal({
                       size="sm"
                       onClick={() => {
                         setScreenshot(null);
-                        setFeedbackData((prev: unknown) => ({ ...prev, screenshot: null }));
+                        setFeedbackData((prev: unknown) => ({
+                          ...prev,
+                          screenshot: null,
+                        }));
                       }}
                     >
                       <X className="w-4 h-4" />

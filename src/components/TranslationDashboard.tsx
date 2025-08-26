@@ -460,7 +460,8 @@ export const TranslationDashboard: React.FC = () => {
                     🚨 Critical Issues
                   </h3>
                   {}
-                  {data.filter((d: unknown) => d.qualityScore.overall < 70).length === 0 ? (
+                  {data.filter((d: unknown) => d.qualityScore.overall < 70).length ===
+                  0 ? (
                     <p className="text-green-600">✅ No critical issues detected!</p>
                   ) : (
                     <div className="space-y-2">

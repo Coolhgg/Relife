@@ -637,7 +637,7 @@ export interface AppState {
     camera: boolean;
     microphone: boolean;
   };
-  
+
   // Navigation state
   currentView:
     | 'dashboard'
@@ -649,7 +649,7 @@ export interface AppState {
     | 'advanced-scheduling'
     | 'pricing'
     | 'gift-shop';
-  
+
   // Reward and gamification
   rewardSystem: {
     points: number;
@@ -658,15 +658,15 @@ export interface AppState {
     streakDays: number;
     unlockedRewards: string[];
   };
-  
+
   activeBattles: Record<string, string>; // alarmId -> battleId mapping
-  
+
   // Social features
   friends: UserFriend[];
-  
+
   // Onboarding state
   isOnboarding: boolean;
-  
+
   // Full nested state for advanced functionality
   alarm: AlarmState;
   user: UserState;

@@ -85,7 +85,11 @@ export class MockAlarmService {
     MockServiceUtils.clearCache();
   }
 
-  static getCallHistory(): Array<{ method: string; args: unknown[]; timestamp: number }> {
+  static getCallHistory(): Array<{
+    method: string;
+    args: unknown[];
+    timestamp: number;
+  }> {
     return [...this.callHistory];
   }
 
@@ -292,7 +296,11 @@ export class MockSubscriptionService {
     this.callHistory = [];
   }
 
-  static getCallHistory(): Array<{ method: string; args: unknown[]; timestamp: number }> {
+  static getCallHistory(): Array<{
+    method: string;
+    args: unknown[];
+    timestamp: number;
+  }> {
     return [...this.callHistory];
   }
 
@@ -484,7 +492,11 @@ export class MockAnalyticsService {
     this.isEnabled = true;
   }
 
-  static getCallHistory(): Array<{ method: string; args: unknown[]; timestamp: number }> {
+  static getCallHistory(): Array<{
+    method: string;
+    args: unknown[];
+    timestamp: number;
+  }> {
     return [...this.callHistory];
   }
 
@@ -530,7 +542,10 @@ export class MockAnalyticsService {
     await MockServiceUtils.delay(50);
   }
 
-  static async identify(userId: string, traits?: Record<string, unknown>): Promise<void> {
+  static async identify(
+    userId: string,
+    traits?: Record<string, unknown>
+  ): Promise<void> {
     this.logCall('identify', [userId, traits]);
 
     if (!this.isEnabled) {
@@ -555,7 +570,11 @@ export class MockAnalyticsService {
   }
 
   static async batch(
-    events: Array<{ _event: string; properties?: Record<string, unknown>; userId?: string }>
+    events: Array<{
+      _event: string;
+      properties?: Record<string, unknown>;
+      userId?: string;
+    }>
   ): Promise<void> {
     this.logCall('batch', [events]);
 
@@ -593,7 +612,11 @@ export class MockBattleService {
     this.realTimeUpdates.clear();
   }
 
-  static getCallHistory(): Array<{ method: string; args: unknown[]; timestamp: number }> {
+  static getCallHistory(): Array<{
+    method: string;
+    args: unknown[];
+    timestamp: number;
+  }> {
     return [...this.callHistory];
   }
 
@@ -703,7 +726,9 @@ export class MockBattleService {
 
   static async submitWakeProof(
     battleId: string,
-    userId: string, proofData: unknown): Promise<{
+    userId: string,
+    proofData: unknown
+  ): Promise<{
     pointsEarned: number;
     newScore: number;
     rank: number;

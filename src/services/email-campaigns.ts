@@ -483,7 +483,9 @@ export class EmailCampaignService {
 
     try {
       const campaignData = campaignConfig[persona];
-      const sequence = campaignData.sequences.find((seq: unknown) => seq.id === sequenceId);
+      const sequence = campaignData.sequences.find(
+        (seq: unknown) => seq.id === sequenceId
+      );
 
       if (!sequence) {
         throw new Error(`Sequence ${sequenceId} not found for persona ${_persona}`);

@@ -351,7 +351,9 @@ export class AlarmAPISecurityService {
    */
   async finalizeResponse(
     context: APISecurityContext,
-    status: number, responseData: unknown): Promise<{ status: number; headers: SecurityHeaders; body: unknown }> {
+    status: number,
+    responseData: unknown
+  ): Promise<{ status: number; headers: SecurityHeaders; body: unknown }> {
     try {
       // Calculate response time
       const responseTime = Date.now() - context.startTime.getTime();
