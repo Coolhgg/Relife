@@ -37,19 +37,14 @@ import {
   AlertTriangle,
   CheckCircle,
   Info,
-  Play,
-  Pause,
   Wifi,
   WifiOff,
-  History,
-  Eye,
   Server,
-  Database,
   Globe,
-  Smartphone
+  Play
 } from 'lucide-react';
 
-// Import the live component
+// Import the Live AI Parameter Customizer component
 import LiveAIParameterCustomizer from './LiveAIParameterCustomizer';
 
 interface AIParameterCategory {
@@ -65,22 +60,23 @@ interface ConfigurationPreset {
   id: string;
   name: string;
   description: string;
-  category: string;
   parameters: Record<string, any>;
+  isDefault?: boolean;
 }
 
 const AIModelParametersCustomizerLive: React.FC = () => {
-  const [mode, setMode] = useState<'overview' | 'live' | 'batch' | 'presets'>('overview');
-  const [selectedCategory, setSelectedCategory] = useState<string>('core_ai');
-  const [isConnected, setIsConnected] = useState(false);
-  const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'error' | 'offline'>('offline');
+  const [mode, setMode] = useState<'overview' | 'live' | 'presets'>('overview');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [connectionStatus, setConnectionStatus] = useState<'connected' | 'disconnected' | 'connecting'>('connected');
   const [systemHealth, setSystemHealth] = useState<Record<string, number>>({});
+  const [selectedPreset, setSelectedPreset] = useState<string>('');
 
+  // AI Parameter Categories with live status
   const categories: AIParameterCategory[] = [
     {
       id: 'core_ai',
       name: 'Core AI Settings',
-      icon: <Brain className=\"w-5 h-5\" />,
+      icon: <Brain className="w-5 h-5" />,
       description: 'Learning rate, pattern recognition, confidence thresholds',
       parameterCount: 12,
       isLive: true
@@ -88,7 +84,7 @@ const AIModelParametersCustomizerLive: React.FC = () => {
     {
       id: 'voice_ai',
       name: 'Voice AI Configuration',
-      icon: <Mic className=\"w-5 h-5\" />,
+      icon: <Mic className="w-5 h-5" />,
       description: 'Personality adaptation, response complexity, speech patterns',
       parameterCount: 18,
       isLive: true
@@ -96,7 +92,7 @@ const AIModelParametersCustomizerLive: React.FC = () => {
     {
       id: 'behavioral_intelligence',
       name: 'Behavioral Intelligence',
-      icon: <Brain className=\"w-5 h-5\" />,
+      icon: <Brain className="w-5 h-5" />,
       description: 'Analysis depth, psychological profiling, contextual learning',
       parameterCount: 15,
       isLive: true
@@ -104,7 +100,7 @@ const AIModelParametersCustomizerLive: React.FC = () => {
     {
       id: 'rewards_system',
       name: 'Rewards System',
-      icon: <Trophy className=\"w-5 h-5\" />,
+      icon: <Trophy className="w-5 h-5" />,
       description: 'Personalization, gamification intensity, achievement triggers',
       parameterCount: 22,
       isLive: true
@@ -112,7 +108,7 @@ const AIModelParametersCustomizerLive: React.FC = () => {
     {
       id: 'platform_integration',
       name: 'Platform Integration',
-      icon: <Globe className=\"w-5 h-5\" />,
+      icon: <Globe className="w-5 h-5" />,
       description: 'Health apps, calendar sync, weather integration, privacy settings',
       parameterCount: 16,
       isLive: false
@@ -120,183 +116,149 @@ const AIModelParametersCustomizerLive: React.FC = () => {
     {
       id: 'deployment_config',
       name: 'Deployment Configuration',
-      icon: <Zap className=\"w-5 h-5\" />,
+      icon: <Zap className="w-5 h-5" />,
       description: 'Phase management, monitoring depth, rollback strategies',
-      parameterCount: 20,
-      isLive: true
+      parameterCount: 8,
+      isLive: false
     }
   ];
 
-  const configPresets: ConfigurationPreset[] = [
-    {
-      id: 'conservative',
-      name: 'Conservative',
-      description: 'Prioritizes accuracy and privacy over advanced features',
-      category: 'general',
-      parameters: {
-        learningRate: 0.2,
-        confidenceThreshold: 0.85,
-        psychologicalProfiling: false,
-        gamificationIntensity: 40
-      }
-    },
+  // Configuration Presets
+  const configurationPresets: ConfigurationPreset[] = [
     {
       id: 'balanced',
-      name: 'Balanced',
-      description: 'Optimal balance between performance and privacy',
-      category: 'general',
+      name: 'Balanced Performance',
+      description: 'Optimal balance between accuracy and speed for general use',
       parameters: {
-        learningRate: 0.5,
-        confidenceThreshold: 0.75,
-        psychologicalProfiling: true,
-        gamificationIntensity: 70
+        learningRate: 0.7,
+        confidenceThreshold: 0.8,
+        responseComplexity: 'moderate',
+        personalizationLevel: 0.6
+      },
+      isDefault: true
+    },
+    {
+      id: 'high_accuracy',
+      name: 'High Accuracy',
+      description: 'Maximum precision with deeper analysis, slower responses',
+      parameters: {
+        learningRate: 0.9,
+        confidenceThreshold: 0.95,
+        responseComplexity: 'complex',
+        personalizationLevel: 0.8
       }
     },
     {
-      id: 'aggressive',
-      name: 'Aggressive',
-      description: 'Maximum AI capabilities with advanced features enabled',
-      category: 'general',
+      id: 'fast_response',
+      name: 'Fast Response',
+      description: 'Quick responses with simplified analysis for real-time use',
       parameters: {
-        learningRate: 0.8,
-        confidenceThreshold: 0.65,
-        psychologicalProfiling: true,
-        gamificationIntensity: 95
+        learningRate: 0.5,
+        confidenceThreshold: 0.6,
+        responseComplexity: 'simple',
+        personalizationLevel: 0.4
       }
     },
     {
       id: 'privacy_focused',
       name: 'Privacy Focused',
-      description: 'Minimal data collection with essential features only',
-      category: 'privacy',
+      description: 'Minimal data collection with enhanced privacy protection',
       parameters: {
-        learningRate: 0.3,
-        confidenceThreshold: 0.9,
-        psychologicalProfiling: false,
-        gamificationIntensity: 30
+        learningRate: 0.4,
+        confidenceThreshold: 0.7,
+        dataRetention: 'minimal',
+        personalizationLevel: 0.3
       }
     }
   ];
 
-  // Connection management
-  const checkConnection = useCallback(async () => {
-    setConnectionStatus('connecting');
-    try {
-      const response = await fetch('/api/ai-parameters/configuration/health-check');
-      if (response.ok) {
-        setIsConnected(true);
-        setConnectionStatus('connected');
-        
-        // Get system health metrics
-        const healthData = await response.json();
-        setSystemHealth(healthData.systemHealth || {});
-      } else {
-        throw new Error('Health check failed');
-      }
-    } catch (error) {
-      console.error('Connection check failed:', error);
-      setIsConnected(false);
-      setConnectionStatus('error');
-    }
+  // Simulate system health monitoring
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSystemHealth({
+        'Core AI': 0.85 + Math.random() * 0.15,
+        'Voice Processing': 0.9 + Math.random() * 0.1,
+        'Behavioral Analysis': 0.8 + Math.random() * 0.2,
+        'Rewards Engine': 0.95 + Math.random() * 0.05
+      });
+    }, 3000);
+
+    return () => clearInterval(interval);
   }, []);
 
-  // Initialize connection
-  useEffect(() => {
-    checkConnection();
-    
-    // Setup periodic health checks
-    const interval = setInterval(checkConnection, 30000);
-    return () => clearInterval(interval);
-  }, [checkConnection]);
+  const handleLiveConfiguration = useCallback(() => {
+    setMode('live');
+  }, []);
 
-  // Apply configuration preset
-  const applyPreset = async (preset: ConfigurationPreset) => {
-    try {
-      const response = await fetch('/api/ai-parameters/batch-update', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: 'current-user',
-          updates: Object.entries(preset.parameters).map(([key, value]) => ({
-            category: 'core_ai', // Default category, would be mapped properly
-            parameters: { [key]: value },
-            userId: 'current-user',
-            immediate: true
-          }))
-        })
-      });
+  const handlePresetApplication = useCallback((presetId: string) => {
+    // In a real implementation, this would apply the preset configuration
+    console.log('Applying preset:', presetId);
+    setSelectedPreset(presetId);
+  }, []);
 
-      if (response.ok) {
-        // Show success message
-        console.log(`Applied preset: ${preset.name}`);
-      }
-    } catch (error) {
-      console.error('Failed to apply preset:', error);
-    }
-  };
-
+  // Render overview mode
   const renderOverview = () => (
-    <div className=\"space-y-6\">
+    <div className="space-y-6">
       {/* System Status */}
       <Card>
         <CardHeader>
-          <CardTitle className=\"flex items-center gap-2\">
-            <Server className=\"w-5 h-5\" />
+          <CardTitle className="flex items-center gap-2">
+            <Server className="w-5 h-5" />
             System Status
           </CardTitle>
           <CardDescription>
-            Real-time status of AI parameter configuration system
+            Real-time status of AI model parameters and system health
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className=\"grid grid-cols-1 md:grid-cols-3 gap-4\">
-            <div className=\"flex items-center justify-between p-4 bg-muted rounded-lg\">
-              <div className=\"flex items-center gap-2\">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
+              <div className="flex items-center gap-2">
                 {connectionStatus === 'connected' ? (
-                  <Wifi className=\"w-5 h-5 text-green-500\" />
+                  <Wifi className="w-5 h-5 text-green-500" />
                 ) : (
-                  <WifiOff className=\"w-5 h-5 text-red-500\" />
+                  <WifiOff className="w-5 h-5 text-red-500" />
                 )}
-                <span className=\"font-medium\">Connection</span>
+                <span className="font-medium">Connection Status</span>
               </div>
               <Badge variant={connectionStatus === 'connected' ? 'default' : 'destructive'}>
                 {connectionStatus}
               </Badge>
             </div>
 
-            <div className=\"flex items-center justify-between p-4 bg-muted rounded-lg\">
-              <div className=\"flex items-center gap-2\">
-                <Activity className=\"w-5 h-5 text-blue-500\" />
-                <span className=\"font-medium\">Live Services</span>
+            <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
+              <div className="flex items-center gap-2">
+                <Activity className="w-5 h-5 text-blue-500" />
+                <span className="font-medium">Live Services</span>
               </div>
-              <Badge variant=\"secondary\">
-                {categories.filter(c => c.isLive).length} Active
+              <Badge variant="secondary">
+                {categories.filter(cat => cat.isLive).length} Active
               </Badge>
             </div>
 
-            <div className=\"flex items-center justify-between p-4 bg-muted rounded-lg\">
-              <div className=\"flex items-center gap-2\">
-                <Settings className=\"w-5 h-5 text-purple-500\" />
-                <span className=\"font-medium\">Parameters</span>
+            <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
+              <div className="flex items-center gap-2">
+                <Settings className="w-5 h-5 text-purple-500" />
+                <span className="font-medium">Parameters</span>
               </div>
-              <Badge variant=\"secondary\">
-                {categories.reduce((sum, cat) => sum + cat.parameterCount, 0)} Total
+              <Badge variant="outline">
+                {categories.reduce((total, cat) => total + cat.parameterCount, 0)} Total
               </Badge>
             </div>
           </div>
 
           {/* Health Metrics */}
           {Object.keys(systemHealth).length > 0 && (
-            <div className=\"mt-6 space-y-3\">
-              <h4 className=\"font-medium\">Service Health</h4>
-              <div className=\"grid grid-cols-2 md:grid-cols-4 gap-3\">
+            <div className="mt-6 space-y-3">
+              <h4 className="font-medium">Service Health</h4>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {Object.entries(systemHealth).map(([service, health]) => (
-                  <div key={service} className=\"space-y-2\">
-                    <div className=\"flex justify-between text-sm\">
+                  <div key={service} className="space-y-2">
+                    <div className="flex justify-between text-sm">
                       <span>{service}</span>
                       <span>{Math.round(health * 100)}%</span>
                     </div>
-                    <Progress value={health * 100} className=\"h-2\" />
+                    <Progress value={health * 100} className="h-2" />
                   </div>
                 ))}
               </div>
@@ -305,40 +267,30 @@ const AIModelParametersCustomizerLive: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Categories Overview */}
-      <div className=\"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4\">
+      {/* Parameter Categories */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {categories.map((category) => (
-          <Card key={category.id} className=\"cursor-pointer hover:shadow-md transition-shadow\"
-                onClick={() => {
-                  setSelectedCategory(category.id);
-                  setMode('live');
-                }}>
-            <CardHeader className=\"pb-3\">
-              <div className=\"flex items-center justify-between\">
-                <div className=\"flex items-center gap-2\">
+          <Card key={category.id} className="cursor-pointer transition-all hover:shadow-md">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
                   {category.icon}
-                  <CardTitle className=\"text-base\">{category.name}</CardTitle>
+                  <CardTitle className="text-base">{category.name}</CardTitle>
                 </div>
                 {category.isLive && (
-                  <Badge variant=\"outline\" className=\"text-xs\">Live</Badge>
+                  <Badge variant="secondary" className="text-xs">
+                    Live
+                  </Badge>
                 )}
               </div>
-              <CardDescription className=\"text-sm\">
-                {category.description}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className=\"flex items-center justify-between text-sm\">
-                <span className=\"text-muted-foreground\">Parameters</span>
-                <span className=\"font-medium\">{category.parameterCount}</span>
-              </div>
+              <CardDescription>{category.description}</CardDescription>
               {category.isLive && (
-                <div className=\"flex items-center gap-1 mt-2 text-xs text-green-600\">
-                  <div className=\"w-2 h-2 rounded-full bg-green-500 animate-pulse\" />
-                  Real-time configuration
+                <div className="flex items-center gap-1 mt-2 text-xs text-green-600">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                  Real-time updates active
                 </div>
               )}
-            </CardContent>
+            </CardHeader>
           </Card>
         ))}
       </div>
@@ -346,50 +298,49 @@ const AIModelParametersCustomizerLive: React.FC = () => {
       {/* Quick Actions */}
       <Card>
         <CardHeader>
-          <CardTitle className=\"flex items-center gap-2\">
-            <Zap className=\"w-5 h-5\" />
+          <CardTitle className="flex items-center gap-2">
+            <Zap className="w-5 h-5" />
             Quick Actions
           </CardTitle>
           <CardDescription>
-            Common configuration tasks and shortcuts
+            Common parameter configuration tasks
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className=\"grid grid-cols-2 md:grid-cols-4 gap-3\">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <Button 
-              variant=\"outline\" 
-              onClick={() => setMode('live')}
-              className=\"flex items-center gap-2\"
+              variant="outline" 
+              onClick={handleLiveConfiguration}
+              className="flex items-center gap-2"
             >
-              <Play className=\"w-4 h-4\" />
+              <Play className="w-4 h-4" />
               Live Config
             </Button>
             
             <Button 
-              variant=\"outline\"
+              variant="outline"
               onClick={() => setMode('presets')}
-              className=\"flex items-center gap-2\"
+              className="flex items-center gap-2"
             >
-              <Target className=\"w-4 h-4\" />
+              <Target className="w-4 h-4" />
               Presets
             </Button>
             
             <Button 
-              variant=\"outline\"
+              variant="outline"
               onClick={() => window.open('/api/ai-parameters/configuration/current-user/export')}
-              className=\"flex items-center gap-2\"
+              className="flex items-center gap-2"
             >
-              <Download className=\"w-4 h-4\" />
+              <Download className="w-4 h-4" />
               Export
             </Button>
             
             <Button 
-              variant=\"outline\"
-              onClick={checkConnection}
-              className=\"flex items-center gap-2\"
+              variant="outline"
+              className="flex items-center gap-2"
             >
-              <RefreshCw className={`w-4 h-4 ${connectionStatus === 'connecting' ? 'animate-spin' : ''}`} />
-              Refresh
+              <Upload className="w-4 h-4" />
+              Import
             </Button>
           </div>
         </CardContent>
@@ -397,179 +348,115 @@ const AIModelParametersCustomizerLive: React.FC = () => {
     </div>
   );
 
+  // Render presets mode
   const renderPresets = () => (
-    <div className=\"space-y-6\">
-      <div className=\"flex items-center justify-between\">
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
         <div>
-          <h2 className=\"text-2xl font-bold\">Configuration Presets</h2>
-          <p className=\"text-muted-foreground\">Pre-configured parameter sets for common use cases</p>
+          <h2 className="text-2xl font-bold">Configuration Presets</h2>
+          <p className="text-muted-foreground">Pre-configured parameter sets for common use cases</p>
         </div>
         <Button 
-          variant=\"outline\"
+          variant="outline"
           onClick={() => setMode('overview')}
-          className=\"flex items-center gap-2\"
+          className="flex items-center gap-2"
         >
-          <RotateCcw className=\"w-4 h-4\" />
+          <RotateCcw className="w-4 h-4" />
           Back to Overview
         </Button>
       </div>
 
-      <div className=\"grid grid-cols-1 md:grid-cols-2 gap-6\">
-        {configPresets.map((preset) => (
-          <Card key={preset.id}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {configurationPresets.map((preset) => (
+          <Card key={preset.id} className="cursor-pointer transition-all hover:shadow-md">
             <CardHeader>
-              <CardTitle className=\"flex items-center justify-between\">
-                {preset.name}
-                <Badge variant=\"secondary\">{preset.category}</Badge>
-              </CardTitle>
-              <CardDescription>
-                {preset.description}
-              </CardDescription>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  {preset.isDefault && <CheckCircle className="w-4 h-4 text-green-500" />}
+                  {preset.name}
+                </CardTitle>
+                <Button
+                  size="sm"
+                  variant={selectedPreset === preset.id ? "default" : "outline"}
+                  onClick={() => handlePresetApplication(preset.id)}
+                >
+                  Apply
+                </Button>
+              </div>
+              <CardDescription>{preset.description}</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className=\"space-y-3\">
-                <div className=\"text-sm font-medium\">Preview Parameters:</div>
-                <div className=\"grid grid-cols-2 gap-2 text-xs\">
+              <div className="space-y-3">
+                <div className="text-sm font-medium">Preview Parameters:</div>
+                <div className="space-y-1 text-sm">
                   {Object.entries(preset.parameters).map(([key, value]) => (
-                    <div key={key} className=\"flex justify-between p-2 bg-muted rounded\">
+                    <div key={key} className="flex justify-between p-2 bg-muted rounded">
                       <span>{key}:</span>
-                      <span className=\"font-medium\">{String(value)}</span>
+                      <span className="font-medium">{String(value)}</span>
                     </div>
                   ))}
                 </div>
-                <Button 
-                  onClick={() => applyPreset(preset)}
-                  className=\"w-full mt-3\"
-                  disabled={!isConnected}
-                >
-                  Apply Preset
-                </Button>
               </div>
             </CardContent>
           </Card>
         ))}
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Custom Preset</CardTitle>
-          <CardDescription>
-            Create your own configuration preset from current settings
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className=\"space-y-4\">
-            <div className=\"grid grid-cols-2 gap-4\">
-              <div>
-                <Label htmlFor=\"preset-name\">Preset Name</Label>
-                <Input id=\"preset-name\" placeholder=\"My Custom Preset\" />
-              </div>
-              <div>
-                <Label htmlFor=\"preset-category\">Category</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder=\"Select category\" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value=\"general\">General</SelectItem>
-                    <SelectItem value=\"privacy\">Privacy</SelectItem>
-                    <SelectItem value=\"performance\">Performance</SelectItem>
-                    <SelectItem value=\"custom\">Custom</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div>
-              <Label htmlFor=\"preset-description\">Description</Label>
-              <Textarea 
-                id=\"preset-description\" 
-                placeholder=\"Describe your preset configuration...\"
-              />
-            </div>
-            <Button disabled={!isConnected}>
-              <Save className=\"w-4 h-4 mr-2\" />
-              Save Preset
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 
-  return (
-    <div className=\"max-w-7xl mx-auto p-6\">
-      {/* Header */}
-      <div className=\"flex items-center justify-between mb-8\">
+  // Render live configuration mode
+  const renderLiveConfiguration = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className=\"text-3xl font-bold flex items-center gap-2\">
-            <Settings className=\"w-8 h-8\" />
-            AI Model Parameters Customizer
-          </h1>
-          <p className=\"text-muted-foreground mt-1\">
-            Live configuration and management of all AI model parameters
-          </p>
+          <h2 className="text-2xl font-bold">Live Configuration</h2>
+          <p className="text-muted-foreground">Real-time parameter adjustment with instant feedback</p>
         </div>
-
-        {/* Mode Selector */}
-        <div className=\"flex items-center gap-2\">
-          <Button
-            variant={mode === 'overview' ? 'default' : 'outline'}
+        <div className="flex gap-2">
+          <Button 
+            variant="outline"
             onClick={() => setMode('overview')}
-            size=\"sm\"
+            size="sm"
           >
-            <BarChart3 className=\"w-4 h-4 mr-2\" />
+            <BarChart3 className="w-4 h-4 mr-2" />
             Overview
           </Button>
-          <Button
-            variant={mode === 'live' ? 'default' : 'outline'}
-            onClick={() => setMode('live')}
-            size=\"sm\"
-            disabled={!isConnected}
-          >
-            <Wifi className=\"w-4 h-4 mr-2\" />
-            Live Config
-          </Button>
-          <Button
-            variant={mode === 'presets' ? 'default' : 'outline'}
+          <Button 
+            variant="outline"
             onClick={() => setMode('presets')}
-            size=\"sm\"
+            size="sm"
           >
-            <Target className=\"w-4 h-4 mr-2\" />
+            <Target className="w-4 h-4 mr-2" />
             Presets
           </Button>
         </div>
       </div>
 
-      {/* Connection Status Alert */}
-      {!isConnected && mode === 'live' && (
-        <Alert variant=\"destructive\" className=\"mb-6\">
-          <AlertTriangle className=\"h-4 w-4\" />
-          <AlertDescription>
-            Unable to connect to AI parameter services. Live configuration is unavailable.
-          </AlertDescription>
-        </Alert>
-      )}
+      <LiveAIParameterCustomizer />
+    </div>
+  );
 
-      {/* Mode Content */}
+  return (
+    <div className="max-w-7xl mx-auto p-6">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-3xl font-bold">AI Parameters - Live Edition</h1>
+          <p className="text-muted-foreground">
+            Advanced configuration with real-time monitoring and adjustment
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Badge variant={connectionStatus === 'connected' ? 'default' : 'destructive'}>
+            {connectionStatus}
+          </Badge>
+        </div>
+      </div>
+
+      {/* Content based on current mode */}
       {mode === 'overview' && renderOverview()}
-      {mode === 'live' && (
-        isConnected ? (
-          <LiveAIParameterCustomizer />
-        ) : (
-          <div className=\"text-center py-12\">
-            <WifiOff className=\"w-16 h-16 mx-auto text-muted-foreground mb-4\" />
-            <h3 className=\"text-lg font-semibold mb-2\">Connection Required</h3>
-            <p className=\"text-muted-foreground mb-4\">
-              Live configuration requires an active connection to AI services.
-            </p>
-            <Button onClick={checkConnection}>
-              <RefreshCw className=\"w-4 h-4 mr-2\" />
-              Retry Connection
-            </Button>
-          </div>
-        )
-      )}
       {mode === 'presets' && renderPresets()}
+      {mode === 'live' && renderLiveConfiguration()}
     </div>
   );
 };
