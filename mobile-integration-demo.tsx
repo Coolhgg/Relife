@@ -23,10 +23,10 @@ export function MobileStorageDemo() {
     try {
       // Initialize mobile storage with optimizations
       await mobileStorage.initializeMobile({
-        enableNativePreferences: true,  // Backup critical data to native storage
-        syncOnResume: true,            // Sync when app resumes
-        compressionEnabled: true,      // Compress data for mobile
-        batchSize: 50,                // Mobile-optimized batch size
+        enableNativePreferences: true, // Backup critical data to native storage
+        syncOnResume: true, // Sync when app resumes
+        compressionEnabled: true, // Compress data for mobile
+        batchSize: 50, // Mobile-optimized batch size
       });
 
       // Load storage information
@@ -52,7 +52,7 @@ export function MobileStorageDemo() {
       // - Backs up to native Capacitor Preferences if alarm is enabled
       // - Handles fallbacks if main storage fails
       await mobileStorage.saveAlarmOptimized(alarm);
-      
+
       // Refresh the list
       const updatedAlarms = await mobileStorage.getEnabledAlarmsWithFallback();
       setAlarms(updatedAlarms);
@@ -66,10 +66,10 @@ export function MobileStorageDemo() {
     try {
       // Check storage health
       const health = await unifiedStorage.checkStorageHealth();
-      
+
       if (!health.isHealthy) {
         console.warn('Storage issues detected:', health.issues);
-        
+
         // Perform maintenance
         await unifiedStorage.performMaintenance();
       }
@@ -79,7 +79,6 @@ export function MobileStorageDemo() {
       console.log(`${pendingChanges.length} changes pending sync`);
 
       // Your server sync logic would go here
-      
     } catch (error) {
       console.error('Sync failed:', error);
     }
@@ -102,7 +101,7 @@ export function MobileStorageDemo() {
   return (
     <div className="mobile-storage-demo">
       <h2>Mobile Storage Integration Demo</h2>
-      
+
       {/* Storage Information */}
       <div className="storage-info">
         <h3>Storage Status</h3>
@@ -112,7 +111,7 @@ export function MobileStorageDemo() {
         <p>Total Alarms: {storageInfo?.storageStats?.alarms}</p>
         <p>Native Backup Count: {storageInfo?.criticalAlarmsCount}</p>
         <p>Network: {storageInfo?.networkStatus?.connected ? 'Online' : 'Offline'}</p>
-        
+
         {storageInfo?.deviceCapabilities?.memoryWarning && (
           <div style={{ color: 'orange' }}>
             ⚠️ Memory warning detected - optimizations active
@@ -125,12 +124,16 @@ export function MobileStorageDemo() {
         <h3>Enabled Alarms ({alarms.length})</h3>
         {alarms.map(alarm => (
           <div key={alarm.id} className="alarm-item">
-            <span>{alarm.title} - {alarm.time}</span>
-            <button onClick={() => {
-              // Update alarm example
-              const updatedAlarm = { ...alarm, title: alarm.title + ' (Updated)' };
-              saveAlarmMobile(updatedAlarm);
-            }}>
+            <span>
+              {alarm.title} - {alarm.time}
+            </span>
+            <button
+              onClick={() => {
+                // Update alarm example
+                const updatedAlarm = { ...alarm, title: alarm.title + ' (Updated)' };
+                saveAlarmMobile(updatedAlarm);
+              }}
+            >
               Update
             </button>
           </div>
@@ -139,34 +142,34 @@ export function MobileStorageDemo() {
 
       {/* Actions */}
       <div className="actions">
-        <button onClick={() => {
-          const newAlarm: Alarm = {
-            id: `alarm-${Date.now()}`,
-            title: 'Mobile Test Alarm',
-            time: '09:00',
-            enabled: true,
-            userId: 'test-user',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          };
-          saveAlarmMobile(newAlarm);
-        }}>
+        <button
+          onClick={() => {
+            const newAlarm: Alarm = {
+              id: `alarm-${Date.now()}`,
+              title: 'Mobile Test Alarm',
+              time: '09:00',
+              enabled: true,
+              userId: 'test-user',
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            };
+            saveAlarmMobile(newAlarm);
+          }}
+        >
           Add Test Alarm
         </button>
 
-        <button onClick={performMobileSync}>
-          Sync Storage
-        </button>
+        <button onClick={performMobileSync}>Sync Storage</button>
 
-        <button onClick={clearMobileCache}>
-          Clear Cache
-        </button>
+        <button onClick={clearMobileCache}>Clear Cache</button>
 
-        <button onClick={async () => {
-          // Force sync critical data to native storage
-          const criticalAlarms = await mobileStorage.getCriticalAlarmsFromNative();
-          console.log('Critical alarms in native storage:', criticalAlarms);
-        }}>
+        <button
+          onClick={async () => {
+            // Force sync critical data to native storage
+            const criticalAlarms = await mobileStorage.getCriticalAlarmsFromNative();
+            console.log('Critical alarms in native storage:', criticalAlarms);
+          }}
+        >
           Check Native Backup
         </button>
       </div>
@@ -193,26 +196,26 @@ export function MobileStorageDemo() {
 export function useMobileStorage() {
   const [mobileStorage] = useState(() => MobileStorageService.getInstance());
   const [unifiedStorage] = useState(() => UnifiedStorageService.getInstance());
-  
+
   return {
     // Mobile-optimized operations
     saveAlarmOptimized: (alarm: Alarm) => mobileStorage.saveAlarmOptimized(alarm),
     getAlarmsWithFallback: () => mobileStorage.getEnabledAlarmsWithFallback(),
-    
+
     // Storage management
     getStorageInfo: () => mobileStorage.getMobileStorageInfo(),
     performMaintenance: () => unifiedStorage.performMaintenance(),
     checkHealth: () => unifiedStorage.checkStorageHealth(),
-    
+
     // Cache operations
     clearCache: (tags?: string[]) => unifiedStorage.clearCache(tags),
-    setCache: <T>(key: string, data: T, ttl?: number, tags?: string[]) => 
+    setCache: <T,>(key: string, data: T, ttl?: number, tags?: string[]) =>
       unifiedStorage.setCache(key, data, ttl, tags),
-    getCache: <T>(key: string) => unifiedStorage.getCache<T>(key),
-    
+    getCache: <T,>(key: string) => unifiedStorage.getCache<T>(key),
+
     // Native storage integration
     getCriticalAlarms: () => mobileStorage.getCriticalAlarmsFromNative(),
-    
+
     // Configuration
     updateConfig: (config: any) => mobileStorage.updateConfig(config),
   };
