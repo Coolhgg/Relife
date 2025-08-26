@@ -597,16 +597,17 @@ function useSubscription(
     }));
   }, []);
 
-  // Plan comparison function
+  // Plan comparison function - optimized with static tier hierarchy
+  const tierHierarchy: SubscriptionTier[] = useMemo(() => [
+    'free',
+    'basic',
+    'premium',
+    'pro',
+    'enterprise',
+  ], []);
+
   const comparePlans = useCallback(
     (currentTier: SubscriptionTier, targetTier: SubscriptionTier) => {
-      const tierHierarchy: SubscriptionTier[] = [
-        'free',
-        'basic',
-        'premium',
-        'pro',
-        'enterprise',
-      ];
       const currentLevel = tierHierarchy.indexOf(currentTier);
       const targetLevel = tierHierarchy.indexOf(targetTier);
 
@@ -624,7 +625,7 @@ function useSubscription(
         removedFeatures: [], // Implement feature comparison logic
       };
     },
-    [state.availablePlans]
+    [state.availablePlans, tierHierarchy]
   );
 
   return useMemo(() => ({

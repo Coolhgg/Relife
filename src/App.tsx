@@ -357,8 +357,7 @@ function AppContent() {
         { context: 'load_user_alarms', metadata: { userId: auth.user.id } }
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: auth
-  }, [auth.user, setSyncStatus, refreshRewardsSystem]);
+  }, [auth._user, setSyncStatus, refreshRewardsSystem]);
 
   // Handle alarm snooze functionality
   const handleAlarmSnooze = useCallback(
@@ -734,8 +733,7 @@ function AppContent() {
       );
       setSyncStatus('_error');
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: auth
-  }, [auth.user, setSyncStatus]);
+  }, [auth._user, setSyncStatus]);
 
   // Refresh rewards system based on current alarms and analytics
   // Handle quick alarm setup with preset configurations
@@ -885,8 +883,7 @@ function AppContent() {
         timestamp: new Date().toISOString(),
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: auth
-  }, [auth.user, identify, track, reset, trackDailyActive]);
+  }, [auth._user, identify, track, reset, trackDailyActive]);
 
   // Network status monitoring
   useEffect(() => {
@@ -1049,10 +1046,9 @@ function AppContent() {
     if (auth.isInitialized) {
       initialize();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: auth
   }, [
     auth.isInitialized,
-    auth.user,
+    auth._user,
     loadUserAlarms,
     registerEnhancedServiceWorker,
     track,
