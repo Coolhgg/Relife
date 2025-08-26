@@ -1,0 +1,9 @@
+=== Checking all backup directories for JSON files ===
+--- Checking backup/pre-encoding-fix-1756198213/ ---
+0
+--- Checking backup/pre-final-lint-20250825_093523/ ---
+22
+--- Checking backup/pre-fix-hooks-deps-2-20250825_182605/ ---
+0
+--- Checking backup/pre-fix-unsafe-fn-20250825_214002/ ---
+0

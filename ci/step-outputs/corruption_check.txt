@@ -1,0 +1,19 @@
+=== Checking for potentially corrupted files in other backup directories ===
+--- backup/pre-encoding-fix-1756198213 ---
+backup/pre-encoding-fix-1756198213/src/components/NuclearModeBattle.tsx
+backup/pre-encoding-fix-1756198213/src/components/NuclearModeChallenge.tsx
+backup/pre-encoding-fix-1756198213/src/components/PersonaAnalyticsDashboard.tsx
+backup/pre-encoding-fix-1756198213/src/components/PersonaDrivenUI.tsx
+backup/pre-encoding-fix-1756198213/src/components/PersonaFocusDashboard.tsx
+--- backup/pre-fix-hooks-deps-2-20250825_182605 ---
+backup/pre-fix-hooks-deps-2-20250825_182605/src/__tests__/api/api-testing-utilities.ts
+backup/pre-fix-hooks-deps-2-20250825_182605/src/__tests__/api/enhanced-msw-handlers.ts
+backup/pre-fix-hooks-deps-2-20250825_182605/src/__tests__/config/global-setup.ts
+backup/pre-fix-hooks-deps-2-20250825_182605/src/__tests__/config/global-teardown.ts
+backup/pre-fix-hooks-deps-2-20250825_182605/src/__tests__/config/test-sequencer.js
+--- backup/pre-fix-unsafe-fn-20250825_214002 ---
+backup/pre-fix-unsafe-fn-20250825_214002/src/__tests__/api/api-testing-utilities.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/__tests__/api/enhanced-msw-handlers.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/__tests__/config/global-setup.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/__tests__/config/global-teardown.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/__tests__/config/test-sequencer.js
