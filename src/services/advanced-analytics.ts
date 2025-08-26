@@ -1,9 +1,6 @@
 // Advanced Analytics Service for Relife Smart Alarm
 // Provides comprehensive analytics, insights, and AI-powered recommendations
-import {
-  MockDataRecord, MockDataStore
-} from '../../types/common-types';
-
+import { MockDataRecord, MockDataStore } from '../../types/common-types';
 
 import { SupabaseService } from './supabase';
 import PerformanceMonitor from './performance-monitor';
@@ -652,7 +649,9 @@ class AdvancedAnalyticsService {
     };
   }
 
-  private async calculateResponseTimeTrend(eventsData: MockDataRecord[]): Promise<TrendData> {
+  private async calculateResponseTimeTrend(
+    eventsData: MockDataRecord[]
+  ): Promise<TrendData> {
     const weeklyAvgResponseTime = new Map<string, { total: number; count: number }>();
 
     eventsData
@@ -721,7 +720,9 @@ class AdvancedAnalyticsService {
     };
   }
 
-  private async calculateSleepQualityTrend(sleepData: MockDataRecord[]): Promise<TrendData> {
+  private async calculateSleepQualityTrend(
+    sleepData: MockDataRecord[]
+  ): Promise<TrendData> {
     const values = sleepData
       .slice(-30) // Last 30 days
       .map(session => ({
@@ -1259,7 +1260,8 @@ class AdvancedAnalyticsService {
   }
 
   private async generateQuickActions(
-    userId: string, liveMetrics: unknown,
+    userId: string,
+    liveMetrics: unknown,
     insights: AnalyticsInsight[]
   ): Promise<unknown[]> {
     const actions = [];

@@ -729,7 +729,8 @@ export class StripeWebhookHandler {
   private async logWebhookEvent(
     _event: Stripe.Event,
     status: 'success' | 'error',
-    _error?: unknown) {
+    _error?: unknown
+  ) {
     const logData = {
       stripeEventId: event.id,
       eventType: event.type,

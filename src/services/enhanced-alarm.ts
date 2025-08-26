@@ -679,7 +679,9 @@ export class EnhancedAlarmService extends BaseService implements AlarmServiceInt
     }
 
     if (
-      !data.days.every((day: unknown) => typeof day === 'number' && day >= 0 && day <= 6)
+      !data.days.every(
+        (day: unknown) => typeof day === 'number' && day >= 0 && day <= 6
+      )
     ) {
       throw new Error('Invalid day values');
     }

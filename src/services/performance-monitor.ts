@@ -320,7 +320,11 @@ export class PerformanceMonitor {
   }
 
   // Enhanced custom metric tracking with aggregation and real-time alerts
-  trackCustomMetric(name: string, value: number, metadata?: Record<string, unknown>): void {
+  trackCustomMetric(
+    name: string,
+    value: number,
+    metadata?: Record<string, unknown>
+  ): void {
     const metric: PerformanceMetric = {
       name,
       value,

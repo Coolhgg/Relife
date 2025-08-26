@@ -376,7 +376,10 @@ export class EnhancedBattleService
     }
   }
 
-  public async updateBattleProgress(battleId: string, progress: unknown): Promise<void> {
+  public async updateBattleProgress(
+    battleId: string,
+    progress: unknown
+  ): Promise<void> {
     const timerId = this.startTimer('updateBattleProgress');
 
     try {

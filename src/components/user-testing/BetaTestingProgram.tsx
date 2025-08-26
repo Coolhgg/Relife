@@ -248,7 +248,9 @@ export function BetaTestingProgram() {
 
   const updateProgramStatus = (programId: string, newStatus: BetaProgram['status']) => {
     setPrograms(
-      programs.map((p: unknown) => (p.id === programId ? { ...p, status: newStatus } : p))
+      programs.map((p: unknown) =>
+        p.id === programId ? { ...p, status: newStatus } : p
+      )
     );
   };
 

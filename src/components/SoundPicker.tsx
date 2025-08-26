@@ -322,7 +322,9 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                 {/* Sound Type Tabs */}
                 <Tabs
                   value={activeTab}
-                  onValueChange={(value: unknown) => setActiveTab(value as CustomSoundType)}
+                  onValueChange={(value: unknown) =>
+                    setActiveTab(value as CustomSoundType)
+                  }
                 >
                   <TabsList>
                     {allowedSoundTypes.includes('uploaded') && (

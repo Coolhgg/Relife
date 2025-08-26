@@ -159,7 +159,7 @@ const generateNonce = (): string => {
 export const securityHeaders = (req: Request, res: Response, next: NextFunction) => {
   const nonce = generateNonce();
   res.locals.nonce = nonce;
-  
+
   // Apply helmet security headers
   helmet({
     contentSecurityPolicy: {
@@ -191,48 +191,51 @@ export const securityHeaders = (req: Request, res: Response, next: NextFunction)
     crossOriginResourcePolicy: { policy: 'cross-origin' },
     crossOriginEmbedderPolicy: { policy: 'credentialless' },
   })(req, res, next);
-  
+
   // Additional security headers not covered by helmet
-  res.setHeader('Permissions-Policy', [
-    'accelerometer=()',
-    'ambient-light-sensor=()',
-    'autoplay=()',
-    'battery=()',
-    'camera=()',
-    'cross-origin-isolated=()',
-    'display-capture=()',
-    'document-domain=()',
-    'encrypted-media=()',
-    'execution-while-not-rendered=()',
-    'execution-while-out-of-viewport=()',
-    'fullscreen=(self)',
-    'geolocation=()',
-    'gyroscope=()',
-    'keyboard-map=()',
-    'magnetometer=()',
-    'microphone=()',
-    'midi=()',
-    'navigation-override=()',
-    'payment=()',
-    'picture-in-picture=()',
-    'publickey-credentials-get=()',
-    'screen-wake-lock=()',
-    'sync-xhr=()',
-    'usb=()',
-    'web-share=()',
-    'xr-spatial-tracking=()',
-  ].join(', '));
-  
+  res.setHeader(
+    'Permissions-Policy',
+    [
+      'accelerometer=()',
+      'ambient-light-sensor=()',
+      'autoplay=()',
+      'battery=()',
+      'camera=()',
+      'cross-origin-isolated=()',
+      'display-capture=()',
+      'document-domain=()',
+      'encrypted-media=()',
+      'execution-while-not-rendered=()',
+      'execution-while-out-of-viewport=()',
+      'fullscreen=(self)',
+      'geolocation=()',
+      'gyroscope=()',
+      'keyboard-map=()',
+      'magnetometer=()',
+      'microphone=()',
+      'midi=()',
+      'navigation-override=()',
+      'payment=()',
+      'picture-in-picture=()',
+      'publickey-credentials-get=()',
+      'screen-wake-lock=()',
+      'sync-xhr=()',
+      'usb=()',
+      'web-share=()',
+      'xr-spatial-tracking=()',
+    ].join(', ')
+  );
+
   // Clear site data on logout
   if (req.path === '/api/auth/logout') {
     res.setHeader('Clear-Site-Data', '"cache", "cookies", "storage"');
   }
-  
+
   // Server timing information (development only)
   if (process.env.NODE_ENV === 'development') {
     res.setHeader('Server-Timing', 'total;dur=0');
   }
-  
+
   // Custom security headers for API endpoints
   if (req.path.startsWith('/api/')) {
     res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -329,7 +332,7 @@ export const authenticateAPIKey = async (
   next: NextFunction
 ) => {
   const startTime = Date.now();
-  
+
   try {
     const apiKey = req.headers['x-api-key'] as string;
     const clientIp = req.ip || req.connection.remoteAddress;
@@ -364,24 +367,18 @@ export const authenticateAPIKey = async (
 
     if (!validation.valid) {
       const responseTime = Date.now() - startTime;
-      
+
       // Log security violation if API key is invalid
       if (validation.apiKey) {
-        await apiKeyService.logUsage(
-          validation.apiKey.id,
-          req.method,
-          req.path,
-          401,
-          {
-            ipAddress: clientIp,
-            userAgent,
-            origin,
-            responseTimeMs: responseTime,
-            errorMessage: validation.error,
-            securityViolation: true,
-            violationType: 'invalid_key',
-          }
-        );
+        await apiKeyService.logUsage(validation.apiKey.id, req.method, req.path, 401, {
+          ipAddress: clientIp,
+          userAgent,
+          origin,
+          responseTimeMs: responseTime,
+          errorMessage: validation.error,
+          securityViolation: true,
+          violationType: 'invalid_key',
+        });
       }
 
       AuditLogger.getInstance().log(
@@ -423,7 +420,7 @@ export const authenticateAPIKey = async (
     AuditLogger.getInstance().log(
       'auth_success',
       validatedKey!.id,
-      { 
+      {
         method: 'api_key',
         keyName: validatedKey!.keyName,
         scopes: validatedKey!.scopes,

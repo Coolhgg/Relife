@@ -676,7 +676,9 @@ class EnhancedCalendarService {
           end: eventEnd,
           isAllDay: false,
           status: 'confirmed',
-          importance: ['low', 'normal', 'high'][Math.floor(Math.random() * 3)] as unknown,
+          importance: ['low', 'normal', 'high'][
+            Math.floor(Math.random() * 3)
+          ] as unknown,
           category: ['work', 'personal'][Math.floor(Math.random() * 2)] as unknown,
           calendarId,
           location: Math.random() > 0.5 ? 'Office Building, 123 Main St' : undefined,

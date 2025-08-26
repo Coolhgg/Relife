@@ -192,7 +192,8 @@ export class MockPerformanceMonitor {
 export class AlarmPerformanceTester {
   private monitor = MockPerformanceMonitor.getInstance();
 
-  async testAlarmTriggerLatency(alarmConfig: unknown,
+  async testAlarmTriggerLatency(
+    alarmConfig: unknown,
     options: { iterations?: number; acceptableLatency?: number } = {}
   ): Promise<{
     passed: boolean;
@@ -225,7 +226,9 @@ export class AlarmPerformanceTester {
     };
   }
 
-  private async measureAlarmTrigger(alarmConfig: unknown): Promise<AlarmPerformanceMetrics> {
+  private async measureAlarmTrigger(
+    alarmConfig: unknown
+  ): Promise<AlarmPerformanceMetrics> {
     const startTime = performance.now();
 
     // Simulate alarm checking

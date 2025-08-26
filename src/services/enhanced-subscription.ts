@@ -968,7 +968,8 @@ export class EnhancedSubscriptionService
   private async trackSubscriptionEvent(
     _event: string,
     subscription: Subscription,
-    changes?: unknown): Promise<void> {
+    changes?: unknown
+  ): Promise<void> {
     if (!(this._config as SubscriptionServiceConfig).enableAnalytics) return;
 
     try {

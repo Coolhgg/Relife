@@ -84,10 +84,12 @@ export interface RetentionOffer {
   message?: string;
 }
 
-export interface AlarmHistoryData { [key: string]: unknown;
+export interface AlarmHistoryData {
+  [key: string]: unknown;
 }
 
-export interface SleepPatternData { [key: string]: unknown;
+export interface SleepPatternData {
+  [key: string]: unknown;
 }
 
 export interface VoiceSettings {
@@ -97,7 +99,8 @@ export interface VoiceSettings {
   volume: number;
 }
 
-export interface EscalationStrategy { [key: string]: unknown[];
+export interface EscalationStrategy {
+  [key: string]: unknown[];
   maxAttempts: number;
   intervals: number[];
 }

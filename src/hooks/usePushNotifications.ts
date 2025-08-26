@@ -56,7 +56,8 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
         currentToken: PushNotificationService.getCurrentToken(),
         settings: PushNotificationService.getSettings(),
         isSupported:
-          'serviceWorker' in navigator || (window as unknown).Capacitor?.isNativePlatform(),
+          'serviceWorker' in navigator ||
+          (window as unknown).Capacitor?.isNativePlatform(),
         _error: null,
       }));
     } catch (_error) {

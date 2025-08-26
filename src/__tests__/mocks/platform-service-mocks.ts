@@ -2,10 +2,7 @@
  * Platform Service Mocks (Supabase, Capacitor, External APIs)
  * Provides comprehensive mocks for platform-specific services and external integrations
  */
-import {
-  MockDataRecord, MockDataStore
-} from '../../types/common-types';
-
+import { MockDataRecord, MockDataStore } from '../../types/common-types';
 
 import type { User } from '@supabase/supabase-js';
 import { AnyFn } from 'src/types/utility-types';
@@ -36,7 +33,11 @@ export class MockSupabaseClient {
     this.callHistory = [];
   }
 
-  static getCallHistory(): Array<{ method: string; args: MockDataRecord[]; timestamp: number }> {
+  static getCallHistory(): Array<{
+    method: string;
+    args: MockDataRecord[];
+    timestamp: number;
+  }> {
     return [...this.callHistory];
   }
 
@@ -568,7 +569,11 @@ class MockSupabaseRealtimeChannel {
     this.name = name;
   }
 
-  static getCallHistory(): Array<{ method: string; args: MockDataRecord[]; timestamp: number }> {
+  static getCallHistory(): Array<{
+    method: string;
+    args: MockDataRecord[];
+    timestamp: number;
+  }> {
     return [...this.callHistory];
   }
 
