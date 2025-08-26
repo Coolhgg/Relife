@@ -1,6 +1,6 @@
 /**
  * Redux DevTools Integration Test Component
- * 
+ *
  * This component provides a simple interface to test Redux DevTools integration
  * and demonstrates the debugging capabilities available in development mode.
  */
@@ -97,7 +97,9 @@ export const ReduxDevToolsTest: React.FC<ReduxDevToolsTestProps> = ({ onClose })
 
         {/* DevTools Status */}
         <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-          <h3 className="font-semibold text-green-800 mb-2">✅ Redux DevTools Status</h3>
+          <h3 className="font-semibold text-green-800 mb-2">
+            ✅ Redux DevTools Status
+          </h3>
           <div className="text-sm text-green-700 space-y-1">
             <p>• Redux store initialized with DevTools support</p>
             <p>• State persistence enabled for user and alarm settings</p>
@@ -117,7 +119,7 @@ export const ReduxDevToolsTest: React.FC<ReduxDevToolsTestProps> = ({ onClose })
               <p>Error: {alarmState.error ? 'Yes' : 'No'}</p>
             </div>
           </div>
-          
+
           <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
             <h4 className="font-semibold text-purple-800 mb-2">User State</h4>
             <div className="text-sm text-purple-700">
@@ -126,7 +128,7 @@ export const ReduxDevToolsTest: React.FC<ReduxDevToolsTestProps> = ({ onClose })
               <p>Profile: {userState.profile ? 'Loaded' : 'None'}</p>
             </div>
           </div>
-          
+
           <div className="p-4 bg-orange-50 border border-orange-200 rounded-lg">
             <h4 className="font-semibold text-orange-800 mb-2">Subscription</h4>
             <div className="text-sm text-orange-700">
@@ -213,10 +215,15 @@ export const ReduxDevToolsTest: React.FC<ReduxDevToolsTestProps> = ({ onClose })
 
         {/* Instructions */}
         <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-          <h3 className="font-semibold text-yellow-800 mb-2">How to Use Redux DevTools:</h3>
+          <h3 className="font-semibold text-yellow-800 mb-2">
+            How to Use Redux DevTools:
+          </h3>
           <div className="text-sm text-yellow-700 space-y-1">
             <p>1. Open browser DevTools (F12)</p>
-            <p>2. Look for "Redux" tab (install Redux DevTools browser extension if missing)</p>
+            <p>
+              2. Look for "Redux" tab (install Redux DevTools browser extension if
+              missing)
+            </p>
             <p>3. Click test actions above to see state changes</p>
             <p>4. Use time travel debugging to replay actions</p>
             <p>5. Filter actions by type or search for specific changes</p>

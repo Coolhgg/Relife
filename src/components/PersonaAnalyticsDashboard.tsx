@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import AnalyticsService from '../services/analytics';
 import {
-// Note: persona should be derived from user analytics or context
+  // Note: persona should be derived from user analytics or context
   BarChart,
   Bar,
   LineChart,

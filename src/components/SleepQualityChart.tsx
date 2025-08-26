@@ -13,9 +13,12 @@ interface SleepQualityChartProps {
   compact?: boolean;
 }
 
-const SleepQualityChart: React.FC<SleepQualityChartProps> = ({ data, compact = false }) => {
+const SleepQualityChart: React.FC<SleepQualityChartProps> = ({
+  data,
+  compact = false,
+}) => {
   // Transform data for chart
-  const chartData = data.map((day) => ({
+  const chartData = data.map(day => ({
     day: new Date(day.date).toLocaleDateString('en', { weekday: 'short' }),
     quality: day.quality,
     duration: day.duration,
@@ -48,9 +51,9 @@ const SleepQualityChart: React.FC<SleepQualityChartProps> = ({ data, compact = f
       <div className="h-12">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} margin={{ top: 2, right: 2, left: 2, bottom: 2 }}>
-            <Bar 
-              dataKey="quality" 
-              fill="currentColor" 
+            <Bar
+              dataKey="quality"
+              fill="currentColor"
               className="text-theme-success-400"
               radius={[1, 1, 0, 0]}
             />
@@ -65,19 +68,16 @@ const SleepQualityChart: React.FC<SleepQualityChartProps> = ({ data, compact = f
     <div className="h-48">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-          <XAxis 
-            dataKey="day" 
+          <XAxis
+            dataKey="day"
             tick={{ fontSize: 12 }}
             className="text-theme-text-600"
           />
-          <YAxis 
-            tick={{ fontSize: 12 }}
-            className="text-theme-text-600"
-          />
+          <YAxis tick={{ fontSize: 12 }} className="text-theme-text-600" />
           <Tooltip content={<CustomTooltip />} />
-          <Bar 
-            dataKey="quality" 
-            fill="currentColor" 
+          <Bar
+            dataKey="quality"
+            fill="currentColor"
             className="text-theme-success-500"
             radius={[2, 2, 0, 0]}
           />

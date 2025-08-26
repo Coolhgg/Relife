@@ -167,16 +167,19 @@ function AppContent() {
 
   // Helper function to simulate old setState behavior for gradual migration
   // Wrapped with useCallback to prevent unnecessary re-renders in dependent hooks
-  const setAppState = useCallback((updater: (prev: AppState) => AppState | AppState) => {
-    if (typeof updater === 'function') {
-      const newState = updater(appState);
-      // For now, we'll use a generic APP_UPDATE action
-      // TODO: Convert to specific domain actions
-      dispatch({ type: 'APP_UPDATE' as any, payload: newState });
-    } else {
-      dispatch({ type: 'APP_UPDATE' as any, payload: updater });
-    }
-  }, [appState, dispatch]);
+  const setAppState = useCallback(
+    (updater: (prev: AppState) => AppState | AppState) => {
+      if (typeof updater === 'function') {
+        const newState = updater(appState);
+        // For now, we'll use a generic APP_UPDATE action
+        // TODO: Convert to specific domain actions
+        dispatch({ type: 'APP_UPDATE' as any, payload: newState });
+      } else {
+        dispatch({ type: 'APP_UPDATE' as any, payload: updater });
+      }
+    },
+    [appState, dispatch]
+  );
 
   const [showAlarmForm, setShowAlarmForm] = useState(false);
   const [editingAlarm, setEditingAlarm] = useState<Alarm | null>(null);
@@ -235,13 +238,13 @@ function AppContent() {
       try {
         // Get the database-backed reward service
         const rewardService = RewardService.getInstance();
-        
+
         // Update user habits based on current alarms
         await rewardService.updateUserHabits(auth._user?.id!, alarms);
-        
+
         // Check and unlock any new rewards
         await rewardService.checkAndUnlockRewards(auth._user?.id!);
-        
+
         // Get the comprehensive reward system data from database
         const rewards = await rewardService.getRewards();
         const userRewards = await rewardService.getUserRewards(auth._user?.id!);
@@ -249,7 +252,7 @@ function AppContent() {
         const analytics = await rewardService.getUserAnalytics(auth._user?.id!);
         const habits = await rewardService.getUserHabits(auth._user?.id!);
         const nicheProfile = await rewardService.getUserNicheProfile(auth._user?.id!);
-        
+
         // Build comprehensive reward system object
         const rewardSystem = {
           level: analytics?.level || 1,
@@ -1993,7 +1996,7 @@ function AppContent() {
         appAnalytics.trackFeatureUsage('gift_shop', 'accessed');
         return (
           <ErrorBoundary context="GiftShop">
-            <GiftShop 
+            <GiftShop
               userId={auth._user?.id!}
               onGiftPurchased={() => {
                 // Refresh reward system to update user points
@@ -2043,397 +2046,405 @@ function AppContent() {
               color: 'var(--theme-text-primary)',
             }}
           >
-          {/* Skip to main content */}
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary-600 text-white px-4 py-2 rounded-lg font-medium z-50"
-          >
-            {getA11yLabels().skipToContent}
-          </a>
+            {/* Skip to main content */}
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary-600 text-white px-4 py-2 rounded-lg font-medium z-50"
+            >
+              {getA11yLabels().skipToContent}
+            </a>
 
-          {/* Header with Offline Indicator */}
-          <header
-            className="shadow-sm border-b"
-            style={{
-              backgroundColor: 'var(--theme-surface)',
-              borderColor: 'var(--theme-border)',
-              color: 'var(--theme-text-primary)',
-            }}
-            role="banner"
-          >
-            <div className="px-4 py-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <h1
-                    className="text-xl font-bold"
-                    style={{ color: 'var(--theme-text-primary)' }}
-                  >
-                    🚀 {t('common:app.name')}
-                  </h1>
-                  {auth.user && (
-                    <div className="flex items-center gap-2">
-                      <span
-                        className="text-sm"
-                        style={{ color: 'var(--theme-text-secondary)' }}
-                      >
-                        {auth.user.name || auth.user.email}
-                      </span>
-                      {auth.user.level && (
+            {/* Header with Offline Indicator */}
+            <header
+              className="shadow-sm border-b"
+              style={{
+                backgroundColor: 'var(--theme-surface)',
+                borderColor: 'var(--theme-border)',
+                color: 'var(--theme-text-primary)',
+              }}
+              role="banner"
+            >
+              <div className="px-4 py-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <h1
+                      className="text-xl font-bold"
+                      style={{ color: 'var(--theme-text-primary)' }}
+                    >
+                      🚀 {t('common:app.name')}
+                    </h1>
+                    {auth.user && (
+                      <div className="flex items-center gap-2">
                         <span
-                          className="text-xs px-2 py-1 rounded"
-                          style={{
-                            backgroundColor: 'var(--theme-primary-100)',
-                            color: 'var(--theme-primary-800)',
-                          }}
+                          className="text-sm"
+                          style={{ color: 'var(--theme-text-secondary)' }}
                         >
-                          Level {auth.user.level}
+                          {auth.user.name || auth.user.email}
                         </span>
-                      )}
-                    </div>
-                  )}
-                </div>
-                <div
-                  className="flex items-center gap-3"
-                  role="group"
-                  aria-label="Header actions"
-                >
-                  <OfflineIndicator />
-                  {tabProtectionSettings.settings.enabled &&
-                    tabProtectionSettings.settings.visualSettings.showVisualWarning && (
-                      <TabProtectionWarning
-                        activeAlarm={appState.activeAlarm}
-                        enabledAlarms={appState.alarms.filter(
-                          (alarm: any) => alarm.enabled
+                        {auth.user.level && (
+                          <span
+                            className="text-xs px-2 py-1 rounded"
+                            style={{
+                              backgroundColor: 'var(--theme-primary-100)',
+                              color: 'var(--theme-primary-800)',
+                            }}
+                          >
+                            Level {auth.user.level}
+                          </span>
                         )}
-                        settings={tabProtectionSettings.settings}
-                      />
+                      </div>
                     )}
-                  <button
-                    onClick={createClickHandler(() => setShowAlarmForm(true))}
-                    className="alarm-button alarm-button-primary p-2 rounded-full"
-                    aria-label="Add new alarm"
-                    aria-describedby="add-alarm-desc"
+                  </div>
+                  <div
+                    className="flex items-center gap-3"
+                    role="group"
+                    aria-label="Header actions"
                   >
-                    <Plus className="w-5 h-5" aria-hidden="true" />
-                    <span id="add-alarm-desc" className="sr-only">
-                      Opens the new alarm creation form
-                    </span>
-                  </button>
-                  <button
-                    onClick={auth.signOut}
-                    className="p-2 rounded-full text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2"
-                    aria-label="Sign out"
-                    aria-describedby="sign-out-desc"
-                  >
-                    <LogOut className="w-5 h-5" aria-hidden="true" />
-                    <span id="sign-out-desc" className="sr-only">
-                      Sign out of your account
-                    </span>
-                  </button>
+                    <OfflineIndicator />
+                    {tabProtectionSettings.settings.enabled &&
+                      tabProtectionSettings.settings.visualSettings
+                        .showVisualWarning && (
+                        <TabProtectionWarning
+                          activeAlarm={appState.activeAlarm}
+                          enabledAlarms={appState.alarms.filter(
+                            (alarm: any) => alarm.enabled
+                          )}
+                          settings={tabProtectionSettings.settings}
+                        />
+                      )}
+                    <button
+                      onClick={createClickHandler(() => setShowAlarmForm(true))}
+                      className="alarm-button alarm-button-primary p-2 rounded-full"
+                      aria-label="Add new alarm"
+                      aria-describedby="add-alarm-desc"
+                    >
+                      <Plus className="w-5 h-5" aria-hidden="true" />
+                      <span id="add-alarm-desc" className="sr-only">
+                        Opens the new alarm creation form
+                      </span>
+                    </button>
+                    <button
+                      onClick={auth.signOut}
+                      className="p-2 rounded-full text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2"
+                      aria-label="Sign out"
+                      aria-describedby="sign-out-desc"
+                    >
+                      <LogOut className="w-5 h-5" aria-hidden="true" />
+                      <span id="sign-out-desc" className="sr-only">
+                        Sign out of your account
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </header>
+            </header>
 
-          {/* Content */}
-          <main id="main-content" className="flex-1 overflow-y-auto" role="main">
-            {renderContent()}
-          </main>
+            {/* Content */}
+            <main id="main-content" className="flex-1 overflow-y-auto" role="main">
+              {renderContent()}
+            </main>
 
-          {/* Bottom Navigation */}
-          <nav
-            className="border-t"
-            style={{
-              backgroundColor: 'var(--theme-surface)',
-              borderColor: 'var(--theme-border)',
-            }}
-            role="navigation"
-            aria-label="Main navigation"
-          >
-            <div
-              className="grid grid-cols-6 px-1 py-2"
-              role="tablist"
-              aria-label="App sections"
+            {/* Bottom Navigation */}
+            <nav
+              className="border-t"
+              style={{
+                backgroundColor: 'var(--theme-surface)',
+                borderColor: 'var(--theme-border)',
+              }}
+              role="navigation"
+              aria-label="Main navigation"
             >
-              <button
-                onClick={createClickHandler(() => {
-                  const appAnalytics = AppAnalyticsService.getInstance();
-                  appAnalytics.trackFeatureUsage('navigation', 'dashboard_clicked');
-                  setAppState((prev: AppState) => ({
-                    // type-safe replacement
-                    ...prev,
-                    currentView: 'dashboard',
-                  }));
-                  AccessibilityUtils.announcePageChange('Dashboard');
-                })}
-                className="flex flex-col items-center py-2 rounded-lg transition-colors border-2"
-                style={
-                  appState.currentView === 'dashboard'
-                    ? {
-                        color: 'var(--theme-primary-800)',
-                        backgroundColor: 'var(--theme-primary-100)',
-                        borderColor: 'var(--theme-primary-300)',
-                      }
-                    : {
-                        color: 'var(--theme-text-secondary)',
-                        backgroundColor: 'transparent',
-                        borderColor: 'transparent',
-                      }
-                }
-                onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
-                  if (appState.currentView !== 'dashboard') {
-                    e.currentTarget.style.backgroundColor =
-                      'var(--theme-surface-hover)';
-                    e.currentTarget.style.color = 'var(--theme-text-primary)';
+              <div
+                className="grid grid-cols-6 px-1 py-2"
+                role="tablist"
+                aria-label="App sections"
+              >
+                <button
+                  onClick={createClickHandler(() => {
+                    const appAnalytics = AppAnalyticsService.getInstance();
+                    appAnalytics.trackFeatureUsage('navigation', 'dashboard_clicked');
+                    setAppState((prev: AppState) => ({
+                      // type-safe replacement
+                      ...prev,
+                      currentView: 'dashboard',
+                    }));
+                    AccessibilityUtils.announcePageChange('Dashboard');
+                  })}
+                  className="flex flex-col items-center py-2 rounded-lg transition-colors border-2"
+                  style={
+                    appState.currentView === 'dashboard'
+                      ? {
+                          color: 'var(--theme-primary-800)',
+                          backgroundColor: 'var(--theme-primary-100)',
+                          borderColor: 'var(--theme-primary-300)',
+                        }
+                      : {
+                          color: 'var(--theme-text-secondary)',
+                          backgroundColor: 'transparent',
+                          borderColor: 'transparent',
+                        }
                   }
-                }}
-                onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
-                  if (appState.currentView !== 'dashboard') {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.color = 'var(--theme-text-secondary)';
+                  onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    if (appState.currentView !== 'dashboard') {
+                      e.currentTarget.style.backgroundColor =
+                        'var(--theme-surface-hover)';
+                      e.currentTarget.style.color = 'var(--theme-text-primary)';
+                    }
+                  }}
+                  onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    if (appState.currentView !== 'dashboard') {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                      e.currentTarget.style.color = 'var(--theme-text-secondary)';
+                    }
+                  }}
+                  role="tab"
+                  aria-selected={appState.currentView === 'dashboard'}
+                  aria-current={
+                    appState.currentView === 'dashboard' ? 'page' : undefined
                   }
-                }}
-                role="tab"
-                aria-selected={appState.currentView === 'dashboard'}
-                aria-current={appState.currentView === 'dashboard' ? 'page' : undefined}
-                aria-label="Dashboard - Overview of your alarms"
-                aria-controls="main-content"
-              >
-                <Clock className="w-5 h-5 mb-1" aria-hidden="true" />
-                <span className="text-xs font-medium">
-                  {getNavigationLabels().dashboard}
-                </span>
-              </button>
+                  aria-label="Dashboard - Overview of your alarms"
+                  aria-controls="main-content"
+                >
+                  <Clock className="w-5 h-5 mb-1" aria-hidden="true" />
+                  <span className="text-xs font-medium">
+                    {getNavigationLabels().dashboard}
+                  </span>
+                </button>
 
-              <button
-                onClick={createClickHandler(() => {
-                  const appAnalytics = AppAnalyticsService.getInstance();
-                  appAnalytics.trackFeatureUsage('navigation', 'alarms_clicked', {
-                    totalAlarms: appState.alarms.length,
-                  });
-                  setAppState((prev: AppState) => ({
-                    // type-safe replacement
-                    ...prev,
-                    currentView: 'alarms',
-                  }));
-                  AccessibilityUtils.announcePageChange('Alarms');
-                })}
-                className="flex flex-col items-center py-2 rounded-lg transition-colors border-2"
-                style={
-                  appState.currentView === 'alarms'
-                    ? {
-                        color: 'var(--theme-primary-800)',
-                        backgroundColor: 'var(--theme-primary-100)',
-                        borderColor: 'var(--theme-primary-300)',
-                      }
-                    : {
-                        color: 'var(--theme-text-secondary)',
-                        backgroundColor: 'transparent',
-                        borderColor: 'transparent',
-                      }
-                }
-                onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
-                  if (appState.currentView !== 'alarms') {
-                    e.currentTarget.style.backgroundColor =
-                      'var(--theme-surface-hover)';
-                    e.currentTarget.style.color = 'var(--theme-text-primary)';
+                <button
+                  onClick={createClickHandler(() => {
+                    const appAnalytics = AppAnalyticsService.getInstance();
+                    appAnalytics.trackFeatureUsage('navigation', 'alarms_clicked', {
+                      totalAlarms: appState.alarms.length,
+                    });
+                    setAppState((prev: AppState) => ({
+                      // type-safe replacement
+                      ...prev,
+                      currentView: 'alarms',
+                    }));
+                    AccessibilityUtils.announcePageChange('Alarms');
+                  })}
+                  className="flex flex-col items-center py-2 rounded-lg transition-colors border-2"
+                  style={
+                    appState.currentView === 'alarms'
+                      ? {
+                          color: 'var(--theme-primary-800)',
+                          backgroundColor: 'var(--theme-primary-100)',
+                          borderColor: 'var(--theme-primary-300)',
+                        }
+                      : {
+                          color: 'var(--theme-text-secondary)',
+                          backgroundColor: 'transparent',
+                          borderColor: 'transparent',
+                        }
                   }
-                }}
-                onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
-                  if (appState.currentView !== 'alarms') {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.color = 'var(--theme-text-secondary)';
+                  onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    if (appState.currentView !== 'alarms') {
+                      e.currentTarget.style.backgroundColor =
+                        'var(--theme-surface-hover)';
+                      e.currentTarget.style.color = 'var(--theme-text-primary)';
+                    }
+                  }}
+                  onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    if (appState.currentView !== 'alarms') {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                      e.currentTarget.style.color = 'var(--theme-text-secondary)';
+                    }
+                  }}
+                  role="tab"
+                  aria-selected={appState.currentView === 'alarms'}
+                  aria-current={appState.currentView === 'alarms' ? 'page' : undefined}
+                  aria-label="Alarms - Manage your alarm list"
+                  aria-controls="main-content"
+                >
+                  <Bell className="w-5 h-5 mb-1" aria-hidden="true" />
+                  <span className="text-xs font-medium">
+                    {getNavigationLabels().alarms}
+                  </span>
+                </button>
+
+                <button
+                  onClick={createClickHandler(() => {
+                    const appAnalytics = AppAnalyticsService.getInstance();
+                    appAnalytics.trackFeatureUsage(
+                      'navigation',
+                      'advanced_scheduling_clicked'
+                    );
+                    setAppState((prev: AppState) => ({
+                      // type-safe replacement
+
+                      ...prev,
+                      currentView: 'advanced-scheduling',
+                    }));
+                    AccessibilityUtils.announcePageChange('Advanced Scheduling');
+                  })}
+                  className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
+                    appState.currentView === 'advanced-scheduling'
+                      ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                      : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
+                  }`}
+                  role="tab"
+                  aria-selected={appState.currentView === 'advanced-scheduling'}
+                  aria-current={
+                    appState.currentView === 'advanced-scheduling' ? 'page' : undefined
                   }
-                }}
-                role="tab"
-                aria-selected={appState.currentView === 'alarms'}
-                aria-current={appState.currentView === 'alarms' ? 'page' : undefined}
-                aria-label="Alarms - Manage your alarm list"
-                aria-controls="main-content"
-              >
-                <Bell className="w-5 h-5 mb-1" aria-hidden="true" />
-                <span className="text-xs font-medium">
-                  {getNavigationLabels().alarms}
-                </span>
-              </button>
+                  aria-label="Advanced Scheduling - Create smart alarms with AI optimization"
+                  aria-controls="main-content"
+                >
+                  <Brain className="w-5 h-5 mb-1" aria-hidden="true" />
+                  <span className="text-xs font-medium">
+                    {getNavigationLabels().advanced}
+                  </span>
+                </button>
 
-              <button
-                onClick={createClickHandler(() => {
-                  const appAnalytics = AppAnalyticsService.getInstance();
-                  appAnalytics.trackFeatureUsage(
-                    'navigation',
-                    'advanced_scheduling_clicked'
-                  );
-                  setAppState((prev: AppState) => ({
-                    // type-safe replacement
+                <button
+                  onClick={createClickHandler(() => {
+                    const appAnalytics = AppAnalyticsService.getInstance();
+                    appAnalytics.trackFeatureUsage('navigation', 'gaming_clicked', {
+                      currentLevel: appState.rewardSystem?.level,
+                      hasRewards: !!appState.rewardSystem?.unlockedRewards.length,
+                      activeBattles: appState.activeBattles?.length,
+                    });
+                    setAppState((prev: AppState) => ({
+                      // type-safe replacement
+                      ...prev,
+                      currentView: 'gaming',
+                    }));
+                    AccessibilityUtils.announcePageChange('Gaming Hub');
+                  })}
+                  className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
+                    appState.currentView === 'gaming'
+                      ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                      : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
+                  }`}
+                  role="tab"
+                  aria-selected={appState.currentView === 'gaming'}
+                  aria-current={appState.currentView === 'gaming' ? 'page' : undefined}
+                  aria-label="Gaming - Rewards, battles, and community challenges"
+                  aria-controls="main-content"
+                >
+                  <Gamepad2 className="w-5 h-5 mb-1" aria-hidden="true" />
+                  <span className="text-xs font-medium">
+                    {getNavigationLabels().gaming}
+                  </span>
+                </button>
 
-                    ...prev,
-                    currentView: 'advanced-scheduling',
-                  }));
-                  AccessibilityUtils.announcePageChange('Advanced Scheduling');
-                })}
-                className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
-                  appState.currentView === 'advanced-scheduling'
-                    ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
-                    : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
-                }`}
-                role="tab"
-                aria-selected={appState.currentView === 'advanced-scheduling'}
-                aria-current={
-                  appState.currentView === 'advanced-scheduling' ? 'page' : undefined
-                }
-                aria-label="Advanced Scheduling - Create smart alarms with AI optimization"
-                aria-controls="main-content"
-              >
-                <Brain className="w-5 h-5 mb-1" aria-hidden="true" />
-                <span className="text-xs font-medium">
-                  {getNavigationLabels().advanced}
-                </span>
-              </button>
+                <button
+                  onClick={createClickHandler(() => {
+                    const appAnalytics = AppAnalyticsService.getInstance();
+                    appAnalytics.trackFeatureUsage('navigation', 'gift_shop_clicked', {
+                      currentLevel: appState.rewardSystem?.level,
+                      totalPoints: appState.rewardSystem?.totalPoints,
+                    });
+                    setAppState((prev: AppState) => ({
+                      // type-safe replacement
+                      ...prev,
+                      currentView: 'gift-shop',
+                    }));
+                    AccessibilityUtils.announcePageChange('Gift Shop');
+                  })}
+                  className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
+                    appState.currentView === 'gift-shop'
+                      ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                      : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
+                  }`}
+                  role="tab"
+                  aria-selected={appState.currentView === 'gift-shop'}
+                  aria-current={
+                    appState.currentView === 'gift-shop' ? 'page' : undefined
+                  }
+                  aria-label="Gift Shop - Browse and purchase gifts with your points"
+                  aria-controls="main-content"
+                >
+                  <Gift className="w-5 h-5 mb-1" aria-hidden="true" />
+                  <span className="text-xs font-medium">Shop</span>
+                </button>
 
-              <button
-                onClick={createClickHandler(() => {
-                  const appAnalytics = AppAnalyticsService.getInstance();
-                  appAnalytics.trackFeatureUsage('navigation', 'gaming_clicked', {
-                    currentLevel: appState.rewardSystem?.level,
-                    hasRewards: !!appState.rewardSystem?.unlockedRewards.length,
-                    activeBattles: appState.activeBattles?.length,
-                  });
-                  setAppState((prev: AppState) => ({
-                    // type-safe replacement
-                    ...prev,
-                    currentView: 'gaming',
-                  }));
-                  AccessibilityUtils.announcePageChange('Gaming Hub');
-                })}
-                className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
-                  appState.currentView === 'gaming'
-                    ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
-                    : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
-                }`}
-                role="tab"
-                aria-selected={appState.currentView === 'gaming'}
-                aria-current={appState.currentView === 'gaming' ? 'page' : undefined}
-                aria-label="Gaming - Rewards, battles, and community challenges"
-                aria-controls="main-content"
-              >
-                <Gamepad2 className="w-5 h-5 mb-1" aria-hidden="true" />
-                <span className="text-xs font-medium">
-                  {getNavigationLabels().gaming}
-                </span>
-              </button>
+                <button
+                  onClick={createClickHandler(() => {
+                    const appAnalytics = AppAnalyticsService.getInstance();
+                    appAnalytics.trackFeatureUsage('navigation', 'settings_clicked');
+                    setAppState((prev: AppState) => ({
+                      // type-safe replacement
+                      ...prev,
+                      currentView: 'settings',
+                    }));
+                    AccessibilityUtils.announcePageChange('Settings');
+                  })}
+                  className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
+                    appState.currentView === 'settings'
+                      ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                      : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
+                  }`}
+                  role="tab"
+                  aria-selected={appState.currentView === 'settings'}
+                  aria-current={
+                    appState.currentView === 'settings' ? 'page' : undefined
+                  }
+                  aria-label="Settings - App preferences, analytics, and accessibility"
+                  aria-controls="main-content"
+                >
+                  <Settings className="w-5 h-5 mb-1" aria-hidden="true" />
+                  <span className="text-xs font-medium">
+                    {getNavigationLabels().settings}
+                  </span>
+                </button>
 
-              <button
-                onClick={createClickHandler(() => {
-                  const appAnalytics = AppAnalyticsService.getInstance();
-                  appAnalytics.trackFeatureUsage('navigation', 'gift_shop_clicked', {
-                    currentLevel: appState.rewardSystem?.level,
-                    totalPoints: appState.rewardSystem?.totalPoints,
-                  });
-                  setAppState((prev: AppState) => ({
-                    // type-safe replacement
-                    ...prev,
-                    currentView: 'gift-shop',
-                  }));
-                  AccessibilityUtils.announcePageChange('Gift Shop');
-                })}
-                className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
-                  appState.currentView === 'gift-shop'
-                    ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
-                    : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
-                }`}
-                role="tab"
-                aria-selected={appState.currentView === 'gift-shop'}
-                aria-current={appState.currentView === 'gift-shop' ? 'page' : undefined}
-                aria-label="Gift Shop - Browse and purchase gifts with your points"
-                aria-controls="main-content"
-              >
-                <Gift className="w-5 h-5 mb-1" aria-hidden="true" />
-                <span className="text-xs font-medium">
-                  Shop
-                </span>
-              </button>
+                <button
+                  onClick={() => {
+                    const appAnalytics = AppAnalyticsService.getInstance();
+                    appAnalytics.trackFeatureUsage('navigation', 'pricing_clicked');
+                    setAppState((prev: AppState) => ({
+                      // type-safe replacement
+                      ...prev,
+                      currentView: 'pricing',
+                    }));
+                    AccessibilityUtils.announcePageChange('Premium Plans');
+                  }}
+                  className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
+                    appState.currentView === 'pricing'
+                      ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                      : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
+                  }`}
+                  role="tab"
+                  aria-selected={appState.currentView === 'pricing'}
+                  aria-current={appState.currentView === 'pricing' ? 'page' : undefined}
+                  aria-label="Premium - Subscription plans and premium features"
+                  aria-controls="main-content"
+                >
+                  <Crown className="w-5 h-5 mb-1" aria-hidden="true" />
+                  <span className="text-xs font-medium">
+                    {getNavigationLabels().premium}
+                  </span>
+                </button>
+              </div>
+            </nav>
 
-              <button
-                onClick={createClickHandler(() => {
-                  const appAnalytics = AppAnalyticsService.getInstance();
-                  appAnalytics.trackFeatureUsage('navigation', 'settings_clicked');
-                  setAppState((prev: AppState) => ({
-                    // type-safe replacement
-                    ...prev,
-                    currentView: 'settings',
-                  }));
-                  AccessibilityUtils.announcePageChange('Settings');
-                })}
-                className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
-                  appState.currentView === 'settings'
-                    ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
-                    : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
-                }`}
-                role="tab"
-                aria-selected={appState.currentView === 'settings'}
-                aria-current={appState.currentView === 'settings' ? 'page' : undefined}
-                aria-label="Settings - App preferences, analytics, and accessibility"
-                aria-controls="main-content"
-              >
-                <Settings className="w-5 h-5 mb-1" aria-hidden="true" />
-                <span className="text-xs font-medium">
-                  {getNavigationLabels().settings}
-                </span>
-              </button>
+            {/* Alarm Form Modal */}
+            {showAlarmForm && (
+              <ErrorBoundary context="AlarmForm">
+                <AlarmForm
+                  alarm={editingAlarm}
+                  onSave={
+                    editingAlarm
+                      ? data => handleEditAlarm(editingAlarm.id, data)
+                      : handleAddAlarm
+                  }
+                  onCancel={() => {
+                    setShowAlarmForm(false);
+                    setEditingAlarm(null);
+                  }}
+                  userId={auth.user?.id || ''}
+                  user={auth.user!}
+                />
+              </ErrorBoundary>
+            )}
 
-              <button
-                onClick={() => {
-                  const appAnalytics = AppAnalyticsService.getInstance();
-                  appAnalytics.trackFeatureUsage('navigation', 'pricing_clicked');
-                  setAppState((prev: AppState) => ({
-                    // type-safe replacement
-                    ...prev,
-                    currentView: 'pricing',
-                  }));
-                  AccessibilityUtils.announcePageChange('Premium Plans');
-                }}
-                className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
-                  appState.currentView === 'pricing'
-                    ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
-                    : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
-                }`}
-                role="tab"
-                aria-selected={appState.currentView === 'pricing'}
-                aria-current={appState.currentView === 'pricing' ? 'page' : undefined}
-                aria-label="Premium - Subscription plans and premium features"
-                aria-controls="main-content"
-              >
-                <Crown className="w-5 h-5 mb-1" aria-hidden="true" />
-                <span className="text-xs font-medium">
-                  {getNavigationLabels().premium}
-                </span>
-              </button>
-            </div>
-          </nav>
-
-          {/* Alarm Form Modal */}
-          {showAlarmForm && (
-            <ErrorBoundary context="AlarmForm">
-              <AlarmForm
-                alarm={editingAlarm}
-                onSave={
-                  editingAlarm
-                    ? data => handleEditAlarm(editingAlarm.id, data)
-                    : handleAddAlarm
-                }
-                onCancel={() => {
-                  setShowAlarmForm(false);
-                  setEditingAlarm(null);
-                }}
-                userId={auth.user?.id || ''}
-                user={auth.user!}
-              />
-            </ErrorBoundary>
-          )}
-
-          {/* PWA Install Prompt */}
-          <PWAInstallPrompt onInstall={handlePWAInstall} onDismiss={handlePWADismiss} />
+            {/* PWA Install Prompt */}
+            <PWAInstallPrompt
+              onInstall={handlePWAInstall}
+              onDismiss={handlePWADismiss}
+            />
           </div>
         </RewardManager>
       </ScreenReaderProvider>

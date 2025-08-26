@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  ShoppingBag,
-  Package,
-  History,
-  Star,
-  Gift,
-  TrendingUp,
-} from 'lucide-react';
+import { ShoppingBag, Package, History, Star, Gift, TrendingUp } from 'lucide-react';
 import GiftCatalog from './GiftCatalog';
 import GiftInventory from './GiftInventory';
 import type { UserRewardAnalytics, UserGiftInventory } from '../types/reward-system';
@@ -18,10 +11,7 @@ interface GiftShopProps {
   onGiftAction?: (action: 'purchased' | 'equipped', gift: UserGiftInventory) => void;
 }
 
-const GiftShop: React.FC<GiftShopProps> = ({
-  userId,
-  onGiftAction,
-}) => {
+const GiftShop: React.FC<GiftShopProps> = ({ userId, onGiftAction }) => {
   const [selectedTab, setSelectedTab] = useState<'catalog' | 'inventory'>('catalog');
   const [userAnalytics, setUserAnalytics] = useState<UserRewardAnalytics | null>(null);
   const [inventoryCount, setInventoryCount] = useState(0);
@@ -54,7 +44,7 @@ const GiftShop: React.FC<GiftShopProps> = ({
   const handleGiftPurchased = (gift: UserGiftInventory) => {
     // Update inventory count
     setInventoryCount(prev => prev + 1);
-    
+
     // Announce purchase
     announceRewardEvent({
       type: 'gift',
@@ -83,7 +73,7 @@ const GiftShop: React.FC<GiftShopProps> = ({
 
   const getTabStats = () => {
     const equippedCount = inventoryCount; // Would calculate equipped items in real implementation
-    
+
     return {
       catalog: {
         count: '100+', // Would get actual count from API
@@ -142,7 +132,9 @@ const GiftShop: React.FC<GiftShopProps> = ({
         {userAnalytics && (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="bg-blue-50 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold text-blue-900">{userAnalytics.total_points || 0}</div>
+              <div className="text-2xl font-bold text-blue-900">
+                {userAnalytics.total_points || 0}
+              </div>
               <div className="text-sm text-blue-700">Points Available</div>
             </div>
             <div className="bg-green-50 rounded-lg p-3 text-center">
@@ -150,7 +142,9 @@ const GiftShop: React.FC<GiftShopProps> = ({
               <div className="text-sm text-green-700">Items Owned</div>
             </div>
             <div className="bg-purple-50 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold text-purple-900">{userAnalytics.total_rewards || 0}</div>
+              <div className="text-2xl font-bold text-purple-900">
+                {userAnalytics.total_rewards || 0}
+              </div>
               <div className="text-sm text-purple-700">Achievements</div>
             </div>
           </div>
@@ -174,11 +168,17 @@ const GiftShop: React.FC<GiftShopProps> = ({
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
-                <Icon className={`mr-2 h-5 w-5 ${isSelected ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500'}`} />
+                <Icon
+                  className={`mr-2 h-5 w-5 ${isSelected ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500'}`}
+                />
                 <span>{tab.label}</span>
-                <span className={`ml-2 py-0.5 px-2 rounded-full text-xs ${
-                  isSelected ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-900'
-                }`}>
+                <span
+                  className={`ml-2 py-0.5 px-2 rounded-full text-xs ${
+                    isSelected
+                      ? 'bg-blue-100 text-blue-800'
+                      : 'bg-gray-100 text-gray-900'
+                  }`}
+                >
                   {tab.count}
                 </span>
               </button>
@@ -213,10 +213,12 @@ const GiftShop: React.FC<GiftShopProps> = ({
           <TrendingUp className="mr-2 h-5 w-5 text-blue-600" />
           Your Progress
         </h3>
-        
+
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
           <div className="text-center">
-            <div className="text-2xl font-bold text-gray-900">{userAnalytics?.total_rewards || 0}</div>
+            <div className="text-2xl font-bold text-gray-900">
+              {userAnalytics?.total_rewards || 0}
+            </div>
             <div className="text-sm text-gray-600">Achievements</div>
           </div>
           <div className="text-center">
@@ -224,11 +226,15 @@ const GiftShop: React.FC<GiftShopProps> = ({
             <div className="text-sm text-gray-600">Items Owned</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-gray-900">{userAnalytics?.current_streak || 0}</div>
+            <div className="text-2xl font-bold text-gray-900">
+              {userAnalytics?.current_streak || 0}
+            </div>
             <div className="text-sm text-gray-600">Current Streak</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-gray-900">{userAnalytics?.total_points || 0}</div>
+            <div className="text-2xl font-bold text-gray-900">
+              {userAnalytics?.total_points || 0}
+            </div>
             <div className="text-sm text-gray-600">Points Available</div>
           </div>
         </div>

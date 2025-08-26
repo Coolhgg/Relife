@@ -78,17 +78,25 @@ const Dashboard: React.FC<DashboardProps> = ({
   onManageAlarms,
 }) => {
   // Performance optimized with memoization
-  const { alarm: nextAlarm, timeUntil } = useMemo(() => getTimeUntilNextAlarm(alarms), [alarms]);
-  const enabledAlarms = useMemo(() => alarms?.filter((a: any) => a.enabled) || [], [alarms]);
-  
+  const { alarm: nextAlarm, timeUntil } = useMemo(
+    () => getTimeUntilNextAlarm(alarms),
+    [alarms]
+  );
+  const enabledAlarms = useMemo(
+    () => alarms?.filter((a: any) => a.enabled) || [],
+    [alarms]
+  );
+
   // Calculate dashboard metrics
   const dashboardMetrics = useMemo(() => {
     const totalAlarms = alarms?.length || 0;
     const activeAlarms = enabledAlarms.length;
-    const completionRate = totalAlarms > 0 ? Math.round((activeAlarms / totalAlarms) * 100) : 0;
-    const avgSleepQuality = mockSleepData.slice(-7).reduce((acc, day) => acc + day.quality, 0) / 7;
+    const completionRate =
+      totalAlarms > 0 ? Math.round((activeAlarms / totalAlarms) * 100) : 0;
+    const avgSleepQuality =
+      mockSleepData.slice(-7).reduce((acc, day) => acc + day.quality, 0) / 7;
     const currentStreak = 12; // Mock data - would come from API
-    
+
     return {
       totalAlarms,
       activeAlarms,
@@ -102,7 +110,7 @@ const Dashboard: React.FC<DashboardProps> = ({
   const [optimizationSuggestions, setOptimizationSuggestions] = useState<any[]>([]);
   const [advancedFeaturesEnabled, setAdvancedFeaturesEnabled] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
-  
+
   // Update current time every minute
   useEffect(() => {
     const timer = setInterval(() => {
@@ -144,24 +152,29 @@ const Dashboard: React.FC<DashboardProps> = ({
   // Show enhanced loading state if alarms is undefined
   if (!alarms) {
     return (
-      <main className="min-h-screen theme-bg p-4 space-y-6" role="main" aria-labelledby="dashboard-heading">
+      <main
+        className="min-h-screen theme-bg p-4 space-y-6"
+        role="main"
+        aria-labelledby="dashboard-heading"
+      >
         <div className="text-center py-12">
           <div className="w-16 h-16 mx-auto mb-4 relative">
             <div className="absolute inset-0 rounded-full bg-gradient-to-r from-theme-primary-500 to-theme-secondary-500 animate-spin opacity-20"></div>
             <div className="absolute inset-2 rounded-full bg-gradient-to-r from-theme-primary-600 to-theme-secondary-600 animate-pulse"></div>
             <div className="absolute inset-4 rounded-full bg-theme-background"></div>
           </div>
-          <div className="text-lg font-semibold theme-text-primary mb-2">Loading your dashboard...</div>
-          <div className="text-theme-text-600">Preparing your personalized experience</div>
+          <div className="text-lg font-semibold theme-text-primary mb-2">
+            Loading your dashboard...
+          </div>
+          <div className="text-theme-text-600">
+            Preparing your personalized experience
+          </div>
         </div>
-        
+
         {/* Enhanced Loading Skeletons */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, i) => (
-            <div
-              key={i}
-              className="alarm-card-glass h-48 relative overflow-hidden"
-            >
+            <div key={i} className="alarm-card-glass h-48 relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-pulse"></div>
               <div className="h-full bg-theme-surface-100 dark:bg-theme-surface-800 opacity-50 rounded-xl"></div>
             </div>
@@ -172,21 +185,32 @@ const Dashboard: React.FC<DashboardProps> = ({
   }
 
   return (
-    <main className="min-h-screen theme-bg p-4 space-y-6" role="main" aria-labelledby="dashboard-heading">
+    <main
+      className="min-h-screen theme-bg p-4 space-y-6"
+      role="main"
+      aria-labelledby="dashboard-heading"
+    >
       <h1 id="dashboard-heading" className="sr-only">
         Enhanced Alarm Dashboard
       </h1>
-      
+
       {/* Hero Section with Time & Weather */}
       <section className="relative overflow-hidden">
         <div className="alarm-card-glass bg-gradient-to-br from-theme-primary-500/10 via-theme-secondary-500/5 to-theme-accent-500/10 p-8 text-center">
           <div className="absolute inset-0 bg-gradient-to-br from-theme-primary-600/20 to-transparent opacity-50"></div>
           <div className="relative z-10">
             <div className="text-6xl font-bold time-display mb-2">
-              {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              {currentTime.toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
             </div>
             <div className="text-theme-text-600 text-lg font-medium mb-4">
-              {currentTime.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' })}
+              {currentTime.toLocaleDateString([], {
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric',
+              })}
             </div>
             <div className="flex items-center justify-center gap-6 text-theme-text-500">
               <div className="flex items-center gap-2">
@@ -201,7 +225,7 @@ const Dashboard: React.FC<DashboardProps> = ({
           </div>
         </div>
       </section>
-      
+
       {/* Dashboard Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Next Alarm Card - Enhanced Design */}
@@ -214,7 +238,10 @@ const Dashboard: React.FC<DashboardProps> = ({
           <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-6">
-              <h2 id="next-alarm-heading" className="text-xl font-bold flex items-center gap-2">
+              <h2
+                id="next-alarm-heading"
+                className="text-xl font-bold flex items-center gap-2"
+              >
                 <Bell className="w-6 h-6" aria-hidden="true" />
                 Next Alarm
               </h2>
@@ -236,11 +263,9 @@ const Dashboard: React.FC<DashboardProps> = ({
                   <div className="text-xl font-medium text-white/90 mb-1">
                     {nextAlarm.label}
                   </div>
-                  <div className="text-sm text-white/75">
-                    {timeUntil} remaining
-                  </div>
+                  <div className="text-sm text-white/75">{timeUntil} remaining</div>
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-3 mt-6">
                   <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 text-center">
                     <Volume2 className="w-5 h-5 mx-auto mb-1" aria-hidden="true" />
@@ -250,9 +275,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                   </div>
                   <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 text-center">
                     <Calendar className="w-5 h-5 mx-auto mb-1" aria-hidden="true" />
-                    <div className="text-xs text-white/90">
-                      Daily
-                    </div>
+                    <div className="text-xs text-white/90">Daily</div>
                   </div>
                 </div>
               </div>
@@ -268,7 +291,9 @@ const Dashboard: React.FC<DashboardProps> = ({
 
                 <div className="space-y-2">
                   <button
-                    onClick={() => (onQuickSetup ? onQuickSetup('morning') : onAddAlarm())}
+                    onClick={() =>
+                      onQuickSetup ? onQuickSetup('morning') : onAddAlarm()
+                    }
                     className="w-full bg-white/20 backdrop-blur-sm text-white px-4 py-3 rounded-xl font-medium hover:bg-white/30 transition-all duration-300 flex items-center justify-center gap-2 border border-white/20"
                     aria-label="Quick setup - Morning routine"
                   >
@@ -297,7 +322,10 @@ const Dashboard: React.FC<DashboardProps> = ({
           aria-labelledby="sleep-quality-heading"
         >
           <div className="flex items-center justify-between mb-4">
-            <h3 id="sleep-quality-heading" className="text-lg font-semibold theme-text-primary flex items-center gap-2">
+            <h3
+              id="sleep-quality-heading"
+              className="text-lg font-semibold theme-text-primary flex items-center gap-2"
+            >
               <Moon className="w-5 h-5 text-theme-success-600" aria-hidden="true" />
               Sleep Quality
             </h3>
@@ -305,13 +333,13 @@ const Dashboard: React.FC<DashboardProps> = ({
               <Activity className="w-4 h-4 text-theme-success-600" aria-hidden="true" />
             </div>
           </div>
-          
+
           <div className="text-center">
             <div className="text-4xl font-bold text-theme-success-600 mb-2">
               {dashboardMetrics.todaySleepScore}%
             </div>
             <div className="text-theme-text-600 text-sm mb-4">Today's Score</div>
-            
+
             {/* Mini Sleep Chart */}
             <div className="flex items-end justify-between h-12 gap-1 mt-4">
               {mockSleepData.slice(-7).map((day, index) => (
@@ -323,10 +351,12 @@ const Dashboard: React.FC<DashboardProps> = ({
                 />
               ))}
             </div>
-            <div className="text-xs text-theme-text-500 mt-2">7-day average: {dashboardMetrics.avgSleepQuality}%</div>
+            <div className="text-xs text-theme-text-500 mt-2">
+              7-day average: {dashboardMetrics.avgSleepQuality}%
+            </div>
           </div>
         </section>
-        
+
         {/* Streak & Achievements Card */}
         <section
           className="alarm-card-glass bg-gradient-to-br from-theme-warning-500/10 to-theme-warning-600/5"
@@ -334,7 +364,10 @@ const Dashboard: React.FC<DashboardProps> = ({
           aria-labelledby="achievements-heading"
         >
           <div className="flex items-center justify-between mb-4">
-            <h3 id="achievements-heading" className="text-lg font-semibold theme-text-primary flex items-center gap-2">
+            <h3
+              id="achievements-heading"
+              className="text-lg font-semibold theme-text-primary flex items-center gap-2"
+            >
               <Award className="w-5 h-5 text-theme-warning-600" aria-hidden="true" />
               Achievements
             </h3>
@@ -342,7 +375,7 @@ const Dashboard: React.FC<DashboardProps> = ({
               <Sparkles className="w-4 h-4 text-theme-warning-600" aria-hidden="true" />
             </div>
           </div>
-          
+
           <div className="space-y-4">
             <div className="text-center">
               <div className="text-4xl font-bold text-theme-warning-600 mb-1">
@@ -350,7 +383,7 @@ const Dashboard: React.FC<DashboardProps> = ({
               </div>
               <div className="text-theme-text-600 text-sm">Day Streak</div>
             </div>
-            
+
             <div className="grid grid-cols-3 gap-2">
               <div className="text-center p-2 bg-theme-surface-100 dark:bg-theme-surface-800 rounded-lg">
                 <CheckCircle className="w-4 h-4 mx-auto text-theme-success-500 mb-1" />
@@ -370,7 +403,7 @@ const Dashboard: React.FC<DashboardProps> = ({
             </div>
           </div>
         </section>
-        
+
         {/* Quick Stats Card */}
         <section
           className="alarm-card-glass bg-gradient-to-br from-theme-accent-500/10 to-theme-accent-600/5"
@@ -378,7 +411,10 @@ const Dashboard: React.FC<DashboardProps> = ({
           aria-labelledby="quick-stats-heading"
         >
           <div className="flex items-center justify-between mb-4">
-            <h3 id="quick-stats-heading" className="text-lg font-semibold theme-text-primary flex items-center gap-2">
+            <h3
+              id="quick-stats-heading"
+              className="text-lg font-semibold theme-text-primary flex items-center gap-2"
+            >
               <BarChart3 className="w-5 h-5 text-theme-accent-600" aria-hidden="true" />
               Overview
             </h3>
@@ -387,24 +423,33 @@ const Dashboard: React.FC<DashboardProps> = ({
               className="p-2 hover:bg-theme-surface-100 dark:hover:bg-theme-surface-800 rounded-full transition-colors"
               aria-label="View detailed statistics"
             >
-              <ChevronRight className="w-4 h-4 text-theme-text-600" aria-hidden="true" />
+              <ChevronRight
+                className="w-4 h-4 text-theme-text-600"
+                aria-hidden="true"
+              />
             </button>
           </div>
-          
+
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-theme-text-600 text-sm">Active Alarms</span>
-              <span className="font-semibold text-theme-accent-600">{enabledAlarms.length}</span>
+              <span className="font-semibold text-theme-accent-600">
+                {enabledAlarms.length}
+              </span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-theme-text-600 text-sm">Total Created</span>
-              <span className="font-semibold text-theme-text-700">{dashboardMetrics.totalAlarms}</span>
+              <span className="font-semibold text-theme-text-700">
+                {dashboardMetrics.totalAlarms}
+              </span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-theme-text-600 text-sm">Success Rate</span>
-              <span className="font-semibold text-theme-success-600">{dashboardMetrics.completionRate}%</span>
+              <span className="font-semibold text-theme-success-600">
+                {dashboardMetrics.completionRate}%
+              </span>
             </div>
-            
+
             {/* Progress Bar */}
             <div className="mt-4">
               <div className="flex justify-between text-xs text-theme-text-500 mb-1">
@@ -412,16 +457,18 @@ const Dashboard: React.FC<DashboardProps> = ({
                 <span>6/7 days</span>
               </div>
               <div className="w-full bg-theme-surface-200 dark:bg-theme-surface-700 rounded-full h-2">
-                <div className="bg-gradient-to-r from-theme-primary-400 to-theme-primary-600 h-2 rounded-full transition-all duration-500" style={{ width: '86%' }}></div>
+                <div
+                  className="bg-gradient-to-r from-theme-primary-400 to-theme-primary-600 h-2 rounded-full transition-all duration-500"
+                  style={{ width: '86%' }}
+                ></div>
               </div>
             </div>
           </div>
         </section>
       </div>
-      
+
       {/* Secondary Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
         {/* Recent Alarms Card */}
         {alarms && alarms.length > 0 && (
           <section
@@ -430,7 +477,10 @@ const Dashboard: React.FC<DashboardProps> = ({
             aria-labelledby="recent-alarms-heading"
           >
             <div className="flex items-center justify-between mb-6">
-              <h3 id="recent-alarms-heading" className="text-lg font-semibold theme-text-primary flex items-center gap-2">
+              <h3
+                id="recent-alarms-heading"
+                className="text-lg font-semibold theme-text-primary flex items-center gap-2"
+              >
                 <Timer className="w-5 h-5 text-theme-primary-600" aria-hidden="true" />
                 Recent Alarms
               </h3>
@@ -442,7 +492,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                 <Settings className="w-4 h-4 text-theme-text-600" aria-hidden="true" />
               </button>
             </div>
-            
+
             <div className="space-y-3" role="list" aria-label="Recent alarm summaries">
               {alarms.slice(0, 4).map((alarm: any) => {
                 const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
@@ -459,12 +509,14 @@ const Dashboard: React.FC<DashboardProps> = ({
                         <div className="relative">
                           <div
                             className={`w-4 h-4 rounded-full transition-all duration-300 ${
-                              alarm.enabled 
-                                ? 'bg-theme-success-500 shadow-lg shadow-theme-success-500/30' 
+                              alarm.enabled
+                                ? 'bg-theme-success-500 shadow-lg shadow-theme-success-500/30'
                                 : 'bg-theme-border-400'
                             }`}
                             role="img"
-                            aria-label={alarm.enabled ? 'Alarm enabled' : 'Alarm disabled'}
+                            aria-label={
+                              alarm.enabled ? 'Alarm enabled' : 'Alarm disabled'
+                            }
                           />
                           {alarm.enabled && (
                             <div className="absolute inset-0 bg-theme-success-500 rounded-full animate-ping opacity-30"></div>
@@ -484,7 +536,10 @@ const Dashboard: React.FC<DashboardProps> = ({
                         <div className="text-xl" aria-hidden="true">
                           {voiceMoodConfig.icon}
                         </div>
-                        <ChevronRight className="w-4 h-4 text-theme-text-400 group-hover:text-theme-text-600 transition-colors" aria-hidden="true" />
+                        <ChevronRight
+                          className="w-4 h-4 text-theme-text-400 group-hover:text-theme-text-600 transition-colors"
+                          aria-hidden="true"
+                        />
                       </div>
                     </div>
                   </div>
@@ -511,7 +566,10 @@ const Dashboard: React.FC<DashboardProps> = ({
           aria-labelledby="insights-heading"
         >
           <div className="flex items-center justify-between mb-6">
-            <h3 id="insights-heading" className="text-lg font-semibold theme-text-primary flex items-center gap-2">
+            <h3
+              id="insights-heading"
+              className="text-lg font-semibold theme-text-primary flex items-center gap-2"
+            >
               <Brain className="w-5 h-5 text-theme-secondary-600" aria-hidden="true" />
               Smart Insights
             </h3>
@@ -521,7 +579,10 @@ const Dashboard: React.FC<DashboardProps> = ({
                 className="p-2 hover:bg-theme-surface-100 dark:hover:bg-theme-surface-800 rounded-full transition-colors"
                 aria-label="View advanced features"
               >
-                <ChevronRight className="w-4 h-4 text-theme-text-600" aria-hidden="true" />
+                <ChevronRight
+                  className="w-4 h-4 text-theme-text-600"
+                  aria-hidden="true"
+                />
               </button>
             )}
           </div>
@@ -543,7 +604,8 @@ const Dashboard: React.FC<DashboardProps> = ({
                         {suggestion.suggestion}
                       </div>
                       <div className="text-xs text-theme-success-600 dark:text-theme-success-400">
-                        {Math.round(suggestion.confidence * 100)}% confidence • {suggestion.impact} impact
+                        {Math.round(suggestion.confidence * 100)}% confidence •{' '}
+                        {suggestion.impact} impact
                       </div>
                     </div>
                     <button className="text-xs bg-theme-success-600 text-white px-3 py-1 rounded-full hover:bg-theme-success-700 transition-colors font-medium">
@@ -555,18 +617,30 @@ const Dashboard: React.FC<DashboardProps> = ({
             ) : (
               <div className="text-center py-6">
                 <div className="w-12 h-12 bg-theme-secondary-100 dark:bg-theme-secondary-900/30 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Brain className="w-6 h-6 text-theme-secondary-600" aria-hidden="true" />
+                  <Brain
+                    className="w-6 h-6 text-theme-secondary-600"
+                    aria-hidden="true"
+                  />
                 </div>
-                <div className="text-theme-text-600 text-sm mb-2">AI is learning your patterns</div>
-                <div className="text-theme-text-500 text-xs">Set more alarms to unlock personalized insights</div>
+                <div className="text-theme-text-600 text-sm mb-2">
+                  AI is learning your patterns
+                </div>
+                <div className="text-theme-text-500 text-xs">
+                  Set more alarms to unlock personalized insights
+                </div>
               </div>
             )}
-            
+
             {/* Community Stats */}
             <div className="pt-4 border-t border-theme-border-200 dark:border-theme-border-700">
               <div className="flex items-center gap-2 mb-3">
-                <Users className="w-4 h-4 text-theme-secondary-600" aria-hidden="true" />
-                <span className="text-sm font-medium text-theme-text-700">Community</span>
+                <Users
+                  className="w-4 h-4 text-theme-secondary-600"
+                  aria-hidden="true"
+                />
+                <span className="text-sm font-medium text-theme-text-700">
+                  Community
+                </span>
               </div>
               <div className="grid grid-cols-2 gap-3 text-center">
                 <div>
@@ -591,11 +665,14 @@ const Dashboard: React.FC<DashboardProps> = ({
           role="region"
           aria-labelledby="quick-actions-heading"
         >
-          <h3 id="quick-actions-heading" className="text-lg font-semibold mb-6 theme-text-primary flex items-center gap-2">
+          <h3
+            id="quick-actions-heading"
+            className="text-lg font-semibold mb-6 theme-text-primary flex items-center gap-2"
+          >
             <Zap className="w-5 h-5 text-theme-primary-600" aria-hidden="true" />
             Quick Actions
           </h3>
-          
+
           <div className="grid grid-cols-1 gap-3">
             <button
               onClick={onAddAlarm}
@@ -608,9 +685,14 @@ const Dashboard: React.FC<DashboardProps> = ({
                 </div>
                 <div className="text-left">
                   <div className="font-semibold">Create New Alarm</div>
-                  <div className="text-sm text-white/90">Set up your perfect wake-up time</div>
+                  <div className="text-sm text-white/90">
+                    Set up your perfect wake-up time
+                  </div>
                 </div>
-                <ChevronRight className="w-5 h-5 ml-auto opacity-70 group-hover:opacity-100 transition-opacity" aria-hidden="true" />
+                <ChevronRight
+                  className="w-5 h-5 ml-auto opacity-70 group-hover:opacity-100 transition-opacity"
+                  aria-hidden="true"
+                />
               </div>
             </button>
 
@@ -627,7 +709,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                     <div className="text-xs text-white/90">7:00 AM</div>
                   </div>
                 </button>
-                
+
                 <button
                   onClick={() => onQuickSetup('work')}
                   className="group p-4 bg-gradient-to-br from-theme-accent-500 to-theme-accent-600 hover:from-theme-accent-600 hover:to-theme-accent-700 text-white rounded-xl transition-all duration-300 transform hover:scale-[1.02]"
@@ -643,57 +725,75 @@ const Dashboard: React.FC<DashboardProps> = ({
             )}
           </div>
         </section>
-        
+
         {/* Advanced Features Card */}
-        {!advancedFeaturesEnabled && alarms && alarms.length > 0 && onNavigateToAdvanced && (
-          <section
-            className="alarm-card-glass bg-gradient-to-br from-theme-secondary-500/10 to-theme-secondary-600/5 border-theme-secondary-200 dark:border-theme-secondary-700"
-            role="region"
-            aria-labelledby="advanced-features-heading"
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 rounded-full bg-theme-secondary-100 dark:bg-theme-secondary-900/30">
-                <Sparkles className="w-5 h-5 text-theme-secondary-600" aria-hidden="true" />
-              </div>
-              <div>
-                <h3 id="advanced-features-heading" className="text-lg font-semibold theme-text-primary">
-                  Unlock AI Features
-                </h3>
-                <p className="text-sm text-theme-text-600">
-                  Personalized optimization & insights
-                </p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-3 gap-3 mb-4">
-              <div className="text-center p-3 bg-theme-surface-100 dark:bg-theme-surface-800 rounded-lg">
-                <Brain className="w-5 h-5 mx-auto text-theme-secondary-600 mb-1" aria-hidden="true" />
-                <div className="text-xs text-theme-text-600">ML Learning</div>
-              </div>
-              <div className="text-center p-3 bg-theme-surface-100 dark:bg-theme-surface-800 rounded-lg">
-                <MapPin className="w-5 h-5 mx-auto text-theme-secondary-600 mb-1" aria-hidden="true" />
-                <div className="text-xs text-theme-text-600">Location</div>
-              </div>
-              <div className="text-center p-3 bg-theme-surface-100 dark:bg-theme-surface-800 rounded-lg">
-                <TrendingUp className="w-5 h-5 mx-auto text-theme-secondary-600 mb-1" aria-hidden="true" />
-                <div className="text-xs text-theme-text-600">Analytics</div>
-              </div>
-            </div>
-
-            <button
-              onClick={onNavigateToAdvanced}
-              className="w-full bg-gradient-to-r from-theme-secondary-600 to-theme-secondary-700 hover:from-theme-secondary-700 hover:to-theme-secondary-800 text-white py-3 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
-              aria-label="Enable advanced AI features"
+        {!advancedFeaturesEnabled &&
+          alarms &&
+          alarms.length > 0 &&
+          onNavigateToAdvanced && (
+            <section
+              className="alarm-card-glass bg-gradient-to-br from-theme-secondary-500/10 to-theme-secondary-600/5 border-theme-secondary-200 dark:border-theme-secondary-700"
+              role="region"
+              aria-labelledby="advanced-features-heading"
             >
-              <div className="flex items-center justify-center gap-2">
-                <Zap className="w-5 h-5" aria-hidden="true" />
-                Enable AI Features
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 rounded-full bg-theme-secondary-100 dark:bg-theme-secondary-900/30">
+                  <Sparkles
+                    className="w-5 h-5 text-theme-secondary-600"
+                    aria-hidden="true"
+                  />
+                </div>
+                <div>
+                  <h3
+                    id="advanced-features-heading"
+                    className="text-lg font-semibold theme-text-primary"
+                  >
+                    Unlock AI Features
+                  </h3>
+                  <p className="text-sm text-theme-text-600">
+                    Personalized optimization & insights
+                  </p>
+                </div>
               </div>
-            </button>
-          </section>
-        )}
+
+              <div className="grid grid-cols-3 gap-3 mb-4">
+                <div className="text-center p-3 bg-theme-surface-100 dark:bg-theme-surface-800 rounded-lg">
+                  <Brain
+                    className="w-5 h-5 mx-auto text-theme-secondary-600 mb-1"
+                    aria-hidden="true"
+                  />
+                  <div className="text-xs text-theme-text-600">ML Learning</div>
+                </div>
+                <div className="text-center p-3 bg-theme-surface-100 dark:bg-theme-surface-800 rounded-lg">
+                  <MapPin
+                    className="w-5 h-5 mx-auto text-theme-secondary-600 mb-1"
+                    aria-hidden="true"
+                  />
+                  <div className="text-xs text-theme-text-600">Location</div>
+                </div>
+                <div className="text-center p-3 bg-theme-surface-100 dark:bg-theme-surface-800 rounded-lg">
+                  <TrendingUp
+                    className="w-5 h-5 mx-auto text-theme-secondary-600 mb-1"
+                    aria-hidden="true"
+                  />
+                  <div className="text-xs text-theme-text-600">Analytics</div>
+                </div>
+              </div>
+
+              <button
+                onClick={onNavigateToAdvanced}
+                className="w-full bg-gradient-to-r from-theme-secondary-600 to-theme-secondary-700 hover:from-theme-secondary-700 hover:to-theme-secondary-800 text-white py-3 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
+                aria-label="Enable advanced AI features"
+              >
+                <div className="flex items-center justify-center gap-2">
+                  <Zap className="w-5 h-5" aria-hidden="true" />
+                  Enable AI Features
+                </div>
+              </button>
+            </section>
+          )}
       </div>
-      
+
       {/* Insights and Suggestions */}
       {(smartInsights.length > 0 || optimizationSuggestions.length > 0) && (
         <section
@@ -702,7 +802,10 @@ const Dashboard: React.FC<DashboardProps> = ({
           aria-labelledby="smart-insights-heading"
         >
           <div className="flex items-center justify-between mb-6">
-            <h3 id="smart-insights-heading" className="text-lg font-semibold theme-text-primary flex items-center gap-2">
+            <h3
+              id="smart-insights-heading"
+              className="text-lg font-semibold theme-text-primary flex items-center gap-2"
+            >
               <Lightbulb className="w-5 h-5 text-theme-info-600" aria-hidden="true" />
               Personalized Suggestions
             </h3>
@@ -716,14 +819,18 @@ const Dashboard: React.FC<DashboardProps> = ({
               >
                 <div className="flex items-start gap-3">
                   <div className="p-1 rounded-full bg-theme-success-100 dark:bg-theme-success-900/30">
-                    <CheckCircle className="w-4 h-4 text-theme-success-600" aria-hidden="true" />
+                    <CheckCircle
+                      className="w-4 h-4 text-theme-success-600"
+                      aria-hidden="true"
+                    />
                   </div>
                   <div className="flex-1">
                     <div className="font-medium theme-text-primary text-sm mb-1">
                       {suggestion.suggestion}
                     </div>
                     <div className="text-xs text-theme-text-500">
-                      {Math.round(suggestion.confidence * 100)}% confidence • {suggestion.impact} impact
+                      {Math.round(suggestion.confidence * 100)}% confidence •{' '}
+                      {suggestion.impact} impact
                     </div>
                   </div>
                   <button className="text-xs bg-theme-primary-600 text-white px-3 py-1 rounded-full hover:bg-theme-primary-700 transition-colors font-medium">
@@ -739,16 +846,25 @@ const Dashboard: React.FC<DashboardProps> = ({
                 className="p-4 bg-theme-surface-50 dark:bg-theme-surface-800 rounded-xl border border-theme-border-200 dark:border-theme-border-700"
               >
                 <div className="flex items-start gap-3">
-                  <div className={`p-1 rounded-full ${
-                    insight.priority === 'high' ? 'bg-theme-error-100 dark:bg-theme-error-900/30' :
-                    insight.priority === 'medium' ? 'bg-theme-warning-100 dark:bg-theme-warning-900/30' :
-                    'bg-theme-info-100 dark:bg-theme-info-900/30'
-                  }`}>
-                    <AlertCircle className={`w-4 h-4 ${
-                      insight.priority === 'high' ? 'text-theme-error-600' :
-                      insight.priority === 'medium' ? 'text-theme-warning-600' :
-                      'text-theme-info-600'
-                    }`} aria-hidden="true" />
+                  <div
+                    className={`p-1 rounded-full ${
+                      insight.priority === 'high'
+                        ? 'bg-theme-error-100 dark:bg-theme-error-900/30'
+                        : insight.priority === 'medium'
+                          ? 'bg-theme-warning-100 dark:bg-theme-warning-900/30'
+                          : 'bg-theme-info-100 dark:bg-theme-info-900/30'
+                    }`}
+                  >
+                    <AlertCircle
+                      className={`w-4 h-4 ${
+                        insight.priority === 'high'
+                          ? 'text-theme-error-600'
+                          : insight.priority === 'medium'
+                            ? 'text-theme-warning-600'
+                            : 'text-theme-info-600'
+                      }`}
+                      aria-hidden="true"
+                    />
                   </div>
                   <div className="flex-1">
                     <div className="font-medium theme-text-primary text-sm mb-1">
@@ -765,7 +881,6 @@ const Dashboard: React.FC<DashboardProps> = ({
         </section>
       )}
 
-      
       {/* Floating Action Button */}
       <button
         onClick={onAddAlarm}
@@ -782,11 +897,13 @@ export default Dashboard;
 
 // Enhanced Dashboard Styles
 export const dashboardStyles = {
-  heroSection: "relative overflow-hidden",
-  heroCard: "alarm-card-glass bg-gradient-to-br from-theme-primary-500/10 via-theme-secondary-500/5 to-theme-accent-500/10 p-8 text-center",
-  timeDisplay: "text-6xl font-bold time-display mb-2",
-  dateDisplay: "text-theme-text-600 text-lg font-medium mb-4",
-  statsGrid: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6",
-  actionCard: "group p-4 bg-gradient-to-r from-theme-primary-500 to-theme-primary-600 hover:from-theme-primary-600 hover:to-theme-primary-700 text-white rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl shadow-theme-primary-500/25",
-  fab: "fab fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-theme-primary-500 to-theme-primary-600 hover:from-theme-primary-600 hover:to-theme-primary-700 text-white rounded-full shadow-2xl hover:shadow-theme-primary-500/30 transition-all duration-300 transform hover:scale-110 z-50 flex items-center justify-center",
+  heroSection: 'relative overflow-hidden',
+  heroCard:
+    'alarm-card-glass bg-gradient-to-br from-theme-primary-500/10 via-theme-secondary-500/5 to-theme-accent-500/10 p-8 text-center',
+  timeDisplay: 'text-6xl font-bold time-display mb-2',
+  dateDisplay: 'text-theme-text-600 text-lg font-medium mb-4',
+  statsGrid: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6',
+  actionCard:
+    'group p-4 bg-gradient-to-r from-theme-primary-500 to-theme-primary-600 hover:from-theme-primary-600 hover:to-theme-primary-700 text-white rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl shadow-theme-primary-500/25',
+  fab: 'fab fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-theme-primary-500 to-theme-primary-600 hover:from-theme-primary-600 hover:to-theme-primary-700 text-white rounded-full shadow-2xl hover:shadow-theme-primary-500/30 transition-all duration-300 transform hover:scale-110 z-50 flex items-center justify-center',
 };

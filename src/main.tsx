@@ -5,7 +5,10 @@ import App from './App.tsx';
 import RootErrorBoundary from './components/RootErrorBoundary.tsx';
 import { setupNotificationListeners } from './services/capacitor';
 import { ServiceWorkerManager } from './services/service-worker-manager';
-import { initializeEnhancedApp, isAppInitialized } from './config/enhancedInitializeApp';
+import {
+  initializeEnhancedApp,
+  isAppInitialized,
+} from './config/enhancedInitializeApp';
 import { initializeStoreWithPersistedState } from './store';
 
 // Show loading screen while app initializes
@@ -44,7 +47,7 @@ const startApp = async () => {
       enableDebugLogging: process.env.NODE_ENV === 'development',
       skipNonCriticalServices: false,
     });
-    
+
     // Initialize Redux store with persisted state
     // Note: This is also called in App.tsx but calling here ensures early initialization
     initializeStoreWithPersistedState();
