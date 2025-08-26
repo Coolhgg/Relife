@@ -243,7 +243,6 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
             </h2>
             <div className="grid gap-3">
               {rewardSystem.unlockedRewards.slice(0, 3).map((reward: any) => {
-                // auto: implicit any
                 const CategoryIcon = getCategoryIcon(reward.category);
                 return (
                   <div
@@ -370,7 +369,6 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
             </h2>
             <div className="grid gap-3 md:grid-cols-2">
               {rewardSystem.unlockedRewards.map((reward: any) => {
-                // auto: implicit any
                 const CategoryIcon = getCategoryIcon(reward.category);
                 return (
                   <div
@@ -421,7 +419,6 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
                     !rewardSystem.unlockedRewards.find((ur: any) => ur.id === reward.id)
                 )
                 .map((reward: any) => {
-                  // auto: implicit any
                   const CategoryIcon = getCategoryIcon(reward.category);
                   return (
                     <div

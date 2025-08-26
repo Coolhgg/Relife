@@ -739,7 +739,6 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
 
         <button
           onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-            // auto: implicit any
             e.stopPropagation();
             onPreview();
           }}
@@ -901,7 +900,6 @@ const ThemeListItem: React.FC<ThemeListItemProps> = ({
       <div className="flex items-center space-x-2 ml-4">
         <button
           onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-            // auto: implicit any
             e.stopPropagation();
             onToggleFavorite();
           }}
@@ -914,7 +912,6 @@ const ThemeListItem: React.FC<ThemeListItemProps> = ({
 
         <button
           onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-            // auto: implicit any
             e.stopPropagation();
             onPreview();
           }}

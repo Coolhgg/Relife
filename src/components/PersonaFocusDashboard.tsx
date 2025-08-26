@@ -321,7 +321,6 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
             </Pie>
             <Tooltip
               formatter={(value: any) => [
-                // auto: implicit any
                 `${((value as number) * 100).toFixed(1)}%`,
                 'Revenue Share',
               ]}

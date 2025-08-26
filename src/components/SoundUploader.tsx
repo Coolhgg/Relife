@@ -266,7 +266,6 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
 
   const removeUploadItem = (id: string) => {
     setUploadItems((prev: any) => {
-      // auto: implicit any
       const item = prev.find((i: any) => i.id === id);
       if (item?.previewUrl) {
         URL.revokeObjectURL(item.previewUrl);
@@ -300,7 +299,6 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
     } else {
       // Stop all other previews
       uploadItems.forEach((i: any) => {
-        // auto: implicit any
         if (i.audio && i.isPlaying) {
           i.audio.pause();
           updateUploadItem(i.id, { isPlaying: false });

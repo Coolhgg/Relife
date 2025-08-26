@@ -35,7 +35,6 @@ export const TabProtectionWarning: React.FC<TabProtectionWarningProps> = ({
       );
 
       const upcoming = enabledAlarms.filter((alarm: any) => {
-        // auto: implicit any
         const today = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
 
         // Check if alarm is set for today

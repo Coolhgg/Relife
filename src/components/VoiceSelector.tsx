@@ -242,7 +242,6 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
     if (filter === 'all') return availableVoices;
 
     return availableVoices.filter((voice: any) => {
-      // auto: implicit any
       const personality = PremiumVoiceService.getVoicePersonality(voice.id);
       if (!personality) {
         return filter === 'free';
@@ -256,7 +255,6 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
     const categories: Record<string, VoiceMoodConfig[]> = {};
 
     filteredVoices.forEach((voice: any) => {
-      // auto: implicit any
       const personality = PremiumVoiceService.getVoicePersonality(voice.id);
       const category = personality?.category || 'basic';
 

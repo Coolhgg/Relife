@@ -180,7 +180,6 @@ function AIWakeUpCoach() {
                   id={goal}
                   checked={coachingGoals.includes(goal)}
                   onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                    // auto: implicit any
                     if (e.target.checked) {
                       setCoachingGoals((prev: any) => [...prev, goal]);
                     } else {
