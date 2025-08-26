@@ -1,6 +1,6 @@
 /**
  * Enhanced Analytics Service Implementation
- * 
+ *
  * Extends BaseService and implements IAnalyticsService interface
  * Provides dependency-injected analytics with proper lifecycle management
  */
@@ -38,7 +38,7 @@ export class EnhancedAnalyticsService extends BaseService implements IAnalyticsS
     config: ServiceConfig;
   }) {
     super(dependencies.config);
-    
+
     this.storageService = dependencies.storageService;
     this.sessionId = this.generateSessionId();
     this.queue = {
@@ -54,24 +54,23 @@ export class EnhancedAnalyticsService extends BaseService implements IAnalyticsS
 
   async initialize(config?: ServiceConfig): Promise<void> {
     await super.initialize(config);
-    
+
     try {
       // Load queued events from storage
       await this.loadQueuedEvents();
-      
+
       // Start auto-flush timer
       this.startAutoFlush();
-      
+
       // Track session start
       await this.track('session_started', {
         sessionId: this.sessionId,
         userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown',
         timestamp: new Date().toISOString(),
       });
-      
+
       this.markReady();
       console.log(`${this.name} initialized successfully`);
-      
     } catch (error) {
       console.error(`${this.name} initialization failed:`, error);
       throw error;
@@ -80,13 +79,13 @@ export class EnhancedAnalyticsService extends BaseService implements IAnalyticsS
 
   async stop(): Promise<void> {
     await super.stop();
-    
+
     // Flush remaining events before stopping
     await this.flush();
-    
+
     // Stop auto-flush timer
     this.stopAutoFlush();
-    
+
     // Track session end
     await this.track('session_ended', {
       sessionId: this.sessionId,
@@ -129,7 +128,6 @@ export class EnhancedAnalyticsService extends BaseService implements IAnalyticsS
       await this.persistQueue();
 
       this.emit('analytics:event_tracked', { event, properties });
-
     } catch (error) {
       await this.handleError(error as Error, 'track');
       console.error('Failed to track event:', event, error);
@@ -148,9 +146,8 @@ export class EnhancedAnalyticsService extends BaseService implements IAnalyticsS
 
       // Store user ID for future events
       await this.storageService.set('analytics_user_id', userId);
-      
-      this.emit('analytics:user_identified', { userId, traits });
 
+      this.emit('analytics:user_identified', { userId, traits });
     } catch (error) {
       await this.handleError(error as Error, 'identify');
       console.error('Failed to identify user:', userId, error);
@@ -169,7 +166,6 @@ export class EnhancedAnalyticsService extends BaseService implements IAnalyticsS
       });
 
       this.emit('analytics:page_viewed', { name, properties });
-
     } catch (error) {
       await this.handleError(error as Error, 'page');
       console.error('Failed to track page view:', name, error);
@@ -180,7 +176,11 @@ export class EnhancedAnalyticsService extends BaseService implements IAnalyticsS
   // User Analytics Methods
   // ============================================================================
 
-  async trackUserAction(userId: string, action: string, metadata?: Record<string, any>): Promise<void> {
+  async trackUserAction(
+    userId: string,
+    action: string,
+    metadata?: Record<string, any>
+  ): Promise<void> {
     this.ensureInitialized();
 
     try {
@@ -191,14 +191,17 @@ export class EnhancedAnalyticsService extends BaseService implements IAnalyticsS
       });
 
       this.emit('analytics:user_action', { userId, action, metadata });
-
     } catch (error) {
       await this.handleError(error as Error, 'trackUserAction');
       console.error('Failed to track user action:', action, error);
     }
   }
 
-  async trackPerformanceMetric(metric: string, value: number, tags?: Record<string, string>): Promise<void> {
+  async trackPerformanceMetric(
+    metric: string,
+    value: number,
+    tags?: Record<string, string>
+  ): Promise<void> {
     this.ensureInitialized();
 
     try {
@@ -210,7 +213,6 @@ export class EnhancedAnalyticsService extends BaseService implements IAnalyticsS
       });
 
       this.emit('analytics:performance_metric', { metric, value, tags });
-
     } catch (error) {
       await this.handleError(error as Error, 'trackPerformanceMetric');
       console.error('Failed to track performance metric:', metric, error);
@@ -235,14 +237,16 @@ export class EnhancedAnalyticsService extends BaseService implements IAnalyticsS
       console.log('Flushing analytics events:', eventsToSend.length);
 
       // Store events for offline analysis
-      const existingEvents = await this.storageService.get('analytics_events') || [];
-      await this.storageService.set('analytics_events', [...existingEvents, ...eventsToSend]);
+      const existingEvents = (await this.storageService.get('analytics_events')) || [];
+      await this.storageService.set('analytics_events', [
+        ...existingEvents,
+        ...eventsToSend,
+      ]);
 
       // Update queue storage
       await this.persistQueue();
 
       this.emit('analytics:events_flushed', { count: eventsToSend.length });
-
     } catch (error) {
       // If flush fails, restore events to queue
       this.queue.events = [...this.queue.events];
@@ -265,8 +269,9 @@ export class EnhancedAnalyticsService extends BaseService implements IAnalyticsS
     // Update queue configuration if provided
     if (config.analytics) {
       this.queue.maxSize = config.analytics.maxQueueSize || this.queue.maxSize;
-      this.queue.flushInterval = config.analytics.flushInterval || this.queue.flushInterval;
-      
+      this.queue.flushInterval =
+        config.analytics.flushInterval || this.queue.flushInterval;
+
       // Restart auto-flush with new interval
       this.stopAutoFlush();
       this.startAutoFlush();

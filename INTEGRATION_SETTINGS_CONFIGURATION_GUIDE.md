@@ -2,7 +2,9 @@
 
 ## Overview
 
-Welcome to the comprehensive integration settings guide for the Relife Smart Alarm application. This guide will walk you through configuring all external services, monitoring tools, payment systems, analytics, and mobile integrations.
+Welcome to the comprehensive integration settings guide for the Relife Smart Alarm application. This
+guide will walk you through configuring all external services, monitoring tools, payment systems,
+analytics, and mobile integrations.
 
 ## 📋 Table of Contents
 
@@ -45,12 +47,14 @@ node scripts/validate-external-services.js
 ### Manual Configuration
 
 1. Copy the environment template:
+
 ```bash
 cp .env.example .env.local
 ```
 
 2. Edit `.env.local` with your actual API keys and configuration values
 3. Validate your configuration:
+
 ```bash
 npm run services:validate
 ```
@@ -71,6 +75,7 @@ Supabase provides the core database and authentication for the Relife app.
 4. Import the database schema
 
 **Environment Variables:**
+
 ```env
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your_anon_key_here
@@ -78,6 +83,7 @@ VITE_SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
 ```
 
 **Database Setup:**
+
 ```bash
 # Import the enhanced schema
 supabase login
@@ -114,11 +120,13 @@ VITE_PWA_ENABLED=true
 Primary user analytics and behavior tracking.
 
 **Setup Steps:**
+
 1. Sign up at [posthog.com](https://posthog.com)
 2. Create a project
 3. Copy your project API key
 
 **Configuration:**
+
 ```env
 VITE_POSTHOG_KEY=phc_your_project_api_key_here
 VITE_POSTHOG_HOST=https://app.posthog.com
@@ -127,6 +135,7 @@ VITE_ENABLE_HEATMAPS=true
 ```
 
 **Features Enabled:**
+
 - User behavior tracking
 - Session recordings
 - Feature flag management
@@ -138,11 +147,13 @@ VITE_ENABLE_HEATMAPS=true
 Real-time error tracking and performance monitoring.
 
 **Setup Steps:**
+
 1. Sign up at [sentry.io](https://sentry.io)
 2. Create a React project
 3. Copy your DSN from project settings
 
 **Configuration:**
+
 ```env
 VITE_SENTRY_DSN=https://your-dsn@sentry.io/project-id
 VITE_SENTRY_ORG=your-organization
@@ -154,11 +165,13 @@ VITE_SENTRY_PROJECT=your-project-name
 Advanced infrastructure monitoring and APM.
 
 **Setup Steps:**
+
 1. Sign up at [datadoghq.com](https://datadoghq.com)
 2. Get API key from Integrations > APIs
 3. Create RUM application for frontend monitoring
 
 **Configuration:**
+
 ```env
 DATADOG_API_KEY=your_api_key_here
 VITE_DATADOG_CLIENT_TOKEN=your_client_token_here
@@ -170,6 +183,7 @@ VITE_DATADOG_APPLICATION_ID=your_app_id_here
 Application performance monitoring.
 
 **Configuration:**
+
 ```env
 NEWRELIC_LICENSE_KEY=your_license_key_here
 VITE_NEW_RELIC_ACCOUNT_ID=your_account_id_here
@@ -180,6 +194,7 @@ VITE_NEW_RELIC_ACCOUNT_ID=your_account_id_here
 Advanced user analytics and product intelligence.
 
 **Configuration:**
+
 ```env
 VITE_AMPLITUDE_API_KEY=your_amplitude_api_key_here
 ```
@@ -193,11 +208,13 @@ VITE_AMPLITUDE_API_KEY=your_amplitude_api_key_here
 Complete payment system with subscriptions, one-time payments, and billing management.
 
 **Setup Steps:**
+
 1. Sign up at [stripe.com](https://dashboard.stripe.com)
 2. Get your API keys from the dashboard
 3. Configure webhook endpoints
 
 **Environment Variables:**
+
 ```env
 # Use test keys for development
 VITE_STRIPE_PUBLISHABLE_KEY=pk_test_your_publishable_key_here
@@ -212,6 +229,7 @@ VITE_PAYMENT_CANCEL_URL=/payment/cancel
 ```
 
 **Webhook Configuration:**
+
 1. In Stripe Dashboard, go to Webhooks
 2. Add endpoint: `https://yourdomain.com/api/stripe/webhooks`
 3. Select these events:
@@ -222,12 +240,14 @@ VITE_PAYMENT_CANCEL_URL=/payment/cancel
    - `invoice.payment_failed`
 
 **Subscription Plans Available:**
+
 - **Free**: $0 (3 alarms max)
 - **Basic**: $4.99/month (unlimited alarms)
 - **Premium**: $9.99/month (smart features + analytics)
 - **Pro**: $19.99/month (AI coach + advanced features)
 
 **Testing:**
+
 ```bash
 # Test payment configuration
 node scripts/test-payment-config.js
@@ -245,19 +265,22 @@ npm run api:dev
 Configure push notifications for alarm reminders and updates.
 
 **Setup Steps:**
+
 1. Create Firebase project at [console.firebase.google.com](https://console.firebase.google.com)
 2. Enable Cloud Messaging
 3. Generate VAPID keys
 
 **Configuration:**
+
 ```env
 VITE_VAPID_PUBLIC_KEY=your_vapid_public_key_here
 VAPID_PRIVATE_KEY=your_vapid_private_key_here
 VITE_FIREBASE_CONFIG={"apiKey":"...","authDomain":"..."}
 ```
 
-**Service Worker Setup:**
-The service worker (`public/sw-unified.js`) is already configured to handle:
+**Service Worker Setup:** The service worker (`public/sw-unified.js`) is already configured to
+handle:
+
 - Push notification display
 - Background alarm processing
 - Offline capability
@@ -272,11 +295,13 @@ The service worker (`public/sw-unified.js`) is already configured to handle:
 The mobile app is configured via `capacitor.config.ts` with the following features:
 
 **Core Settings:**
+
 - App ID: `com.scrapybara.relife`
 - App Name: `Relife Alarm`
 - Scheme: HTTPS for Android, `Relife` for iOS
 
 **Plugins Enabled:**
+
 - Local Notifications
 - Push Notifications
 - Background Mode (for alarms)
@@ -288,11 +313,13 @@ The mobile app is configured via `capacitor.config.ts` with the following featur
 ### Android Setup
 
 **Prerequisites:**
+
 - Android Studio installed
 - Java 11+ configured
 - Android SDK tools
 
 **Setup Steps:**
+
 ```bash
 # Add Android platform
 npm run cap:add:android
@@ -304,6 +331,7 @@ npm run sign:android
 ```
 
 **Keystore Configuration:**
+
 ```properties
 # android/keystore.properties
 storeFile=../app-release-key.keystore
@@ -315,10 +343,12 @@ keyPassword=your_key_password
 ### iOS Setup
 
 **Prerequisites:**
+
 - Xcode installed (macOS only)
 - Apple Developer account
 
 **Setup Steps:**
+
 ```bash
 # Add iOS platform
 npm run cap:add:ios
@@ -328,6 +358,7 @@ npm run sign:ios
 ```
 
 **iOS Configuration:**
+
 - Background app refresh enabled
 - Push notification capabilities
 - App Store Connect configuration
@@ -356,6 +387,7 @@ npm run cap:sync
 The project includes a complete monitoring stack with Docker Compose.
 
 **Services Included:**
+
 - **App Container**: Main Relife application
 - **API Container**: Express.js backend API
 - **Redis**: Caching and session storage
@@ -365,6 +397,7 @@ The project includes a complete monitoring stack with Docker Compose.
 - **Fluentd**: Log aggregation
 
 **Quick Start:**
+
 ```bash
 # Start all services
 docker-compose up -d
@@ -377,6 +410,7 @@ npm run services:monitor:stop
 ```
 
 **Service URLs:**
+
 - App: http://localhost (port 80)
 - API: http://localhost:3001
 - Prometheus: http://localhost:9090
@@ -386,6 +420,7 @@ npm run services:monitor:stop
 ### Prometheus Configuration
 
 **Metrics Collection:**
+
 - System metrics (CPU, memory, disk)
 - Application performance metrics
 - Web vitals (LCP, FID, CLS)
@@ -393,6 +428,7 @@ npm run services:monitor:stop
 - External service health checks
 
 **Alert Rules:** Configured in `monitoring/prometheus/alerts/`:
+
 - Performance degradation
 - High error rates
 - Resource exhaustion
@@ -402,6 +438,7 @@ npm run services:monitor:stop
 ### Grafana Dashboards
 
 **Available Dashboards:**
+
 - Application Performance Overview
 - User Experience Metrics
 - Business Intelligence
@@ -409,6 +446,7 @@ npm run services:monitor:stop
 - Security Monitoring
 
 **Access:** http://localhost:3002
+
 - Username: `admin`
 - Password: Set via `GRAFANA_PASSWORD` environment variable
 
@@ -421,6 +459,7 @@ npm run services:monitor:stop
 Configure AI-powered features for smart alarm optimization.
 
 **Environment Variables:**
+
 ```env
 # OpenAI for intelligent features
 VITE_OPENAI_API_KEY=sk-your_openai_api_key_here
@@ -434,6 +473,7 @@ VITE_AI_PERFORMANCE_ENDPOINT=/api/ai/performance
 ```
 
 **AI Features Available:**
+
 - Smart alarm optimization
 - Voice cloning for custom alarms
 - Behavioral intelligence analysis
@@ -443,6 +483,7 @@ VITE_AI_PERFORMANCE_ENDPOINT=/api/ai/performance
 ### Performance Monitoring
 
 **Configuration:**
+
 ```env
 VITE_PERFORMANCE_MONITORING=true
 VITE_PERFORMANCE_ENDPOINT=/api/performance
@@ -458,6 +499,7 @@ VITE_PERFORMANCE_MEMORY_THRESHOLD=50
 ### Security Configuration
 
 **Security Headers:**
+
 ```env
 VITE_ENABLE_SECURITY_HEADERS=true
 VITE_ENABLE_HTTPS=true
@@ -466,6 +508,7 @@ VITE_RATE_LIMIT_ENABLED=true
 ```
 
 **Security Features:**
+
 - CSRF protection
 - Rate limiting
 - Content Security Policy
@@ -498,6 +541,7 @@ npm run test:all
 ### Testing Scripts Available
 
 **Unit & Integration Tests:**
+
 ```bash
 npm run test                    # Basic unit tests
 npm run test:integration        # Integration tests
@@ -507,6 +551,7 @@ npm run test:coverage          # Test coverage reports
 ```
 
 **Performance Tests:**
+
 ```bash
 npm run test:perf:baseline     # Performance baseline
 npm run test:perf:load         # Load testing
@@ -514,6 +559,7 @@ npm run test:perf:lighthouse   # Lighthouse audits
 ```
 
 **Accessibility Tests:**
+
 ```bash
 npm run test:a11y:all          # Complete accessibility test suite
 npm run a11y:baseline          # Generate accessibility baseline
@@ -523,6 +569,7 @@ npm run a11y:report            # Generate a11y report
 ### Service Health Checks
 
 **Health Check Endpoints:**
+
 - App Health: `GET /api/health`
 - Database Health: `GET /api/health/database`
 - External Services: `GET /api/health/services`
@@ -535,6 +582,7 @@ npm run a11y:report            # Generate a11y report
 ### 1. Essential Services (Start Here)
 
 **Supabase Database:**
+
 ```bash
 # 1. Set up Supabase credentials
 echo "VITE_SUPABASE_URL=https://your-project.supabase.co" >> .env.local
@@ -545,6 +593,7 @@ supabase db push
 ```
 
 **Basic App Configuration:**
+
 ```env
 # Add to .env.local
 VITE_APP_NAME="Relife"
@@ -556,6 +605,7 @@ NODE_ENV=development
 ### 2. Analytics Setup (High Priority)
 
 **PostHog (Primary Analytics):**
+
 ```bash
 # Sign up at posthog.com and get your API key
 echo "VITE_POSTHOG_KEY=phc_your_key_here" >> .env.local
@@ -563,6 +613,7 @@ echo "VITE_ANALYTICS_ENABLED=true" >> .env.local
 ```
 
 **Sentry (Error Monitoring):**
+
 ```bash
 # Sign up at sentry.io and create a React project
 echo "VITE_SENTRY_DSN=https://your-dsn@sentry.io/project-id" >> .env.local
@@ -571,6 +622,7 @@ echo "VITE_SENTRY_DSN=https://your-dsn@sentry.io/project-id" >> .env.local
 ### 3. Payment Integration (For Monetization)
 
 **Stripe Configuration:**
+
 ```bash
 # Get keys from dashboard.stripe.com/apikeys
 echo "VITE_STRIPE_PUBLISHABLE_KEY=pk_test_your_key" >> .env.local
@@ -584,6 +636,7 @@ npm run api:dev
 ### 4. Push Notifications (Mobile Features)
 
 **VAPID Configuration:**
+
 ```bash
 # Generate VAPID keys or use Firebase
 echo "VITE_VAPID_PUBLIC_KEY=your_vapid_public_key" >> .env.local
@@ -593,6 +646,7 @@ echo "VAPID_PRIVATE_KEY=your_vapid_private_key" >> .env.local
 ### 5. Mobile App Setup (For Mobile Users)
 
 **Capacitor Configuration:**
+
 ```bash
 # Build and sync mobile platforms
 npm run mobile:setup
@@ -605,6 +659,7 @@ npm run mobile:dev:ios        # iOS development
 ### 6. Monitoring Stack (Production)
 
 **Docker Monitoring:**
+
 ```bash
 # Start monitoring services
 docker-compose up -d
@@ -667,26 +722,31 @@ VITE_CSP_REPORT_URI=/api/security/csp-reports
 ## 🎯 Integration Priorities
 
 ### Phase 1: Core Functionality (Essential)
+
 1. ✅ **Supabase** - Database and authentication
 2. ✅ **Environment** - Basic app configuration
 3. ✅ **Service Worker** - PWA functionality
 
 ### Phase 2: User Intelligence (High Priority)
+
 1. ⚡ **PostHog** - User analytics and behavior
 2. ⚡ **Sentry** - Error monitoring and performance
 3. ⚡ **Push Notifications** - User engagement
 
 ### Phase 3: Monetization (Business Critical)
+
 1. 💰 **Stripe** - Payment processing
 2. 💰 **Subscription Management** - Billing and plans
 3. 💰 **Usage Tracking** - Feature usage analytics
 
 ### Phase 4: Advanced Features (Growth)
+
 1. 🚀 **Mobile Apps** - Android and iOS
 2. 🚀 **AI Features** - Smart optimization
 3. 🚀 **Infrastructure Monitoring** - Production reliability
 
 ### Phase 5: Scale & Optimization (Enterprise)
+
 1. 📈 **Advanced Analytics** - DataDog, New Relic
 2. 📈 **Performance Optimization** - CDN, caching
 3. 📈 **International Support** - Multi-language, RTL
@@ -711,24 +771,28 @@ npm run test:pwa              # Test PWA features
 ### Manual Testing Checklist
 
 **Core Functionality:**
+
 - [ ] App loads without errors
 - [ ] Database connection works
 - [ ] Authentication flow works
 - [ ] Alarms can be created and triggered
 
 **Analytics:**
+
 - [ ] Events appear in PostHog
 - [ ] Errors appear in Sentry
 - [ ] Performance metrics are collected
 - [ ] User sessions are tracked
 
 **Payments:**
+
 - [ ] Stripe checkout works
 - [ ] Webhooks process correctly
 - [ ] Subscription creation works
 - [ ] Billing management functional
 
 **Mobile:**
+
 - [ ] Apps build successfully
 - [ ] Push notifications work
 - [ ] Offline functionality works
@@ -741,6 +805,7 @@ npm run test:pwa              # Test PWA features
 ### Environment-Specific Configuration
 
 **Development (.env.development):**
+
 ```env
 NODE_ENV=development
 VITE_APP_ENV=development
@@ -749,6 +814,7 @@ VITE_DEBUG_MODE=true
 ```
 
 **Staging (.env.staging):**
+
 ```env
 NODE_ENV=staging
 VITE_APP_ENV=staging
@@ -757,6 +823,7 @@ VITE_DEBUG_MODE=false
 ```
 
 **Production (.env.production):**
+
 ```env
 NODE_ENV=production
 VITE_APP_ENV=production
@@ -783,21 +850,25 @@ VITE_ENABLE_HTTPS=true
 ### Common Issues
 
 **"Supabase connection failed"**
+
 - ✅ Check URL format: `https://your-project.supabase.co`
 - ✅ Verify anon key is correct
 - ✅ Check network connectivity
 
 **"Stripe initialization error"**
+
 - ✅ Verify publishable key format: `pk_test_...` or `pk_live_...`
 - ✅ Check if Stripe is enabled: `VITE_STRIPE_ENABLED=true`
 - ✅ Ensure API server is running
 
 **"Analytics not tracking"**
+
 - ✅ Check PostHog key format: `phc_...`
 - ✅ Verify analytics is enabled: `VITE_ANALYTICS_ENABLED=true`
 - ✅ Check browser console for errors
 
 **"Mobile app not building"**
+
 - ✅ Check Capacitor CLI installation: `npm install -g @capacitor/cli`
 - ✅ Verify platform setup: `npx cap doctor`
 - ✅ Check Android/iOS requirements
@@ -884,6 +955,9 @@ npm run quality:full-check    # Code quality checks
 
 ---
 
-This guide provides everything you need to configure all integrations for the Relife Smart Alarm application. Start with the essential services and gradually add more advanced features as your application grows.
+This guide provides everything you need to configure all integrations for the Relife Smart Alarm
+application. Start with the essential services and gradually add more advanced features as your
+application grows.
 
-For detailed implementation guides, check the specific documentation files mentioned throughout this guide.
+For detailed implementation guides, check the specific documentation files mentioned throughout this
+guide.

@@ -2,11 +2,14 @@
 
 ## 🎯 Overview
 
-This guide walks you through setting up Stripe webhooks for production deployment of your Relife Smart Alarm app. Webhooks are **critical** for subscription billing - they ensure your app knows immediately when payments succeed, fail, or subscriptions change.
+This guide walks you through setting up Stripe webhooks for production deployment of your Relife
+Smart Alarm app. Webhooks are **critical** for subscription billing - they ensure your app knows
+immediately when payments succeed, fail, or subscriptions change.
 
 ## 📋 Prerequisites
 
 Before starting, ensure you have:
+
 - [ ] Relife app deployed to production with HTTPS
 - [ ] Stripe account in Live Mode
 - [ ] API server running and accessible
@@ -35,11 +38,13 @@ Before starting, ensure you have:
 ### 2.1 Set Endpoint URL
 
 **Enter your production API webhook URL:**
+
 ```
 https://your-production-domain.com/api/stripe/webhooks
 ```
 
 **Common production URL patterns:**
+
 - Custom domain: `https://api.relife.app/api/stripe/webhooks`
 - Heroku: `https://relife-app.herokuapp.com/api/stripe/webhooks`
 - Vercel: `https://relife-api.vercel.app/api/stripe/webhooks`
@@ -108,6 +113,7 @@ For enhanced functionality, also select:
 3. Copy the secret (starts with `whsec_...`)
 
 **Example:**
+
 ```
 whsec_1234567890abcdefghijklmnopqrstuvwxyz...
 ```
@@ -115,17 +121,20 @@ whsec_1234567890abcdefghijklmnopqrstuvwxyz...
 ### 4.2 Add to Production Environment
 
 **Option A: Environment Variables**
+
 ```env
 STRIPE_WEBHOOK_SECRET="whsec_your_actual_webhook_secret_here"
 ```
 
 **Option B: Docker Secrets**
+
 ```bash
 # If using Docker Swarm or Kubernetes
 echo "whsec_your_secret" | docker secret create stripe_webhook_secret -
 ```
 
 **Option C: Cloud Provider Secrets**
+
 ```bash
 # AWS Systems Manager Parameter Store
 aws ssm put-parameter \
@@ -156,6 +165,7 @@ az keyvault secret set \
 ### 5.2 Verify Webhook Processing
 
 **Check Your API Logs:**
+
 ```bash
 # Look for successful processing
 ✅ "Webhook signature verified"
@@ -170,6 +180,7 @@ az keyvault secret set \
 ```
 
 **Check Stripe Dashboard:**
+
 1. Go to your webhook → **"Recent deliveries"**
 2. Click on the test event
 3. Verify:
@@ -180,12 +191,14 @@ az keyvault secret set \
 ### 5.3 Test Real Payment Flow
 
 **Create a test subscription:**
+
 1. Use your production app
 2. Sign up with a real email
 3. Use a test card: `4242 4242 4242 4242`
 4. Complete subscription purchase
 
 **Verify end-to-end:**
+
 - ✅ Payment processes in Stripe
 - ✅ Webhook delivered to your server
 - ✅ Subscription created in your database
@@ -217,18 +230,18 @@ const webhookAlerts = {
   delivery_failure: {
     threshold: '5 failures in 1 hour',
     channels: ['email', 'slack'],
-    priority: 'high'
+    priority: 'high',
   },
   slow_response: {
     threshold: 'average response > 10s',
     channels: ['slack'],
-    priority: 'medium'
+    priority: 'medium',
   },
   signature_verification_failure: {
     threshold: '3 failures in 15 minutes',
     channels: ['email', 'pagerduty'],
-    priority: 'critical'
-  }
+    priority: 'critical',
+  },
 };
 ```
 
@@ -263,8 +276,8 @@ const retryConfig = {
   retryConditions: [
     'database_connection_error',
     'temporary_service_unavailable',
-    'rate_limit_exceeded'
-  ]
+    'rate_limit_exceeded',
+  ],
 };
 ```
 
@@ -280,7 +293,7 @@ const processWebhook = (event) => {
   if (processedEvents.has(event.id)) {
     return { status: 'already_processed' };
   }
-  
+
   // Process event...
   processedEvents.add(event.id);
   return { status: 'processed' };
@@ -295,17 +308,16 @@ Critical webhook operations use database transactions:
 // Example transaction handling
 const processSubscriptionWebhook = async (event) => {
   const transaction = await db.transaction();
-  
+
   try {
     // Update subscription
     await updateSubscription(event.data, transaction);
-    
+
     // Update user permissions
     await updateUserPermissions(event.data, transaction);
-    
+
     // Commit transaction
     await transaction.commit();
-    
   } catch (error) {
     await transaction.rollback();
     throw error;
@@ -402,15 +414,13 @@ const processSubscriptionWebhook = async (event) => {
 
 With production webhooks properly configured, your Relife Smart Alarm app now has:
 
-✅ **Bulletproof subscription billing**
-✅ **Real-time payment processing**  
-✅ **Automatic subscription management**
-✅ **Comprehensive error handling**
-✅ **Production-grade monitoring**
-✅ **Enterprise-level reliability**
+✅ **Bulletproof subscription billing** ✅ **Real-time payment processing**  
+✅ **Automatic subscription management** ✅ **Comprehensive error handling** ✅ **Production-grade
+monitoring** ✅ **Enterprise-level reliability**
 
 Your payment system is now ready to handle real customers and revenue! 🚀
 
 ---
 
-*This guide is part of the comprehensive Relife integration configuration system. For more setup guides, see `INTEGRATION_SETTINGS_CONFIGURATION_GUIDE.md`.*
+_This guide is part of the comprehensive Relife integration configuration system. For more setup
+guides, see `INTEGRATION_SETTINGS_CONFIGURATION_GUIDE.md`._

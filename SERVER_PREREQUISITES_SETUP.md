@@ -1,10 +1,12 @@
 # 🖥️ Production Server Setup Guide - Prerequisites & Dependencies
 
-This guide will prepare your production server with all required dependencies for the Relife monitoring system deployment.
+This guide will prepare your production server with all required dependencies for the Relife
+monitoring system deployment.
 
 ## 🎯 Overview
 
 We'll install and configure:
+
 - **System updates** and security hardening
 - **Docker Engine** and Docker Compose
 - **Essential utilities** (curl, wget, jq, openssl, git)
@@ -19,6 +21,7 @@ We'll install and configure:
 ## 🚀 Step 1: Initial Server Access and Setup
 
 ### Connect to Your Production Server
+
 ```bash
 # Connect via SSH (replace with your server details)
 ssh root@your-server-ip
@@ -27,6 +30,7 @@ ssh username@your-server-ip
 ```
 
 ### Check Server Information
+
 ```bash
 # Check OS version
 cat /etc/os-release
@@ -38,6 +42,7 @@ nproc  # CPU cores
 ```
 
 **Expected output for Ubuntu 20.04+:**
+
 ```
 NAME="Ubuntu"
 VERSION="20.04.6 LTS (Focal Fossa)"
@@ -54,16 +59,17 @@ Filesystem      Size  Used Avail Use% Mounted on
 ```
 
 ### Create Deployment User (if not exists)
+
 ```bash
 # If you're logged in as root, create a deployment user
 if [[ $USER == "root" ]]; then
     # Create deployment user
     useradd -m -s /bin/bash deployer
     usermod -aG sudo deployer
-    
+
     # Set password
     passwd deployer
-    
+
     # Switch to deployment user
     su - deployer
     cd ~
@@ -77,6 +83,7 @@ fi
 ## 🔄 Step 2: System Updates and Security
 
 ### Update System Packages
+
 ```bash
 # Update package lists
 sudo apt-get update
@@ -102,6 +109,7 @@ sudo apt-get install -y \
 ```
 
 **Expected output:**
+
 ```
 Hit:1 http://archive.ubuntu.com/ubuntu focal InRelease
 Get:2 http://archive.ubuntu.com/ubuntu focal-updates InRelease [114 kB]
@@ -116,6 +124,7 @@ The following NEW packages will be installed:
 ```
 
 ### Configure Basic Security
+
 ```bash
 # Configure firewall (UFW)
 sudo ufw --force enable
@@ -137,6 +146,7 @@ sudo ufw status numbered
 ```
 
 **Expected output:**
+
 ```
 Status: active
 
@@ -155,6 +165,7 @@ Status: active
 ## 🐳 Step 3: Docker Installation and Configuration
 
 ### Install Docker Engine
+
 ```bash
 # Add Docker's official GPG key
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
@@ -174,11 +185,13 @@ sudo systemctl enable docker
 ```
 
 **Expected output:**
+
 ```
 ✅ Docker Engine installed successfully
 ```
 
 ### Configure Docker for Your User
+
 ```bash
 # Add current user to docker group
 sudo usermod -aG docker $USER
@@ -191,6 +204,7 @@ docker run hello-world
 ```
 
 **Expected output:**
+
 ```
 Hello from Docker!
 This message shows that your installation appears to be working correctly.
@@ -198,6 +212,7 @@ This message shows that your installation appears to be working correctly.
 ```
 
 ### Install Docker Compose
+
 ```bash
 # Docker Compose should be installed with docker-compose-plugin
 # Verify installation
@@ -205,11 +220,13 @@ docker compose version
 ```
 
 **Expected output:**
+
 ```
 Docker Compose version v2.20.3
 ```
 
 ### Configure Docker Daemon
+
 ```bash
 # Create Docker daemon configuration for production
 sudo mkdir -p /etc/docker
@@ -243,6 +260,7 @@ sudo systemctl status docker
 ```
 
 **Expected output:**
+
 ```
 ● docker.service - Docker Application Container Engine
    Loaded: loaded (/lib/systemd/system/docker.service; enabled; vendor preset: enabled)
@@ -254,6 +272,7 @@ sudo systemctl status docker
 ## 🛠️ Step 4: Additional Utilities Installation
 
 ### Install Monitoring-Specific Tools
+
 ```bash
 # Install additional monitoring utilities
 sudo apt-get install -y \
@@ -278,12 +297,14 @@ npm --version
 ```
 
 **Expected output:**
+
 ```
 v18.17.0
 9.6.7
 ```
 
 ### Install SSL Certificate Tools
+
 ```bash
 # Install Certbot for Let's Encrypt SSL certificates
 sudo apt-get install -y certbot
@@ -293,6 +314,7 @@ certbot --version
 ```
 
 **Expected output:**
+
 ```
 certbot 1.21.0
 ```
@@ -302,6 +324,7 @@ certbot 1.21.0
 ## 📁 Step 5: Directory Structure Setup
 
 ### Create Monitoring Directories
+
 ```bash
 # Create monitoring data directories
 sudo mkdir -p /var/lib/monitoring/{prometheus,grafana,alertmanager}
@@ -325,6 +348,7 @@ chmod 755 /var/backups/monitoring
 ```
 
 ### Create Project Directory
+
 ```bash
 # Create project directory
 sudo mkdir -p /opt/relife
@@ -339,6 +363,7 @@ cd /opt/relife
 ## 🌐 Step 6: Network Configuration
 
 ### Configure System Limits
+
 ```bash
 # Increase system limits for monitoring workloads
 sudo tee -a /etc/security/limits.conf > /dev/null <<EOF
@@ -369,6 +394,7 @@ sudo sysctl -p /etc/sysctl.d/99-monitoring.conf
 ```
 
 ### Test Network Connectivity
+
 ```bash
 # Test external connectivity
 curl -I https://prometheus.io
@@ -380,6 +406,7 @@ nslookup google.com
 ```
 
 **Expected output:**
+
 ```
 HTTP/1.1 200 OK
 ...
@@ -391,6 +418,7 @@ HTTP/1.1 200 OK
 ## 🔒 Step 7: Security Hardening
 
 ### Configure SSH Security (if needed)
+
 ```bash
 # Backup SSH config
 sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.backup
@@ -412,6 +440,7 @@ sudo systemctl restart ssh
 ```
 
 ### Set Up Log Rotation
+
 ```bash
 # Configure log rotation for monitoring logs
 sudo tee /etc/logrotate.d/monitoring > /dev/null <<EOF
@@ -432,6 +461,7 @@ EOF
 ## ✅ Step 8: Validation and Testing
 
 ### Create System Validation Script
+
 ```bash
 # Create validation script
 cat > ~/validate-server-setup.sh <<'EOF'
@@ -505,7 +535,7 @@ echo ""
 echo "🐳 Docker Configuration:"
 if systemctl is-active --quiet docker; then
     echo -e "  ✅ Docker service: ${GREEN}Running${NC}"
-    
+
     # Check Docker permissions
     if docker ps &> /dev/null; then
         echo -e "  ✅ Docker permissions: ${GREEN}OK${NC}"
@@ -514,7 +544,7 @@ if systemctl is-active --quiet docker; then
         echo "    Fix: sudo usermod -aG docker $USER && newgrp docker"
         ((issues++))
     fi
-    
+
     # Check Docker Compose
     if docker compose version &> /dev/null; then
         compose_version=$(docker compose version --short)
@@ -553,7 +583,7 @@ echo "🔥 Firewall Configuration:"
 if command -v ufw &> /dev/null; then
     if ufw status | grep -q "Status: active"; then
         echo -e "  ✅ UFW firewall: ${GREEN}Active${NC}"
-        
+
         # Check required ports
         required_ports=("80/tcp" "443/tcp" "22/tcp")
         for port in "${required_ports[@]}"; do
@@ -609,6 +639,7 @@ chmod +x ~/validate-server-setup.sh
 ```
 
 ### Run Server Validation
+
 ```bash
 # Run the validation script
 ~/validate-server-setup.sh
@@ -619,6 +650,7 @@ chmod +x ~/validate-server-setup.sh
 ## 🎯 Step 9: Clone Relife Repository
 
 ### Clone the Repository
+
 ```bash
 # Navigate to deployment directory
 cd /opt/relife
@@ -634,6 +666,7 @@ ls -la monitoring/
 ```
 
 **Expected output:**
+
 ```
 total 48
 drwxr-xr-x  15 deployer deployer 4096 Jan 15 10:30 .
@@ -656,6 +689,7 @@ drwxr-xr-x 2 deployer deployer 4096 Jan 15 10:30 scripts
 ```
 
 ### Verify Monitoring Scripts
+
 ```bash
 # Check script permissions
 ls -la monitoring/scripts/
@@ -672,6 +706,7 @@ chmod +x monitoring/scripts/*.sh
 ## 🔧 Step 10: System Optimization for Monitoring
 
 ### Configure System for Time-Series Database
+
 ```bash
 # Optimize for Prometheus time-series database
 echo 'vm.max_map_count=262144' | sudo tee -a /etc/sysctl.conf
@@ -688,11 +723,13 @@ ulimit -n
 ```
 
 **Expected output:**
+
 ```
 65536
 ```
 
 ### Set Up Log Management
+
 ```bash
 # Configure systemd journal limits
 sudo mkdir -p /etc/systemd/journald.conf.d
@@ -716,12 +753,14 @@ sudo systemctl restart systemd-journald
 ## ✅ Final Validation
 
 ### Run Complete System Check
+
 ```bash
 # Run the validation script again
 ~/validate-server-setup.sh
 ```
 
 **You should see:**
+
 ```
 🔍 Server Setup Validation
 ==========================
@@ -769,6 +808,7 @@ Your server is ready for monitoring system deployment!
 ```
 
 ### Create Server Information Summary
+
 ```bash
 # Create server info file for reference
 cat > ~/server-info.txt <<EOF
@@ -801,9 +841,11 @@ cat ~/server-info.txt
 
 ## 🎉 Prerequisites Complete!
 
-Your production server is now fully prepared with all required dependencies and optimizations for the monitoring system deployment.
+Your production server is now fully prepared with all required dependencies and optimizations for
+the monitoring system deployment.
 
 ### What's Ready:
+
 - ✅ **Docker Engine** and Docker Compose installed and configured
 - ✅ **System utilities** installed (curl, wget, jq, openssl, git)
 - ✅ **SSL certificate tools** ready (Certbot for Let's Encrypt)
@@ -814,6 +856,7 @@ Your production server is now fully prepared with all required dependencies and 
 - ✅ **Repository cloned** and scripts ready for execution
 
 ### Next Steps:
+
 ```bash
 # 1. Configure notification channels
 ./monitoring/scripts/setup-webhooks.sh

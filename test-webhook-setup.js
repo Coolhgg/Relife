@@ -12,11 +12,11 @@ const WEBHOOK_URL = process.env.WEBHOOK_URL || 'http://localhost:3000';
 
 async function testHealthCheck() {
   console.log('🏥 Testing health check endpoint...');
-  
+
   try {
     const response = await fetch(`${WEBHOOK_URL}/health`);
     const data = await response.json();
-    
+
     if (response.ok) {
       console.log('✅ Health check passed');
       console.log('📊 Response:', data);
@@ -34,7 +34,7 @@ async function testHealthCheck() {
 
 async function testWebhookEndpoint() {
   console.log('📡 Testing webhook endpoint accessibility...');
-  
+
   try {
     // This should fail with 400 (missing signature) but confirms endpoint exists
     const response = await fetch(`${WEBHOOK_URL}/api/stripe/webhooks`, {
@@ -42,11 +42,11 @@ async function testWebhookEndpoint() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ test: 'connectivity' })
+      body: JSON.stringify({ test: 'connectivity' }),
     });
-    
+
     const text = await response.text();
-    
+
     if (response.status === 400) {
       console.log('✅ Webhook endpoint is accessible');
       console.log('📊 Expected 400 error (missing signature):', text);
@@ -64,16 +64,16 @@ async function testWebhookEndpoint() {
 
 async function testEnvironmentVariables() {
   console.log('⚙️  Testing environment variables...');
-  
+
   const requiredVars = [
     'STRIPE_SECRET_KEY',
     'STRIPE_WEBHOOK_SECRET',
     'SUPABASE_URL',
-    'SUPABASE_SERVICE_KEY'
+    'SUPABASE_SERVICE_KEY',
   ];
-  
+
   let allSet = true;
-  
+
   requiredVars.forEach(varName => {
     const value = process.env[varName];
     if (!value || value === 'PLACEHOLDER_GET_FROM_STRIPE_DASHBOARD') {
@@ -84,27 +84,27 @@ async function testEnvironmentVariables() {
       console.log(`✅ Set: ${varName} = ${maskedValue}`);
     }
   });
-  
+
   return allSet;
 }
 
 async function testDatabaseConnection() {
   console.log('🗄️  Testing database connection...');
-  
+
   try {
     // Import Supabase client
     const { supabase } = await import('./src/services/supabase.js');
-    
+
     // Test simple query
     const { data, error } = await supabase
       .from('webhook_logs')
       .select('count(*)', { count: 'exact', head: true });
-    
+
     if (error) {
       console.log('❌ Database connection error:', error.message);
       return false;
     }
-    
+
     console.log('✅ Database connection successful');
     return true;
   } catch (error) {
@@ -116,31 +116,31 @@ async function testDatabaseConnection() {
 async function main() {
   console.log('🧪 Relife Webhook Setup Testing');
   console.log('================================\n');
-  
+
   if (!WEBHOOK_URL.includes('localhost')) {
     console.log(`🌐 Testing production URL: ${WEBHOOK_URL}`);
   } else {
     console.log(`🏠 Testing local development: ${WEBHOOK_URL}`);
   }
   console.log('');
-  
+
   const results = {
     health: await testHealthCheck(),
     webhook: await testWebhookEndpoint(),
     env: await testEnvironmentVariables(),
-    database: await testDatabaseConnection()
+    database: await testDatabaseConnection(),
   };
-  
+
   console.log('\n📊 TEST RESULTS:');
   console.log('================');
-  
+
   Object.entries(results).forEach(([test, passed]) => {
     const emoji = passed ? '✅' : '❌';
     console.log(`${emoji} ${test.toUpperCase()}: ${passed ? 'PASS' : 'FAIL'}`);
   });
-  
+
   const allPassed = Object.values(results).every(result => result);
-  
+
   if (allPassed) {
     console.log('\n🎉 ALL TESTS PASSED!');
     console.log('Your webhook setup is ready for production.');
@@ -166,4 +166,9 @@ main().catch(error => {
 });
 
 // Export for programmatic use
-export { testHealthCheck, testWebhookEndpoint, testEnvironmentVariables, testDatabaseConnection };
+export {
+  testHealthCheck,
+  testWebhookEndpoint,
+  testEnvironmentVariables,
+  testDatabaseConnection,
+};

@@ -1,6 +1,6 @@
 /**
  * Redux Store Configuration with DevTools Integration
- * 
+ *
  * This file sets up the Redux store using Redux Toolkit's configureStore
  * with integrated Redux DevTools for better state debugging and monitoring.
  */
@@ -59,14 +59,11 @@ const devToolsOptions = {
 // Create the Redux store with DevTools integration
 export const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) =>
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
         // Ignore these action types for serialization checks
-        ignoredActions: [
-          'ALARM_AUDIO_LOAD',
-          'PERFORMANCE_MONITOR_UPDATE',
-        ],
+        ignoredActions: ['ALARM_AUDIO_LOAD', 'PERFORMANCE_MONITOR_UPDATE'],
         // Ignore these field paths in all actions
         ignoredActionsPaths: ['meta.arg', 'payload.timestamp'],
         // Ignore these paths in the state
@@ -80,9 +77,10 @@ export const store = configureStore({
         },
       },
     }),
-  devTools: process.env.NODE_ENV !== 'production' && composeWithDevTools(devToolsOptions),
+  devTools:
+    process.env.NODE_ENV !== 'production' && composeWithDevTools(devToolsOptions),
   preloadedState: undefined, // Will be populated from localStorage if available
-  enhancers: (defaultEnhancers) => {
+  enhancers: defaultEnhancers => {
     // Add any custom enhancers here
     return defaultEnhancers;
   },
@@ -113,7 +111,10 @@ store.subscribe(() => {
 
   if (previousState.alarm.settings !== currentState.alarm.settings) {
     try {
-      localStorage.setItem('relife_alarm_settings', JSON.stringify(currentState.alarm.settings));
+      localStorage.setItem(
+        'relife_alarm_settings',
+        JSON.stringify(currentState.alarm.settings)
+      );
     } catch (error) {
       console.warn('Failed to persist alarm settings:', error);
     }
@@ -155,7 +156,7 @@ export const initializeStoreWithPersistedState = () => {
 if (process.env.NODE_ENV === 'development') {
   // Add store to window for debugging
   (window as any).__RELIFE_STORE__ = store;
-  
+
   // Log store initialization
   console.log('🏪 Redux Store initialized with DevTools support');
   console.log('🔧 Available DevTools features:');
@@ -163,7 +164,7 @@ if (process.env.NODE_ENV === 'development') {
   console.log('  - Action filtering and search');
   console.log('  - State diff visualization');
   console.log('  - Performance monitoring');
-  
+
   // Store debugging helpers
   (window as any).__RELIFE_DEBUG__ = {
     getState: () => store.getState(),

@@ -5,12 +5,14 @@
 I've created everything you need to deploy and configure your Stripe webhooks:
 
 ### 🚀 Deployment Files
-- **`api/stripe/webhooks.js`** - Vercel serverless webhook handler  
+
+- **`api/stripe/webhooks.js`** - Vercel serverless webhook handler
 - **`server.js`** - Express server for Railway/Heroku deployment
 - **`setup-production-env.js`** - Environment configuration script
 - **`test-webhook-setup.js`** - Testing and validation script
 
 ### 📖 Documentation
+
 - **`WEBHOOK_DEPLOYMENT_QUICKSTART.md`** - Step-by-step deployment guide
 - **`STRIPE_WEBHOOK_PRODUCTION_GUIDE.md`** - Comprehensive production setup
 
@@ -21,6 +23,7 @@ I've created everything you need to deploy and configure your Stripe webhooks:
 ### 1️⃣ Choose Your Deployment Platform
 
 **Option A: Vercel (Easiest)**
+
 ```bash
 # Install and deploy
 npm install -g vercel
@@ -28,8 +31,9 @@ vercel --prod
 ```
 
 **Option B: Railway (Full Backend)**
+
 ```bash
-# Install and deploy  
+# Install and deploy
 npm install -g @railway/cli
 railway login
 railway link
@@ -37,6 +41,7 @@ railway up
 ```
 
 **Option C: Netlify**
+
 ```bash
 # Install and deploy
 npm install -g netlify-cli
@@ -51,6 +56,7 @@ node setup-production-env.js
 ```
 
 Or set manually on your platform:
+
 - `STRIPE_SECRET_KEY` - Your Stripe live secret key
 - `SUPABASE_URL` - Your Supabase project URL
 - `SUPABASE_SERVICE_KEY` - Supabase service role key
@@ -59,7 +65,7 @@ Or set manually on your platform:
 ### 3️⃣ Create Stripe Webhook
 
 1. Go to [Stripe Dashboard](https://dashboard.stripe.com) → **Live Mode**
-2. Navigate to **Developers → Webhooks**  
+2. Navigate to **Developers → Webhooks**
 3. Click **"Add endpoint"**
 4. **URL:** `https://your-app.vercel.app/api/stripe/webhooks`
 5. **Events:** Select these critical ones:
@@ -94,28 +100,33 @@ node test-webhook-setup.js https://your-app.vercel.app
 Run these tests to verify everything works:
 
 ### ✅ Basic Connectivity
+
 ```bash
 # Health check should return 200 OK
 curl https://your-app.vercel.app/health
 
-# Webhook endpoint should return 400 (missing signature)  
+# Webhook endpoint should return 400 (missing signature)
 curl -X POST https://your-app.vercel.app/api/stripe/webhooks
 ```
 
 ### ✅ Environment Variables
+
 All these should be set:
+
 - [ ] `STRIPE_SECRET_KEY` (starts with `sk_live_`)
 - [ ] `STRIPE_WEBHOOK_SECRET` (starts with `whsec_`)
 - [ ] `SUPABASE_URL` (your project URL)
 - [ ] `SUPABASE_SERVICE_KEY` (service role key)
 
 ### ✅ Stripe Webhook Test
+
 1. In Stripe Dashboard, send test webhook
-2. Check Response: **200 OK, <2 seconds**  
+2. Check Response: **200 OK, <2 seconds**
 3. Check Logs: "Successfully processed webhook..."
 4. Check Database: New entry in `webhook_logs` table
 
 ### ✅ End-to-End Payment
+
 1. Create subscription in your app
 2. Use test card: `4242 4242 4242 4242`
 3. Verify webhook processes payment
@@ -126,21 +137,25 @@ All these should be set:
 ## 🔍 Troubleshooting
 
 ### ❌ 400 Bad Request - Invalid Signature
+
 - **Check:** `STRIPE_WEBHOOK_SECRET` environment variable
 - **Fix:** Copy exact secret from Stripe Dashboard
 - **Test:** Re-deploy and send test webhook
 
 ### ❌ 500 Internal Server Error
+
 - **Check:** Application logs for detailed error
 - **Common:** Missing environment variables
 - **Fix:** Run `node test-webhook-setup.js` to diagnose
 
-### ❌ Webhook Delivery Failures  
+### ❌ Webhook Delivery Failures
+
 - **Check:** Endpoint URL is publicly accessible
 - **Verify:** HTTPS is working (required for production)
 - **Test:** Manual curl request to your endpoint
 
 ### ❌ Database Connection Issues
+
 - **Check:** Supabase credentials are correct
 - **Verify:** Database tables exist (subscriptions, webhook_logs)
 - **Test:** Run database connection test
@@ -152,19 +167,23 @@ All these should be set:
 Once deployed, monitor these metrics:
 
 ### Stripe Dashboard
+
 - **Delivery Success Rate:** >99%
-- **Average Response Time:** <2 seconds  
+- **Average Response Time:** <2 seconds
 - **Retry Rate:** <5%
 
 ### Your Database
+
 - Check `webhook_logs` table for processing records
 - Verify `subscriptions` table updates correctly
 - Monitor for failed webhook attempts
 
 ### Application Logs
+
 Look for these success indicators:
+
 ```
-✅ "Processing Stripe webhook: customer.subscription.created"  
+✅ "Processing Stripe webhook: customer.subscription.created"
 ✅ "Webhook signature verified"
 ✅ "Successfully processed webhook ... in XXXms"
 ```
@@ -176,7 +195,7 @@ Look for these success indicators:
 Your webhook setup is working when:
 
 1. **Stripe shows:** 100% delivery success, <2s response time
-2. **Database shows:** Webhook events logged, subscriptions created  
+2. **Database shows:** Webhook events logged, subscriptions created
 3. **Users experience:** Instant access after payment
 4. **Logs show:** No webhook processing errors
 5. **Tests pass:** All automated tests successful
@@ -186,18 +205,21 @@ Your webhook setup is working when:
 ## 📞 Need Help?
 
 ### Quick Fixes
+
 1. **Run the test script:** `node test-webhook-setup.js`
 2. **Check deployment logs** for specific error messages
 3. **Verify environment variables** are set correctly
 4. **Test connectivity** manually with curl
 
 ### Documentation
+
 - `WEBHOOK_DEPLOYMENT_QUICKSTART.md` - Fast deployment steps
 - `STRIPE_WEBHOOK_PRODUCTION_GUIDE.md` - Detailed production guide
 
 ### Command Reference
+
 ```bash
-# Test everything  
+# Test everything
 node test-webhook-setup.js https://your-app.com
 
 # Setup environment
@@ -215,8 +237,9 @@ vercel logs --follow
 ## 🚀 You're Ready!
 
 With this setup, your Relife Smart Alarm app now has:
+
 - ✅ **Production-ready webhook handling**
-- ✅ **Real-time subscription management**  
+- ✅ **Real-time subscription management**
 - ✅ **Automatic payment processing**
 - ✅ **Comprehensive error handling**
 - ✅ **Enterprise-grade reliability**

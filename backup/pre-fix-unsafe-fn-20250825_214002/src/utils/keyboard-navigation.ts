@@ -6,7 +6,7 @@
 
 import ScreenReaderService from './screen-reader';
 import AccessibilityPreferencesService, {
-// Replaced stub import with proper implementation // auto: restored by scout - verify
+  // Replaced stub import with proper implementation // auto: restored by scout - verify
   AccessibilityPreferences,
 } from '../services/accessibility-preferences';
 

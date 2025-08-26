@@ -2,15 +2,18 @@
 
 ## Overview
 
-The Live AI Parameter Configuration System enables real-time customization and management of all AI services in the Relife smart alarm app. This comprehensive system provides live endpoint connections, parameter validation, rollback capabilities, and performance monitoring.
+The Live AI Parameter Configuration System enables real-time customization and management of all AI
+services in the Relife smart alarm app. This comprehensive system provides live endpoint
+connections, parameter validation, rollback capabilities, and performance monitoring.
 
 ## Architecture
 
 ### Core Components
 
 #### 1. AI Parameters API Service (`src/services/ai-parameters-api.ts`)
+
 - **Purpose**: Central orchestration of parameter updates across all AI services
-- **Features**: 
+- **Features**:
   - Real-time parameter validation and application
   - Live configuration sessions with auto-save
   - Rollback capabilities with token-based recovery
@@ -18,22 +21,22 @@ The Live AI Parameter Configuration System enables real-time customization and m
   - Queue-based update processing
 
 #### 2. Service Configuration Extensions
+
 - **Behavioral Intelligence** (`src/services/advanced-behavioral-intelligence.ts`)
   - Analysis depth, learning rates, confidence thresholds
   - Psychological profiling controls
   - Pattern recognition sensitivity
-  
 - **Voice AI Enhanced** (`src/services/voice-ai-enhanced.ts`)
   - Personality adaptation, response complexity
   - Emotional intelligence, speech patterns
   - Cultural sensitivity, voice cloning
-  
 - **AI Rewards System** (`src/services/ai-rewards.ts`)
   - Gamification intensity, reward frequency
   - Personalization levels, motivation styles
   - Category weights, behavioral reinforcement
 
 #### 3. REST API Endpoints (`src/backend/ai-parameters-endpoints.ts`)
+
 - **Session Management**: Start/stop live configuration sessions
 - **Parameter Updates**: Validate and apply parameter changes
 - **Rollback Operations**: Restore previous configurations
@@ -41,22 +44,26 @@ The Live AI Parameter Configuration System enables real-time customization and m
 - **Import/Export**: Configuration backup and restore
 
 #### 4. Live UI Components
+
 - **LiveAIParameterCustomizer**: Real-time parameter interface
 - **AIModelParametersCustomizerLive**: Enhanced overview with live capabilities
 
 ## API Reference
 
 ### Base URL
+
 ```
 /api/ai-parameters
 ```
 
 ### Authentication
+
 All endpoints require user authentication. Include `userId` in request bodies or URL parameters.
 
 ### Core Endpoints
 
 #### Start Live Session
+
 ```http
 POST /session/start
 Content-Type: application/json
@@ -68,6 +75,7 @@ Content-Type: application/json
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -83,11 +91,13 @@ Content-Type: application/json
 ```
 
 #### Get Current Configuration
+
 ```http
 GET /configuration/{userId}
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -107,6 +117,7 @@ GET /configuration/{userId}
 ```
 
 #### Update Parameters
+
 ```http
 PUT /update
 Content-Type: application/json
@@ -123,6 +134,7 @@ Content-Type: application/json
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -140,6 +152,7 @@ Content-Type: application/json
 ```
 
 #### Validate Parameters
+
 ```http
 POST /validate
 Content-Type: application/json
@@ -155,6 +168,7 @@ Content-Type: application/json
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -171,6 +185,7 @@ Content-Type: application/json
 ```
 
 #### Rollback Parameters
+
 ```http
 POST /rollback
 Content-Type: application/json
@@ -184,12 +199,14 @@ Content-Type: application/json
 ## Parameter Categories
 
 ### 1. Core AI Settings
+
 - **Learning Rate** (0.1-0.9): Rate of algorithm adaptation
 - **Confidence Threshold** (0.5-0.95): Minimum confidence for decisions
 - **Pattern Recognition Sensitivity**: Low/Medium/High detection sensitivity
 - **Background Processing**: Enable/disable background learning
 
 ### 2. Voice AI Configuration
+
 - **Personality Adaptation** (0-1): Voice personality flexibility
 - **Response Complexity**: Simple/Moderate/Complex/Adaptive responses
 - **Emotional Intelligence** (0-1): Emotional awareness level
@@ -197,6 +214,7 @@ Content-Type: application/json
 - **Cultural Sensitivity**: Adapt to cultural context
 
 ### 3. Behavioral Intelligence
+
 - **Analysis Depth**: Surface/Moderate/Deep/Comprehensive analysis
 - **Psychological Profiling**: Enable advanced personality analysis
 - **Contextual Weight** (0-1): Importance of environmental factors
@@ -204,6 +222,7 @@ Content-Type: application/json
 - **Predictive Insights**: Enable future behavior predictions
 
 ### 4. Rewards System
+
 - **Gamification Intensity** (0-100): Overall gamification level
 - **Reward Frequency**: Minimal/Balanced/Frequent/Abundant
 - **Personalization Level** (0-1): Customization depth
@@ -211,12 +230,14 @@ Content-Type: application/json
 - **Achievement Threshold**: Easy/Moderate/Challenging/Adaptive
 
 ### 5. Platform Integration
+
 - **Health Apps Sync**: Connect to Apple Health, Google Fit, Fitbit
 - **Calendar Integration**: Google Calendar, Outlook, Apple Calendar
 - **Weather Service**: Real-time weather data integration
 - **Privacy Level**: Basic/Enhanced/Comprehensive data protection
 
 ### 6. Deployment Configuration
+
 - **Deployment Strategy**: Immediate/Gradual/Canary/Blue-Green
 - **Rollback Strategy**: Immediate/Gradual/Manual recovery
 - **Auto-Rollback**: Automatic failure recovery
@@ -230,16 +251,16 @@ Content-Type: application/json
 ```typescript
 class AIParameterClient {
   private baseUrl = '/api/ai-parameters';
-  
+
   async startSession(userId: string, previewMode = false) {
     const response = await fetch(`${this.baseUrl}/session/start`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId, previewMode })
+      body: JSON.stringify({ userId, previewMode }),
     });
     return await response.json();
   }
-  
+
   async updateParameter(category: string, parameters: Record<string, any>, userId: string) {
     const response = await fetch(`${this.baseUrl}/update`, {
       method: 'PUT',
@@ -248,12 +269,12 @@ class AIParameterClient {
         category,
         parameters,
         userId,
-        immediate: true
-      })
+        immediate: true,
+      }),
     });
     return await response.json();
   }
-  
+
   async getCurrentConfig(userId: string) {
     const response = await fetch(`${this.baseUrl}/configuration/${userId}`);
     return await response.json();
@@ -267,11 +288,15 @@ const client = new AIParameterClient();
 const session = await client.startSession('user123');
 
 // Update voice AI parameters
-await client.updateParameter('voice_ai', {
-  personalityAdaptation: 0.8,
-  responseComplexity: 'complex',
-  emotionalIntelligence: 0.9
-}, 'user123');
+await client.updateParameter(
+  'voice_ai',
+  {
+    personalityAdaptation: 0.8,
+    responseComplexity: 'complex',
+    emotionalIntelligence: 0.9,
+  },
+  'user123'
+);
 
 // Get current configuration
 const config = await client.getCurrentConfig('user123');
@@ -294,11 +319,11 @@ export const useAIParameters = (userId: string): UseAIParameters => {
   const [configurations, setConfigurations] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   const updateParameter = async (category: string, params: Record<string, any>) => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const response = await fetch('/api/ai-parameters/update', {
         method: 'PUT',
@@ -310,7 +335,7 @@ export const useAIParameters = (userId: string): UseAIParameters => {
           immediate: true
         })
       });
-      
+
       const result = await response.json();
       if (result.success) {
         // Update local state
@@ -333,7 +358,7 @@ export const useAIParameters = (userId: string): UseAIParameters => {
       setIsLoading(false);
     }
   };
-  
+
   const rollback = async (token: string) => {
     setIsLoading(true);
     try {
@@ -342,7 +367,7 @@ export const useAIParameters = (userId: string): UseAIParameters => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ rollbackToken: token, userId })
       });
-      
+
       if (response.ok) {
         // Refresh configurations
         loadConfigurations();
@@ -353,7 +378,7 @@ export const useAIParameters = (userId: string): UseAIParameters => {
       setIsLoading(false);
     }
   };
-  
+
   const loadConfigurations = async () => {
     try {
       const response = await fetch(`/api/ai-parameters/configuration/${userId}`);
@@ -365,11 +390,11 @@ export const useAIParameters = (userId: string): UseAIParameters => {
       setError(err.message);
     }
   };
-  
+
   useEffect(() => {
     loadConfigurations();
   }, [userId]);
-  
+
   return {
     configurations,
     updateParameter,
@@ -382,13 +407,13 @@ export const useAIParameters = (userId: string): UseAIParameters => {
 // Component usage
 const MyComponent = () => {
   const { configurations, updateParameter, isLoading } = useAIParameters('user123');
-  
+
   const handleSliderChange = async (value: number) => {
     await updateParameter('behavioral_intelligence', {
       learningRate: value / 100
     });
   };
-  
+
   return (
     <div>
       <Slider
@@ -404,6 +429,7 @@ const MyComponent = () => {
 ## Best Practices
 
 ### 1. Parameter Validation
+
 Always validate parameters before applying:
 
 ```typescript
@@ -414,8 +440,8 @@ const validation = await fetch('/api/ai-parameters/validate', {
   body: JSON.stringify({
     category: 'voice_ai',
     parameters: { speechRate: newRate },
-    userId
-  })
+    userId,
+  }),
 });
 
 const validationResult = await validation.json();
@@ -429,6 +455,7 @@ if (validationResult.data.isValid) {
 ```
 
 ### 2. Batch Updates
+
 For multiple parameter changes, use batch updates for consistency:
 
 ```typescript
@@ -441,19 +468,20 @@ const batchUpdate = await fetch('/api/ai-parameters/batch-update', {
       {
         category: 'behavioral_intelligence',
         parameters: { learningRate: 0.6, analysisDepth: 'deep' },
-        userId: 'user123'
+        userId: 'user123',
       },
       {
         category: 'voice_ai',
         parameters: { personalityAdaptation: 0.8 },
-        userId: 'user123'
-      }
-    ]
-  })
+        userId: 'user123',
+      },
+    ],
+  }),
 });
 ```
 
 ### 3. Performance Monitoring
+
 Monitor the impact of parameter changes:
 
 ```typescript
@@ -469,17 +497,17 @@ if (metricsData.data.avgResponseTime > 1000) {
 ```
 
 ### 4. Error Handling
+
 Implement comprehensive error handling:
 
 ```typescript
 try {
   const result = await updateParameter('rewards', { gamificationIntensity: 85 });
-  
+
   if (result.warnings?.length > 0) {
     // Show warnings to user
     showWarnings(result.warnings);
   }
-  
 } catch (error) {
   if (error.message.includes('validation')) {
     showValidationErrors(error.details);
@@ -493,6 +521,7 @@ try {
 ```
 
 ### 5. User Experience
+
 Provide clear feedback and control:
 
 ```typescript
@@ -500,12 +529,12 @@ const ParameterSlider = ({ category, parameter, min, max, step }) => {
   const [value, setValue] = useState(currentValue);
   const [isUpdating, setIsUpdating] = useState(false);
   const [error, setError] = useState(null);
-  
+
   const handleChange = useCallback(
     debounce(async (newValue) => {
       setIsUpdating(true);
       setError(null);
-      
+
       try {
         await updateParameter(category, { [parameter]: newValue });
       } catch (err) {
@@ -517,7 +546,7 @@ const ParameterSlider = ({ category, parameter, min, max, step }) => {
     }, 1000),
     [category, parameter]
   );
-  
+
   return (
     <div className=\"space-y-2\">
       <Slider
@@ -539,6 +568,7 @@ const ParameterSlider = ({ category, parameter, min, max, step }) => {
 ## Security Considerations
 
 ### 1. Authentication
+
 All endpoints require proper user authentication:
 
 ```typescript
@@ -554,12 +584,13 @@ const authenticateUser = (req, res, next) => {
 ```
 
 ### 2. Parameter Validation
+
 Server-side validation prevents malicious parameter injection:
 
 ```typescript
 const validateParameters = (category: string, parameters: Record<string, any>) => {
   const rules = getValidationRules(category);
-  
+
   for (const [key, value] of Object.entries(parameters)) {
     const rule = rules[key];
     if (!rule || !rule.validate(value)) {
@@ -570,19 +601,21 @@ const validateParameters = (category: string, parameters: Record<string, any>) =
 ```
 
 ### 3. Rate Limiting
+
 Prevent parameter update abuse:
 
 ```typescript
 const rateLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
   max: 10, // 10 updates per minute
-  message: 'Too many parameter updates'
+  message: 'Too many parameter updates',
 });
 
 app.use('/api/ai-parameters', rateLimiter);
 ```
 
 ### 4. Audit Logging
+
 Track all parameter changes:
 
 ```typescript
@@ -594,7 +627,7 @@ const logParameterChange = (userId: string, category: string, parameters: any) =
     parameters,
     timestamp: new Date().toISOString(),
     ip: req.ip,
-    userAgent: req.headers['user-agent']
+    userAgent: req.headers['user-agent'],
   });
 };
 ```
@@ -602,6 +635,7 @@ const logParameterChange = (userId: string, category: string, parameters: any) =
 ## Monitoring and Observability
 
 ### 1. Performance Metrics
+
 Track key performance indicators:
 
 - **Response Time**: API endpoint response times
@@ -610,13 +644,14 @@ Track key performance indicators:
 - **Parameter Impact**: Effect on AI service performance
 
 ### 2. Health Checks
+
 Implement comprehensive health monitoring:
 
 ```typescript
 const healthCheck = async () => {
   const services = ['behavioral_intelligence', 'voice_ai', 'rewards'];
   const health = {};
-  
+
   for (const service of services) {
     try {
       const response = await pingService(service);
@@ -625,23 +660,24 @@ const healthCheck = async () => {
       health[service] = 0.0;
     }
   }
-  
+
   return health;
 };
 ```
 
 ### 3. Alerting
+
 Set up alerts for critical issues:
 
 ```typescript
 const checkParameterImpact = async (category: string, parameters: any) => {
   const impact = await assessPerformanceImpact(category, parameters);
-  
+
   if (impact.performanceScore < 0.8) {
     await sendAlert({
       severity: 'warning',
       message: `Parameter update may impact ${category} performance`,
-      details: impact
+      details: impact,
     });
   }
 };
@@ -652,44 +688,52 @@ const checkParameterImpact = async (category: string, parameters: any) => {
 ### Common Issues
 
 #### 1. Connection Failures
+
 ```
 Error: Unable to connect to AI parameter services
 ```
 
 **Solutions:**
+
 - Check service health endpoints
 - Verify network connectivity
 - Review authentication tokens
 - Check rate limiting
 
 #### 2. Validation Errors
+
 ```
 Error: Learning rate must be between 0.1 and 0.9
 ```
 
 **Solutions:**
+
 - Review parameter constraints
 - Check input sanitization
 - Validate data types
 - Test edge cases
 
 #### 3. Performance Degradation
+
 ```
 Warning: Average response time exceeded threshold
 ```
 
 **Solutions:**
+
 - Review recent parameter changes
 - Check system resource usage
 - Consider parameter rollback
 - Optimize configuration
 
 #### 4. Rollback Failures
+
 ```
 Error: Rollback token not found or expired
 ```
 
 **Solutions:**
+
 - Check token expiration settings
 - Verify rollback data integrity
 - Use manual parameter reset
@@ -698,41 +742,44 @@ Error: Rollback token not found or expired
 ### Debug Tools
 
 #### 1. Parameter Inspector
+
 ```typescript
 const inspectParameters = async (userId: string) => {
   const config = await getCurrentConfiguration(userId);
   const validation = await validateAllParameters(config);
   const impact = await assessPerformanceImpact(config);
-  
+
   return {
     configuration: config,
     validation,
     impact,
-    recommendations: generateRecommendations(config, validation, impact)
+    recommendations: generateRecommendations(config, validation, impact),
   };
 };
 ```
 
 #### 2. Health Dashboard
+
 ```typescript
 const getSystemHealth = async () => {
   const services = await Promise.all([
     checkServiceHealth('behavioral_intelligence'),
     checkServiceHealth('voice_ai'),
     checkServiceHealth('rewards'),
-    checkServiceHealth('deployment')
+    checkServiceHealth('deployment'),
   ]);
-  
+
   return {
-    overall: services.every(s => s.healthy),
-    services: services.map(s => ({
+    overall: services.every((s) => s.healthy),
+    services: services.map((s) => ({
       name: s.name,
       status: s.healthy ? 'healthy' : 'unhealthy',
       responseTime: s.responseTime,
-      lastCheck: s.lastCheck
-    }))
+      lastCheck: s.lastCheck,
+    })),
   };
 };
 ```
 
-This live AI parameter configuration system provides comprehensive control over all AI services while maintaining safety, performance, and user experience standards.
+This live AI parameter configuration system provides comprehensive control over all AI services
+while maintaining safety, performance, and user experience standards.

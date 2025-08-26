@@ -1,6 +1,7 @@
 # 🚀 Relife Smart Alarm - Production Monitoring Deployment Guide
 
-This comprehensive guide will walk you through deploying the complete monitoring system to your production infrastructure.
+This comprehensive guide will walk you through deploying the complete monitoring system to your
+production infrastructure.
 
 ## 📋 Table of Contents
 
@@ -20,12 +21,14 @@ This comprehensive guide will walk you through deploying the complete monitoring
 ### Server Requirements
 
 **Minimum Hardware:**
+
 - **CPU:** 4 cores
 - **RAM:** 8GB
 - **Storage:** 100GB SSD
 - **Network:** 1Gbps connection
 
 **Recommended Hardware:**
+
 - **CPU:** 8 cores
 - **RAM:** 16GB
 - **Storage:** 200GB SSD
@@ -50,14 +53,16 @@ sudo apt-get install -y curl wget jq openssl
 ### Domain Setup
 
 You'll need the following subdomains pointing to your server:
+
 - `prometheus.yourdomain.com` - Prometheus metrics database
 - `grafana.yourdomain.com` - Dashboard interface
 - `alertmanager.yourdomain.com` - Alert management
 
 **DNS Configuration Example:**
+
 ```
 A record: prometheus.relife.app → YOUR_SERVER_IP
-A record: grafana.relife.app → YOUR_SERVER_IP  
+A record: grafana.relife.app → YOUR_SERVER_IP
 A record: alertmanager.relife.app → YOUR_SERVER_IP
 ```
 
@@ -94,14 +99,16 @@ nano .env.production
 Before deployment, configure your notification channels to receive alerts.
 
 #### Option A: Interactive Setup (Recommended)
+
 ```bash
 cd /path/to/your/relife/project
 ./monitoring/scripts/setup-webhooks.sh
 ```
 
 This interactive script will guide you through:
+
 - ✅ Slack webhook configuration
-- ✅ Discord webhook setup  
+- ✅ Discord webhook setup
 - ✅ Email/SMTP configuration
 - ✅ PagerDuty integration
 - ✅ Automatic environment file generation
@@ -109,21 +116,24 @@ This interactive script will guide you through:
 #### Option B: Manual Configuration
 
 **Slack Setup:**
+
 1. Go to https://api.slack.com/messaging/webhooks
 2. Create a new Slack app for your workspace
-3. Enable "Incoming Webhooks" 
+3. Enable "Incoming Webhooks"
 4. Create webhooks for your alert channels:
    - `#critical-alerts` - Critical system issues
    - `#monitoring-alerts` - General monitoring notifications
    - `#monitoring-info` - Informational updates
 
 **Discord Setup:**
+
 1. Go to your Discord server
 2. Right-click the channel → Edit Channel → Integrations → Webhooks
 3. Create webhook named "Relife Monitoring"
 4. Copy the webhook URL
 
 **Email Setup:**
+
 - **Gmail:** Use App Passwords (smtp.gmail.com:587)
 - **Office 365:** Use standard credentials (smtp.office365.com:587)
 - **SendGrid:** Use API key as password (smtp.sendgrid.net:587)
@@ -131,6 +141,7 @@ This interactive script will guide you through:
 ### Step 2: Environment Configuration
 
 #### Copy and Configure Environment File
+
 ```bash
 # Copy the template
 cp monitoring/.env.production.template .env.production
@@ -142,6 +153,7 @@ nano .env.production
 #### Critical Configuration Values
 
 **🔐 Security Settings:**
+
 ```bash
 # Generate secure passwords
 GRAFANA_ADMIN_PASSWORD=$(openssl rand -base64 32)
@@ -149,6 +161,7 @@ WEBHOOK_AUTH_TOKEN=$(openssl rand -base64 48)
 ```
 
 **🌐 Domain Configuration:**
+
 ```bash
 RELIFE_DOMAIN=yourdomain.com
 PROMETHEUS_DOMAIN=prometheus.yourdomain.com
@@ -157,14 +170,16 @@ ALERTMANAGER_DOMAIN=alertmanager.yourdomain.com
 ```
 
 **📊 Database Configuration:**
+
 ```bash
 POSTGRES_HOST=your_postgres_server
 GRAFANA_DB_NAME=grafana
-GRAFANA_DB_USER=grafana  
+GRAFANA_DB_USER=grafana
 GRAFANA_DB_PASSWORD=your_secure_db_password
 ```
 
 **🔔 Notification URLs:**
+
 ```bash
 SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK
 DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/YOUR/DISCORD/WEBHOOK
@@ -183,7 +198,7 @@ DAILY_REVENUE_WARNING_THRESHOLD=100
 CHURN_RATE_WARNING=10.0
 ALARM_SUCCESS_RATE_WARNING=80.0
 
-# Performance Metrics  
+# Performance Metrics
 RESPONSE_TIME_WARNING=2000  # milliseconds
 ERROR_RATE_WARNING=5.0      # percentage
 MOBILE_CRASH_RATE_WARNING=1.0
@@ -196,6 +211,7 @@ UPTIME_TARGET_PREMIUM=99.95
 ### Step 3: SSL Certificate Setup
 
 #### Option A: Let's Encrypt (Recommended)
+
 ```bash
 # Set in .env.production
 LETSENCRYPT_EMAIL=admin@yourdomain.com
@@ -204,6 +220,7 @@ LETSENCRYPT_EMAIL=admin@yourdomain.com
 ```
 
 #### Option B: Custom Certificates
+
 ```bash
 # Place your certificates at:
 sudo mkdir -p /etc/ssl/certs /etc/ssl/private
@@ -229,10 +246,11 @@ cd /path/to/your/relife/project
 ```
 
 **The script will:**
+
 1. ✅ Validate prerequisites and configuration
 2. ✅ Set up infrastructure and networks
 3. ✅ Configure SSL certificates
-4. ✅ Create backups of existing data  
+4. ✅ Create backups of existing data
 5. ✅ Deploy all monitoring services
 6. ✅ Run health checks and validation
 7. ✅ Configure dashboards and alerts
@@ -269,15 +287,16 @@ docker-compose -f docker-compose.monitoring.yml ps
 
 After successful deployment, access your monitoring interfaces:
 
-| Service | URL | Default Login |
-|---------|-----|---------------|
-| **Grafana** | https://grafana.yourdomain.com | admin / [generated_password] |
-| **Prometheus** | https://prometheus.yourdomain.com | No auth required |
-| **AlertManager** | https://alertmanager.yourdomain.com | No auth required |
+| Service          | URL                                 | Default Login                |
+| ---------------- | ----------------------------------- | ---------------------------- |
+| **Grafana**      | https://grafana.yourdomain.com      | admin / [generated_password] |
+| **Prometheus**   | https://prometheus.yourdomain.com   | No auth required             |
+| **AlertManager** | https://alertmanager.yourdomain.com | No auth required             |
 
 ### Initial Dashboard Setup
 
 1. **Log into Grafana**
+
    ```
    URL: https://grafana.yourdomain.com
    Username: admin
@@ -379,12 +398,14 @@ curl -s http://localhost:3000/api/health
 ### Regular Maintenance Tasks
 
 **Weekly:**
+
 - [ ] Review alert trends in Grafana
 - [ ] Check disk usage and clean up if needed
 - [ ] Validate backup integrity
 - [ ] Review business metrics for anomalies
 
 **Monthly:**
+
 - [ ] Update Docker images to latest stable versions
 - [ ] Review and adjust alert thresholds
 - [ ] Analyze monitoring system performance
@@ -392,6 +413,7 @@ curl -s http://localhost:3000/api/health
 - [ ] Review team access and permissions
 
 **Quarterly:**
+
 - [ ] Full security audit of monitoring system
 - [ ] Review and update alert runbooks
 - [ ] Capacity planning based on growth trends
@@ -404,6 +426,7 @@ curl -s http://localhost:3000/api/health
 ### Common Issues
 
 **1. Services Not Starting**
+
 ```bash
 # Check Docker logs
 docker-compose -f docker-compose.monitoring.yml logs
@@ -417,6 +440,7 @@ docker-compose -f docker-compose.monitoring.yml restart [service-name]
 ```
 
 **2. SSL Certificate Issues**
+
 ```bash
 # Check certificate validity
 openssl x509 -in /etc/ssl/certs/yourdomain.com.crt -text -noout
@@ -429,6 +453,7 @@ curl -I https://grafana.yourdomain.com
 ```
 
 **3. Alerts Not Firing**
+
 ```bash
 # Check AlertManager status
 curl http://localhost:9093/api/v1/status
@@ -442,6 +467,7 @@ curl -X POST http://localhost:9090/api/v1/admin/tsdb/delete_series \
 ```
 
 **4. Dashboard Not Loading**
+
 ```bash
 # Check Grafana logs
 docker logs relife-grafana
@@ -453,6 +479,7 @@ docker exec relife-grafana grafana-cli admin reset-admin-password newpassword
 ```
 
 **5. High Resource Usage**
+
 ```bash
 # Check Prometheus storage usage
 du -sh /var/lib/docker/volumes/relife_prometheus-data/
@@ -467,6 +494,7 @@ docker-compose -f docker-compose.monitoring.yml restart prometheus
 ### Getting Help
 
 **1. Check Logs First**
+
 ```bash
 # All services
 docker-compose -f docker-compose.monitoring.yml logs
@@ -476,11 +504,13 @@ docker-compose -f docker-compose.monitoring.yml logs grafana
 ```
 
 **2. Run Diagnostics**
+
 ```bash
 ./monitoring/scripts/health-check.sh
 ```
 
 **3. Review Configuration**
+
 ```bash
 # Check environment variables
 grep -v '^#\|^$' .env.production
@@ -494,16 +524,19 @@ docker-compose -f docker-compose.monitoring.yml config
 ## 📚 Additional Resources
 
 ### Documentation
+
 - [Alert Response Runbooks](monitoring/runbooks/alert-response-guide.md)
 - [Grafana Dashboard Guide](MONITORING_ALERTS_SETUP_COMPLETE.md)
 - [Business Metrics Documentation](monitoring/prometheus/alerts/business-metrics.yml)
 
 ### External Links
+
 - [Prometheus Documentation](https://prometheus.io/docs/)
 - [Grafana Documentation](https://grafana.com/docs/)
 - [AlertManager Documentation](https://prometheus.io/docs/alerting/latest/alertmanager/)
 
 ### Community
+
 - [Prometheus Community](https://prometheus.io/community/)
 - [Grafana Community](https://community.grafana.com/)
 
@@ -514,6 +547,7 @@ docker-compose -f docker-compose.monitoring.yml config
 Before going live, ensure you've completed:
 
 ### Pre-Deployment
+
 - [ ] Server meets minimum hardware requirements
 - [ ] DNS records configured for monitoring subdomains
 - [ ] SSL certificates available or Let's Encrypt configured
@@ -523,6 +557,7 @@ Before going live, ensure you've completed:
 - [ ] Alert thresholds customized for your application
 
 ### During Deployment
+
 - [ ] Deployment script runs without errors
 - [ ] All services pass health checks
 - [ ] SSL certificates are valid and trusted
@@ -531,6 +566,7 @@ Before going live, ensure you've completed:
 - [ ] AlertManager can send test notifications
 
 ### Post-Deployment
+
 - [ ] Team has access to Grafana dashboards
 - [ ] Alert channels are receiving test messages
 - [ ] Backup system is functioning
@@ -542,9 +578,11 @@ Before going live, ensure you've completed:
 
 ## 🎉 Success!
 
-Your comprehensive monitoring system is now deployed and protecting your Relife Smart Alarm application!
+Your comprehensive monitoring system is now deployed and protecting your Relife Smart Alarm
+application!
 
 **What you now have:**
+
 - 📊 Real-time business intelligence dashboards
 - 🔔 Proactive alerting for critical issues
 - 📱 Mobile app performance monitoring
@@ -554,6 +592,7 @@ Your comprehensive monitoring system is now deployed and protecting your Relife 
 - 📋 Comprehensive alert runbooks
 
 **Next steps:**
+
 1. Monitor the dashboards for the first few days to establish baselines
 2. Fine-tune alert thresholds based on actual usage patterns
 3. Train your team on the new monitoring capabilities

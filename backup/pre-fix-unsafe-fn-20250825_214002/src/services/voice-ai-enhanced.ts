@@ -1251,7 +1251,11 @@ class VoiceAIEnhancedService {
     formalityFlexibility: 0.6,
     humorLevel: 'moderate' as 'none' | 'light' | 'moderate' | 'heavy',
     empathyLevel: 'high' as 'low' | 'medium' | 'high',
-    motivationStyle: 'encouraging' as 'gentle' | 'encouraging' | 'assertive' | 'aggressive',
+    motivationStyle: 'encouraging' as
+      | 'gentle'
+      | 'encouraging'
+      | 'assertive'
+      | 'aggressive',
     speechRate: 1.0, // 0.5 to 2.0
     pitchVariation: 0.5, // 0 to 1
     pauseDuration: 0.3, // seconds
@@ -1261,7 +1265,7 @@ class VoiceAIEnhancedService {
     moodSynchronization: 0.8,
     responsePersonalization: true,
     voiceCloning: false,
-    realTimeAdjustment: true
+    realTimeAdjustment: true,
   };
 
   /**
@@ -1306,7 +1310,9 @@ class VoiceAIEnhancedService {
               }
               break;
             case 'motivationStyle':
-              if (['gentle', 'encouraging', 'assertive', 'aggressive'].includes(value)) {
+              if (
+                ['gentle', 'encouraging', 'assertive', 'aggressive'].includes(value)
+              ) {
                 this.parameters.motivationStyle = value;
               }
               break;
@@ -1326,7 +1332,10 @@ class VoiceAIEnhancedService {
               }
               break;
             default:
-              if (typeof this.parameters[key] === 'boolean' && typeof value === 'boolean') {
+              if (
+                typeof this.parameters[key] === 'boolean' &&
+                typeof value === 'boolean'
+              ) {
                 this.parameters[key] = value;
               } else if (typeof this.parameters[key] === typeof value) {
                 this.parameters[key] = value;
@@ -1367,7 +1376,7 @@ class VoiceAIEnhancedService {
       moodSynchronization: 0.8,
       responsePersonalization: true,
       voiceCloning: false,
-      realTimeAdjustment: true
+      realTimeAdjustment: true,
     };
   }
 
@@ -1382,13 +1391,13 @@ class VoiceAIEnhancedService {
         max: 1,
         step: 0.1,
         description: 'How much the voice adapts to user personality',
-        impact: 'user_experience'
+        impact: 'user_experience',
       },
       responseComplexity: {
         type: 'select',
         options: ['simple', 'moderate', 'complex', 'adaptive'],
         description: 'Complexity level of voice responses',
-        impact: 'comprehension'
+        impact: 'comprehension',
       },
       emotionalIntelligence: {
         type: 'slider',
@@ -1396,7 +1405,7 @@ class VoiceAIEnhancedService {
         max: 1,
         step: 0.1,
         description: 'Emotional awareness and response capability',
-        impact: 'empathy'
+        impact: 'empathy',
       },
       voiceLearningRate: {
         type: 'slider',
@@ -1404,7 +1413,7 @@ class VoiceAIEnhancedService {
         max: 1,
         step: 0.05,
         description: 'Rate at which voice adapts to user preferences',
-        impact: 'adaptation'
+        impact: 'adaptation',
       },
       contextualAwareness: {
         type: 'slider',
@@ -1412,30 +1421,30 @@ class VoiceAIEnhancedService {
         max: 1,
         step: 0.05,
         description: 'Awareness of situational context',
-        impact: 'relevance'
+        impact: 'relevance',
       },
       energyAdaptation: {
         type: 'boolean',
         description: 'Adapt voice energy to time of day and user state',
-        impact: 'engagement'
+        impact: 'engagement',
       },
       humorLevel: {
         type: 'select',
         options: ['none', 'light', 'moderate', 'heavy'],
         description: 'Amount of humor in voice responses',
-        impact: 'personality'
+        impact: 'personality',
       },
       empathyLevel: {
         type: 'select',
         options: ['low', 'medium', 'high'],
         description: 'Level of empathetic responses',
-        impact: 'emotional_support'
+        impact: 'emotional_support',
       },
       motivationStyle: {
         type: 'select',
         options: ['gentle', 'encouraging', 'assertive', 'aggressive'],
         description: 'Style of motivational messaging',
-        impact: 'motivation'
+        impact: 'motivation',
       },
       speechRate: {
         type: 'slider',
@@ -1443,7 +1452,7 @@ class VoiceAIEnhancedService {
         max: 2.0,
         step: 0.1,
         description: 'Speed of voice delivery',
-        impact: 'comprehension'
+        impact: 'comprehension',
       },
       pitchVariation: {
         type: 'slider',
@@ -1451,30 +1460,30 @@ class VoiceAIEnhancedService {
         max: 1,
         step: 0.1,
         description: 'Amount of pitch variation for expressiveness',
-        impact: 'engagement'
+        impact: 'engagement',
       },
       vocabularyRichness: {
         type: 'select',
         options: ['simple', 'standard', 'rich', 'dynamic'],
         description: 'Complexity of vocabulary used',
-        impact: 'comprehension'
+        impact: 'comprehension',
       },
       culturalSensitivity: {
         type: 'boolean',
         description: 'Adapt language and references to cultural context',
-        impact: 'inclusivity'
+        impact: 'inclusivity',
       },
       voiceCloning: {
         type: 'boolean',
         description: 'Enable voice cloning for personalization',
         impact: 'privacy',
-        requiresConsent: true
+        requiresConsent: true,
       },
       realTimeAdjustment: {
         type: 'boolean',
         description: 'Allow real-time voice parameter adjustments',
-        impact: 'performance'
-      }
+        impact: 'performance',
+      },
     };
   }
 }
