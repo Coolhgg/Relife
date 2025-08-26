@@ -2,19 +2,21 @@
 
 ## 🎯 Overview
 
-Your Relife app has a **comprehensive notification system** already implemented with advanced features:
+Your Relife app has a **comprehensive notification system** already implemented with advanced
+features:
 
 ✅ **Push Notifications** - Web & Mobile with security validation  
 ✅ **Email Campaigns** - Persona-based automated sequences  
 ✅ **Emotional Intelligence** - AI-driven personalized notifications  
 ✅ **Smart Timing** - Context-aware delivery optimization  
-✅ **Security Features** - Signature validation & rate limiting  
+✅ **Security Features** - Signature validation & rate limiting
 
 ## 📋 Configuration Checklist
 
 ### 1️⃣ Push Notifications Setup
 
 #### **Web Push (VAPID Keys)**
+
 ```env
 # Generate VAPID keys for web push notifications
 VAPID_PUBLIC_KEY=your_vapid_public_key_here
@@ -23,6 +25,7 @@ VAPID_SUBJECT=mailto:your-email@domain.com
 ```
 
 **Generate VAPID Keys:**
+
 ```bash
 # Install web-push globally
 npm install -g web-push
@@ -32,6 +35,7 @@ web-push generate-vapid-keys
 ```
 
 #### **Mobile Push (Firebase/FCM)**
+
 ```env
 # Firebase Cloud Messaging
 FCM_SERVER_KEY=your_fcm_server_key_here
@@ -39,6 +43,7 @@ FCM_SENDER_ID=your_fcm_sender_id_here
 ```
 
 **Firebase Setup:**
+
 1. Go to [Firebase Console](https://console.firebase.google.com)
 2. Create/select your project
 3. Navigate to Project Settings → Cloud Messaging
@@ -47,6 +52,7 @@ FCM_SENDER_ID=your_fcm_sender_id_here
 ### 2️⃣ Email Campaign Configuration
 
 #### **ConvertKit Integration**
+
 ```env
 # ConvertKit API credentials
 CONVERTKIT_API_KEY=your_convertkit_api_key_here
@@ -55,6 +61,7 @@ CONVERTKIT_WEBHOOK_SECRET=your_webhook_secret_here
 ```
 
 **ConvertKit Setup:**
+
 1. Login to [ConvertKit](https://app.convertkit.com)
 2. Go to Settings → Advanced → API Keys
 3. Copy API Key and API Secret
@@ -63,6 +70,7 @@ CONVERTKIT_WEBHOOK_SECRET=your_webhook_secret_here
 ### 3️⃣ Mobile Platform Setup
 
 #### **iOS Configuration**
+
 ```json
 // ios/App/App/Info.plist additions
 <dict>
@@ -75,6 +83,7 @@ CONVERTKIT_WEBHOOK_SECRET=your_webhook_secret_here
 ```
 
 #### **Android Configuration**
+
 ```json
 // android/app/src/main/AndroidManifest.xml
 <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -85,6 +94,7 @@ CONVERTKIT_WEBHOOK_SECRET=your_webhook_secret_here
 ### 4️⃣ Security Configuration
 
 #### **Notification Security Keys**
+
 ```env
 # Security for notification validation
 NOTIFICATION_SIGNING_KEY=your_notification_signing_key_here
@@ -94,11 +104,12 @@ RATE_LIMIT_WINDOW_MINUTES=15
 ```
 
 **Generate Security Keys:**
+
 ```bash
 # Generate signing key (256-bit)
 openssl rand -base64 32
 
-# Generate encryption key (256-bit)  
+# Generate encryption key (256-bit)
 openssl rand -base64 32
 ```
 
@@ -107,12 +118,14 @@ openssl rand -base64 32
 ## ⚙️ Quick Setup Commands
 
 ### **Run Environment Setup**
+
 ```bash
 # Set up notification environment variables
 node setup-notification-env.js
 ```
 
 ### **Test Notification System**
+
 ```bash
 # Test all notification types
 node test-notifications.js
@@ -123,6 +136,7 @@ node test-notifications.js --type=email
 ```
 
 ### **Mobile Platform Sync**
+
 ```bash
 # Sync mobile platforms with notification config
 npm run cap:sync
@@ -135,6 +149,7 @@ npm run cap:sync:ios
 ## 🧪 Testing Your Setup
 
 ### **Quick Test Demo**
+
 ```bash
 # Open the interactive notification test page
 open notification-test-demo.html
@@ -144,24 +159,28 @@ python -m http.server 8000
 ```
 
 ### **1. Web Push Notifications**
+
 - Open your app in browser
 - Navigate to Settings → Notifications
-- Click "Test Push Notification" 
+- Click "Test Push Notification"
 - **Expected**: Browser notification appears
 - **Demo**: Use `notification-test-demo.html` for interactive testing
 
 ### **2. Mobile Push Notifications**
+
 - Install app on device via `npm run cap:open:android`
 - Enable notification permissions
 - Test from notification settings panel
 - **Expected**: Native mobile notification appears
 
 ### **3. Email Campaigns**
+
 - Add test subscriber in ConvertKit
 - Trigger welcome sequence
 - **Expected**: Persona-based email received
 
 ### **4. Emotional Intelligence Notifications**
+
 - Set emotional state in app
 - Wait for context-aware notification
 - **Expected**: Personalized message based on mood
@@ -172,6 +191,7 @@ python -m http.server 8000
 ## 🎛️ Notification Types Available
 
 ### **Push Notifications**
+
 ```javascript
 // Already configured types:
 - ALARM_REMINDER: Scheduled wake-up alerts
@@ -183,6 +203,7 @@ python -m http.server 8000
 ```
 
 ### **Email Campaigns**
+
 ```javascript
 // Persona-based email sequences:
 - struggling_sam: Encouragement & tips
@@ -197,6 +218,7 @@ python -m http.server 8000
 ## 🔧 Advanced Configuration
 
 ### **Smart Timing Settings**
+
 ```env
 # Adaptive notification timing
 SMART_TIMING_ENABLED=true
@@ -207,6 +229,7 @@ LOCATION_AWARENESS=true
 ```
 
 ### **Emotional Intelligence Config**
+
 ```env
 # AI-driven notification personalization
 EMOTIONAL_AI_ENABLED=true
@@ -215,6 +238,7 @@ EMOTIONAL_PROFILE_UPDATES=true
 ```
 
 ### **Security & Rate Limiting**
+
 ```env
 # Advanced security settings
 NOTIFICATION_SIGNATURE_VALIDATION=true
@@ -228,14 +252,17 @@ TRUST_SCORING_ENABLED=true
 ## 📊 Monitoring & Analytics
 
 ### **Notification Metrics**
+
 Your app automatically tracks:
+
 - ✅ Delivery success rates
-- 📱 Device engagement metrics  
+- 📱 Device engagement metrics
 - 🧠 Emotional response tracking
 - 🎯 Persona detection accuracy
 - 🔒 Security event logging
 
 ### **Dashboard Access**
+
 - **Push Stats**: Settings → Notifications → Analytics
 - **Email Metrics**: Integrated ConvertKit dashboard
 - **Security Events**: Admin → Security → Notifications
@@ -245,6 +272,7 @@ Your app automatically tracks:
 ## 🆘 Troubleshooting
 
 ### **Push Notifications Not Working**
+
 ```bash
 # Check VAPID keys are set
 echo $VAPID_PUBLIC_KEY
@@ -257,12 +285,14 @@ echo $VAPID_PUBLIC_KEY
 ```
 
 **Common Issues:**
+
 - ❌ **"No VAPID public key"** → Run `npm run notifications:setup`
 - ❌ **"Service worker not found"** → Check `public/sw-unified.js` exists
 - ❌ **"Permission denied"** → Clear browser data and request permission again
 - ❌ **"Notifications not showing"** → Check Do Not Disturb is disabled
 
 ### **Mobile Notifications Issues**
+
 ```bash
 # Check Capacitor plugin installation
 npm list @capacitor/push-notifications
@@ -277,12 +307,14 @@ npm run cap:sync
 ```
 
 **Common Mobile Issues:**
+
 - ❌ **"Plugin not found"** → Run `npm install @capacitor/push-notifications`
 - ❌ **"FCM token error"** → Verify `google-services.json` is in correct location
 - ❌ **"iOS notifications silent"** → Check notification settings in iOS app
 - ❌ **"Android background issues"** → Disable battery optimization for your app
 
 ### **Email Campaign Not Triggering**
+
 ```bash
 # Verify ConvertKit webhook setup
 curl -X POST your-domain.com/api/convertkit/webhooks \
@@ -293,12 +325,14 @@ curl -X POST your-domain.com/api/convertkit/webhooks \
 ```
 
 **Common Email Issues:**
+
 - ❌ **"ConvertKit API error"** → Verify API keys in .env.local
 - ❌ **"Webhook not receiving"** → Check webhook URL is publicly accessible
 - ❌ **"Wrong persona detected"** → Review persona detection logic
 - ❌ **"Emails going to spam"** → Set up proper SPF/DKIM records
 
 ### **Security & Performance Issues**
+
 ```bash
 # Check security configuration
 node test-notifications.js --type=security
@@ -308,16 +342,19 @@ tail -f logs/notification-security.log
 ```
 
 **Common Security Issues:**
+
 - ❌ **"Signature validation failed"** → Regenerate signing keys
 - ❌ **"Rate limit exceeded"** → Adjust RATE_LIMIT_MAX_REQUESTS
 - ❌ **"Suspicious sender blocked"** → Check trust scoring configuration
 
 ### **Smart Timing Issues**
+
 - ❌ **"Quiet hours not working"** → Verify time format is HH:MM
 - ❌ **"Battery optimization not detecting"** → Enable location services
 - ❌ **"Context awareness off"** → Check LOCATION_AWARENESS=true
 
 ### **Quick Diagnostic Commands**
+
 ```bash
 # Run full notification system test
 npm run test:notifications
@@ -346,7 +383,7 @@ Your notification system is working when:
 ✅ **Smart timing** respects quiet hours and context  
 ✅ **Emotional AI** adapts messages to user mood  
 ✅ **Security validation** prevents malicious notifications  
-✅ **Analytics** track all notification metrics  
+✅ **Analytics** track all notification metrics
 
 ---
 
@@ -354,9 +391,9 @@ Your notification system is working when:
 
 1. **Run setup script**: `node setup-notification-env.js`
 2. **Configure VAPID keys** for web push
-3. **Set up Firebase/FCM** for mobile push  
+3. **Set up Firebase/FCM** for mobile push
 4. **Connect ConvertKit** for email campaigns
-5. **Test all notification types** 
+5. **Test all notification types**
 6. **Monitor analytics** for optimization
 
 Your notification system is enterprise-grade with features that rival major apps! 🔔✨

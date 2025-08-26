@@ -2,10 +2,10 @@
 import { Capacitor } from '@capacitor/core';
 import { TimeoutHandle } from '../types/timers';
 import {
-// auto: restored by scout - verify import path
-// Note: alarmOrNotification should be defined as local type
-// auto: restored by scout - verify import path
-// Note: alarmOrNotification should be defined as local type
+  // auto: restored by scout - verify import path
+  // Note: alarmOrNotification should be defined as local type
+  // auto: restored by scout - verify import path
+  // Note: alarmOrNotification should be defined as local type
   LocalNotifications,
   ScheduleOptions,
   DeliveredNotifications,

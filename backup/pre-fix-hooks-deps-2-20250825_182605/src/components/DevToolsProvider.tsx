@@ -1,6 +1,6 @@
 /**
  * Developer Tools Initialization and Integration
- * 
+ *
  * This file provides setup and integration for all developer tools
  * in the Relife application.
  */
@@ -9,7 +9,9 @@ import React, { useState, useEffect } from 'react';
 import { DeveloperDashboard } from './DeveloperDashboard';
 
 // Dev tools hotkey and initialization
-export const DevToolsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const DevToolsProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [showDevTools, setShowDevTools] = useState(false);
 
   // Only available in development
@@ -67,8 +69,11 @@ export const DevToolsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   return (
     <>
       {children}
-      <DeveloperDashboard isOpen={showDevTools} onClose={() => setShowDevTools(false)} />
-      
+      <DeveloperDashboard
+        isOpen={showDevTools}
+        onClose={() => setShowDevTools(false)}
+      />
+
       {/* Dev tools indicator */}
       {showDevTools && (
         <div className="fixed bottom-4 right-4 bg-blue-500 text-white px-3 py-1 rounded text-sm z-[10000]">

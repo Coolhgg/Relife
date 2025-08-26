@@ -5,11 +5,11 @@
 
 import { Request, Response } from 'express';
 import AIParametersAPIService from '../services/ai-parameters-api';
-import type { 
+import type {
   ParameterUpdateRequest,
   ParameterUpdateResponse,
   ParameterValidationResult,
-  LiveConfigurationSession
+  LiveConfigurationSession,
 } from '../services/ai-parameters-api';
 
 // API Response wrapper
@@ -41,7 +41,7 @@ class AIParametersEndpoints {
           success: false,
           error: 'userId is required',
           timestamp: new Date().toISOString(),
-          version: '1.0.0'
+          version: '1.0.0',
         });
         return;
       }
@@ -52,7 +52,7 @@ class AIParametersEndpoints {
         success: true,
         data: session,
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: '1.0.0',
       };
 
       res.status(200).json(response);
@@ -61,7 +61,7 @@ class AIParametersEndpoints {
         success: false,
         error: `Failed to start live session: ${error.message}`,
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: '1.0.0',
       });
     }
   }
@@ -79,7 +79,7 @@ class AIParametersEndpoints {
           success: false,
           error: 'userId is required',
           timestamp: new Date().toISOString(),
-          version: '1.0.0'
+          version: '1.0.0',
         });
         return;
       }
@@ -90,7 +90,7 @@ class AIParametersEndpoints {
         success: true,
         data: configurations,
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: '1.0.0',
       };
 
       res.status(200).json(response);
@@ -99,7 +99,7 @@ class AIParametersEndpoints {
         success: false,
         error: `Failed to get current configuration: ${error.message}`,
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: '1.0.0',
       });
     }
   }
@@ -112,12 +112,16 @@ class AIParametersEndpoints {
     try {
       const updateRequest: ParameterUpdateRequest = req.body;
 
-      if (!updateRequest.category || !updateRequest.parameters || !updateRequest.userId) {
+      if (
+        !updateRequest.category ||
+        !updateRequest.parameters ||
+        !updateRequest.userId
+      ) {
         res.status(400).json({
           success: false,
           error: 'category, parameters, and userId are required',
           timestamp: new Date().toISOString(),
-          version: '1.0.0'
+          version: '1.0.0',
         });
         return;
       }
@@ -128,7 +132,7 @@ class AIParametersEndpoints {
         success: true,
         data: validation,
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: '1.0.0',
       };
 
       res.status(200).json(response);
@@ -137,7 +141,7 @@ class AIParametersEndpoints {
         success: false,
         error: `Failed to validate parameters: ${error.message}`,
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: '1.0.0',
       });
     }
   }
@@ -150,12 +154,16 @@ class AIParametersEndpoints {
     try {
       const updateRequest: ParameterUpdateRequest = req.body;
 
-      if (!updateRequest.category || !updateRequest.parameters || !updateRequest.userId) {
+      if (
+        !updateRequest.category ||
+        !updateRequest.parameters ||
+        !updateRequest.userId
+      ) {
         res.status(400).json({
           success: false,
           error: 'category, parameters, and userId are required',
           timestamp: new Date().toISOString(),
-          version: '1.0.0'
+          version: '1.0.0',
         });
         return;
       }
@@ -167,7 +175,7 @@ class AIParametersEndpoints {
         data: updateResult,
         error: updateResult.success ? undefined : 'Parameter update failed',
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: '1.0.0',
       };
 
       const statusCode = updateResult.success ? 200 : 400;
@@ -177,7 +185,7 @@ class AIParametersEndpoints {
         success: false,
         error: `Failed to update parameters: ${error.message}`,
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: '1.0.0',
       });
     }
   }
@@ -195,19 +203,22 @@ class AIParametersEndpoints {
           success: false,
           error: 'rollbackToken and userId are required',
           timestamp: new Date().toISOString(),
-          version: '1.0.0'
+          version: '1.0.0',
         });
         return;
       }
 
-      const rollbackResult = await this.apiService.rollbackParameters(rollbackToken, userId);
+      const rollbackResult = await this.apiService.rollbackParameters(
+        rollbackToken,
+        userId
+      );
 
       const response: APIResponse<ParameterUpdateResponse> = {
         success: rollbackResult.success,
         data: rollbackResult,
         error: rollbackResult.success ? undefined : 'Parameter rollback failed',
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: '1.0.0',
       };
 
       const statusCode = rollbackResult.success ? 200 : 400;
@@ -217,7 +228,7 @@ class AIParametersEndpoints {
         success: false,
         error: `Failed to rollback parameters: ${error.message}`,
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: '1.0.0',
       });
     }
   }
@@ -235,18 +246,20 @@ class AIParametersEndpoints {
           success: false,
           error: 'timeRange must be hour, day, or week',
           timestamp: new Date().toISOString(),
-          version: '1.0.0'
+          version: '1.0.0',
         });
         return;
       }
 
-      const metrics = await this.apiService.getParameterPerformanceMetrics(timeRange as 'hour' | 'day' | 'week');
+      const metrics = await this.apiService.getParameterPerformanceMetrics(
+        timeRange as 'hour' | 'day' | 'week'
+      );
 
       const response: APIResponse = {
         success: true,
         data: metrics,
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: '1.0.0',
       };
 
       res.status(200).json(response);
@@ -255,7 +268,7 @@ class AIParametersEndpoints {
         success: false,
         error: `Failed to get parameter metrics: ${error.message}`,
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: '1.0.0',
       });
     }
   }
@@ -273,7 +286,7 @@ class AIParametersEndpoints {
           success: false,
           error: 'sessionId is required',
           timestamp: new Date().toISOString(),
-          version: '1.0.0'
+          version: '1.0.0',
         });
         return;
       }
@@ -285,7 +298,7 @@ class AIParametersEndpoints {
           success: false,
           error: 'Session not found or expired',
           timestamp: new Date().toISOString(),
-          version: '1.0.0'
+          version: '1.0.0',
         });
         return;
       }
@@ -294,7 +307,7 @@ class AIParametersEndpoints {
         success: true,
         data: session,
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: '1.0.0',
       };
 
       res.status(200).json(response);
@@ -303,7 +316,7 @@ class AIParametersEndpoints {
         success: false,
         error: `Failed to get session status: ${error.message}`,
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: '1.0.0',
       });
     }
   }
@@ -321,7 +334,7 @@ class AIParametersEndpoints {
           success: false,
           error: 'sessionId is required',
           timestamp: new Date().toISOString(),
-          version: '1.0.0'
+          version: '1.0.0',
         });
         return;
       }
@@ -332,7 +345,7 @@ class AIParametersEndpoints {
         success: true,
         data: { message: 'Session closed successfully' },
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: '1.0.0',
       };
 
       res.status(200).json(response);
@@ -341,7 +354,7 @@ class AIParametersEndpoints {
         success: false,
         error: `Failed to close session: ${error.message}`,
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: '1.0.0',
       });
     }
   }
@@ -359,7 +372,7 @@ class AIParametersEndpoints {
           success: false,
           error: 'updates array and userId are required',
           timestamp: new Date().toISOString(),
-          version: '1.0.0'
+          version: '1.0.0',
         });
         return;
       }
@@ -379,10 +392,10 @@ class AIParametersEndpoints {
           results,
           totalUpdates: updates.length,
           successfulUpdates: results.filter(r => r.success).length,
-          failedUpdates: results.filter(r => !r.success).length
+          failedUpdates: results.filter(r => !r.success).length,
         },
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: '1.0.0',
       };
 
       res.status(200).json(response);
@@ -391,7 +404,7 @@ class AIParametersEndpoints {
         success: false,
         error: `Failed to batch update parameters: ${error.message}`,
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: '1.0.0',
       });
     }
   }
@@ -409,7 +422,7 @@ class AIParametersEndpoints {
           success: false,
           error: 'userId is required',
           timestamp: new Date().toISOString(),
-          version: '1.0.0'
+          version: '1.0.0',
         });
         return;
       }
@@ -418,13 +431,16 @@ class AIParametersEndpoints {
 
       // Set headers for file download
       res.setHeader('Content-Type', 'application/json');
-      res.setHeader('Content-Disposition', `attachment; filename="ai-config-${userId}-${Date.now()}.json"`);
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename="ai-config-${userId}-${Date.now()}.json"`
+      );
 
       const exportData = {
         exportedAt: new Date().toISOString(),
         userId,
         version: '1.0.0',
-        configurations
+        configurations,
       };
 
       res.status(200).json(exportData);
@@ -433,7 +449,7 @@ class AIParametersEndpoints {
         success: false,
         error: `Failed to export configuration: ${error.message}`,
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: '1.0.0',
       });
     }
   }
@@ -452,7 +468,7 @@ class AIParametersEndpoints {
           success: false,
           error: 'userId and configurations are required',
           timestamp: new Date().toISOString(),
-          version: '1.0.0'
+          version: '1.0.0',
         });
         return;
       }
@@ -462,19 +478,24 @@ class AIParametersEndpoints {
       // Import configurations for each service
       for (const [serviceName, config] of Object.entries(configurations)) {
         const categoryMap: Record<string, string> = {
-          'behavioral_intelligence': 'behavioral_intelligence',
-          'voice_ai': 'voice_ai',
-          'rewards': 'rewards',
-          'deployment': 'deployment'
+          behavioral_intelligence: 'behavioral_intelligence',
+          voice_ai: 'voice_ai',
+          rewards: 'rewards',
+          deployment: 'deployment',
         };
 
         const category = categoryMap[serviceName];
-        if (category && config && typeof config === 'object' && 'currentParameters' in config) {
+        if (
+          category &&
+          config &&
+          typeof config === 'object' &&
+          'currentParameters' in config
+        ) {
           const updateRequest: ParameterUpdateRequest = {
             category: category as any,
             parameters: (config as any).currentParameters,
             userId,
-            immediate: false
+            immediate: false,
           };
 
           const result = await this.apiService.updateParameters(updateRequest);
@@ -488,10 +509,10 @@ class AIParametersEndpoints {
           results,
           totalImports: results.length,
           successfulImports: results.filter(r => r.success).length,
-          failedImports: results.filter(r => !r.success).length
+          failedImports: results.filter(r => !r.success).length,
         },
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: '1.0.0',
       };
 
       res.status(200).json(response);
@@ -500,7 +521,7 @@ class AIParametersEndpoints {
         success: false,
         error: `Failed to import configuration: ${error.message}`,
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: '1.0.0',
       });
     }
   }

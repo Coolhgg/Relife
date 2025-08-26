@@ -5,7 +5,13 @@
 import { EnhancedAlarmService } from '../enhanced/EnhancedAlarmService';
 import { EnhancedAnalyticsService } from '../enhanced/EnhancedAnalyticsService';
 import { EnhancedStorageService } from '../enhanced/EnhancedStorageService';
-import { IAlarmService, IAnalyticsService, IStorageService, ISecurityService, IBattleService } from '../../types/service-interfaces';
+import {
+  IAlarmService,
+  IAnalyticsService,
+  IStorageService,
+  ISecurityService,
+  IBattleService,
+} from '../../types/service-interfaces';
 import { ServiceConfig } from '../../types/service-architecture';
 import { VoiceMood } from '../../types';
 
@@ -92,14 +98,16 @@ describe('EnhancedAlarmService', () => {
 
   beforeEach(async () => {
     jest.clearAllMocks();
-    
+
     // Setup mock responses
     (mockStorageService.get as jest.Mock).mockResolvedValue([]);
     (mockStorageService.set as jest.Mock).mockResolvedValue(undefined);
     (mockSecurityService.validateUser as jest.Mock).mockResolvedValue(true);
     (mockSecurityService.checkRateLimit as jest.Mock).mockResolvedValue(true);
     (mockAnalyticsService.track as jest.Mock).mockResolvedValue(undefined);
-    (mockBattleService.completeBattleChallenge as jest.Mock).mockResolvedValue(undefined);
+    (mockBattleService.completeBattleChallenge as jest.Mock).mockResolvedValue(
+      undefined
+    );
 
     alarmService = new EnhancedAlarmService({
       storageService: mockStorageService,
@@ -188,8 +196,11 @@ describe('EnhancedAlarmService', () => {
       expect(alarm.enabled).toBe(true);
 
       // Verify analytics was called
-      expect(mockAnalyticsService.track).toHaveBeenCalledWith('alarm_created', expect.any(Object));
-      
+      expect(mockAnalyticsService.track).toHaveBeenCalledWith(
+        'alarm_created',
+        expect.any(Object)
+      );
+
       // Verify storage was called
       expect(mockStorageService.set).toHaveBeenCalledWith('alarms', expect.any(Array));
     });
@@ -217,7 +228,10 @@ describe('EnhancedAlarmService', () => {
       expect(updatedAlarm.updatedAt).toBeInstanceOf(Date);
 
       // Verify analytics was called
-      expect(mockAnalyticsService.track).toHaveBeenCalledWith('alarm_updated', expect.any(Object));
+      expect(mockAnalyticsService.track).toHaveBeenCalledWith(
+        'alarm_updated',
+        expect.any(Object)
+      );
     });
 
     test('should delete alarm successfully', async () => {
@@ -238,7 +252,10 @@ describe('EnhancedAlarmService', () => {
       expect(alarmService.getAlarms()).toHaveLength(0);
 
       // Verify analytics was called
-      expect(mockAnalyticsService.track).toHaveBeenCalledWith('alarm_deleted', expect.any(Object));
+      expect(mockAnalyticsService.track).toHaveBeenCalledWith(
+        'alarm_deleted',
+        expect.any(Object)
+      );
     });
 
     test('should toggle alarm successfully', async () => {
@@ -263,7 +280,10 @@ describe('EnhancedAlarmService', () => {
       expect(toggledAlarm2.enabled).toBe(true);
 
       // Verify analytics was called
-      expect(mockAnalyticsService.track).toHaveBeenCalledWith('alarm_toggled', expect.any(Object));
+      expect(mockAnalyticsService.track).toHaveBeenCalledWith(
+        'alarm_toggled',
+        expect.any(Object)
+      );
     });
   });
 
@@ -294,7 +314,9 @@ describe('EnhancedAlarmService', () => {
         userId: 'user-123',
       };
 
-      await expect(alarmService.createAlarm(alarmData)).rejects.toThrow('Rate limit exceeded');
+      await expect(alarmService.createAlarm(alarmData)).rejects.toThrow(
+        'Rate limit exceeded'
+      );
     });
 
     test('should validate user permissions', async () => {
@@ -308,7 +330,9 @@ describe('EnhancedAlarmService', () => {
         userId: 'invalid-user',
       };
 
-      await expect(alarmService.createAlarm(alarmData)).rejects.toThrow('Invalid user ID');
+      await expect(alarmService.createAlarm(alarmData)).rejects.toThrow(
+        'Invalid user ID'
+      );
     });
   });
 
@@ -372,7 +396,7 @@ describe('EnhancedAnalyticsService', () => {
 
   beforeEach(async () => {
     jest.clearAllMocks();
-    
+
     (mockStorageService.get as jest.Mock).mockResolvedValue(null);
     (mockStorageService.set as jest.Mock).mockResolvedValue(undefined);
 
@@ -411,13 +435,17 @@ describe('EnhancedAnalyticsService', () => {
     });
 
     test('should track user actions', async () => {
-      await analyticsService.trackUserAction('user-123', 'button_click', { button: 'create_alarm' });
+      await analyticsService.trackUserAction('user-123', 'button_click', {
+        button: 'create_alarm',
+      });
 
       expect(analyticsService.getQueueSize()).toBe(1);
     });
 
     test('should track performance metrics', async () => {
-      await analyticsService.trackPerformanceMetric('load_time', 1500, { page: 'home' });
+      await analyticsService.trackPerformanceMetric('load_time', 1500, {
+        page: 'home',
+      });
 
       expect(analyticsService.getQueueSize()).toBe(1);
     });
@@ -501,7 +529,10 @@ describe('EnhancedStorageService', () => {
     mockIDBObjectStore.put.mockReturnValue(mockSuccessRequest);
     mockIDBObjectStore.delete.mockReturnValue(mockSuccessRequest);
     mockIDBObjectStore.clear.mockReturnValue(mockSuccessRequest);
-    mockIDBObjectStore.getAllKeys.mockReturnValue({ ...mockSuccessRequest, result: [] });
+    mockIDBObjectStore.getAllKeys.mockReturnValue({
+      ...mockSuccessRequest,
+      result: [],
+    });
 
     storageService = new EnhancedStorageService(defaultConfig);
 

@@ -40,13 +40,13 @@ jobs:
         id: hooks-check
         run: |
           echo "🎣 Running React hooks rules validation..."
-          
+
           # Create output directory
           mkdir -p ci/step-outputs
-          
+
           # Run ESLint specifically for hooks rules with detailed output
           bun run lint:eslint --format json --output-file ci/step-outputs/hooks-eslint-results.json || echo "ESLint check completed"
-          
+
           # Extract hooks-specific violations
           if [ -f "ci/step-outputs/hooks-eslint-results.json" ]; then
             # Check for react-hooks/rules-of-hooks violations
@@ -119,36 +119,36 @@ jobs:
             const fs = require('fs');
             const hooksViolations = '${{ steps.hooks-check.outputs.hooks_violations }}';
             const exhaustiveDeps = '${{ steps.hooks-check.outputs.exhaustive_deps_warnings }}';
-            
+
             let reportContent = '';
             try {
               reportContent = fs.readFileSync('ci/step-outputs/hooks-report.md', 'utf8');
             } catch (error) {
               reportContent = 'Report file not found';
             }
-            
+
             const status = hooksViolations === '0' ? '✅' : '❌';
             const title = hooksViolations === '0' ? 'React Hooks Validation Passed' : 'React Hooks Violations Found';
-            
+
             const body = `## 🎣 ${title} ${status}
-            
+
             ${reportContent}
-            
+
             ---
-            
+
             **Status**: ${hooksViolations === '0' ? 'PASSED' : 'FAILED'} | **Hooks Violations**: ${hooksViolations} | **Dependency Warnings**: ${exhaustiveDeps}
-            
+
             ${hooksViolations !== '0' ? '🚨 **This PR cannot be merged until all hooks violations are resolved**' : '✅ **Ready for review - no hooks violations detected**'}
-            
+
             <details>
             <summary>📋 What This Check Does</summary>
-            
+
             This automated check validates that all React hooks follow the Rules of Hooks:
-            
+
             1. **Only call hooks at the top level** - Never in loops, conditions, or nested functions
             2. **Only call hooks from React functions** - Components or custom hooks only
             3. **Hook naming convention** - Custom hooks must start with 'use'
-            
+
             This prevents runtime errors and ensures React can properly track state and effects.
             </details>
             `;
@@ -159,11 +159,11 @@ jobs:
               repo: context.repo.repo,
               issue_number: context.issue.number,
             });
-            
+
             const botComment = comments.find(comment => 
               comment.user.type === 'Bot' && comment.body.includes('React Hooks Validation')
             );
-            
+
             if (botComment) {
               await github.rest.issues.updateComment({
                 owner: context.repo.owner,
@@ -189,7 +189,7 @@ jobs:
             const hooksViolations = '${{ steps.hooks-check.outputs.hooks_violations }}';
             const conclusion = hooksViolations === '0' ? 'success' : 'failure';
             const title = hooksViolations === '0' ? 'No hooks violations' : `${hooksViolations} hooks violations found`;
-            
+
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,

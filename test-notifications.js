@@ -19,22 +19,22 @@ const colors = {
   yellow: '\x1b[33m',
   red: '\x1b[31m',
   cyan: '\x1b[36m',
-  magenta: '\x1b[35m'
+  magenta: '\x1b[35m',
 };
 
 const log = {
-  info: (msg) => console.log(`${colors.blue}ℹ ${msg}${colors.reset}`),
-  success: (msg) => console.log(`${colors.green}✅ ${msg}${colors.reset}`),
-  warning: (msg) => console.log(`${colors.yellow}⚠️  ${msg}${colors.reset}`),
-  error: (msg) => console.log(`${colors.red}❌ ${msg}${colors.reset}`),
-  test: (msg) => console.log(`${colors.magenta}🧪 ${msg}${colors.reset}`),
-  header: (msg) => console.log(`\n${colors.bright}${colors.cyan}${msg}${colors.reset}\n`)
+  info: msg => console.log(`${colors.blue}ℹ ${msg}${colors.reset}`),
+  success: msg => console.log(`${colors.green}✅ ${msg}${colors.reset}`),
+  warning: msg => console.log(`${colors.yellow}⚠️  ${msg}${colors.reset}`),
+  error: msg => console.log(`${colors.red}❌ ${msg}${colors.reset}`),
+  test: msg => console.log(`${colors.magenta}🧪 ${msg}${colors.reset}`),
+  header: msg => console.log(`\n${colors.bright}${colors.cyan}${msg}${colors.reset}\n`),
 };
 
 // Load environment variables from .env.local
 function loadEnvConfig() {
   const envPath = path.join(__dirname, '.env.local');
-  
+
   if (!fs.existsSync(envPath)) {
     log.error('No .env.local file found. Run setup-notification-env.js first.');
     process.exit(1);
@@ -42,7 +42,7 @@ function loadEnvConfig() {
 
   const envContent = fs.readFileSync(envPath, 'utf8');
   const config = {};
-  
+
   envContent.split('\n').forEach(line => {
     const [key, ...valueParts] = line.split('=');
     if (key && !key.startsWith('#') && valueParts.length > 0) {
@@ -63,7 +63,7 @@ async function testWebPush(config) {
   }
 
   log.test('Validating VAPID key format...');
-  
+
   // Basic validation of VAPID key format
   if (config.VITE_VAPID_PUBLIC_KEY.length < 80) {
     log.error('VAPID public key appears invalid (too short)');
@@ -73,20 +73,21 @@ async function testWebPush(config) {
   try {
     // Try to import web-push for testing
     const webpush = require('web-push');
-    
+
     webpush.setVapidDetails(
       config.VAPID_SUBJECT || 'mailto:test@example.com',
       config.VITE_VAPID_PUBLIC_KEY,
       config.VAPID_PRIVATE_KEY
     );
-    
+
     log.success('VAPID keys are valid and configured correctly');
     log.info('To test web push: Open your app → Settings → Notifications → Test Push');
     return true;
-    
   } catch (error) {
     log.warning('web-push package not available for testing');
-    log.info('VAPID keys appear configured. Install web-push to test: npm install web-push');
+    log.info(
+      'VAPID keys appear configured. Install web-push to test: npm install web-push'
+    );
     return true; // Keys exist, just can't test programmatically
   }
 }
@@ -112,7 +113,9 @@ async function testFirebaseFCM(config) {
   }
 
   log.success('FCM credentials are present and formatted correctly');
-  log.info('To test mobile push: Install app on device → Enable notifications → Test from settings');
+  log.info(
+    'To test mobile push: Install app on device → Enable notifications → Test from settings'
+  );
   return true;
 }
 
@@ -127,38 +130,41 @@ async function testConvertKitEmail(config) {
 
   log.test('Testing ConvertKit API connection...');
 
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     const url = `https://api.convertkit.com/v3/account?api_key=${config.CONVERTKIT_API_KEY}`;
-    
-    https.get(url, (res) => {
-      let data = '';
-      
-      res.on('data', (chunk) => {
-        data += chunk;
-      });
-      
-      res.on('end', () => {
-        try {
-          const response = JSON.parse(data);
-          
-          if (response.account) {
-            log.success(`ConvertKit connected successfully! Account: ${response.account.name}`);
-            log.info(`Primary email: ${response.account.primary_email_address}`);
-            resolve(true);
-          } else {
-            log.error('ConvertKit API responded but no account data found');
+
+    https
+      .get(url, res => {
+        let data = '';
+
+        res.on('data', chunk => {
+          data += chunk;
+        });
+
+        res.on('end', () => {
+          try {
+            const response = JSON.parse(data);
+
+            if (response.account) {
+              log.success(
+                `ConvertKit connected successfully! Account: ${response.account.name}`
+              );
+              log.info(`Primary email: ${response.account.primary_email_address}`);
+              resolve(true);
+            } else {
+              log.error('ConvertKit API responded but no account data found');
+              resolve(false);
+            }
+          } catch (error) {
+            log.error(`ConvertKit API error: ${data}`);
             resolve(false);
           }
-        } catch (error) {
-          log.error(`ConvertKit API error: ${data}`);
-          resolve(false);
-        }
+        });
+      })
+      .on('error', error => {
+        log.error(`ConvertKit connection failed: ${error.message}`);
+        resolve(false);
       });
-      
-    }).on('error', (error) => {
-      log.error(`ConvertKit connection failed: ${error.message}`);
-      resolve(false);
-    });
   });
 }
 
@@ -170,7 +176,7 @@ function testSecurityConfig(config) {
     { key: 'NOTIFICATION_SIGNING_KEY', name: 'Notification Signing Key' },
     { key: 'NOTIFICATION_ENCRYPTION_KEY', name: 'Notification Encryption Key' },
     { key: 'RATE_LIMIT_MAX_REQUESTS', name: 'Rate Limit Max Requests' },
-    { key: 'RATE_LIMIT_WINDOW_MINUTES', name: 'Rate Limit Window' }
+    { key: 'RATE_LIMIT_WINDOW_MINUTES', name: 'Rate Limit Window' },
   ];
 
   let allSecure = true;
@@ -189,7 +195,10 @@ function testSecurityConfig(config) {
     log.warning('Signing key may be too short for strong security');
   }
 
-  if (config.NOTIFICATION_ENCRYPTION_KEY && config.NOTIFICATION_ENCRYPTION_KEY.length < 40) {
+  if (
+    config.NOTIFICATION_ENCRYPTION_KEY &&
+    config.NOTIFICATION_ENCRYPTION_KEY.length < 40
+  ) {
     log.warning('Encryption key may be too short for strong security');
   }
 
@@ -205,7 +214,7 @@ function testSmartTiming(config) {
     { key: 'QUIET_HOURS_START', name: 'Quiet Hours Start' },
     { key: 'QUIET_HOURS_END', name: 'Quiet Hours End' },
     { key: 'BATTERY_OPTIMIZATION', name: 'Battery Optimization' },
-    { key: 'LOCATION_AWARENESS', name: 'Location Awareness' }
+    { key: 'LOCATION_AWARENESS', name: 'Location Awareness' },
   ];
 
   let allConfigured = true;
@@ -221,7 +230,7 @@ function testSmartTiming(config) {
 
   // Validate time format
   const timeRegex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
-  
+
   if (config.QUIET_HOURS_START && !timeRegex.test(config.QUIET_HOURS_START)) {
     log.warning('Quiet hours start time format may be invalid (use HH:MM)');
   }
@@ -269,7 +278,9 @@ function generateTestReport(results) {
 
   Object.entries(results).forEach(([test, passed]) => {
     const status = passed ? '✅ PASS' : '❌ FAIL';
-    const testName = test.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+    const testName = test
+      .replace(/([A-Z])/g, ' $1')
+      .replace(/^./, str => str.toUpperCase());
     console.log(`${status} ${testName}`);
   });
 
@@ -280,7 +291,9 @@ function generateTestReport(results) {
   } else if (score >= 75) {
     log.info('🔧 Most features are working. Review failed tests above.');
   } else {
-    log.warning('⚠️  Several configuration issues found. Run setup-notification-env.js again.');
+    log.warning(
+      '⚠️  Several configuration issues found. Run setup-notification-env.js again.'
+    );
   }
 }
 
@@ -325,16 +338,22 @@ async function runTests() {
   console.log('4. Monitor notification analytics dashboard\n');
 
   console.log('Available test commands:');
-  console.log('• node test-notifications.js --type=push    (test push notifications only)');
-  console.log('• node test-notifications.js --type=email   (test email campaigns only)');
-  console.log('• node test-notifications.js --type=security (test security config only)');
+  console.log(
+    '• node test-notifications.js --type=push    (test push notifications only)'
+  );
+  console.log(
+    '• node test-notifications.js --type=email   (test email campaigns only)'
+  );
+  console.log(
+    '• node test-notifications.js --type=security (test security config only)'
+  );
   console.log('• node test-notifications.js --type=smart   (test smart timing only)');
   console.log('• node test-notifications.js --type=ai      (test emotional AI only)');
   console.log('• node test-notifications.js               (run all tests)\n');
 }
 
 // Run the tests
-runTests().catch((error) => {
+runTests().catch(error => {
   log.error(`Testing failed: ${error.message}`);
   console.error(error.stack);
   process.exit(1);
