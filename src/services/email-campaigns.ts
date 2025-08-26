@@ -2,8 +2,7 @@
 // Integrates persona-driven email marketing with campaign automation
 
 import {
-import { ErrorHandler } from './error-handler';
-// Note: User and persona data should come from auth context or analytics service
+  ErrorHandler,
   PersonaType,
   PersonaDetectionResult,
   EmailCampaign,

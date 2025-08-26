@@ -3,17 +3,17 @@
 // Provides feature access state and controls throughout the React component tree
 
 import React, {
-// auto: restored by scout - verify import path
+import path
 import { SubscriptionTier } from '@/types';
-// auto: restored by scout - verify import path
+import path
 // Replaced stub import with proper implementation
-// auto: restored by scout - verify import path
+import path
 // Replaced stub import with proper implementation
-// auto: restored by scout - verify import path
+import path
 import { SubscriptionTier } from '@/types';
-// auto: restored by scout - verify import path
+import path
 // Replaced stub import with proper implementation
-// auto: restored by scout - verify import path
+import path
 // Replaced stub import with proper implementation
   createContext,
   useContext,

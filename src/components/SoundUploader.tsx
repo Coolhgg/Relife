@@ -1,10 +1,9 @@
 /// <reference lib="dom" />
 import React, { useState, useCallback, useRef } from 'react';
 import {
-// auto: restored by scout - verify import path
-import { Textarea } from '@/components/ui/textarea';
-// auto: restored by scout - verify import path
-import { Textarea } from '@/components/ui/textarea';
+import path
+import { Textarea } from './ui/textarea';
+import path
   Upload,
   X,
   Play,
@@ -20,7 +19,7 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
-import { Progress } from './ui/textarea';
+import { Progress } from './ui/progress';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
 import { Alert, AlertDescription } from './ui/alert';

@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-import { ErrorHandler } from '../services/error-handler';
+  ErrorHandler,
   CreditCard,
   CheckCircle,
   AlertCircle,

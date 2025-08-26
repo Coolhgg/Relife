@@ -9,9 +9,9 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Switch } from '../ui/switch';
 import {
-// auto: restored by scout - verify import path
+import path
 import { Zap } from 'lucide-react';
-// auto: restored by scout - verify import path
+import path
 import { Zap } from 'lucide-react';
   Select,
   SelectContent,

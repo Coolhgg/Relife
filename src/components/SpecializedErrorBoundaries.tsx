@@ -1,6 +1,6 @@
 import React, { Component, type ReactNode, type ErrorInfo } from 'react';
 import {
-import { AlertTriangle } from 'lucide-react'; // auto: restored by scout - verify
+  AlertTriangle,
   Alert,
   RefreshCw,
   BarChart3,

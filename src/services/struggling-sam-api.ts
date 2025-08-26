@@ -4,8 +4,9 @@
  */
 
 import {
-import { config } from '../config/environment';
-import { ErrorHandler } from './error-handler';
+  config,
+  import { ErrorHandler
+} from './error-handler';
   UserStreak,
   SamAchievement,
   SocialChallenge,

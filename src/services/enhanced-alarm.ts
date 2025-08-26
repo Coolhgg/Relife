@@ -8,7 +8,7 @@ import { generateAlarmId, getNextAlarmTime } from '../utils';
 import { BaseService } from './base/BaseService';
 import { CacheProvider, getCacheManager } from './base/CacheManager';
 import {
-import { ErrorHandler } from './error-handler';
+  ErrorHandler,
   AlarmServiceInterface,
   ServiceConfig,
   ServiceHealth,

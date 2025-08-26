@@ -1,5 +1,5 @@
 import {
-import { config } from '../config/environment';
+  config,
   EnhancedSmartAlarmScheduler,
   type EnhancedSmartAlarm,
   type ConditionBasedAdjustment,

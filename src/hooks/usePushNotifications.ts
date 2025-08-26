@@ -1,7 +1,7 @@
 /// <reference lib="dom" />
 import { useState, useEffect, useCallback } from 'react';
 import {
-import { ErrorHandler } from '../services/error-handler';
+  ErrorHandler,
   PushNotificationService,
   type PushNotificationSettings,
 } from '../services/push-notifications';

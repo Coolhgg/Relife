@@ -2,8 +2,7 @@
 // Provides comprehensive ConvertKit API integration with authentication, testing, and advanced features
 
 import {
-import { ErrorHandler } from './error-handler';
-// Note: User and persona data should come from auth context or analytics service
+  ErrorHandler,
   PersonaType,
   EmailPlatformConfig,
   DEFAULT_PERSONAS,

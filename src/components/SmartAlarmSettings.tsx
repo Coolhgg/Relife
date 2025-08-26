@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-import { AlertTriangle } from 'lucide-react'; // auto: restored by scout - verify
+  AlertTriangle,
   Brain,
   Clock,
   Target,
