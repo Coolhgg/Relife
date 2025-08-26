@@ -44,7 +44,7 @@ import { AnyFn } from 'src/types/utility-types';
 const USE_REAL_DEVICE = process.env.USE_REAL_DEVICE === 'true';
 
 // Logging utility
-const log = (message: string, ...args: any[]) => {
+const log = (message: string, ...args: unknown[]) => {
   if (process.env.NODE_ENV !== 'test' || process.env.VERBOSE_TESTS === 'true') {
     console.log(message, ...args);
   }
@@ -74,7 +74,7 @@ interface MockAlarmNotification {
     allowWhileIdle?: boolean;
   };
   sound?: string;
-  extra?: Record<string, any>;
+  extra?: Record<string, unknown>;
   scheduledAt?: number;
   isAlarm?: boolean;
 }
@@ -253,7 +253,7 @@ const addMockListener = (pluginName: string, eventName: string, callback: AnyFn)
   };
 };
 
-const triggerMockEvent = (pluginName: string, eventName: string, data?: any) => {
+const triggerMockEvent = (pluginName: string, eventName: string, data?: unknown) => {
   const key = `${pluginName}:${eventName}`;
   const listeners = mockEventListeners.get(key);
   if (listeners) {
@@ -297,7 +297,7 @@ export const Capacitor = {
   }),
 
   // Plugin registration (for testing)
-  registerPlugin: vi.fn((pluginName: string, options?: any) => {
+  registerPlugin: vi.fn((pluginName: string, options?: unknown) => {
     log(`🔌 Mock Capacitor.registerPlugin: ${pluginName}`, options);
     return {}; // Return empty plugin object
   }),
@@ -520,7 +520,7 @@ export const LocalNotifications = {
     return Promise.resolve();
   }),
 
-  registerActionTypes: vi.fn((options: { types: any[] }) => {
+  registerActionTypes: vi.fn((options: { types: unknown[] }) => {
     log(
       `⚡ Mock LocalNotifications.registerActionTypes: ${options.types.length} types`
     );
@@ -623,7 +623,7 @@ export const PushNotifications = {
     return Promise.resolve({ notifications: [] });
   }),
 
-  removeDeliveredNotifications: vi.fn((options: { notifications: any[] }) => {
+  removeDeliveredNotifications: vi.fn((options: { notifications: unknown[] }) => {
     log(
       `📨 Mock PushNotifications.removeDeliveredNotifications: ${options.notifications.length}`
     );
@@ -667,12 +667,12 @@ export const PushNotifications = {
   }),
 
   // Testing utilities
-  _mockReceivePush: (data: any) => {
+  _mockReceivePush: (data: unknown) => {
     triggerMockEvent('PushNotifications', 'pushNotificationReceived', data);
     log('📨 Mock push notification received:', data);
   },
 
-  _mockPushAction: (data: any) => {
+  _mockPushAction: (data: unknown) => {
     triggerMockEvent('PushNotifications', 'pushNotificationActionPerformed', data);
     log('📨 Mock push notification action:', data);
   },
@@ -722,7 +722,7 @@ export const Haptics = {
 // =============================================================================
 
 export const Geolocation = {
-  getCurrentPosition: vi.fn((options?: any) => {
+  getCurrentPosition: vi.fn((options?: unknown) => {
     log('🌍 Mock Geolocation.getCurrentPosition', options);
     return Promise.resolve({
       timestamp: Date.now(),
@@ -738,7 +738,7 @@ export const Geolocation = {
     });
   }),
 
-  watchPosition: vi.fn((options?: any, callback?: AnyFn) => {
+  watchPosition: vi.fn((options?: unknown, callback?: AnyFn) => {
     log('👀 Mock Geolocation.watchPosition', options);
 
     const watchId = `mock-watch-${Math.random().toString(36).substr(2, 9)}`;
@@ -1120,7 +1120,7 @@ export const KeepAwake = {
 
 // Camera Plugin
 export const Camera = {
-  getPhoto: vi.fn((options: any) => {
+  getPhoto: vi.fn((options: unknown) => {
     log('📷 Mock Camera.getPhoto', options);
     return Promise.resolve({
       base64String: 'mock-base64-image-data',
@@ -1520,7 +1520,7 @@ export const _mockCapacitorSetup = {
   },
 
   // Event simulation
-  triggerEvent: (pluginName: string, eventName: string, data?: any) => {
+  triggerEvent: (pluginName: string, eventName: string, data?: unknown) => {
     if (!USE_REAL_DEVICE) {
       triggerMockEvent(pluginName, eventName, data);
     }
@@ -1606,13 +1606,13 @@ export default CapacitorMock;
 // Initialize global references for testing utilities
 if (typeof global !== 'undefined') {
   // Make mock setup available globally for easy testing
-  (global as any).mockCapacitor = _mockCapacitorSetup;
+  (global as unknown).mockCapacitor = _mockCapacitorSetup;
 
   // Initialize event listener tracking
-  (global as any).mockEventListeners = mockEventListeners;
+  (global as unknown).mockEventListeners = mockEventListeners;
 
   // Make state accessible for advanced testing scenarios
-  (global as any).mockCapacitorState = mockState;
+  (global as unknown).mockCapacitorState = mockState;
 
   log('🧪 Global Capacitor mock utilities initialized');
 }
@@ -1803,7 +1803,7 @@ export const WebAudioAPI = {
     resume: vi.fn(() => Promise.resolve()),
   })),
 
-  mockPlaySound: vi.fn((soundId: string, options?: any) => {
+  mockPlaySound: vi.fn((soundId: string, options?: unknown) => {
     log(`🔊 Mock WebAudio.mockPlaySound: ${soundId}`, options);
     mockState.audio.currentlyPlaying = soundId;
     mockState.audio.isPlaying = true;

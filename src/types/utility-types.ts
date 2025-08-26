@@ -15,13 +15,13 @@ export type Optional<T> = T | undefined; // type-safe replacement for any | unde
 export type Maybe<T> = T | null | undefined; // type-safe replacement for any | null | undefined
 
 // Record and map types
-export type RecordMap<K extends string | number | symbol, V> = Record<K, V>; // type-safe replacement for Record<string, any>
-export type StringMap<V> = Record<string, V>; // type-safe replacement for Record<string, any>
-export type NumberMap<V> = Record<number, V>; // type-safe replacement for Record<number, any>
+export type RecordMap<K extends string | number | symbol, V> = Record<K, V>; // type-safe replacement for Record<string, unknown>
+export type StringMap<V> = Record<string, V>; // type-safe replacement for Record<string, unknown>
+export type NumberMap<V> = Record<number, V>; // type-safe replacement for Record<string, unknown>
 
 // Common object patterns
-export type UnknownObject = Record<string, unknown>; // type-safe replacement for Record<string, any>
-export type AnyObject = Record<string, any>; // TODO: type definition needed - temporary bridge type
+export type UnknownObject = Record<string, unknown>; // type-safe replacement for Record<string, unknown>
+export type AnyObject = Record<string, unknown>; // TODO: type definition needed - temporary bridge type
 
 // Event handler types
 export type ChangeEventHandler<T = HTMLInputElement> = React.ChangeEventHandler<T>; // type-safe replacement for onChange: any
@@ -31,7 +31,7 @@ export type FormEventHandler<T = HTMLFormElement> = React.FormEventHandler<T>; /
 
 // State setter types
 export type StateUpdater<T> = React.Dispatch<React.SetStateAction<T>>; // type-safe replacement for setState: any
-export type StateUpdaterFunction<T> = (prev: T) => T; // type-safe replacement for (prev: any) => any
+export type StateUpdaterFunction<T> = (prev: T) => T; // type-safe replacement for (prev: unknown) => unknown
 
 // API response types
 export interface BaseResponse {
@@ -51,7 +51,7 @@ export interface SuccessResponse<T = unknown> extends BaseResponse {
   data: T;
 }
 
-export type ApiResponse<T = unknown> = SuccessResponse<T> | ErrorResponse; // type-safe replacement for Promise<any>
+export type ApiResponse<T = unknown> = SuccessResponse<T> | ErrorResponse; // type-safe replacement for Promise<unknown>
 
 // Component prop types
 export interface BaseProps {
@@ -62,20 +62,20 @@ export interface BaseProps {
 }
 
 // Function types
-export type AnyFn = (...args: any[]) => any; // type-safe replacement for Function
+export type AnyFn = (...args: unknown[]) => unknown; // type-safe replacement for Function
 export type VoidFunction = () => void; // type-safe replacement for Function | any
-export type AsyncVoidFunction = () => Promise<void>; // type-safe replacement for async () => any
+export type AsyncVoidFunction = () => Promise<void>; // type-safe replacement for async () => unknown
 export type CallbackFunction<T = unknown> = (arg: T) => void; // type-safe replacement for callback: any
 export type AsyncCallbackFunction<T = unknown> = (arg: T) => Promise<void>; // type-safe replacement for async callback: any
 
 // Metadata and configuration types
-export interface Metadata extends Record<string, unknown> {} // type-safe replacement for metadata: any
-export interface Config extends Record<string, unknown> {} // type-safe replacement for config: any
+export interface Metadata extends Record<string, unknown> {} // type-safe replacement for metadata: unknown
+export interface Config extends Record<string, unknown> {} // type-safe replacement for config: Record<string, unknown>
 export interface Settings extends Record<string, unknown> {} // type-safe replacement for settings: any
 
 // Temporal types for migration
-export type TODO_TypeDefinitionNeeded = any; // TODO: type definition needed - mark for future typing
-export type Legacy_Any = any; // TODO: type definition needed - legacy any usage that needs proper typing
+export type TODO_TypeDefinitionNeeded = unknown; // TODO: type definition needed - mark for future typing
+export type Legacy_Any = unknown; // TODO: type definition needed - legacy any usage that needs proper typing
 
 // API specific response types
 export interface RetentionOffer {
@@ -84,17 +84,10 @@ export interface RetentionOffer {
   message?: string;
 }
 
-export interface AlarmHistoryData {
-  alarms: any[];
-  totalCount: number;
-  patterns?: any;
+export interface AlarmHistoryData { [key: string]: unknown;
 }
 
-export interface SleepPatternData {
-  averageSleepTime: string;
-  averageWakeTime: string;
-  efficiency: number;
-  trends?: any;
+export interface SleepPatternData { [key: string]: unknown;
 }
 
 export interface VoiceSettings {
@@ -104,8 +97,7 @@ export interface VoiceSettings {
   volume: number;
 }
 
-export interface EscalationStrategy {
-  steps: any[];
+export interface EscalationStrategy { [key: string]: unknown[];
   maxAttempts: number;
   intervals: number[];
 }

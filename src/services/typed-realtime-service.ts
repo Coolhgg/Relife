@@ -320,8 +320,8 @@ export class TypedRealtimeService extends EventEmitter implements RealtimeServic
 
     const baseMetrics: RealtimeServiceMetrics = {
       connections: {
-        websocket: this.websocketManager?.getMetrics() || ({} as any),
-        supabase: {} as any, // Would be populated by actual Supabase connection
+        websocket: this.websocketManager?.getMetrics() || ({} as unknown),
+        supabase: {} as unknown, // Would be populated by actual Supabase connection
         totalUptime: this.isRunning
           ? (now.getTime() -
               (this.connectionStatus?.lastStatusChange?.getTime() || now.getTime())) /
@@ -496,7 +496,7 @@ export class TypedRealtimeService extends EventEmitter implements RealtimeServic
       send: async () => true,
       isConnected: () => this.isRunning,
       getConnectionInfo: () => null,
-      getMetrics: () => ({}) as any,
+      getMetrics: () => ({}) as unknown,
       setHeartbeatInterval: () => {},
       addMessageFilter: () => {},
       removeMessageFilter: () => {},
@@ -598,7 +598,7 @@ export class TypedRealtimeService extends EventEmitter implements RealtimeServic
     return Math.max(0, score);
   }
 
-  private generateHealthRecommendations(checks: any): string[] {
+  private generateHealthRecommendations(checks: unknown): string[] {
     const recommendations: string[] = [];
 
     if (checks.connection === 'unhealthy') {
@@ -626,7 +626,7 @@ class AlarmRealtimeFeaturesImpl implements AlarmRealtimeFeatures {
     // Implementation would sync alarm state across devices
   }
 
-  subscribeToAlarmChanges(userId: string, handler: (alarm: any) => void): () => void {
+  subscribeToAlarmChanges(userId: string, handler: (alarm: unknown) => void): () => void {
     // Implementation would subscribe to alarm database changes
     return () => {};
   }
@@ -653,7 +653,7 @@ class AlarmRealtimeFeaturesImpl implements AlarmRealtimeFeatures {
     return () => this.service.off('message', messageHandler);
   }
 
-  onAlarmSnoozed(handler: (data: any) => void): () => void {
+  onAlarmSnoozed(handler: (data: unknown) => void): () => void {
     const messageHandler = (message: RealtimeMessage) => {
       if (message.type === 'alarm_snoozed') {
         handler(message.payload);
@@ -664,7 +664,7 @@ class AlarmRealtimeFeaturesImpl implements AlarmRealtimeFeatures {
     return () => this.service.off('message', messageHandler);
   }
 
-  async sendAlarmNotification(alarmData: any): Promise<string> {
+  async sendAlarmNotification(alarmData: unknown): Promise<string> {
     // Implementation would send alarm notification
     return 'notification-id';
   }
@@ -683,7 +683,7 @@ class AlarmRealtimeFeaturesImpl implements AlarmRealtimeFeatures {
     // Implementation would coordinate alarm across devices
   }
 
-  async handleAlarmConflict(conflictData: any): Promise<void> {
+  async handleAlarmConflict(conflictData: unknown): Promise<void> {
     // Implementation would handle alarm conflicts
   }
 
@@ -721,13 +721,13 @@ class UserRealtimeFeaturesImpl implements UserRealtimeFeatures {
     return [];
   }
 
-  async trackActivity(activity: any): Promise<void> {
+  async trackActivity(activity: unknown): Promise<void> {
     // Implementation would track user activity
   }
 
   subscribeToUserActivity(
     userId: string,
-    handler: (activity: any) => void
+    handler: (activity: unknown) => void
   ): () => void {
     // Implementation would subscribe to user activity
     return () => {};
@@ -737,7 +737,7 @@ class UserRealtimeFeaturesImpl implements UserRealtimeFeatures {
     // Implementation would send friend request
   }
 
-  async inviteToChallenge(userIds: string[], challengeData: any): Promise<void> {
+  async inviteToChallenge(userIds: string[], challengeData: unknown): Promise<void> {
     // Implementation would invite users to challenge
   }
 
@@ -745,7 +745,7 @@ class UserRealtimeFeaturesImpl implements UserRealtimeFeatures {
     // Implementation would sync device settings
   }
 
-  onDeviceStatusChange(handler: (status: any) => void): () => void {
+  onDeviceStatusChange(handler: (status: unknown) => void): () => void {
     // Implementation would handle device status changes
     return () => {};
   }
@@ -767,16 +767,16 @@ class AIRealtimeFeaturesImpl implements AIRealtimeFeatures {
     return () => this.service.off('message', messageHandler);
   }
 
-  async requestAnalysis(type: string, data: any): Promise<string> {
+  async requestAnalysis(type: string, data: unknown): Promise<string> {
     // Implementation would request AI analysis
     return 'analysis-id';
   }
 
-  async updateVoiceMood(mood: any): Promise<void> {
+  async updateVoiceMood(mood: unknown): Promise<void> {
     // Implementation would update voice mood
   }
 
-  onVoiceMoodDetected(handler: (mood: any) => void): () => void {
+  onVoiceMoodDetected(handler: (mood: unknown) => void): () => void {
     const messageHandler = (message: RealtimeMessage) => {
       if (message.type === 'voice_mood_detected') {
         handler(message.payload);
@@ -787,7 +787,7 @@ class AIRealtimeFeaturesImpl implements AIRealtimeFeatures {
     return () => this.service.off('message', messageHandler);
   }
 
-  onSleepPatternUpdate(handler: (pattern: any) => void): () => void {
+  onSleepPatternUpdate(handler: (pattern: unknown) => void): () => void {
     const messageHandler = (message: RealtimeMessage) => {
       if (message.type === 'sleep_pattern_updated') {
         handler(message.payload);
@@ -802,11 +802,11 @@ class AIRealtimeFeaturesImpl implements AIRealtimeFeatures {
     // Implementation would trigger sleep analysis
   }
 
-  async updatePersonalizationData(data: any): Promise<void> {
+  async updatePersonalizationData(data: unknown): Promise<void> {
     // Implementation would update personalization data
   }
 
-  onPersonalizationUpdate(handler: (data: any) => void): () => void {
+  onPersonalizationUpdate(handler: (data: unknown) => void): () => void {
     // Implementation would handle personalization updates
     return () => {};
   }
@@ -815,12 +815,12 @@ class AIRealtimeFeaturesImpl implements AIRealtimeFeatures {
 class SystemRealtimeFeaturesImpl implements SystemRealtimeFeatures {
   constructor(private service: TypedRealtimeService) {}
 
-  async sendSystemNotification(notification: any): Promise<string> {
+  async sendSystemNotification(notification: unknown): Promise<string> {
     // Implementation would send system notification
     return 'notification-id';
   }
 
-  subscribeToSystemNotifications(handler: (notification: any) => void): () => void {
+  subscribeToSystemNotifications(handler: (notification: unknown) => void): () => void {
     const messageHandler = (message: RealtimeMessage) => {
       if (message.type === 'system_notification') {
         handler(message.payload);
@@ -831,11 +831,11 @@ class SystemRealtimeFeaturesImpl implements SystemRealtimeFeatures {
     return () => this.service.off('message', messageHandler);
   }
 
-  async sendEmergencyAlert(alert: any): Promise<void> {
+  async sendEmergencyAlert(alert: unknown): Promise<void> {
     // Implementation would send emergency alert
   }
 
-  onEmergencyAlert(handler: (alert: any) => void): () => void {
+  onEmergencyAlert(handler: (alert: unknown) => void): () => void {
     const messageHandler = (message: RealtimeMessage) => {
       if (message.type === 'emergency_alert') {
         handler(message.payload);
@@ -846,19 +846,19 @@ class SystemRealtimeFeaturesImpl implements SystemRealtimeFeatures {
     return () => this.service.off('message', messageHandler);
   }
 
-  async announceMaintenanceWindow(window: any): Promise<void> {
+  async announceMaintenanceWindow(window: unknown): Promise<void> {
     // Implementation would announce maintenance
   }
 
-  async notifyAppUpdate(updateInfo: any): Promise<void> {
+  async notifyAppUpdate(updateInfo: unknown): Promise<void> {
     // Implementation would notify about app updates
   }
 
-  async reportPerformanceMetric(metric: any): Promise<void> {
+  async reportPerformanceMetric(metric: unknown): Promise<void> {
     // Implementation would report performance metrics
   }
 
-  onPerformanceAlert(handler: (alert: any) => void): () => void {
+  onPerformanceAlert(handler: (alert: unknown) => void): () => void {
     // Implementation would handle performance alerts
     return () => {};
   }

@@ -187,7 +187,7 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
     })
   );
 
-  const giftCategories: { id: GiftType | 'all'; label: string; icon: any }[] = [
+  const giftCategories: { id: GiftType | 'all'; label: string; icon: unknown }[] = [
     { id: 'all', label: 'All Items', icon: Package },
     { id: 'theme', label: 'Themes', icon: Palette },
     { id: 'sound_pack', label: 'Sounds', icon: Music },
@@ -338,7 +338,7 @@ const GiftInventory: React.FC<GiftInventoryProps> = ({
 
         <select
           value={sortBy}
-          onChange={e => setSortBy(e.target.value as any)}
+          onChange={e => setSortBy(e.target.value as unknown)}
           className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         >
           <option value="recent">Recently Added</option>

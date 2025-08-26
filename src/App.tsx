@@ -173,9 +173,9 @@ function AppContent() {
         const newState = updater(appState);
         // For now, we'll use a generic APP_UPDATE action
         // TODO: Convert to specific domain actions
-        dispatch({ type: 'APP_UPDATE' as any, payload: newState });
+        dispatch({ type: 'APP_UPDATE' as unknown, payload: newState });
       } else {
-        dispatch({ type: 'APP_UPDATE' as any, payload: updater });
+        dispatch({ type: 'APP_UPDATE' as unknown, payload: updater });
       }
     },
     [appState, dispatch]
@@ -219,7 +219,7 @@ function AppContent() {
     activeAlarm: appState.activeAlarm,
     // TODO: Performance optimization - Move to useMemo to prevent re-renders
     // const enabledAlarms = useMemo(() => appState.alarms.filter(alarm => alarm.enabled), [appState.alarms]);
-    enabledAlarms: appState.alarms.filter((alarm: any) => alarm.enabled),
+    enabledAlarms: appState.alarms.filter((alarm: unknown) => alarm.enabled),
     settings: tabProtectionSettings.settings,
   });
 
@@ -1124,7 +1124,7 @@ function AppContent() {
       if (tabProtectionSettings.settings.protectionTiming.upcomingAlarmWarning) {
         // TODO: Performance optimization - Replace with useMemo for better performance
         // const enabledAlarms = useMemo(() => appState.alarms.filter(alarm => alarm.enabled), [appState.alarms]);
-        const enabledAlarms = appState.alarms.filter((alarm: any) => alarm.enabled);
+        const enabledAlarms = appState.alarms.filter((alarm: unknown) => alarm.enabled);
         if (enabledAlarms.length > 0) {
           // Check if any alarm is within the configured threshold
           const now = new Date();
@@ -1135,7 +1135,7 @@ function AppContent() {
                 1000
           );
 
-          const upcomingAlarms = enabledAlarms.filter((alarm: any) => {
+          const upcomingAlarms = enabledAlarms.filter((alarm: unknown) => {
             const today = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
 
             // Check if alarm is set for today
@@ -1399,7 +1399,7 @@ function AppContent() {
 
     try {
       analytics.trackAlarmAction('edit', alarmId, { voiceMood: alarmData.voiceMood });
-      const existingAlarm = appState.alarms.find((a: any) => a.id === alarmId);
+      const existingAlarm = appState.alarms.find((a: unknown) => a.id === alarmId);
       if (!existingAlarm) throw new Error('Alarm not found');
 
       const updatedAlarm: Alarm = {
@@ -1420,7 +1420,7 @@ function AppContent() {
         await OfflineStorage.saveAlarm(updatedAlarm);
       }
 
-      const updatedAlarms = appState.alarms.map((alarm: any) =>
+      const updatedAlarms = appState.alarms.map((alarm: unknown) =>
         alarm.id === alarmId ? updatedAlarm : alarm
       );
 
@@ -1498,11 +1498,11 @@ function AppContent() {
         await OfflineStorage.deleteAlarm(alarmId);
       }
 
-      const alarmToDelete = appState.alarms.find((a: any) => a.id === alarmId);
+      const alarmToDelete = appState.alarms.find((a: unknown) => a.id === alarmId);
       const updatedAlarms = appState.alarms.filter(
-        (alarm: any) => alarm.id !== alarmId
+        (alarm: unknown) => alarm.id !== alarmId
       );
-      setAppState((prev: any) => ({
+      setAppState((prev: unknown) => ({
         ...prev,
         alarms: updatedAlarms,
       }));
@@ -1562,7 +1562,7 @@ function AppContent() {
 
     try {
       analytics.trackAlarmAction('toggle', alarmId, { enabled });
-      const existingAlarm = appState.alarms.find((a: any) => a.id === alarmId);
+      const existingAlarm = appState.alarms.find((a: unknown) => a.id === alarmId);
       if (!existingAlarm) throw new Error('Alarm not found');
 
       const updatedAlarm: Alarm = {
@@ -1583,7 +1583,7 @@ function AppContent() {
         await OfflineStorage.saveAlarm(updatedAlarm);
       }
 
-      const updatedAlarms = appState.alarms.map((alarm: any) =>
+      const updatedAlarms = appState.alarms.map((alarm: unknown) =>
         alarm.id === alarmId ? updatedAlarm : alarm
       );
 
@@ -1840,7 +1840,7 @@ function AppContent() {
       case 'dashboard':
         appAnalytics.trackPageView('dashboard', {
           totalAlarms: appState.alarms.length,
-          activeAlarms: appState.alarms.filter((a: any) => a.enabled).length,
+          activeAlarms: appState.alarms.filter((a: unknown) => a.enabled).length,
         });
         return (
           <ErrorBoundary context="Dashboard">
@@ -1874,7 +1874,7 @@ function AppContent() {
             <AlarmList
               alarms={appState.alarms}
               onToggleAlarm={handleToggleAlarm}
-              onEditAlarm={(alarm: any) => {
+              onEditAlarm={(alarm: unknown) => {
                 appAnalytics.trackFeatureUsage('edit_alarm', 'button_clicked', {
                   alarmId: alarm.id,
                   alarmLabel: alarm.label,
@@ -1904,7 +1904,7 @@ function AppContent() {
               rewardSystem={appState.rewardSystem}
               activeBattles={appState.activeBattles || []}
               friends={appState.friends || []}
-              onCreateBattle={(battle: any) => {
+              onCreateBattle={(battle: unknown) => {
                 // Add battle to state with complete Battle object
                 const completeBattle: Battle = {
                   id: battle.id || Math.random().toString(36).substr(2, 9),
@@ -1933,7 +1933,7 @@ function AppContent() {
                   battleType: completeBattle.type,
                 });
               }}
-              onJoinBattle={(battleId: any) => {
+              onJoinBattle={(battleId: unknown) => {
                 appAnalytics.trackFeatureUsage('battle_participation', 'joined', {
                   battleId,
                 });
@@ -2016,7 +2016,7 @@ function AppContent() {
           <ErrorBoundary context="PricingPage">
             <PricingPage
               user={auth._user as User}
-              onUpgrade={(plan: any) => {
+              onUpgrade={(plan: unknown) => {
                 appAnalytics.trackFeatureUsage('subscription', 'upgraded', {
                   plan: plan.id,
                   price: plan.price,
@@ -2107,7 +2107,7 @@ function AppContent() {
                         <TabProtectionWarning
                           activeAlarm={appState.activeAlarm}
                           enabledAlarms={appState.alarms.filter(
-                            (alarm: any) => alarm.enabled
+                            (alarm: unknown) => alarm.enabled
                           )}
                           settings={tabProtectionSettings.settings}
                         />

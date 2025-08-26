@@ -61,7 +61,7 @@ describe('PerformanceMonitor', () => {
     jest.clearAllMocks();
 
     // Reset singleton instance
-    (PerformanceMonitor as any).instance = null;
+    (PerformanceMonitor as unknown).instance = null;
 
     // Mock localStorage
     const mockStorage = {
@@ -319,7 +319,7 @@ describe('PerformanceMonitor', () => {
 
     test('handles browsers without memory API', () => {
       const originalMemory = performance.memory;
-      delete (performance as any).memory;
+      delete (performance as unknown).memory;
 
       const monitor = PerformanceMonitor.getInstance();
 
@@ -328,7 +328,7 @@ describe('PerformanceMonitor', () => {
       expect(memoryInfo).toBeNull();
 
       // Restore
-      (performance as any).memory = originalMemory;
+      (performance as unknown).memory = originalMemory;
     });
   });
 
@@ -468,26 +468,26 @@ describe('PerformanceMonitor', () => {
   describe('_error handling', () => {
     test('handles performance API unavailability gracefully', () => {
       const originalPerformance = global.performance;
-      delete (global as any).performance;
+      delete (global as unknown).performance;
 
       expect(() => {
         PerformanceMonitor.getInstance();
       }).not.toThrow();
 
       // Restore
-      (global as any).performance = originalPerformance;
+      (global as unknown).performance = originalPerformance;
     });
 
     test('handles PerformanceObserver unavailability', () => {
       const originalPO = global.PerformanceObserver;
-      delete (global as any).PerformanceObserver;
+      delete (global as unknown).PerformanceObserver;
 
       expect(() => {
         PerformanceMonitor.getInstance();
       }).not.toThrow();
 
       // Restore
-      (global as any).PerformanceObserver = originalPO;
+      (global as unknown).PerformanceObserver = originalPO;
     });
 
     test('handles localStorage errors gracefully', () => {

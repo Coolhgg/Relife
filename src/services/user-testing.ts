@@ -20,7 +20,7 @@ export interface UserTestSession {
   deviceInfo: DeviceInfo;
   appVersion: string;
   testType: 'usability' | 'a-b-test' | 'beta-test' | 'feedback' | 'bug-report';
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 export interface DeviceInfo {
@@ -76,7 +76,7 @@ export interface ABTestVariant {
   name: string;
   description: string;
   percentage: number;
-  _config: Record<string, any>;
+  _config: Record<string, unknown>;
 }
 
 export interface ABTestMetric {
@@ -106,7 +106,7 @@ export interface UsabilityEvent {
   scrollPosition?: number;
   duration?: number;
   timestamp: Date;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 export interface BugReport {
@@ -124,7 +124,7 @@ export interface BugReport {
   video?: string;
   logs: string[];
   deviceInfo: DeviceInfo;
-  networkInfo: any;
+  networkInfo: unknown;
   reproducible: boolean;
   frequency: 'once' | 'sometimes' | 'often' | 'always';
   timestamp: Date;
@@ -183,7 +183,7 @@ export class UserTestingService {
   async startSession(
     userId: string,
     testType: UserTestSession['testType'],
-    metadata: Record<string, any> = {}
+    metadata: Record<string, unknown> = {}
   ): Promise<string> {
     try {
       const deviceInfo = await this.getDeviceInfo();
@@ -279,7 +279,7 @@ export class UserTestingService {
     element: string,
     x: number,
     y: number,
-    metadata: Record<string, any> = {}
+    metadata: Record<string, unknown> = {}
   ): void {
     this.trackEvent({
       type: 'click',
@@ -302,7 +302,7 @@ export class UserTestingService {
   trackError(
     _error: string,
     element?: string,
-    metadata: Record<string, any> = {}
+    metadata: Record<string, unknown> = {}
   ): void {
     this.trackEvent({
       type: '_error',
@@ -314,7 +314,7 @@ export class UserTestingService {
   trackPerformance(
     metric: string,
     value: number,
-    metadata: Record<string, any> = {}
+    metadata: Record<string, unknown> = {}
   ): void {
     this.trackEvent({
       type: 'performance',

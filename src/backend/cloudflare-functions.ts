@@ -62,8 +62,8 @@ export class AlarmTriggerProcessor {
     alarmId: string;
     userId: string;
     triggeredAt: string;
-    deviceInfo: any;
-    context: any;
+    deviceInfo: unknown;
+    context: Record<string, unknown>;
   }): Promise<Response> {
     try {
       const startTime = Date.now();
@@ -103,7 +103,7 @@ export class AlarmTriggerProcessor {
     }
   }
 
-  private async storeAlarmEvent(alarmData: any): Promise<void> {
+  private async storeAlarmEvent(alarmData: unknown): Promise<void> {
     const event = {
       id: `event_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       alarm_id: alarmData.alarmId,
@@ -145,7 +145,7 @@ export class AlarmTriggerProcessor {
     await this.env.KV.put(cacheKey, JSON.stringify(_event), { expirationTtl: 3600 });
   }
 
-  private async updateRealtimeAnalytics(alarmData: any): Promise<void> {
+  private async updateRealtimeAnalytics(alarmData: unknown): Promise<void> {
     const analyticsData = {
       userId: alarmData.userId,
       timestamp: Date.now(),
@@ -161,7 +161,7 @@ export class AlarmTriggerProcessor {
     const existing =
       existingData && typeof existingData === 'object'
         ? (existingData as {
-            events: any[];
+            events: unknown[];
             totalTriggers: number;
             lastUpdated?: string;
           })
@@ -176,7 +176,7 @@ export class AlarmTriggerProcessor {
     });
   }
 
-  private async generatePersonalizedContent(alarmData: any): Promise<any> {
+  private async generatePersonalizedContent(alarmData: unknown): Promise<unknown> {
     try {
       // Get user's historical data for personalization
       const userHistory = await this.getUserAlarmHistory(alarmData.userId);
@@ -211,7 +211,7 @@ export class AlarmTriggerProcessor {
     }
   }
 
-  private async generateAIWakeupMessage(context: any): Promise<string> {
+  private async generateAIWakeupMessage(context: Record<string, unknown>): Promise<string> {
     if (!this.env.OPENAI_API_KEY) {
       return 'Rise and shine! Time to start your amazing day!';
     }
@@ -249,7 +249,7 @@ export class AlarmTriggerProcessor {
     }
   }
 
-  private async getUserAlarmHistory(userId: string): Promise<any> {
+  private async getUserAlarmHistory(userId: string): Promise<unknown> {
     const cacheKey = `history:${userId}`;
     const cached = await this.env.KV.get(cacheKey, 'json');
 
@@ -290,7 +290,7 @@ export class AlarmTriggerProcessor {
     return historyData;
   }
 
-  private async getUserSleepPattern(userId: string): Promise<any> {
+  private async getUserSleepPattern(userId: string): Promise<unknown> {
     const cacheKey = `sleep_pattern:${userId}`;
     const cached = await this.env.KV.get(cacheKey, 'json');
 
@@ -326,7 +326,7 @@ export class AlarmTriggerProcessor {
     return patternData;
   }
 
-  private async getOptimalVoiceSettings(userId: string, _context: any): Promise<any> {
+  private async getOptimalVoiceSettings(userId: string, _context: Record<string, unknown>): Promise<unknown> {
     // Get user's most effective voice settings based on history
     const effectiveSettings = await this.env.DB.prepare(
       `
@@ -354,7 +354,7 @@ export class AlarmTriggerProcessor {
     );
   }
 
-  private async getOptimalEscalationStrategy(userId: string): Promise<any> {
+  private async getOptimalEscalationStrategy(userId: string): Promise<unknown> {
     // Determine optimal escalation based on user's response patterns
     const responsePatterns = await this.env.DB.prepare(
       `
@@ -406,7 +406,7 @@ export class AlarmTriggerProcessor {
     return { steps: escalationSteps, avgResponseTime, quickResponseRate };
   }
 
-  private async getMotivationalContent(userId: string): Promise<any> {
+  private async getMotivationalContent(userId: string): Promise<unknown> {
     // Get user's goals and preferences for motivational content
     const userPrefs = await this.env.DB.prepare(
       `
@@ -479,7 +479,7 @@ export class AlarmTriggerProcessor {
     return themeTips[Math.floor(Math.random() * themeTips.length)];
   }
 
-  private async getEnergyBoostContent(theme: string): Promise<any> {
+  private async getEnergyBoostContent(theme: string): Promise<unknown> {
     return {
       breathingExercise: {
         name: '4-7-8 Energizing Breath',
@@ -508,7 +508,7 @@ export class AlarmTriggerProcessor {
     );
   }
 
-  private async sendPushNotification(alarmData: any): Promise<void> {
+  private async sendPushNotification(alarmData: unknown): Promise<void> {
     // Implementation for sending push notifications
     // This would integrate with service worker for web push notifications
     try {
@@ -535,7 +535,7 @@ export class AlarmTriggerProcessor {
     }
   }
 
-  private async updateSleepPatternAnalysis(alarmData: any): Promise<void> {
+  private async updateSleepPatternAnalysis(alarmData: unknown): Promise<void> {
     // Update sleep pattern analysis based on alarm timing and user response
     const analysisData = {
       alarmTime: alarmData.triggeredAt,
@@ -581,8 +581,8 @@ export class SmartRecommendationsProcessor {
     }
   }
 
-  private async analyzeAndRecommend(userId: string): Promise<any[]> {
-    const recommendations: any[] = [];
+  private async analyzeAndRecommend(userId: string): Promise<unknown[]> {
+    const recommendations: unknown[] = [];
 
     // Analyze alarm effectiveness
     const effectivenessAnalysis = await this.analyzeAlarmEffectiveness(userId);
@@ -611,7 +611,7 @@ export class SmartRecommendationsProcessor {
     return recommendations.filter(rec => asNumber(rec.confidence_score, 0) > 0.6);
   }
 
-  private async analyzeAlarmEffectiveness(userId: string): Promise<any> {
+  private async analyzeAlarmEffectiveness(userId: string): Promise<unknown> {
     const effectiveness = await this.env.DB.prepare(
       `
       SELECT
@@ -668,7 +668,7 @@ export class SmartRecommendationsProcessor {
     return {};
   }
 
-  private async analyzeSleepPatterns(userId: string): Promise<any> {
+  private async analyzeSleepPatterns(userId: string): Promise<unknown> {
     const sleepData = await this.env.DB.prepare(
       `
       SELECT
@@ -716,7 +716,7 @@ export class SmartRecommendationsProcessor {
     return {};
   }
 
-  private async analyzeVoicePreferences(userId: string): Promise<any> {
+  private async analyzeVoicePreferences(userId: string): Promise<unknown> {
     const voiceEffectiveness = await this.env.DB.prepare(
       `
       SELECT
@@ -741,9 +741,9 @@ export class SmartRecommendationsProcessor {
 
     const best = voiceEffectiveness.results[0];
     const current = voiceEffectiveness.results.find(
-      (v: any) =>
+      (v: unknown) =>
         v.usage_count ===
-        Math.max(...voiceEffectiveness.results.map((r: any) => r.usage_count))
+        Math.max(...voiceEffectiveness.results.map((r: unknown) => r.usage_count))
     );
 
     if (
@@ -782,7 +782,7 @@ export class SmartRecommendationsProcessor {
     return {};
   }
 
-  private async analyzeTimingPatterns(userId: string): Promise<any> {
+  private async analyzeTimingPatterns(userId: string): Promise<unknown> {
     const timingData = await this.env.DB.prepare(
       `
       SELECT
@@ -877,7 +877,7 @@ export class AnalyticsAggregator {
     }
   }
 
-  private async aggregateDailyAnalytics(): Promise<any> {
+  private async aggregateDailyAnalytics(): Promise<unknown> {
     // Get today's analytics from KV
     const today = new Date().toISOString().split('T')[0];
     const analyticsKeys = await this.env.KV.list({ prefix: `analytics:*:${today}` });
@@ -894,7 +894,7 @@ export class AnalyticsAggregator {
     for (const key of analyticsKeys.keys) {
       const data = await this.env.KV.get(key.name, 'json');
       if (data && typeof data === 'object' && 'events' in data) {
-        const typedData = data as { events: any[]; totalTriggers: number };
+        const typedData = data as { events: unknown[]; totalTriggers: number };
         aggregatedData.totalUsers++;
         aggregatedData.totalAlarmTriggers += typedData.totalTriggers;
 
@@ -922,7 +922,7 @@ export class AnalyticsAggregator {
     };
   }
 
-  private async generateInsights(analytics: any): Promise<any[]> {
+  private async generateInsights(analytics: unknown): Promise<unknown[]> {
     const insights = [];
 
     // Peak usage hours
@@ -982,7 +982,7 @@ export default {
       if (url.pathname === '/api/cloud/alarm-trigger' && method === 'POST') {
         const processor = new AlarmTriggerProcessor(env);
         const alarmData = asObject(await request.json(), {});
-        const response = await processor.processAlarmTrigger(alarmData as any);
+        const response = await processor.processAlarmTrigger(alarmData as unknown);
 
         // Add CORS headers to response
         Object.entries(corsHeaders).forEach(([key, value]) => {

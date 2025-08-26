@@ -52,7 +52,7 @@ export interface MobilePerformanceProfile {
 // Performance monitoring mock service
 export class MockPerformanceMonitor {
   private static instance: MockPerformanceMonitor;
-  private metrics: Map<string, any[]> = new Map();
+  private metrics: Map<string, unknown[]> = new Map();
   private alerts: Array<{ type: string; message: string; timestamp: number }> = [];
   private thresholds: Map<string, number> = new Map([
     ['api_response_time', 1000], // 1s
@@ -70,7 +70,7 @@ export class MockPerformanceMonitor {
   }
 
   // Record performance metric
-  recordMetric(category: string, metric: any): void {
+  recordMetric(category: string, metric: unknown): void {
     if (!this.metrics.has(category)) {
       this.metrics.set(category, []);
     }
@@ -92,7 +92,7 @@ export class MockPerformanceMonitor {
   }
 
   // Check metric thresholds and generate alerts
-  private checkThresholds(category: string, metric: any): void {
+  private checkThresholds(category: string, metric: unknown): void {
     const threshold = this.thresholds.get(category);
     if (!threshold) return;
 
@@ -107,7 +107,7 @@ export class MockPerformanceMonitor {
   }
 
   // Extract comparable value from metric
-  private extractMetricValue(category: string, metric: any): number | null {
+  private extractMetricValue(category: string, metric: unknown): number | null {
     switch (category) {
       case 'api_response_time':
         return metric.requestDuration;
@@ -131,14 +131,14 @@ export class MockPerformanceMonitor {
       return this.calculateSummary(categoryMetrics);
     }
 
-    const summary: Record<string, any> = {};
+    const summary: Record<string, unknown> = {};
     for (const [cat, metrics] of this.metrics.entries()) {
       summary[cat] = this.calculateSummary(metrics);
     }
     return summary;
   }
 
-  private calculateSummary(metrics: any[]): any {
+  private calculateSummary(metrics: unknown[]): any {
     if (metrics.length === 0) return null;
 
     const recent = metrics.slice(-100); // Last 100 metrics
@@ -154,7 +154,7 @@ export class MockPerformanceMonitor {
   }
 
   // Get performance alerts
-  getAlerts(since?: number): any[] {
+  getAlerts(since?: number): unknown[] {
     const cutoff = since || Date.now() - 24 * 60 * 60 * 1000; // 24 hours
     return this.alerts.filter(alert => alert.timestamp > cutoff);
   }
@@ -180,7 +180,7 @@ export class MockPerformanceMonitor {
   }
 
   // Get call history for testing
-  getCallHistory(): { metrics: Map<string, any[]>; alerts: any[] } {
+  getCallHistory(): { metrics: Map<string, unknown[]>; alerts: unknown[] } {
     return {
       metrics: new Map(this.metrics),
       alerts: [...this.alerts],
@@ -192,8 +192,7 @@ export class MockPerformanceMonitor {
 export class AlarmPerformanceTester {
   private monitor = MockPerformanceMonitor.getInstance();
 
-  async testAlarmTriggerLatency(
-    alarmConfig: any,
+  async testAlarmTriggerLatency(alarmConfig: unknown,
     options: { iterations?: number; acceptableLatency?: number } = {}
   ): Promise<{
     passed: boolean;
@@ -226,9 +225,7 @@ export class AlarmPerformanceTester {
     };
   }
 
-  private async measureAlarmTrigger(
-    alarmConfig: any
-  ): Promise<AlarmPerformanceMetrics> {
+  private async measureAlarmTrigger(alarmConfig: unknown): Promise<AlarmPerformanceMetrics> {
     const startTime = performance.now();
 
     // Simulate alarm checking
@@ -256,7 +253,7 @@ export class AlarmPerformanceTester {
     };
   }
 
-  private async simulateAlarmCheck(_config: any): Promise<void> {
+  private async simulateAlarmCheck(_config: unknown): Promise<void> {
     // Simulate various alarm check scenarios
     const complexity = _config?.multiple_alarms ? 50 : 20;
     await new Promise(resolve => setTimeout(resolve, Math.random() * complexity + 10));
@@ -279,7 +276,7 @@ export class AlarmPerformanceTester {
     backgroundTaskCount: number;
   }> {
     const startTime = Date.now();
-    const memorySnapshots: any[] = [];
+    const memorySnapshots: unknown[] = [];
     let backgroundTaskCount = 0;
 
     // Simulate background alarm monitoring
@@ -419,9 +416,9 @@ export class ApiPerformanceTester {
   async benchmarkCriticalPaths(
     paths: Array<{ name: string; endpoint: string; method?: string }>,
     options: { acceptableResponseTime?: number } = {}
-  ): Promise<Record<string, any>> {
+  ): Promise<Record<string, unknown>> {
     const { acceptableResponseTime = 500 } = options;
-    const results: Record<string, any> = {};
+    const results: Record<string, unknown> = {};
 
     for (const path of paths) {
       const result = await this.testEndpointPerformance(path.endpoint, path.method, {
@@ -716,7 +713,7 @@ export class MobilePerformanceTester {
   async benchmarkAcrossDevices(
     testFunction: () => Promise<void>,
     duration: number = 10000
-  ): Promise<Record<string, any>> {
+  ): Promise<Record<string, unknown>> {
     const profiles: MobilePerformanceProfile[] = [
       {
         device: 'high-end',
@@ -744,7 +741,7 @@ export class MobilePerformanceTester {
       },
     ];
 
-    const results: Record<string, any> = {};
+    const results: Record<string, unknown> = {};
 
     for (const profile of profiles) {
       const key = `${profile.device}-${profile.platform}`;
@@ -773,7 +770,7 @@ export class PerformanceTestSuite {
     } = {}
   ): Promise<{
     passed: boolean;
-    summary: Record<string, any>;
+    summary: Record<string, unknown>;
     violations: string[];
     recommendations: string[];
   }> {
@@ -785,7 +782,7 @@ export class PerformanceTestSuite {
       duration = 30000,
     } = options;
 
-    const results: Record<string, any> = {};
+    const results: Record<string, unknown> = {};
     const violations: string[] = [];
     const recommendations: string[] = [];
 
@@ -858,9 +855,9 @@ export class PerformanceTestSuite {
   // Generate performance report
   generateReport(): {
     overallHealth: 'excellent' | 'good' | 'fair' | 'poor';
-    metrics: Record<string, any>;
+    metrics: Record<string, unknown>;
     trends: Record<string, 'improving' | 'stable' | 'degrading'>;
-    alerts: any[];
+    alerts: unknown[];
   } {
     const summary = this.monitor.getPerformanceSummary();
     const alerts = this.monitor.getAlerts();
@@ -883,8 +880,8 @@ export class PerformanceTestSuite {
   }
 
   private calculateOverallHealth(
-    summary: Record<string, any>,
-    alerts: any[]
+    summary: Record<string, unknown>,
+    alerts: unknown[]
   ): 'excellent' | 'good' | 'fair' | 'poor' {
     const recentAlerts = alerts.filter(a => a.timestamp > Date.now() - 60 * 60 * 1000);
 

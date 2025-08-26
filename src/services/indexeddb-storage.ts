@@ -105,7 +105,7 @@ export class IndexedDBStorage {
     db: RelifeDB,
     oldVersion: number,
     newVersion: number | null,
-    _transaction: any
+    _transaction: unknown
   ): void {
     console.log('[IndexedDBStorage] Performing database upgrade...');
 

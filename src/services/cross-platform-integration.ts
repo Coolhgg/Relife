@@ -252,7 +252,7 @@ export class CrossPlatformIntegration {
       try {
         const data = await this.syncPlatformData(platform, config, userId);
         if (data) {
-          crossPlatformData[platform as keyof CrossPlatformData] = data as any;
+          crossPlatformData[platform as keyof CrossPlatformData] = data as unknown;
           successfulSyncs++;
         }
       } catch (error) {
@@ -275,7 +275,7 @@ export class CrossPlatformIntegration {
     platform: string,
     config: PlatformConfig,
     userId: string
-  ): Promise<any> {
+  ): Promise<unknown> {
     switch (platform) {
       case 'apple_health':
       case 'google_fit':

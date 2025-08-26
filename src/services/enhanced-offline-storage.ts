@@ -24,11 +24,11 @@ interface EnhancedStorageMetadata {
 
 interface ConflictResolution {
   id: string;
-  localData: any;
-  serverData: any;
+  localData: unknown;
+  serverData: unknown;
   timestamp: string;
   resolution?: 'client' | 'server' | 'merged';
-  mergedData?: any;
+  mergedData?: unknown;
 }
 
 interface DataIntegrityCheck {
@@ -142,7 +142,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
 
   private async updateDataIntegrityHash(
     alarms: Alarm[],
-    pendingChanges: any[]
+    pendingChanges: unknown[]
   ): Promise<void> {
     try {
       const combinedData = JSON.stringify({ alarms, pendingChanges });
@@ -203,7 +203,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
       if (retryFailedOnly) {
         // Only retry previously failed syncs
         changesToSync = pendingChanges.filter(
-          (change: any) => change.retryCount && change.retryCount > 0
+          (change: unknown) => change.retryCount && change.retryCount > 0
         );
       }
 
@@ -277,12 +277,12 @@ export class EnhancedOfflineStorage extends OfflineStorage {
   }
 
   private async syncSingleChange(
-    change: any,
+    change: unknown,
     conflictResolution: string
   ): Promise<{
     success: boolean;
     hasConflict: boolean;
-    serverData?: any;
+    serverData?: unknown;
     _error?: string;
   }> {
     try {
@@ -334,7 +334,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
     }
   }
 
-  private async mergeData(localData: any, serverData: any): Promise<any> {
+  private async mergeData(localData: unknown, serverData: unknown): Promise<unknown> {
     try {
       // Intelligent data merging logic
       const merged = { ...localData };
@@ -405,8 +405,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
   async resolveConflict(
     conflictId: string,
     resolution: 'client' | 'server' | 'merged',
-    mergedData?: any
-  ): Promise<boolean> {
+    mergedData?: unknown): Promise<boolean> {
     try {
       const conflicts = await this.getConflicts();
       const conflictIndex = conflicts.findIndex(c => c.id === conflictId);
@@ -419,7 +418,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
       const conflict = conflicts[conflictIndex];
       conflict.resolution = resolution;
 
-      let dataToSave: any;
+      let dataToSave: unknown;
       if (resolution === 'client') {
         dataToSave = conflict.localData;
       } else if (resolution === 'server') {
@@ -462,7 +461,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
       const pendingChanges = await this.getPendingChanges();
       const metadata = SecurityService.secureStorageGet('smart-alarm-metadata') || {};
 
-      const backupData: any = {
+      const backupData: unknown = {
         version: this.ENHANCED_VERSION,
         timestamp: new Date().toISOString(),
         alarms,
@@ -638,7 +637,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
   ): Promise<void> {
     try {
       const history = await this.getBackupHistory();
-      history.unshift({ ...metadata, id: backupId } as any);
+      history.unshift({ ...metadata, id: backupId } as unknown);
 
       // Keep only last 10 backups in history
       const trimmedHistory = history.slice(0, 10);
@@ -654,7 +653,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
     try {
       const pendingChanges = await this.getPendingChanges();
       const filteredChanges = pendingChanges.filter(
-        (change: any) => change.id !== changeId
+        (change: unknown) => change.id !== changeId
       );
       SecurityService.secureStorageSet('smart-alarm-pending', filteredChanges);
     } catch (_error) {
@@ -665,7 +664,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
   private async updatePendingChangeRetryCount(changeId: string): Promise<void> {
     try {
       const pendingChanges = await this.getPendingChanges();
-      const change = pendingChanges.find((c: any) => c.id === changeId);
+      const change = pendingChanges.find((c: unknown) => c.id === changeId);
 
       if (change) {
         change.retryCount = (change.retryCount || 0) + 1;
@@ -677,7 +676,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
     }
   }
 
-  private async updateSyncMetadata(update: any): Promise<void> {
+  private async updateSyncMetadata(update: unknown): Promise<void> {
     try {
       const existing = SecurityService.secureStorageGet('smart-alarm-metadata') || {};
       const updated = { ...existing, ...update };
@@ -690,7 +689,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
   // ==================== ENHANCED STATISTICS ====================
 
   async getEnhancedStorageStats(): Promise<{
-    basic: any;
+    basic: unknown;
     conflicts: number;
     backups: number;
     integrityStatus: 'valid' | 'invalid' | 'unknown';

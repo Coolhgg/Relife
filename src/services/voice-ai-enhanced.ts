@@ -47,7 +47,7 @@ export interface VoiceLearningData {
     dayOfWeek: number;
     sleepQuality: number;
     responsiveness: number;
-    environmentalFactors: any;
+    environmentalFactors: unknown;
   };
   userResponse: {
     responseTime: number;
@@ -63,7 +63,7 @@ class VoiceAIEnhancedService {
   private performanceMonitor = PerformanceMonitor.getInstance();
   private personalities = new Map<VoiceMood, VoicePersonality>();
   private userLearningData = new Map<string, VoiceLearningData[]>();
-  private contextualMemory = new Map<string, any>();
+  private contextualMemory = new Map<string, unknown>();
   private elevenlabsApiKey: string | null = null;
   private openaiApiKey: string | null = null;
 
@@ -557,9 +557,9 @@ class VoiceAIEnhancedService {
     context: {
       sleepQuality?: number;
       timeOfDay: number;
-      weather?: any;
-      calendar?: any;
-      previousResponses?: any[];
+      weather?: unknown;
+      calendar?: unknown;
+      previousResponses?: unknown[];
     }
   ): Promise<ContextualResponse> {
     try {
@@ -647,7 +647,7 @@ class VoiceAIEnhancedService {
     alarm: Alarm,
     _user: User,
     personality: VoicePersonality,
-    context: any,
+    context: unknown,
     learningData: VoiceLearningData[]
   ): Promise<string> {
     const timeOfDay = context.timeOfDay;
@@ -721,7 +721,7 @@ class VoiceAIEnhancedService {
   private async enhanceWithAI(
     baseMessage: string,
     _user: User,
-    context: any,
+    context: unknown,
     learningData: VoiceLearningData[]
   ): Promise<string> {
     try {
@@ -875,7 +875,7 @@ class VoiceAIEnhancedService {
    */
   private predictEffectiveness(
     voiceMood: VoiceMood,
-    context: any,
+    context: unknown,
     learningData: VoiceLearningData[]
   ): number {
     if (learningData.length === 0) {
@@ -942,7 +942,7 @@ class VoiceAIEnhancedService {
     return greeting;
   }
 
-  private generateWeatherContext(weather: any, personality: VoicePersonality): string {
+  private generateWeatherContext(weather: unknown, personality: VoicePersonality): string {
     if (!weather) return '';
 
     if (weather.condition === 'sunny') {
@@ -1029,7 +1029,7 @@ class VoiceAIEnhancedService {
       if (_error) throw error;
 
       const learningData =
-        data?.map((row: any) => ({
+        data?.map((row: unknown) => ({
           userId: row.user_id,
           voiceMood: row.voice_mood,
           context: row.context,
@@ -1167,7 +1167,7 @@ class VoiceAIEnhancedService {
     return mostSuccessful ? mostSuccessful[0] : 'motivational';
   }
 
-  private summarizeContext(context: any): string {
+  private summarizeContext(context: unknown): string {
     const parts = [];
     if (context.timeOfDay < 6) parts.push('Very early morning');
     else if (context.timeOfDay < 9) parts.push('Early morning');
@@ -1187,7 +1187,7 @@ class VoiceAIEnhancedService {
 
   private generatePersonalizations(
     _user: User,
-    context: any,
+    context: unknown,
     learningData: VoiceLearningData[]
   ): string[] {
     const personalizations = [];
@@ -1271,14 +1271,14 @@ class VoiceAIEnhancedService {
   /**
    * Get current parameter configuration
    */
-  async getCurrentConfiguration(): Promise<Record<string, any>> {
+  async getCurrentConfiguration(): Promise<Record<string, unknown>> {
     return { ...this.parameters };
   }
 
   /**
    * Update voice AI configuration with validation
    */
-  async updateConfiguration(newParameters: Record<string, any>): Promise<boolean> {
+  async updateConfiguration(newParameters: Record<string, unknown>): Promise<boolean> {
     try {
       for (const [key, value] of Object.entries(newParameters)) {
         if (key in this.parameters) {
@@ -1383,7 +1383,7 @@ class VoiceAIEnhancedService {
   /**
    * Get voice AI parameter metadata for UI configuration
    */
-  getConfigurationMetadata(): Record<string, any> {
+  getConfigurationMetadata(): Record<string, unknown> {
     return {
       personalityAdaptation: {
         type: 'slider',

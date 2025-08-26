@@ -133,7 +133,7 @@ class VoiceRecognitionEnhancedService {
   };
 
   // Multi-language command patterns
-  private commandPatterns = new Map<string, any>([
+  private commandPatterns = new Map<string, unknown>([
     [
       'en-US',
       {
@@ -817,7 +817,7 @@ class VoiceRecognitionEnhancedService {
   private async initializeAudioContext(): Promise<void> {
     try {
       this.audioContext = new (window.AudioContext ||
-        (window as any).webkitAudioContext)();
+        (window as unknown).webkitAudioContext)();
 
       if (this.audioContext.state === 'suspended') {
         await this.audioContext.resume();
@@ -919,7 +919,7 @@ class VoiceRecognitionEnhancedService {
     };
   }
 
-  private classifyLanguage(features: any): string {
+  private classifyLanguage(features: unknown): string {
     // Simplified language classification based on formant patterns
     // In production, this would use ML models
     return 'en-US';
@@ -940,14 +940,14 @@ class VoiceRecognitionEnhancedService {
 
   private detectEnhancedIntent(
     transcript: string,
-    patterns: any,
+    patterns: unknown,
     emotion: string
   ): EnhancedVoiceCommand['intent'] {
     const lowerTranscript = transcript.toLowerCase();
 
     // Check exact matches first
     for (const [intent, data] of Object.entries(patterns)) {
-      const intentData = data as any;
+      const intentData = data as unknown;
       if (
         intentData.exact?.some((phrase: string) =>
           lowerTranscript.includes(phrase.toLowerCase())
@@ -959,7 +959,7 @@ class VoiceRecognitionEnhancedService {
 
     // Check pattern matches
     for (const [intent, data] of Object.entries(patterns)) {
-      const intentData = data as any;
+      const intentData = data as unknown;
       if (
         intentData.patterns?.some((pattern: RegExp) => pattern.test(lowerTranscript))
       ) {

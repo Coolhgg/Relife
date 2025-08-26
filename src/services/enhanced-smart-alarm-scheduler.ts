@@ -37,7 +37,7 @@ export interface ConditionBasedAdjustment {
   priority: number; // 1-5, higher = more important
   condition: {
     operator: 'equals' | 'greater_than' | 'less_than' | 'contains';
-    value: any;
+    value: unknown;
     threshold?: number;
   };
   adjustment: {
@@ -95,7 +95,7 @@ export interface SmartRecommendation {
   confidence: number;
   action: {
     type: string;
-    value: any;
+    value: unknown;
   };
 }
 
@@ -219,8 +219,8 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
 
   // ===== CONDITION-BASED ADJUSTMENTS =====
 
-  private static async getCurrentConditions(): Promise<Record<string, any>> {
-    const conditions: Record<string, any> = {};
+  private static async getCurrentConditions(): Promise<Record<string, unknown>> {
+    const conditions: Record<string, unknown> = {};
 
     try {
       // Weather conditions
@@ -252,7 +252,7 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
 
   private static async evaluateConditionAdjustment(
     conditionAdj: ConditionBasedAdjustment,
-    conditions: Record<string, any>
+    conditions: Record<string, unknown>
   ): Promise<number> {
     const conditionValue = conditions[conditionAdj.type];
     if (conditionValue === undefined) return 0;
@@ -562,7 +562,7 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
     return Math.min(0.5 + agreement + magnitude, 1.0);
   }
 
-  private static calculateCurrentSleepDebt(sleepHistory: any[]): number {
+  private static calculateCurrentSleepDebt(sleepHistory: unknown[]): number {
     const last7Days = sleepHistory.slice(0, 7);
     const averageNeeded = 8 * 60; // 8 hours in minutes
     return last7Days.reduce((debt, session) => {
@@ -728,12 +728,12 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
     return recommendations;
   }
 
-  private static async getWeatherConditions(): Promise<any> {
+  private static async getWeatherConditions(): Promise<unknown> {
     // Implement weather API integration
     return { condition: 'clear', temperature: 20 };
   }
 
-  private static async getUpcomingEvents(): Promise<any[]> {
+  private static async getUpcomingEvents(): Promise<unknown[]> {
     // Implement calendar integration
     return [];
   }

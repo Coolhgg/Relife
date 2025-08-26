@@ -321,7 +321,7 @@ export class SleepAnalysisService {
   }
 
   // Helper methods
-  private static mapDatabaseToSleepSession(data: any): SleepSession {
+  private static mapDatabaseToSleepSession(data: unknown): SleepSession {
     return {
       id: data.id,
       userId: data.user_id,

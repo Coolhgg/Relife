@@ -71,7 +71,7 @@ export interface ThemeCondition {
     | 'location'
     | 'day-of-week';
   operator: 'equals' | 'contains' | 'between' | 'greater-than' | 'less-than';
-  value: any;
+  value: unknown;
   weight: number;
 }
 
@@ -81,7 +81,7 @@ class ContextualThemesService {
   private smartRules: SmartThemeRule[];
   private isLearningMode: boolean = true;
   private currentLocation: { lat: number; lon: number } | null = null;
-  private weatherData: any = null;
+  private weatherData: unknown = null;
 
   private constructor() {
     this.userPatterns = this.getDefaultPatterns();

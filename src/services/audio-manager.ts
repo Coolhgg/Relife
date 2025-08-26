@@ -143,7 +143,7 @@ export class AudioManager {
   private async initializeAudioContext(): Promise<void> {
     try {
       this.audioContext = new (window.AudioContext ||
-        (window as any).webkitAudioContext)();
+        (window as unknown).webkitAudioContext)();
 
       // Resume context if it's suspended (required for iOS)
       if (this.audioContext.state === 'suspended') {
@@ -242,7 +242,7 @@ export class AudioManager {
 
   private async performLazyLoad(
     url: string,
-    options: any,
+    options: unknown,
     cacheKey: string
   ): Promise<AudioCacheEntry> {
     const {
@@ -398,8 +398,8 @@ export class AudioManager {
 
     // Preload any custom sounds used by alarms
     const soundPromises = criticalAlarms
-      .filter(alarm => (alarm as any).customSound)
-      .map(alarm => this.preloadCustomSound((alarm as any).customSound));
+      .filter(alarm => (alarm as unknown).customSound)
+      .map(alarm => this.preloadCustomSound((alarm as unknown).customSound));
 
     await Promise.allSettled([...ttsPromises, ...soundPromises]);
   }

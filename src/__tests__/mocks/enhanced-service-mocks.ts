@@ -2,6 +2,10 @@
  * Enhanced Service Mocks - New Architecture
  * Implements the enhanced service interfaces with dependency injection patterns
  */
+import {
+  MockDataRecord, MockDataStore
+} from '../../types/common-types';
+
 
 import type {
   BaseService,
@@ -42,7 +46,7 @@ export abstract class MockBaseService implements BaseService {
   protected initialized: boolean = false;
   protected ready: boolean = false;
   protected errors: ServiceError[] = [];
-  protected eventHandlers: Map<string, Array<(...args: any[]) => void>> = new Map();
+  protected eventHandlers: Map<string, Array<(...args: MockDataRecord[]) => void>> = new Map();
   protected startTime: Date = new Date();
   protected dependencies: Map<string, BaseService> = new Map();
 
@@ -125,14 +129,14 @@ export abstract class MockBaseService implements BaseService {
     this.emit('service:config-updated', { serviceName: this.name, _config });
   }
 
-  public on(_event: string, handler: (...args: any[]) => void): void {
+  public on(_event: string, handler: (...args: MockDataRecord[]) => void): void {
     if (!this.eventHandlers.has(_event)) {
       this.eventHandlers.set(_event, []);
     }
     this.eventHandlers.get(_event)!.push(handler);
   }
 
-  public off(_event: string, handler: (...args: any[]) => void): void {
+  public off(_event: string, handler: (...args: MockDataRecord[]) => void): void {
     const handlers = this.eventHandlers.get(_event);
     if (handlers) {
       const _index = handlers.indexOf(handler);
@@ -142,7 +146,7 @@ export abstract class MockBaseService implements BaseService {
     }
   }
 
-  public emit(_event: string, ...args: any[]): void {
+  public emit(_event: string, ...args: MockDataRecord[]): void {
     const handlers = this.eventHandlers.get(_event);
     if (handlers) {
       handlers.forEach(handler => {
@@ -155,7 +159,7 @@ export abstract class MockBaseService implements BaseService {
     }
   }
 
-  protected handleError(_error: any, context: string): void {
+  protected handleError(_error: unknown, context: string): void {
     const serviceError: ServiceError = {
       message: error.message || String(_error),
       code: _error.code || 'UNKNOWN_ERROR',
@@ -187,7 +191,7 @@ export abstract class MockBaseService implements BaseService {
 // ============================================================================
 
 export class MockCacheProvider implements CacheProvider {
-  private cache = new Map<string, { value: any; timestamp: Date; ttl: number }>();
+  private cache = new Map<string, { value: unknown; timestamp: Date; ttl: number }>();
   private stats: CacheStats = {
     hits: 0,
     misses: 0,
@@ -276,7 +280,7 @@ export class MockCacheProvider implements CacheProvider {
 export class MockAlarmService extends MockBaseService implements AlarmServiceInterface {
   private alarms: Alarm[] = [];
   private cache = new MockCacheProvider();
-  private callHistory: Array<{ method: string; args: any[]; timestamp: number }> = [];
+  private callHistory: Array<{ method: string; args: MockDataRecord[]; timestamp: number }> = [];
 
   constructor(dependencies?: Map<string, BaseService>, _config?: ServiceConfig) {
     super('MockAlarmService', '1.0.0', _config || {}, dependencies);
@@ -334,7 +338,7 @@ export class MockAlarmService extends MockBaseService implements AlarmServiceInt
     this.cache.reset();
   }
 
-  private logCall(method: string, args: any[]): void {
+  private logCall(method: string, args: MockDataRecord[]): void {
     this.callHistory.push({
       method,
       args: args.map(arg =>
@@ -344,7 +348,7 @@ export class MockAlarmService extends MockBaseService implements AlarmServiceInt
     });
   }
 
-  public getCallHistory(): Array<{ method: string; args: any[]; timestamp: number }> {
+  public getCallHistory(): Array<{ method: string; args: MockDataRecord[]; timestamp: number }> {
     return [...this.callHistory];
   }
 
@@ -470,10 +474,10 @@ export class MockAnalyticsService
 {
   private events: AnalyticsEvent[] = [];
   private cache = new MockCacheProvider();
-  private callHistory: Array<{ method: string; args: any[]; timestamp: number }> = [];
+  private callHistory: Array<{ method: string; args: MockDataRecord[]; timestamp: number }> = [];
   private queue: Array<{
     event: string;
-    properties?: Record<string, any>;
+    properties?: Record<string, unknown>;
     userId?: string;
   }> = [];
 
@@ -508,7 +512,7 @@ export class MockAnalyticsService
     this.cache.reset();
   }
 
-  private logCall(method: string, args: any[]): void {
+  private logCall(method: string, args: MockDataRecord[]): void {
     this.callHistory.push({
       method,
       args: args.map(arg =>
@@ -533,7 +537,7 @@ export class MockAnalyticsService
     }
   }
 
-  public getCallHistory(): Array<{ method: string; args: any[]; timestamp: number }> {
+  public getCallHistory(): Array<{ method: string; args: MockDataRecord[]; timestamp: number }> {
     return [...this.callHistory];
   }
 
@@ -545,7 +549,7 @@ export class MockAnalyticsService
     return this.queue.length;
   }
 
-  public async track(_event: string, properties?: Record<string, any>): Promise<void> {
+  public async track(_event: string, properties?: Record<string, unknown>): Promise<void> {
     this.logCall('track', [_event, properties]);
 
     if (!this._config.enabled) {
@@ -557,7 +561,7 @@ export class MockAnalyticsService
     await this.delay(25);
   }
 
-  public async identify(userId: string, traits?: Record<string, any>): Promise<void> {
+  public async identify(userId: string, traits?: Record<string, unknown>): Promise<void> {
     this.logCall('identify', [userId, traits]);
 
     if (!this._config.enabled) {
@@ -567,7 +571,7 @@ export class MockAnalyticsService
     await this.track('user_identified', { ...traits, user_id: userId });
   }
 
-  public async page(name: string, properties?: Record<string, any>): Promise<void> {
+  public async page(name: string, properties?: Record<string, unknown>): Promise<void> {
     this.logCall('page', [name, properties]);
 
     if (!this._config.enabled) {
@@ -595,7 +599,7 @@ export class MockSubscriptionService
 {
   private subscriptions = new Map<string, Subscription>();
   private cache = new MockCacheProvider();
-  private callHistory: Array<{ method: string; args: any[]; timestamp: number }> = [];
+  private callHistory: Array<{ method: string; args: MockDataRecord[]; timestamp: number }> = [];
 
   constructor(dependencies?: Map<string, BaseService>, _config?: ServiceConfig) {
     super('MockSubscriptionService', '1.0.0', _config || {}, dependencies);
@@ -644,7 +648,7 @@ export class MockSubscriptionService
     this.cache.reset();
   }
 
-  private logCall(method: string, args: any[]): void {
+  private logCall(method: string, args: MockDataRecord[]): void {
     this.callHistory.push({
       method,
       args: args.map(arg =>
@@ -654,7 +658,7 @@ export class MockSubscriptionService
     });
   }
 
-  public getCallHistory(): Array<{ method: string; args: any[]; timestamp: number }> {
+  public getCallHistory(): Array<{ method: string; args: MockDataRecord[]; timestamp: number }> {
     return [...this.callHistory];
   }
 
@@ -677,7 +681,7 @@ export class MockSubscriptionService
     return subscription;
   }
 
-  public async createSubscription(data: any): Promise<Subscription> {
+  public async createSubscription(data: unknown): Promise<Subscription> {
     this.logCall('createSubscription', [data]);
 
     const subscription: Subscription = {
@@ -705,7 +709,7 @@ export class MockSubscriptionService
     return subscription;
   }
 
-  public async updateSubscription(id: string, updates: any): Promise<Subscription> {
+  public async updateSubscription(id: string, updates: unknown): Promise<Subscription> {
     this.logCall('updateSubscription', [id, updates]);
 
     const subscription = Array.from(this.subscriptions.values()).find(s => s.id === id);
@@ -752,7 +756,7 @@ export class MockBattleService
   implements BattleServiceInterface
 {
   private battles: Battle[] = [];
-  private callHistory: Array<{ method: string; args: any[]; timestamp: number }> = [];
+  private callHistory: Array<{ method: string; args: MockDataRecord[]; timestamp: number }> = [];
 
   constructor(dependencies?: Map<string, BaseService>, _config?: ServiceConfig) {
     super('MockBattleService', '1.0.0', _config || {}, dependencies);
@@ -775,7 +779,7 @@ export class MockBattleService
     this.callHistory = [];
   }
 
-  private logCall(method: string, args: any[]): void {
+  private logCall(method: string, args: MockDataRecord[]): void {
     this.callHistory.push({
       method,
       args: args.map(arg =>
@@ -785,11 +789,11 @@ export class MockBattleService
     });
   }
 
-  public getCallHistory(): Array<{ method: string; args: any[]; timestamp: number }> {
+  public getCallHistory(): Array<{ method: string; args: MockDataRecord[]; timestamp: number }> {
     return [...this.callHistory];
   }
 
-  public async createBattle(_config: any): Promise<Battle> {
+  public async createBattle(_config: unknown): Promise<Battle> {
     this.logCall('createBattle', [_config]);
 
     const battle: Battle = {
@@ -839,7 +843,7 @@ export class MockBattleService
     return battle;
   }
 
-  public async joinBattle(battleId: string, userId: string): Promise<any> {
+  public async joinBattle(battleId: string, userId: string): Promise<unknown> {
     this.logCall('joinBattle', [battleId, userId]);
 
     const battle = this.battles.find(b => b.id === battleId);
@@ -879,7 +883,7 @@ export class MockBattleService
     return { success: true };
   }
 
-  public async updateBattleProgress(battleId: string, progress: any): Promise<void> {
+  public async updateBattleProgress(battleId: string, progress: unknown): Promise<void> {
     this.logCall('updateBattleProgress', [battleId, progress]);
 
     const battle = this.battles.find(b => b.id === battleId);
@@ -892,7 +896,7 @@ export class MockBattleService
     await this.delay(50);
   }
 
-  public async getBattleHistory(userId: string): Promise<any[]> {
+  public async getBattleHistory(userId: string): Promise<unknown[]> {
     this.logCall('getBattleHistory', [userId]);
 
     const userBattles = this.battles.filter(battle =>
@@ -903,7 +907,7 @@ export class MockBattleService
     return userBattles;
   }
 
-  public async endBattle(battleId: string): Promise<any> {
+  public async endBattle(battleId: string): Promise<unknown> {
     this.logCall('endBattle', [battleId]);
 
     const battle = this.battles.find(b => b.id === battleId);
@@ -926,8 +930,8 @@ export class MockBattleService
 // ============================================================================
 
 export class MockVoiceService extends MockBaseService implements VoiceServiceInterface {
-  private callHistory: Array<{ method: string; args: any[]; timestamp: number }> = [];
-  private availableVoices: any[] = [];
+  private callHistory: Array<{ method: string; args: MockDataRecord[]; timestamp: number }> = [];
+  private availableVoices: MockDataRecord[] = [];
   private currentVoice: string = 'default';
   private speaking: boolean = false;
 
@@ -956,7 +960,7 @@ export class MockVoiceService extends MockBaseService implements VoiceServiceInt
     this.speaking = false;
   }
 
-  private logCall(method: string, args: any[]): void {
+  private logCall(method: string, args: MockDataRecord[]): void {
     this.callHistory.push({
       method,
       args: args.map(arg =>
@@ -966,11 +970,11 @@ export class MockVoiceService extends MockBaseService implements VoiceServiceInt
     });
   }
 
-  public getCallHistory(): Array<{ method: string; args: any[]; timestamp: number }> {
+  public getCallHistory(): Array<{ method: string; args: MockDataRecord[]; timestamp: number }> {
     return [...this.callHistory];
   }
 
-  public async speak(text: string, options?: any): Promise<void> {
+  public async speak(text: string, options?: unknown): Promise<void> {
     this.logCall('speak', [text, options]);
 
     if (!this._config.enabled) {
@@ -996,7 +1000,7 @@ export class MockVoiceService extends MockBaseService implements VoiceServiceInt
     await this.delay(50);
   }
 
-  public async getVoices(): Promise<any[]> {
+  public async getVoices(): Promise<unknown[]> {
     this.logCall('getVoices', []);
 
     await this.delay(100);

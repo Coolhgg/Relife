@@ -223,7 +223,7 @@ export function SubscriptionManagement({
   };
 
   const handleAcceptRetentionOffer = (offerId: string) => {
-    setCancellationData((prev: any) => ({
+    setCancellationData((prev: unknown) => ({
       ...prev,
       retentionOfferAccepted: true,
     }));
@@ -358,8 +358,8 @@ export function SubscriptionManagement({
                         <Label htmlFor="reason">Reason for canceling</Label>
                         <Select
                           value={cancellationData.reason}
-                          onValueChange={(value: any) =>
-                            setCancellationData((prev: any) => ({
+                          onValueChange={(value: unknown) =>
+                            setCancellationData((prev: unknown) => ({
                               ...prev,
                               reason: value,
                             }))
@@ -384,7 +384,7 @@ export function SubscriptionManagement({
                           id="feedback"
                           value={cancellationData.feedback}
                           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            setCancellationData((prev: any) => ({
+                            setCancellationData((prev: unknown) => ({
                               ...prev,
                               feedback: e.target.value,
                             }))
@@ -404,7 +404,7 @@ export function SubscriptionManagement({
                               name="effectiveDate"
                               checked={cancellationData.effectiveDate === 'period_end'}
                               onChange={() =>
-                                setCancellationData((prev: any) => ({
+                                setCancellationData((prev: unknown) => ({
                                   ...prev,
                                   effectiveDate: 'period_end',
                                 }))
@@ -422,7 +422,7 @@ export function SubscriptionManagement({
                               name="effectiveDate"
                               checked={cancellationData.effectiveDate === 'immediate'}
                               onChange={() =>
-                                setCancellationData((prev: any) => ({
+                                setCancellationData((prev: unknown) => ({
                                   ...prev,
                                   effectiveDate: 'immediate',
                                 }))

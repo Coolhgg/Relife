@@ -152,7 +152,7 @@ export function BugReportModal({
   };
 
   const removeTag = (tagToRemove: string) => {
-    setTags(tags.filter((tag: any) => tag !== tagToRemove));
+    setTags(tags.filter((tag: unknown) => tag !== tagToRemove));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -165,7 +165,7 @@ export function BugReportModal({
       const bugData: Partial<BugReport> = {
         title: title.trim(),
         description: description.trim(),
-        steps: steps.filter((step: any) => step.trim() !== ''),
+        steps: steps.filter((step: unknown) => step.trim() !== ''),
         expectedBehavior: expectedBehavior.trim(),
         actualBehavior: actualBehavior.trim(),
         severity,
@@ -471,7 +471,7 @@ export function BugReportModal({
                   </div>
                   {tags.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-3">
-                      {tags.map((tag: any) => (
+                      {tags.map((tag: unknown) => (
                         <Badge
                           key={tag}
                           variant="secondary"

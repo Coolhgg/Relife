@@ -233,7 +233,7 @@ export class WebSocketTypeMocks {
         days: [1, 2, 3, 4, 5],
         sound: 'gentle_bells.wav',
         volume: 0.8,
-      } as any,
+      } as unknown,
       triggeredAt: new Date(),
       location: {
         latitude: 40.7128,
@@ -689,7 +689,7 @@ export class WebSocketTypeMocks {
   ): WebSocketMessage<T> {
     return {
       id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      type: type as any,
+      type: type as unknown,
       payload,
       timestamp: new Date().toISOString(),
       userId: 'test-user-456',
@@ -700,7 +700,7 @@ export class WebSocketTypeMocks {
   }
 
   // Batch Message Creators
-  static createMockAlarmMessages(): WebSocketMessage<any>[] {
+  static createMockAlarmMessages(): WebSocketMessage<unknown>[] {
     return [
       this.createMockWebSocketMessage(
         'alarm_triggered',
@@ -717,7 +717,7 @@ export class WebSocketTypeMocks {
     ];
   }
 
-  static createMockUserMessages(): WebSocketMessage<any>[] {
+  static createMockUserMessages(): WebSocketMessage<unknown>[] {
     return [
       this.createMockWebSocketMessage(
         'user_presence_update',
@@ -734,7 +734,7 @@ export class WebSocketTypeMocks {
     ];
   }
 
-  static createMockAIMessages(): WebSocketMessage<any>[] {
+  static createMockAIMessages(): WebSocketMessage<unknown>[] {
     return [
       this.createMockWebSocketMessage(
         'recommendation_generated',
@@ -755,7 +755,7 @@ export class WebSocketTypeMocks {
     ];
   }
 
-  static createMockSystemMessages(): WebSocketMessage<any>[] {
+  static createMockSystemMessages(): WebSocketMessage<unknown>[] {
     return [
       this.createMockWebSocketMessage(
         'system_notification',
@@ -768,7 +768,7 @@ export class WebSocketTypeMocks {
     ];
   }
 
-  static createMockSyncMessages(): WebSocketMessage<any>[] {
+  static createMockSyncMessages(): WebSocketMessage<unknown>[] {
     return [
       this.createMockWebSocketMessage(
         'sync_status_update',
@@ -816,7 +816,7 @@ export class WebSocketTypeMocks {
   }
 
   // Validation Helpers
-  static isValidWebSocketMessage(message: any): message is WebSocketMessage {
+  static isValidWebSocketMessage(message: unknown): message is WebSocketMessage {
     return (
       message &&
       typeof message.id === 'string' &&
@@ -827,7 +827,7 @@ export class WebSocketTypeMocks {
     );
   }
 
-  static isValidConnectionInfo(info: any): info is WebSocketConnectionInfo {
+  static isValidConnectionInfo(info: unknown): info is WebSocketConnectionInfo {
     return (
       info &&
       typeof info.id === 'string' &&
@@ -839,7 +839,7 @@ export class WebSocketTypeMocks {
     );
   }
 
-  static isValidDeviceInfo(device: any): device is DeviceInfo {
+  static isValidDeviceInfo(device: unknown): device is DeviceInfo {
     return (
       device &&
       ['mobile', 'tablet', 'desktop', 'smartwatch', 'smart_speaker'].includes(

@@ -287,9 +287,9 @@ export class NuclearModeService {
               'thursday',
               'friday',
               'saturday',
-            ][d] as any
+            ][d] as unknown
         ),
-        voiceMood: alarmData.voiceMood as any,
+        voiceMood: alarmData.voiceMood as unknown,
         sound: 'nuclear_alert',
         difficulty: 'nuclear',
         snoozeEnabled: false, // Nuclear mode doesn't allow snoozing
@@ -419,7 +419,7 @@ export class NuclearModeService {
       timeToComplete?: number;
       hintsUsed?: number;
       errorsMade?: number;
-      details?: Record<string, any>;
+      details?: Record<string, unknown>;
     }
   ): Promise<{
     continueSession: boolean;

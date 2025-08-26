@@ -35,7 +35,7 @@ interface RateLimitEntry {
   operation: AlarmOperation;
   timestamp: Date;
   ip?: string;
-  metadata?: any;
+  metadata?: unknown;
 }
 
 interface RateLimitResult {
@@ -201,8 +201,7 @@ export class AlarmRateLimitingService {
     userId: string,
     operation: AlarmOperation,
     ip?: string,
-    metadata?: any
-  ): Promise<RateLimitResult> {
+    metadata?: unknown): Promise<RateLimitResult> {
     try {
       // Get user rate limits
       const userLimits = this.getUserLimits(userId);
@@ -316,7 +315,7 @@ export class AlarmRateLimitingService {
     userId: string,
     operation: AlarmOperation,
     violationType: string,
-    details: any
+    details: unknown
   ): Promise<void> {
     const userLimits = this.getUserLimits(userId);
     userLimits.violations++;
@@ -712,8 +711,7 @@ export class AlarmRateLimitingService {
     userId: string,
     operation: AlarmOperation,
     ip?: string,
-    metadata?: any
-  ): Promise<void> {
+    metadata?: unknown): Promise<void> {
     const entry: RateLimitEntry = {
       userId,
       operation,
@@ -764,7 +762,7 @@ export class AlarmRateLimitingService {
     _event: string,
     userId: string,
     operation: AlarmOperation,
-    details: any
+    details: unknown
   ): Promise<void> {
     console.log(`[AlarmRateLimit] Event: ${_event}`, {
       userId,
@@ -848,7 +846,7 @@ export class AlarmRateLimitingService {
       if (value) {
         const data = SecurityService.decryptData(value);
         this.rateLimitEntries = new Map(
-          Object.entries(data).map(([userId, entries]: [string, any[]]) => [
+          Object.entries(data).map(([userId, entries]: [string, unknown[]]) => [
             userId,
             entries.map(e => ({ ...e, timestamp: new Date(e.timestamp) })),
           ])
@@ -867,7 +865,7 @@ export class AlarmRateLimitingService {
       if (value) {
         const data = SecurityService.decryptData(value);
         this.userLimits = new Map(
-          data.map((_user: any) => [
+          data.map((_user: unknown) => [
             user.userId,
             {
               ...user,
@@ -892,7 +890,7 @@ export class AlarmRateLimitingService {
       });
       if (value) {
         const data = SecurityService.decryptData(value);
-        this.adaptiveAdjustments = data.map((adj: any) => ({
+        this.adaptiveAdjustments = data.map((adj: unknown) => ({
           ...adj,
           expiresAt: new Date(adj.expiresAt),
         }));

@@ -546,7 +546,7 @@ class ErrorHandlerService {
               severity: 'medium',
               metadata: {
                 tagName: target.tagName,
-                src: (target as any).src || (target as any).href,
+                src: (target as unknown).src || (target as unknown).href,
               },
             }
           );
@@ -568,11 +568,11 @@ class ErrorHandlerService {
     });
   }
 
-  wrapFunction<T extends (...args: any[]) => any>(
+  wrapFunction<T extends (...args: unknown[]) => unknown>(
     fn: T,
     context: ErrorContext = {}
   ): T {
-    return ((...args: any[]) => {
+    return ((...args: unknown[]) => {
       try {
         const result = fn(...args);
         if (result && typeof result.then === 'function') {

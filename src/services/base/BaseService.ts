@@ -25,7 +25,7 @@ export abstract class BaseService implements IBaseService {
   protected ready: boolean = false;
   protected errors: ServiceError[] = [];
   protected dependencies: string[] = [];
-  protected eventHandlers: Map<string, Array<(...args: any[]) => void>> = new Map();
+  protected eventHandlers: Map<string, Array<(...args: unknown[]) => void>> = new Map();
   protected performanceTracker?: PerformanceTracker;
 
   constructor(name: string, version: string = '1.0.0', _config: ServiceConfig) {
@@ -215,8 +215,8 @@ export abstract class BaseService implements IBaseService {
   }
 
   protected getMemoryUsage(): number {
-    if (typeof (performance as any)?.memory !== 'undefined') {
-      return (performance as any).memory.usedJSHeapSize;
+    if (typeof (performance as unknown)?.memory !== 'undefined') {
+      return (performance as unknown).memory.usedJSHeapSize;
     }
     return 0;
   }
@@ -272,14 +272,14 @@ export abstract class BaseService implements IBaseService {
   // Event Handling
   // ============================================================================
 
-  public on(_event: string, handler: (...args: any[]) => void): void {
+  public on(_event: string, handler: (...args: unknown[]) => void): void {
     if (!this.eventHandlers.has(_event)) {
       this.eventHandlers.set(_event, []);
     }
     this.eventHandlers.get(_event)!.push(handler);
   }
 
-  public off(_event: string, handler: (...args: any[]) => void): void {
+  public off(_event: string, handler: (...args: unknown[]) => void): void {
     const handlers = this.eventHandlers.get(_event);
     if (handlers) {
       const _index = handlers.indexOf(handler);
@@ -289,7 +289,7 @@ export abstract class BaseService implements IBaseService {
     }
   }
 
-  public emit(_event: string, ...args: any[]): void {
+  public emit(_event: string, ...args: unknown[]): void {
     const handlers = this.eventHandlers.get(_event);
     if (handlers) {
       handlers.forEach(handler => {
@@ -305,7 +305,7 @@ export abstract class BaseService implements IBaseService {
     this.emitToGlobalBus(_event, args);
   }
 
-  protected emitToGlobalBus(_event: string, args: any[]): void {
+  protected emitToGlobalBus(_event: string, args: unknown[]): void {
     const serviceEvent: ServiceEvent = {
       type: event,
       source: this.name,
@@ -315,8 +315,8 @@ export abstract class BaseService implements IBaseService {
 
     // Emit to global event bus if available
     // This would be injected via DI in a real implementation
-    if (typeof (globalThis as any).serviceEventBus?.publish === 'function') {
-      (globalThis as any).serviceEventBus.publish(serviceEvent);
+    if (typeof (globalThis as unknown).serviceEventBus?.publish === 'function') {
+      (globalThis as unknown).serviceEventBus.publish(serviceEvent);
     }
   }
 
@@ -324,10 +324,9 @@ export abstract class BaseService implements IBaseService {
   // Error Handling
   // ============================================================================
 
-  protected handleError(
-    _error: any,
+  protected handleError(_error: unknown,
     message: string,
-    context?: Record<string, any>
+    context?: Record<string, unknown>
   ): void {
     const serviceError: ServiceError = {
       message: `${message}: ${_error.message || _error}`,
@@ -361,7 +360,7 @@ export abstract class BaseService implements IBaseService {
     }
   }
 
-  protected determineSeverity(_error: any): ServiceError['severity'] {
+  protected determineSeverity(_error: unknown): ServiceError['severity'] {
     if (_error.name === 'NetworkError' || _error.code === 'NETWORK_ERROR') {
       return 'medium';
     }
@@ -376,8 +375,8 @@ export abstract class BaseService implements IBaseService {
 
   protected reportError(_error: ServiceError): void {
     // Override in subclasses or inject _error reporting service
-    if (typeof (globalThis as any).errorReporter?.report === 'function') {
-      (globalThis as any).errorReporter.report(_error);
+    if (typeof (globalThis as unknown).errorReporter?.report === 'function') {
+      (globalThis as unknown).errorReporter.report(_error);
     }
   }
 
@@ -388,7 +387,7 @@ export abstract class BaseService implements IBaseService {
   protected async setupPerformanceTracking(): Promise<void> {
     if (this.config.monitoring?.performanceTracking) {
       // Performance tracker would be injected via DI
-      this.performanceTracker = (globalThis as any).performanceTracker;
+      this.performanceTracker = (globalThis as unknown).performanceTracker;
     }
   }
 
@@ -425,7 +424,7 @@ export abstract class BaseService implements IBaseService {
     attempts: number = this.config.retryAttempts || 3,
     delay: number = this.config.retryDelay || 1000
   ): Promise<T> {
-    let lastError: any;
+    let lastError: unknown;
 
     for (let i = 0; i < attempts; i++) {
       try {
@@ -523,7 +522,7 @@ export function createServiceBuilder<T extends BaseService>(): ServiceBuilderImp
 }
 
 class ServiceBuilderImpl<T extends BaseService> {
-  private descriptor: Partial<any> = {
+  private descriptor: Partial<unknown> = {
     singleton: true,
     dependencies: [],
     tags: [],
@@ -554,7 +553,7 @@ class ServiceBuilderImpl<T extends BaseService> {
     return this;
   }
 
-  withFactory(factory: any): this {
+  withFactory(factory: unknown): this {
     this.descriptor.factory = factory;
     return this;
   }

@@ -955,14 +955,14 @@ class VisualAlarmThemesService {
     const interval = setInterval(flash, theme.screen.flashInterval);
 
     // Store interval for cleanup
-    (this as any)[flashId] = interval;
+    (this as unknown)[flashId] = interval;
   }
 
   stopAllEffects(): void {
     this.activeAnimations.forEach(animationId => {
-      if ((this as any)[animationId]) {
-        clearInterval((this as any)[animationId]);
-        delete (this as any)[animationId];
+      if ((this as unknown)[animationId]) {
+        clearInterval((this as unknown)[animationId]);
+        delete (this as unknown)[animationId];
       }
     });
     this.activeAnimations.clear();

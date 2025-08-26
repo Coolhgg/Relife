@@ -535,7 +535,7 @@ export class MonitoringIntegrationService {
         deployments: {
           frequency: deploymentResults.results || [],
           totalCount: (deploymentResults.results || []).reduce(
-            (sum: number, d: any) => sum + asNumber(d.deployment_count, 0),
+            (sum: number, d: unknown) => sum + asNumber(d.deployment_count, 0),
             0
           ),
           latest: latestDeployment,
@@ -694,7 +694,7 @@ export class MonitoringIntegrationService {
     return timeMap[timeRange] || '-7 days';
   }
 
-  private calculateDeploymentSuccessRate(deployments: any[], errors: any): number {
+  private calculateDeploymentSuccessRate(deployments: unknown[], errors: unknown): number {
     if (!deployments || deployments.length === 0) return 1.0;
 
     const totalDeployments = deployments.reduce(
@@ -708,7 +708,7 @@ export class MonitoringIntegrationService {
 
   // Notify external services about deployment
   private async notifyDeployment(
-    deploymentData: any,
+    deploymentData: unknown,
     deploymentId: string
   ): Promise<void> {
     // Send to DataDog if configured

@@ -16,7 +16,7 @@ const ANALYTICS_URL = 'https://app.posthog.com';
 
 // Mock data factories
 export class MockDataFactory {
-  static createUser(overrides: Partial<any> = {}) {
+  static createUser(overrides: Partial<unknown> = {}) {
     return {
       id: 'test-user-123',
       email: 'test@example.com',
@@ -43,7 +43,7 @@ export class MockDataFactory {
     };
   }
 
-  static createAlarm(overrides: Partial<any> = {}) {
+  static createAlarm(overrides: Partial<unknown> = {}) {
     return {
       id: 'test-alarm-123',
       user_id: 'test-user-123',
@@ -67,7 +67,7 @@ export class MockDataFactory {
     };
   }
 
-  static createBattle(overrides: Partial<any> = {}) {
+  static createBattle(overrides: Partial<unknown> = {}) {
     return {
       id: 'test-battle-123',
       creator_id: 'test-user-123',
@@ -108,7 +108,7 @@ export class MockDataFactory {
     };
   }
 
-  static createSubscription(overrides: Partial<any> = {}) {
+  static createSubscription(overrides: Partial<unknown> = {}) {
     return {
       id: 'sub_test123',
       object: 'subscription',
@@ -145,7 +145,7 @@ export class MockDataFactory {
     };
   }
 
-  static createAnalyticsEvent(overrides: Partial<any> = {}) {
+  static createAnalyticsEvent(overrides: Partial<unknown> = {}) {
     return {
       event: 'alarm_created',
       properties: {
@@ -161,7 +161,7 @@ export class MockDataFactory {
     };
   }
 
-  static createPerformanceMetrics(overrides: Partial<any> = {}) {
+  static createPerformanceMetrics(overrides: Partial<unknown> = {}) {
     return {
       metrics: {
         page_load_time: 1250,
@@ -184,7 +184,7 @@ export class MockDataFactory {
 export class RequestInterceptor {
   static withDelay(
     delay: number
-  ): HttpResponseResolver<PathParams, DefaultBodyType, any> {
+  ): HttpResponseResolver<PathParams, DefaultBodyType, unknown> {
     return async _info => {
       await new Promise(resolve => setTimeout(resolve, delay));
       return HttpResponse.json({ success: true, delayed: true });
@@ -194,7 +194,7 @@ export class RequestInterceptor {
   static withErrorRate(
     errorRate: number,
     errorStatus: number = 500
-  ): HttpResponseResolver<PathParams, DefaultBodyType, any> {
+  ): HttpResponseResolver<PathParams, DefaultBodyType, unknown> {
     return _info => {
       if (Math.random() < errorRate) {
         return HttpResponse.json(
@@ -208,7 +208,7 @@ export class RequestInterceptor {
 
   static withAuth(
     requireAuth: boolean = true
-  ): HttpResponseResolver<PathParams, DefaultBodyType, any> {
+  ): HttpResponseResolver<PathParams, DefaultBodyType, unknown> {
     return info => {
       if (requireAuth) {
         const authHeader = info.request.headers.get('authorization');
@@ -225,7 +225,7 @@ export class RequestInterceptor {
 
   static withRateLimit(
     requestsPerMinute: number
-  ): HttpResponseResolver<PathParams, DefaultBodyType, any> {
+  ): HttpResponseResolver<PathParams, DefaultBodyType, unknown> {
     const requests = new Map<string, number[]>();
 
     return info => {
@@ -314,7 +314,7 @@ export const enhancedHandlers = [
   }),
 
   http.post(`${CLOUDFLARE_API_URL}/api/users`, async ({ request }) => {
-    const body = (await request.json()) as any;
+    const body = (await request.json()) as unknown;
     const newUser = MockDataFactory.createUser({
       email: body.email,
       name: body.name,
@@ -371,7 +371,7 @@ export const enhancedHandlers = [
   }),
 
   http.post(`${CLOUDFLARE_API_URL}/api/alarms`, async ({ request }) => {
-    const body = (await request.json()) as any;
+    const body = (await request.json()) as unknown;
     const newAlarm = MockDataFactory.createAlarm({
       ...body,
       id: `alarm_${Date.now()}`,
@@ -388,7 +388,7 @@ export const enhancedHandlers = [
   }),
 
   http.put(`${CLOUDFLARE_API_URL}/api/alarms/:id`, async ({ request, params }) => {
-    const body = (await request.json()) as any;
+    const body = (await request.json()) as unknown;
     const updatedAlarm = MockDataFactory.createAlarm({
       ...body,
       id: params.id,
@@ -441,7 +441,7 @@ export const enhancedHandlers = [
   }),
 
   http.post(`${CLOUDFLARE_API_URL}/api/battles`, async ({ request }) => {
-    const body = (await request.json()) as any;
+    const body = (await request.json()) as unknown;
     const newBattle = MockDataFactory.createBattle({
       ...body,
       id: `battle_${Date.now()}`,
@@ -461,7 +461,7 @@ export const enhancedHandlers = [
   http.post(
     `${CLOUDFLARE_API_URL}/api/battles/:id/join`,
     async ({ params, request }) => {
-      const body = (await request.json()) as any;
+      const body = (await request.json()) as unknown;
 
       return HttpResponse.json({
         success: true,
@@ -479,7 +479,7 @@ export const enhancedHandlers = [
   http.post(
     `${CLOUDFLARE_API_URL}/api/battles/:id/wake`,
     async ({ params, request }) => {
-      const body = (await request.json()) as any;
+      const body = (await request.json()) as unknown;
 
       return HttpResponse.json({
         success: true,
@@ -520,7 +520,7 @@ export const enhancedHandlers = [
 
   // Performance monitoring endpoints
   http.post(`${CLOUDFLARE_API_URL}/api/performance/metrics`, async ({ request }) => {
-    const _body = (await request.json()) as any;
+    const _body = (await request.json()) as unknown;
 
     return HttpResponse.json({
       success: true,
@@ -533,7 +533,7 @@ export const enhancedHandlers = [
   }),
 
   http.post(`${CLOUDFLARE_API_URL}/api/performance/web-vitals`, async ({ request }) => {
-    const _body = (await request.json()) as any;
+    const _body = (await request.json()) as unknown;
 
     return HttpResponse.json({
       success: true,
@@ -578,7 +578,7 @@ export const enhancedHandlers = [
 
   // Enhanced Supabase auth handlers
   http.post(`${SUPABASE_URL}/auth/v1/token`, async ({ request }) => {
-    const body = (await request.json()) as any;
+    const body = (await request.json()) as unknown;
 
     // Simulate different authentication scenarios
     if (body.email === 'blocked@example.com') {
@@ -623,7 +623,7 @@ export const enhancedHandlers = [
     if (select) {
       const fields = select.split(',');
       users = users.map(user => {
-        const selectedUser: any = {};
+        const selectedUser: unknown = {};
         fields.forEach(field => {
           if (_user[field] !== undefined) {
             selectedUser[field] = user[field];
@@ -736,7 +736,7 @@ export const enhancedHandlers = [
   http.post(
     `${ELEVENLABS_URL}/v1/text-to-speech/:voice_id`,
     async ({ _params, request }) => {
-      const _body = (await request.json()) as any;
+      const _body = (await request.json()) as unknown;
 
       // Simulate audio generation delay
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -755,7 +755,7 @@ export const enhancedHandlers = [
   // ==================== ANALYTICS ENDPOINTS ====================
 
   http.post(`${ANALYTICS_URL}/capture/`, async ({ request }) => {
-    const _body = (await request.json()) as any;
+    const _body = (await request.json()) as unknown;
 
     return HttpResponse.json({
       status: 1,
@@ -765,7 +765,7 @@ export const enhancedHandlers = [
   }),
 
   http.post(`${ANALYTICS_URL}/batch/`, async ({ request }) => {
-    const body = (await request.json()) as any;
+    const body = (await request.json()) as unknown;
     const events = body.batch || [];
 
     return HttpResponse.json({
@@ -777,7 +777,7 @@ export const enhancedHandlers = [
 
   // Feature flag endpoints
   http.post(`${ANALYTICS_URL}/decide/`, async ({ request }) => {
-    const _body = (await request.json()) as any;
+    const _body = (await request.json()) as unknown;
 
     return HttpResponse.json({
       featureFlags: {

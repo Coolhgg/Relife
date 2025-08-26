@@ -37,7 +37,7 @@ interface PerformanceMetric {
   device_type?: string;
   network_type?: string;
   timestamp?: string;
-  metadata?: any;
+  metadata?: unknown;
 }
 
 interface WebVitalsData {
@@ -66,7 +66,7 @@ interface ErrorEvent {
   severity: 'low' | 'medium' | 'high' | 'critical';
   page_path?: string;
   user_agent?: string;
-  device_info?: any;
+  device_info?: unknown;
   app_version?: string;
   fingerprint: string;
 }
@@ -75,7 +75,7 @@ interface AnalyticsEvent {
   event_name: string;
   user_id?: string;
   session_id: string;
-  properties: Record<string, any>;
+  properties: Record<string, unknown>;
   timestamp: string;
   page_path?: string;
   device_type?: string;
@@ -599,12 +599,12 @@ export class PerformanceMonitoringAPI {
         summary: {
           totalMetrics:
             vitalsResults.results?.reduce(
-              (sum: number, v: any) => sum + v.sample_count,
+              (sum: number, v: unknown) => sum + v.sample_count,
               0
             ) || 0,
           totalErrors:
             errorResults.results?.reduce(
-              (sum: number, e: any) => sum + e.total_occurrences,
+              (sum: number, e: unknown) => sum + e.total_occurrences,
               0
             ) || 0,
           uniqueUsers: await this.getUniqueUsersCount(timeFilter, userId),
@@ -980,8 +980,8 @@ export class PerformanceMonitoringAPI {
     return timeMap[timeRange] || '-24 hours';
   }
 
-  private processVitalsResults(results: any[]): any {
-    const processed: Record<string, any> = {};
+  private processVitalsResults(results: unknown[]): any {
+    const processed: Record<string, unknown> = {};
     for (const result of results) {
       const metric = result.metric_name.replace('web_vitals_', '');
       processed[metric] = {
@@ -994,8 +994,8 @@ export class PerformanceMonitoringAPI {
     return processed;
   }
 
-  private processErrorResults(results: any[]): any {
-    const processed: Record<string, any> = {};
+  private processErrorResults(results: unknown[]): any {
+    const processed: Record<string, unknown> = {};
     for (const result of results) {
       processed[result.severity] = {
         count: result.error_count,
@@ -1005,8 +1005,8 @@ export class PerformanceMonitoringAPI {
     return processed;
   }
 
-  private processeTrendsResults(results: any[]): any {
-    const processed: Record<string, any[]> = {};
+  private processeTrendsResults(results: unknown[]): any {
+    const processed: Record<string, unknown[]> = {};
     for (const result of results) {
       if (!processed[result.metric_name]) {
         processed[result.metric_name] = [];
@@ -1074,7 +1074,7 @@ export class PerformanceMonitoringAPI {
     return Math.max(0, score) / 100;
   }
 
-  private async checkDatabaseHealth(): Promise<any> {
+  private async checkDatabaseHealth(): Promise<unknown> {
     try {
       const start = Date.now();
       await this.env.DB.prepare('SELECT 1').first();
@@ -1094,7 +1094,7 @@ export class PerformanceMonitoringAPI {
     }
   }
 
-  private calculateHealthScore(recentErrors: any, performanceMetrics: any[]): number {
+  private calculateHealthScore(recentErrors: unknown, performanceMetrics: unknown[]): number {
     let score = 1.0;
 
     // Deduct for errors
@@ -1118,7 +1118,7 @@ export class PerformanceMonitoringAPI {
     return Math.max(0, score);
   }
 
-  private getPerformanceHealthStatus(metrics: any[]): string {
+  private getPerformanceHealthStatus(metrics: unknown[]): string {
     for (const metric of metrics) {
       if (metric.metric_name === 'web_vitals_lcp' && metric.avg_value > 4000)
         return 'warning';
@@ -1130,7 +1130,7 @@ export class PerformanceMonitoringAPI {
     return 'healthy';
   }
 
-  private async generateRealTimeMetrics(): Promise<any> {
+  private async generateRealTimeMetrics(): Promise<unknown> {
     const current5Min = await this.env.DB.prepare(
       `
       SELECT
@@ -1150,7 +1150,7 @@ export class PerformanceMonitoringAPI {
     };
   }
 
-  private analyzeTrends(data: any[]): any {
+  private analyzeTrends(data: unknown[]): any {
     if (data.length < 2) return { trend: 'insufficient_data' };
 
     const values = data.map(d => d.avg_value);
@@ -1168,7 +1168,7 @@ export class PerformanceMonitoringAPI {
   private async performAnomalyDetection(
     timeRange: string,
     sensitivity: number
-  ): Promise<any[]> {
+  ): Promise<unknown[]> {
     // Simplified anomaly detection using statistical methods
     const timeFilter = this.getTimeFilter(timeRange);
 
@@ -1186,8 +1186,8 @@ export class PerformanceMonitoringAPI {
     ).all();
 
     // Group by metric and detect anomalies
-    const anomalies: any[] = [];
-    const metricGroups: Record<string, any[]> = {};
+    const anomalies: unknown[] = [];
+    const metricGroups: Record<string, unknown[]> = {};
 
     for (const result of results.results || []) {
       if (!metricGroups[result.metric_name]) {
@@ -1224,8 +1224,8 @@ export class PerformanceMonitoringAPI {
   private async generateOptimizationRecommendations(
     userId: string | null,
     timeRange: string
-  ): Promise<any[]> {
-    const recommendations: any[] = [];
+  ): Promise<unknown[]> {
+    const recommendations: unknown[] = [];
 
     // Analyze performance patterns and generate recommendations
     const timeFilter = this.getTimeFilter(timeRange);
@@ -1307,8 +1307,8 @@ export class PerformanceMonitoringAPI {
     userId: string | null,
     sessionId: string | null,
     _timeFilter: string
-  ): Promise<any[]> {
-    const insights: any[] = [];
+  ): Promise<unknown[]> {
+    const insights: unknown[] = [];
 
     // Add user-specific insights based on their patterns
     if (userId || sessionId) {
@@ -1473,7 +1473,7 @@ export class PerformanceMonitoringAPI {
     }
   }
 
-  private async logCriticalError(_error: any, request: Request): Promise<void> {
+  private async logCriticalError(_error: unknown, request: Request): Promise<void> {
     try {
       const errorData: ErrorEvent = {
         session_id: 'system',

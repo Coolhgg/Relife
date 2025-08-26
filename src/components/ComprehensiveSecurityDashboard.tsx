@@ -59,7 +59,7 @@ interface SecurityAlert {
 const ComprehensiveSecurityDashboard: React.FC = () => {
   const [securityStatus, setSecurityStatus] = useState<SecurityStatus | null>(null);
   const [activeAlerts, setActiveAlerts] = useState<SecurityAlert[]>([]);
-  const [diagnosticsResults, setDiagnosticsResults] = useState<any>(null);
+  const [diagnosticsResults, setDiagnosticsResults] = useState<unknown>(null);
   const [loading, setLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState<
     'overview' | 'alerts' | 'diagnostics' | 'backup'
@@ -77,12 +77,12 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
 
   useEffect(() => {
     // Listen for real-time security events
-    const handleSecurityAlert = (_event: any) => {
+    const handleSecurityAlert = (_event: unknown) => {
       console.log('New security alert:', _event.detail);
       loadSecurityData(); // Refresh data when new alerts come in
     };
 
-    const handleTamperDetection = (_event: any) => {
+    const handleTamperDetection = (_event: unknown) => {
       console._error('Tamper detection:', _event.detail);
       loadSecurityData();
     };
@@ -439,7 +439,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
             ].map(({ key, label, icon: Icon, desc }) => (
               <button
                 key={key}
-                onClick={() => setSelectedTab(key as any)}
+                onClick={() => setSelectedTab(key as unknown)}
                 role="tab"
                 aria-selected={selectedTab === key}
                 aria-controls={`${key}-panel`}
@@ -590,7 +590,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                {activeAlerts.map((alert: any) => (
+                {activeAlerts.map((alert: unknown) => (
                   <div
                     key={alert.id}
                     className="alarm-card glass-card backdrop-blur-lg border hover:transform hover:scale-[1.02] transition-all"
@@ -706,7 +706,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
                   <h5 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                     Diagnostic Tests
                   </h5>
-                  {diagnosticsResults.tests.map((test: any, _index: number) => {
+                  {diagnosticsResults.tests.map((test: unknown, _index: number) => {
                     const isHealthy = ['passed', 'healthy', 'active'].includes(
                       test.status
                     );

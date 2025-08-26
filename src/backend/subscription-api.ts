@@ -62,13 +62,13 @@ function errorResponse(
 }
 
 // Success response helper
-function successResponse(data: any, origin: string = '*'): Response {
+function successResponse(data: unknown, origin: string = '*'): Response {
   return Response.json(data, { headers: corsHeaders(origin) });
 }
 
 export class SubscriptionAPIHandler {
   private stripe: Stripe;
-  private supabase: any;
+  private supabase: unknown;
 
   constructor(private env: StripeEnv) {
     this.stripe = getStripe(env);
@@ -242,7 +242,7 @@ export class SubscriptionAPIHandler {
     }
 
     try {
-      const subscriptionData: any = {
+      const subscriptionData: unknown = {
         customer: customerId,
         items: [{ price: priceId }],
         payment_behavior: 'default_incomplete',
@@ -322,7 +322,7 @@ export class SubscriptionAPIHandler {
       await request.json();
 
     try {
-      const updateData: any = {};
+      const updateData: unknown = {};
 
       if (planId) {
         // Get price ID for new plan
@@ -714,7 +714,7 @@ export class SubscriptionAPIHandler {
 
   // Helper Methods
 
-  private async saveSubscriptionToDatabase(stripeSubscription: any): Promise<void> {
+  private async saveSubscriptionToDatabase(stripeSubscription: unknown): Promise<void> {
     const subscriptionData = {
       stripe_subscription_id: stripeSubscription.id,
       stripe_customer_id: stripeSubscription.customer,
@@ -745,7 +745,7 @@ export class SubscriptionAPIHandler {
       .upsert(subscriptionData, { onConflict: 'stripe_subscription_id' });
   }
 
-  private async updateSubscriptionInDatabase(stripeSubscription: any): Promise<void> {
+  private async updateSubscriptionInDatabase(stripeSubscription: unknown): Promise<void> {
     const updateData = {
       status: stripeSubscription.status,
       billing_interval:
@@ -781,7 +781,7 @@ export class SubscriptionAPIHandler {
     };
   }
 
-  private async processWebhookEvent(_event: any): Promise<void> {
+  private async processWebhookEvent(_event: unknown): Promise<void> {
     switch (_event.type) {
       case 'customer.subscription.updated':
       case 'customer.subscription.deleted':
@@ -809,12 +809,12 @@ export class SubscriptionAPIHandler {
       .eq('stripe_event_id', _event.id);
   }
 
-  private async handleInvoiceEvent(invoice: any): Promise<void> {
+  private async handleInvoiceEvent(invoice: unknown): Promise<void> {
     // Handle invoice events - save to database, send notifications, etc.
     // Implementation depends on specific business logic
   }
 
-  private async handleTrialWillEnd(subscription: any): Promise<void> {
+  private async handleTrialWillEnd(subscription: unknown): Promise<void> {
     // Handle trial ending - send reminder emails, etc.
     // Implementation depends on specific business logic
   }

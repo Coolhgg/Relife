@@ -2,6 +2,10 @@
  * Platform Service Mocks (Supabase, Capacitor, External APIs)
  * Provides comprehensive mocks for platform-specific services and external integrations
  */
+import {
+  MockDataRecord, MockDataStore
+} from '../../types/common-types';
+
 
 import type { User } from '@supabase/supabase-js';
 import { AnyFn } from 'src/types/utility-types';
@@ -14,7 +18,7 @@ export class MockSupabaseClient {
   private static realTimeChannels: Map<string, any> = new Map();
   private static callHistory: Array<{
     method: string;
-    args: any[];
+    args: MockDataRecord[];
     timestamp: number;
   }> = [];
 
@@ -32,11 +36,11 @@ export class MockSupabaseClient {
     this.callHistory = [];
   }
 
-  static getCallHistory(): Array<{ method: string; args: any[]; timestamp: number }> {
+  static getCallHistory(): Array<{ method: string; args: MockDataRecord[]; timestamp: number }> {
     return [...this.callHistory];
   }
 
-  private static logCall(method: string, args: any[]): void {
+  private static logCall(method: string, args: MockDataRecord[]): void {
     this.callHistory.push({
       method,
       args: args.map(arg =>
@@ -157,7 +161,7 @@ export class MockSupabaseClient {
       };
     },
 
-    onAuthStateChange: (callback: (_event: string, session: any) => void) => {
+    onAuthStateChange: (callback: (_event: string, session: unknown) => void) => {
       MockSupabaseClient.logCall('auth.onAuthStateChange', []);
 
       // Mock auth state changes
@@ -196,7 +200,7 @@ export class MockSupabaseClient {
     return channel;
   }
 
-  removeChannel(channel: any) {
+  removeChannel(channel: unknown) {
     MockSupabaseClient.logCall('removeChannel', [channel]);
 
     if (channel.name) {
@@ -226,7 +230,7 @@ class MockSupabaseQueryBuilder {
   }
 
   private initializeMockData(table: string): void {
-    const mockData: any[] = [];
+    const mockData: MockDataRecord[] = [];
 
     switch (table) {
       case 'users':
@@ -296,7 +300,7 @@ class MockSupabaseQueryBuilder {
     return this;
   }
 
-  update(data: any) {
+  update(data: unknown) {
     this.queryParams.update = data;
     return this;
   }
@@ -311,37 +315,37 @@ class MockSupabaseQueryBuilder {
     return this;
   }
 
-  eq(column: string, value: any) {
+  eq(column: string, value: unknown) {
     this.queryParams.eq = this.queryParams.eq || {};
     this.queryParams.eq[column] = value;
     return this;
   }
 
-  neq(column: string, value: any) {
+  neq(column: string, value: unknown) {
     this.queryParams.neq = this.queryParams.neq || {};
     this.queryParams.neq[column] = value;
     return this;
   }
 
-  gt(column: string, value: any) {
+  gt(column: string, value: unknown) {
     this.queryParams.gt = this.queryParams.gt || {};
     this.queryParams.gt[column] = value;
     return this;
   }
 
-  gte(column: string, value: any) {
+  gte(column: string, value: unknown) {
     this.queryParams.gte = this.queryParams.gte || {};
     this.queryParams.gte[column] = value;
     return this;
   }
 
-  lt(column: string, value: any) {
+  lt(column: string, value: unknown) {
     this.queryParams.lt = this.queryParams.lt || {};
     this.queryParams.lt[column] = value;
     return this;
   }
 
-  lte(column: string, value: any) {
+  lte(column: string, value: unknown) {
     this.queryParams.lte = this.queryParams.lte || {};
     this.queryParams.lte[column] = value;
     return this;
@@ -353,7 +357,7 @@ class MockSupabaseQueryBuilder {
     return this;
   }
 
-  in(column: string, values: any[]) {
+  in(column: string, values: MockDataRecord[]) {
     this.queryParams.in = this.queryParams.in || {};
     this.queryParams.in[column] = values;
     return this;
@@ -381,8 +385,8 @@ class MockSupabaseQueryBuilder {
 
   // Execute the query
   async then(
-    resolve?: (result: any) => void,
-    reject?: (_error: any) => void
+    resolve?: (result: unknown) => void,
+    reject?: (_error: unknown) => void
   ): Promise<any> {
     try {
       const result = await this.execute();
@@ -404,7 +408,7 @@ class MockSupabaseQueryBuilder {
 
     // Handle INSERT
     if (this.queryParams.insert) {
-      const newRecords = this.queryParams.insert.map((record: any) => ({
+      const newRecords = this.queryParams.insert.map((record: unknown) => ({
         ...record,
         id:
           record.id ||
@@ -533,11 +537,11 @@ class MockSupabaseQueryBuilder {
   }
 
   // Static methods for managing mock data
-  static setMockData(table: string, data: any[]): void {
+  static setMockData(table: string, data: MockDataRecord[]): void {
     this.mockData.set(table, data);
   }
 
-  static getMockData(table: string): any[] {
+  static getMockData(table: string): MockDataRecord[] {
     return this.mockData.get(table) || [];
   }
 
@@ -556,7 +560,7 @@ class MockSupabaseRealtimeChannel {
   private subscriptions: Array<{ event: string; callback: AnyFn }> = [];
   private static callHistory: Array<{
     method: string;
-    args: any[];
+    args: MockDataRecord[];
     timestamp: number;
   }> = [];
 
@@ -564,11 +568,11 @@ class MockSupabaseRealtimeChannel {
     this.name = name;
   }
 
-  static getCallHistory(): Array<{ method: string; args: any[]; timestamp: number }> {
+  static getCallHistory(): Array<{ method: string; args: MockDataRecord[]; timestamp: number }> {
     return [...this.callHistory];
   }
 
-  private static logCall(method: string, args: any[]): void {
+  private static logCall(method: string, args: MockDataRecord[]): void {
     this.callHistory.push({
       method,
       args: args.map(arg =>
@@ -638,7 +642,7 @@ class MockSupabaseRealtimeChannel {
     return Promise.resolve();
   }
 
-  send(type: string, payload: any) {
+  send(type: string, payload: unknown) {
     MockSupabaseRealtimeChannel.logCall('channel.send', [this.name, type, payload]);
 
     // Echo the message back to simulate real-time communication
@@ -658,7 +662,7 @@ class MockSupabaseRealtimeChannel {
   }
 
   // Utility method to trigger events for testing
-  trigger(_event: string, payload: any) {
+  trigger(_event: string, payload: unknown) {
     this.subscriptions.forEach(sub => {
       if (sub.event === _event) {
         sub.callback(payload);
