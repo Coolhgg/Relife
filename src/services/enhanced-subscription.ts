@@ -40,10 +40,10 @@ export interface SubscriptionServiceConfig extends ServiceConfig {
 }
 
 export interface SubscriptionServiceDependencies {
-  supabaseService?: any;
-  stripeService?: any;
-  analyticsService?: any;
-  errorHandler?: any;
+  supabaseService?: unknown;
+  stripeService?: unknown;
+  analyticsService?: unknown;
+  errorHandler?: unknown;
 }
 
 export interface SubscriptionCheckResult {
@@ -968,8 +968,7 @@ export class EnhancedSubscriptionService
   private async trackSubscriptionEvent(
     _event: string,
     subscription: Subscription,
-    changes?: any
-  ): Promise<void> {
+    changes?: unknown): Promise<void> {
     if (!(this._config as SubscriptionServiceConfig).enableAnalytics) return;
 
     try {
@@ -987,7 +986,7 @@ export class EnhancedSubscriptionService
     }
   }
 
-  private async trackUsageEvent(_event: string, data: any): Promise<void> {
+  private async trackUsageEvent(_event: string, data: unknown): Promise<void> {
     if (!(this._config as SubscriptionServiceConfig).enableAnalytics) return;
 
     try {

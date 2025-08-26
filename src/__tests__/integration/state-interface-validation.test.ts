@@ -191,7 +191,7 @@ describe('State Interface Validation', () => {
 
     it('should fail validation with invalid alarm state', () => {
       const invalidState = { ...mockAlarmState, alarms: 'not-an-array' };
-      expect(validateAlarmState(invalidState as any)).toBe(false);
+      expect(validateAlarmState(invalidState as unknown)).toBe(false);
       expect(isAlarmState(invalidState)).toBe(false);
     });
   });
@@ -325,7 +325,7 @@ describe('State Interface Validation', () => {
 
     it('should fail validation with invalid _user state', () => {
       const invalidState = { ...mockUserState, auth: null };
-      expect(validateUserState(invalidState as any)).toBe(false);
+      expect(validateUserState(invalidState as unknown)).toBe(false);
       expect(isUserState(invalidState)).toBe(false);
     });
   });
@@ -443,7 +443,7 @@ describe('State Interface Validation', () => {
 
     it('should fail validation with invalid subscription state', () => {
       const invalidState = { ...mockSubscriptionState, status: null };
-      expect(validateSubscriptionState(invalidState as any)).toBe(false);
+      expect(validateSubscriptionState(invalidState as unknown)).toBe(false);
       expect(isSubscriptionState(invalidState)).toBe(false);
     });
   });

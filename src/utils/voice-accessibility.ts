@@ -8,7 +8,7 @@ import { TimeoutHandle } from '../types/timers';
 
 export interface VoiceCommand {
   phrases: string[];
-  action: (params?: any) => void;
+  action: (params?: unknown) => void;
   description: string;
   category: 'navigation' | 'alarm' | 'accessibility' | 'general';
   enabled: boolean;

@@ -240,6 +240,9 @@ export interface HealthCheckResponse {
   timestamp: string;
   version: string;
 }
+// Common type definitions for reducing any usage
+export * from './common-types';
+
 // Service Interface Exports
 export * from './service-interfaces';
 export * from './domain-service-interfaces';

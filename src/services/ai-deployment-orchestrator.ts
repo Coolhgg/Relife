@@ -788,7 +788,7 @@ export class AIDeploymentOrchestrator {
     return results;
   }
 
-  private async handlePhaseFailure(phase: PhaseConfig, error: any): Promise<void> {
+  private async handlePhaseFailure(phase: PhaseConfig, error: unknown): Promise<void> {
     console.error(
       `[Rollback] Phase ${phase.phase} failed, initiating rollback strategy: ${phase.rollbackStrategy}`
     );
@@ -965,8 +965,7 @@ export class AIDeploymentOrchestrator {
 
   private async sendDeploymentNotification(
     status: string,
-    report?: any
-  ): Promise<void> {
+    report?: unknown): Promise<void> {
     // In a real implementation, this would send notifications via email, Slack, etc.
     console.log(`[Notification] Deployment ${status}`, report ? { report } : '');
   }
@@ -1093,14 +1092,14 @@ export class AIDeploymentOrchestrator {
   /**
    * Get current deployment configuration
    */
-  async getCurrentConfiguration(): Promise<Record<string, any>> {
+  async getCurrentConfiguration(): Promise<Record<string, unknown>> {
     return { ...this.parameters };
   }
 
   /**
    * Update deployment configuration with validation
    */
-  async updateConfiguration(newParameters: Record<string, any>): Promise<boolean> {
+  async updateConfiguration(newParameters: Record<string, unknown>): Promise<boolean> {
     try {
       for (const [key, value] of Object.entries(newParameters)) {
         if (key in this.parameters) {
@@ -1228,7 +1227,7 @@ export class AIDeploymentOrchestrator {
   /**
    * Get deployment parameter metadata for UI configuration
    */
-  getConfigurationMetadata(): Record<string, any> {
+  getConfigurationMetadata(): Record<string, unknown> {
     return {
       deploymentStrategy: {
         type: 'select',

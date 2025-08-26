@@ -32,7 +32,7 @@ interface GeofenceTrigger {
   type: 'enter' | 'exit' | 'dwell';
   action: 'enable_alarm' | 'disable_alarm' | 'adjust_time' | 'notify';
   alarmIds: string[];
-  parameters: Record<string, any>;
+  parameters: Record<string, unknown>;
   dwellTime?: number; // minutes for dwell triggers
 }
 
@@ -109,10 +109,10 @@ export class EnhancedLocationService {
           Object.entries(data).map(([k, v]) => [
             k,
             {
-              ...(v as any),
-              createdAt: new Date((v as any).createdAt),
-              lastTriggered: (v as any).lastTriggered
-                ? new Date((v as any).lastTriggered)
+              ...(v as unknown),
+              createdAt: new Date((v as unknown).createdAt),
+              lastTriggered: (v as unknown).lastTriggered
+                ? new Date((v as unknown).lastTriggered)
                 : undefined,
             },
           ])
@@ -128,7 +128,7 @@ export class EnhancedLocationService {
       const { value } = await Preferences.get({ key: LOCATION_HISTORY_KEY });
       if (value) {
         const data = JSON.parse(value);
-        this.locationHistory = data.map((point: any) => ({
+        this.locationHistory = data.map((point: unknown) => ({
           ...point,
           timestamp: new Date(point.timestamp),
         }));
@@ -381,7 +381,7 @@ export class EnhancedLocationService {
 
   private static async adjustAlarmTimes(
     alarmIds: string[],
-    parameters: Record<string, any>
+    parameters: Record<string, unknown>
   ): Promise<void> {
     const adjustMinutes = parameters.adjustMinutes || 0;
 

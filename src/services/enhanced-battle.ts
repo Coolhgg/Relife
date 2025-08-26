@@ -58,12 +58,12 @@ export interface BattleServiceConfig extends ServiceConfig {
 }
 
 export interface BattleServiceDependencies {
-  supabaseClient?: any;
+  supabaseClient?: unknown;
   analyticsService?: AnalyticsServiceInterface;
-  userService?: any;
-  gamificationService?: any;
-  notificationService?: any;
-  errorHandler?: any;
+  userService?: unknown;
+  gamificationService?: unknown;
+  notificationService?: unknown;
+  errorHandler?: unknown;
 }
 
 export interface BattleResult {
@@ -114,13 +114,13 @@ export interface BattlePersistenceLayer {
   updateBattle(id: string, updates: Partial<Battle>): Promise<void>;
 
   saveTournament?(tournament: Tournament): Promise<void>;
-  loadTournaments?(filter?: any): Promise<Tournament[]>;
+  loadTournaments?(filter?: unknown): Promise<Tournament[]>;
 
   saveTeam?(team: Team): Promise<void>;
-  loadTeams?(filter?: any): Promise<Team[]>;
+  loadTeams?(filter?: unknown): Promise<Team[]>;
 
   saveSeason?(season: Season): Promise<void>;
-  loadSeasons?(filter?: any): Promise<Season[]>;
+  loadSeasons?(filter?: unknown): Promise<Season[]>;
 }
 
 // ============================================================================
@@ -326,7 +326,7 @@ export class EnhancedBattleService
     }
   }
 
-  public async joinBattle(battleId: string, userId: string): Promise<any> {
+  public async joinBattle(battleId: string, userId: string): Promise<unknown> {
     const timerId = this.startTimer('joinBattle');
 
     try {
@@ -377,7 +377,7 @@ export class EnhancedBattleService
     }
   }
 
-  public async updateBattleProgress(battleId: string, progress: any): Promise<void> {
+  public async updateBattleProgress(battleId: string, progress: unknown): Promise<void> {
     const timerId = this.startTimer('updateBattleProgress');
 
     try {
@@ -730,7 +730,7 @@ export class EnhancedBattleService
     });
   }
 
-  private async handleAlarmTrigger(data: any): Promise<void> {
+  private async handleAlarmTrigger(data: unknown): Promise<void> {
     // Find active battles for this user
     const userBattles = Array.from(this.battles.values()).filter(
       battle =>
@@ -747,7 +747,7 @@ export class EnhancedBattleService
     }
   }
 
-  private validateBattleData(battleData: any): void {
+  private validateBattleData(battleData: unknown): void {
     const config = this._config as BattleServiceConfig;
 
     if (!battleData.type || !battleData.startTime) {
@@ -1118,7 +1118,7 @@ class LocalStorageBattlePersistence implements BattlePersistenceLayer {
 }
 
 class SupabaseBattlePersistence implements BattlePersistenceLayer {
-  constructor(private supabase: any) {}
+  constructor(private supabase: unknown) {}
 
   async saveBattle(battle: Battle): Promise<void> {
     if (!this.supabase) {

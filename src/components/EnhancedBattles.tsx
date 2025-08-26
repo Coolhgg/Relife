@@ -90,7 +90,7 @@ const MOCK_TEAMS: Team[] = [
           experience: 3200,
           joinDate: '2023-12-01',
           lastActive: new Date().toISOString(),
-          preferences: {} as any,
+          preferences: {} as unknown,
           createdAt: '2023-12-01',
         },
         role: 'captain',
@@ -391,7 +391,7 @@ export function EnhancedBattles({
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              {MOCK_SEASON.rewards.map((reward: any) => (
+              {MOCK_SEASON.rewards.map((reward: unknown) => (
                 <div
                   key={reward.rank}
                   className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"

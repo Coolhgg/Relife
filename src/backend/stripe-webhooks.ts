@@ -502,7 +502,7 @@ export class StripeWebhookHandler {
       stripePaymentMethodId: paymentMethod.id,
       userId: user.id,
       stripeCustomerId: paymentMethod.customer as string,
-      type: paymentMethod.type as any,
+      type: paymentMethod.type as unknown,
       cardData: paymentMethod.card
         ? {
             brand: paymentMethod.card.brand,
@@ -675,7 +675,7 @@ export class StripeWebhookHandler {
     if (_error) throw error;
   }
 
-  private async updateInvoice(stripeInvoiceId: string, updates: any) {
+  private async updateInvoice(stripeInvoiceId: string, updates: unknown) {
     const { _error } = await supabase
       .from('invoices')
       .update({ ...updates, updatedAt: new Date() })
@@ -729,8 +729,7 @@ export class StripeWebhookHandler {
   private async logWebhookEvent(
     _event: Stripe.Event,
     status: 'success' | 'error',
-    _error?: any
-  ) {
+    _error?: unknown) {
     const logData = {
       stripeEventId: event.id,
       eventType: event.type,
@@ -748,14 +747,14 @@ export class StripeWebhookHandler {
   }
 
   // Notification methods (implement based on your notification system)
-  private async sendTrialEndingNotification(_user: any, trialEndDate: Date) {
+  private async sendTrialEndingNotification(_user: unknown, trialEndDate: Date) {
     // Implement trial ending notification
     console.log(
       `Sending trial ending notification to user ${_user.id}, trial ends: ${trialEndDate}`
     );
   }
 
-  private async sendPaymentFailedNotification(_user: any, invoice: Stripe.Invoice) {
+  private async sendPaymentFailedNotification(_user: unknown, invoice: Stripe.Invoice) {
     // Implement payment failed notification
     console.log(
       `Sending payment failed notification to user ${_user.id}, invoice: ${invoice.id}`
@@ -763,7 +762,7 @@ export class StripeWebhookHandler {
   }
 
   private async sendPaymentActionRequiredNotification(
-    _user: any,
+    _user: unknown,
     invoice: Stripe.Invoice
   ) {
     // Implement payment action required notification

@@ -136,7 +136,7 @@ interface Tournament {
   description: string;
   type: string;
   status: string;
-  participants: any[];
+  participants: unknown[];
   maxParticipants: number;
   entryFee: number;
   startTime: string;

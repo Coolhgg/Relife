@@ -254,7 +254,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
         themeDescription || `Custom theme based on ${baseTheme}`;
 
       setCurrentEditingTheme(customTheme);
-      setSavedThemes((prev: any) => [...prev, customTheme]);
+      setSavedThemes((prev: unknown) => [...prev, customTheme]);
 
       // Save to localStorage
       const savedCustomThemes = JSON.parse(
@@ -306,7 +306,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
   };
 
   const handleColorChange = (colorKey: keyof ColorPaletteState, color: string) => {
-    setColorPalette((prev: any) => ({
+    setColorPalette((prev: unknown) => ({
       ...prev,
       [colorKey]: color,
     }));
@@ -633,7 +633,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
                       {showColorPicker === key && (
                         <ColorPicker
                           color={color}
-                          onChange={(newColor: any) =>
+                          onChange={(newColor: unknown) =>
                             handleColorChange(key as keyof ColorPaletteState, newColor)
                           }
                           onClose={() => setShowColorPicker(null)}

@@ -49,8 +49,8 @@ import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 
 interface BehavioralIntelligenceDashboardProps {
   userId: string;
-  alarms: any[];
-  alarmEvents: any[];
+  alarms: unknown[];
+  alarmEvents: unknown[];
   className?: string;
 }
 
@@ -110,9 +110,9 @@ const TYPE_ICONS = {
 export const EnhancedBehavioralIntelligenceDashboard: React.FC<
   BehavioralIntelligenceDashboardProps
 > = ({ userId, alarms, alarmEvents, className = '' }) => {
-  const [analysisData, setAnalysisData] = useState<any>(null);
-  const [recommendations, setRecommendations] = useState<any[]>([]);
-  const [crossPlatformData, setCrossPlatformData] = useState<any>(null);
+  const [analysisData, setAnalysisData] = useState<unknown>(null);
+  const [recommendations, setRecommendations] = useState<unknown[]>([]);
+  const [crossPlatformData, setCrossPlatformData] = useState<unknown>(null);
   const [loading, setLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState('overview');
   const [selectedInsight, setSelectedInsight] = useState<BehavioralInsight | null>(
@@ -209,7 +209,7 @@ export const EnhancedBehavioralIntelligenceDashboard: React.FC<
     if (!analysisData?.insights) return { critical: [], high: [], medium: [], low: [] };
 
     return analysisData.insights.reduce(
-      (acc: any, insight: BehavioralInsight) => {
+      (acc: unknown, insight: BehavioralInsight) => {
         if (!acc[insight.priority]) acc[insight.priority] = [];
         acc[insight.priority].push(insight);
         return acc;
@@ -660,7 +660,7 @@ export const EnhancedBehavioralIntelligenceDashboard: React.FC<
               <CardContent>
                 <div className="space-y-3">
                   {(analysisData?.predictiveAnalysis?.riskFactors || []).map(
-                    (risk: any, index: number) => (
+                    (risk: unknown, index: number) => (
                       <div key={index} className="p-3 border rounded-lg">
                         <div className="flex items-center justify-between mb-2">
                           <h4 className="font-medium text-gray-900">{risk.factor}</h4>
@@ -725,7 +725,7 @@ export const EnhancedBehavioralIntelligenceDashboard: React.FC<
                       <div>
                         <h4 className="font-medium mb-2">Action Steps</h4>
                         <div className="space-y-2">
-                          {rec.actions.map((action: any, index: number) => (
+                          {rec.actions.map((action: unknown, index: number) => (
                             <div key={index} className="flex items-start space-x-3">
                               <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-600 text-sm font-medium flex items-center justify-center mt-0.5">
                                 {action.step}

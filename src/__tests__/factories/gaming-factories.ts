@@ -215,7 +215,7 @@ export const _createTestAchievementReward = (
       'title',
     ]),
     description: faker.lorem.words(3),
-  } as any;
+  } as unknown;
 };
 
 export const _createTestAchievementRequirement = (
@@ -247,7 +247,7 @@ export const _createTestAchievementRequirement = (
     target: faker.number.int({ min: 1, max: 100 }),
     description: faker.lorem.sentence(),
     optional: faker.datatype.boolean({ probability: 0.2 }),
-  } as any;
+  } as unknown;
 };
 
 // ===============================
@@ -382,7 +382,7 @@ export const _createTestTournamentRounds = (
               : 'pending',
         startTime: generateTimestamp({ past: 7 - i }),
         endTime: generateTimestamp({ past: 6 - i }),
-      } as any);
+      } as unknown);
     }
   } else if (type === 'round-robin') {
     for (let i = 1; i <= participantCount - 1; i++) {
@@ -395,7 +395,7 @@ export const _createTestTournamentRounds = (
         status: i < 5 ? 'completed' : 'pending',
         startTime: generateTimestamp({ past: 7 - i }),
         endTime: generateTimestamp({ past: 6 - i }),
-      } as any);
+      } as unknown);
     }
   }
 
@@ -484,7 +484,7 @@ export const _createTestTeam = (options: CreateTeamOptions = {}): Team => {
       publicStats: faker.datatype.boolean({ probability: 0.6 }),
       notifications: faker.datatype.boolean({ probability: 0.9 }),
     },
-  } as any;
+  } as unknown;
 };
 
 export const _createTestTeamMember = (userId?: string): TeamMember => ({
@@ -609,7 +609,7 @@ export const _createTestSeason = (options: CreateSeasonOptions = {}): Season => 
       tournamentsHeld: faker.number.int({ min: 5, max: 50 }),
       achievementsUnlocked: faker.number.int({ min: 100, max: 5000 }),
     },
-  } as any;
+  } as unknown;
 };
 
 // ===============================
@@ -643,7 +643,7 @@ export const _createTestLeaderboard = (entryCount = 100): Leaderboard => {
       'consistency',
       'achievements',
     ]),
-  } as any;
+  } as unknown;
 };
 
 export const _createTestLeaderboardEntry = (rank: number): LeaderboardEntry =>
@@ -659,7 +659,7 @@ export const _createTestLeaderboardEntry = (rank: number): LeaderboardEntry =>
     streak: faker.number.int({ min: 0, max: 30 }),
     achievements: faker.number.int({ min: 0, max: 50 }),
     lastActive: generateTimestamp({ past: 7 }),
-  }) as any; // Battle-related factory functions to append to gaming-factories.ts
+  }) as unknown; // Battle-related factory functions to append to gaming-factories.ts
 
 /**
  * Battle Factories

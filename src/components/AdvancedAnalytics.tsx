@@ -47,7 +47,7 @@ interface AdvancedAnalyticsProps {
   battlePerformance: BattlePerformanceData[];
   learningData: LearningData;
   onExportData?: () => void;
-  onUpdatePreferences?: (preferences: any) => void;
+  onUpdatePreferences?: (preferences: unknown) => void;
 }
 
 // Mock data for development
@@ -240,12 +240,12 @@ const MOCK_BATTLE_PERFORMANCE: BattlePerformanceData[] = [
     score: 85,
     mistakes: 1,
     mood: 'good',
-    performance: {} as any,
-    comparison: {} as any,
-    improvement: {} as any,
-    streaks: {} as any,
+    performance: {} as unknown,
+    comparison: {} as unknown,
+    improvement: {} as unknown,
+    streaks: {} as unknown,
     achievements: [],
-    analysis: {} as any,
+    analysis: {} as unknown,
     createdAt: new Date(),
   },
   {
@@ -258,12 +258,12 @@ const MOCK_BATTLE_PERFORMANCE: BattlePerformanceData[] = [
     score: 92,
     mistakes: 0,
     mood: 'excellent',
-    performance: {} as any,
-    comparison: {} as any,
-    improvement: {} as any,
-    streaks: {} as any,
+    performance: {} as unknown,
+    comparison: {} as unknown,
+    improvement: {} as unknown,
+    streaks: {} as unknown,
     achievements: [],
-    analysis: {} as any,
+    analysis: {} as unknown,
     createdAt: new Date(),
   },
   {
@@ -276,12 +276,12 @@ const MOCK_BATTLE_PERFORMANCE: BattlePerformanceData[] = [
     score: 65,
     mistakes: 3,
     mood: 'tired',
-    performance: {} as any,
-    comparison: {} as any,
-    improvement: {} as any,
-    streaks: {} as any,
+    performance: {} as unknown,
+    comparison: {} as unknown,
+    improvement: {} as unknown,
+    streaks: {} as unknown,
     achievements: [],
-    analysis: {} as any,
+    analysis: {} as unknown,
     createdAt: new Date(),
   },
 ];

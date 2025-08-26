@@ -13,9 +13,9 @@ export default async function globalTeardown() {
 
   try {
     // Run any registered cleanup tasks
-    if ((global as any).testCleanupTasks) {
+    if ((global as unknown).testCleanupTasks) {
       console.log('🔧 Running registered cleanup tasks...');
-      const cleanupTasks = (global as any).testCleanupTasks;
+      const cleanupTasks = (global as unknown).testCleanupTasks;
 
       for (let i = 0; i < cleanupTasks.length; i++) {
         try {
@@ -56,7 +56,7 @@ export default async function globalTeardown() {
           await fs.rmdir(testUploadsDir);
           console.log('✅ Test files cleaned up');
         } catch (_error) {
-          if ((_error as any).code !== 'ENOENT') {
+          if ((_error as unknown).code !== 'ENOENT') {
             console.warn('⚠️ Could not clean up test files:', _error);
           }
         }
@@ -66,10 +66,10 @@ export default async function globalTeardown() {
     }
 
     // Generate test performance report
-    if ((global as any).testPerformance) {
+    if ((global as unknown).testPerformance) {
       console.log('📊 Generating performance report...');
 
-      const slowTests = (global as any).testPerformance.getSlowTests();
+      const slowTests = (global as unknown).testPerformance.getSlowTests();
       if (slowTests.length > 0) {
         console.log('\n⏱️ Slow Tests Report:');
         console.log('==================');
@@ -107,27 +107,27 @@ export default async function globalTeardown() {
     }
 
     // Clear any remaining intervals/timeouts from tests
-    if ((global as any).mockGeoWatchIntervals) {
+    if ((global as unknown).mockGeoWatchIntervals) {
       console.log('🌍 Cleaning up geolocation watchers...');
-      (global as any).mockGeoWatchIntervals.forEach((interval: any) => {
+      (global as unknown).mockGeoWatchIntervals.forEach((interval: unknown) => {
         clearInterval(interval);
       });
-      (global as any).mockGeoWatchIntervals.clear();
+      (global as unknown).mockGeoWatchIntervals.clear();
       console.log('✅ Geolocation watchers cleaned');
     }
 
     // Clear any global test state
-    if ((global as any).testHelpers) {
-      delete (global as any).testHelpers;
+    if ((global as unknown).testHelpers) {
+      delete (global as unknown).testHelpers;
     }
-    if ((global as any).testPerformance) {
-      delete (global as any).testPerformance;
+    if ((global as unknown).testPerformance) {
+      delete (global as unknown).testPerformance;
     }
-    if ((global as any).testCleanupTasks) {
-      delete (global as any).testCleanupTasks;
+    if ((global as unknown).testCleanupTasks) {
+      delete (global as unknown).testCleanupTasks;
     }
-    if ((global as any).addTestCleanupTask) {
-      delete (global as any).addTestCleanupTask;
+    if ((global as unknown).addTestCleanupTask) {
+      delete (global as unknown).addTestCleanupTask;
     }
 
     // Reset environment variables that were modified for testing

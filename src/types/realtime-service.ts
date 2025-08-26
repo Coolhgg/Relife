@@ -2,6 +2,10 @@
  * Real-time Service Interface
  * Complete interface for real-time functionality combining WebSockets, push notifications, and Supabase real-time
  */
+import {
+  MockDataRecord, MockDataStore
+} from '../../types/common-types';
+
 
 import type {
   WebSocketManager,
@@ -122,21 +126,21 @@ export interface RealtimeService {
 export interface AlarmRealtimeFeatures {
   // Alarm state synchronization
   syncAlarmState(alarmId: string): Promise<void>;
-  subscribeToAlarmChanges(userId: string, handler: (alarm: any) => void): () => void;
+  subscribeToAlarmChanges(userId: string, handler: (alarm: unknown) => void): () => void;
 
   // Real-time alarm events
   onAlarmTriggered(handler: (data: AlarmTriggeredPayload) => void): () => void;
   onAlarmDismissed(handler: (data: AlarmDismissedPayload) => void): () => void;
-  onAlarmSnoozed(handler: (data: any) => void): () => void;
+  onAlarmSnoozed(handler: (data: unknown) => void): () => void;
 
   // Alarm notifications
-  sendAlarmNotification(alarmData: any): Promise<string>;
+  sendAlarmNotification(alarmData: unknown): Promise<string>;
   scheduleAlarmReminder(alarmId: string, time: Date): Promise<string>;
   cancelAlarmNotification(notificationId: string): Promise<boolean>;
 
   // Multi-device coordination
   coordinateMultiDeviceAlarm(alarmId: string): Promise<void>;
-  handleAlarmConflict(conflictData: any): Promise<void>;
+  handleAlarmConflict(conflictData: unknown): Promise<void>;
 
   // Emergency features
   triggerEmergencyAlarm(reason: string): Promise<void>;
@@ -152,16 +156,16 @@ export interface UserRealtimeFeatures {
   getOnlineUsers(): Promise<UserPresenceUpdatePayload[]>;
 
   // Activity tracking
-  trackActivity(activity: any): Promise<void>;
-  subscribeToUserActivity(userId: string, handler: (activity: any) => void): () => void;
+  trackActivity(activity: unknown): Promise<void>;
+  subscribeToUserActivity(userId: string, handler: (activity: unknown) => void): () => void;
 
   // Social features
   sendFriendRequest(toUserId: string): Promise<void>;
-  inviteToChallenge(userIds: string[], challengeData: any): Promise<void>;
+  inviteToChallenge(userIds: string[], challengeData: unknown): Promise<void>;
 
   // Device coordination
   syncDeviceSettings(): Promise<void>;
-  onDeviceStatusChange(handler: (status: any) => void): () => void;
+  onDeviceStatusChange(handler: (status: unknown) => void): () => void;
 }
 
 export interface AIRealtimeFeatures {
@@ -169,37 +173,37 @@ export interface AIRealtimeFeatures {
   subscribeToRecommendations(
     handler: (rec: RecommendationGeneratedPayload) => void
   ): () => void;
-  requestAnalysis(type: string, data: any): Promise<string>;
+  requestAnalysis(type: string, data: unknown): Promise<string>;
 
   // Voice and mood
-  updateVoiceMood(mood: any): Promise<void>;
-  onVoiceMoodDetected(handler: (mood: any) => void): () => void;
+  updateVoiceMood(mood: unknown): Promise<void>;
+  onVoiceMoodDetected(handler: (mood: unknown) => void): () => void;
 
   // Sleep pattern analysis
-  onSleepPatternUpdate(handler: (pattern: any) => void): () => void;
+  onSleepPatternUpdate(handler: (pattern: unknown) => void): () => void;
   triggerSleepAnalysis(): Promise<void>;
 
   // Personalization
-  updatePersonalizationData(data: any): Promise<void>;
-  onPersonalizationUpdate(handler: (data: any) => void): () => void;
+  updatePersonalizationData(data: unknown): Promise<void>;
+  onPersonalizationUpdate(handler: (data: unknown) => void): () => void;
 }
 
 export interface SystemRealtimeFeatures {
   // System notifications
-  sendSystemNotification(notification: any): Promise<string>;
-  subscribeToSystemNotifications(handler: (notification: any) => void): () => void;
+  sendSystemNotification(notification: unknown): Promise<string>;
+  subscribeToSystemNotifications(handler: (notification: unknown) => void): () => void;
 
   // Emergency alerts
-  sendEmergencyAlert(alert: any): Promise<void>;
-  onEmergencyAlert(handler: (alert: any) => void): () => void;
+  sendEmergencyAlert(alert: unknown): Promise<void>;
+  onEmergencyAlert(handler: (alert: unknown) => void): () => void;
 
   // Maintenance and updates
-  announceMaintenanceWindow(window: any): Promise<void>;
-  notifyAppUpdate(updateInfo: any): Promise<void>;
+  announceMaintenanceWindow(window: unknown): Promise<void>;
+  notifyAppUpdate(updateInfo: unknown): Promise<void>;
 
   // Performance monitoring
-  reportPerformanceMetric(metric: any): Promise<void>;
-  onPerformanceAlert(handler: (alert: any) => void): () => void;
+  reportPerformanceMetric(metric: unknown): Promise<void>;
+  onPerformanceAlert(handler: (alert: unknown) => void): () => void;
 }
 
 // ===============================
@@ -389,9 +393,9 @@ export interface RealtimeServiceFactory {
 
 export interface RealtimeServiceBuilder {
   withWebSocket(_config: WebSocketConfig): RealtimeServiceBuilder;
-  withSupabase(_config: any): RealtimeServiceBuilder;
-  withPushNotifications(_config: any): RealtimeServiceBuilder;
-  withSync(_config: any): RealtimeServiceBuilder;
+  withSupabase(_config: unknown): RealtimeServiceBuilder;
+  withPushNotifications(_config: unknown): RealtimeServiceBuilder;
+  withSync(_config: unknown): RealtimeServiceBuilder;
   enableLogging(enabled: boolean): RealtimeServiceBuilder;
   enableMetrics(enabled: boolean): RealtimeServiceBuilder;
   enableOfflineSupport(enabled: boolean): RealtimeServiceBuilder;
@@ -417,7 +421,7 @@ export interface MockRealtimeService extends RealtimeService {
   // Test helpers
   getReceivedMessages(): RealtimeMessage[];
   getSentMessages(): RealtimeMessage[];
-  getMethodCallHistory(): Array<{ method: string; args: any[]; timestamp: Date }>;
+  getMethodCallHistory(): Array<{ method: string; args: MockDataRecord[]; timestamp: Date }>;
 }
 
 export interface RealtimeServiceTestHarness {

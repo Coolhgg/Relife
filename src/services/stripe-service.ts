@@ -48,7 +48,7 @@ class StripeService {
       if (typeof window !== 'undefined') {
         const { loadStripe } = await import('@stripe/stripe-js');
         this.stripe = await loadStripe(config.publishableKey, {
-          apiVersion: _config.apiVersion as any,
+          apiVersion: _config.apiVersion as unknown,
           appInfo: _config.appInfo,
         });
       }
@@ -174,7 +174,7 @@ class StripeService {
           { userId, planId: request.planId, errorCode: _error.code }
         );
 
-        return { subscription: null as any, requiresAction: false, _error };
+        return { subscription: null as unknown, requiresAction: false, _error };
       }
 
       // Save subscription to our database
@@ -219,7 +219,7 @@ class StripeService {
       };
 
       return {
-        subscription: null as any,
+        subscription: null as unknown,
         requiresAction: false,
         _error: subscriptionError,
       };
@@ -257,7 +257,7 @@ class StripeService {
             'Unable to update subscription. Please try again.',
         };
 
-        return { subscription: null as any, effectiveDate: new Date(), _error };
+        return { subscription: null as unknown, effectiveDate: new Date(), _error };
       }
 
       // Update subscription in our database
@@ -291,7 +291,7 @@ class StripeService {
       };
 
       return {
-        subscription: null as any,
+        subscription: null as unknown,
         effectiveDate: new Date(),
         _error: subscriptionError,
       };
@@ -332,7 +332,7 @@ class StripeService {
             'Unable to cancel subscription. Please contact support.',
         };
 
-        return { subscription: null as any, effectiveDate: new Date(), _error };
+        return { subscription: null as unknown, effectiveDate: new Date(), _error };
       }
 
       // Update subscription in our database
@@ -377,7 +377,7 @@ class StripeService {
       };
 
       return {
-        subscription: null as any,
+        subscription: null as unknown,
         effectiveDate: new Date(),
         _error: subscriptionError,
       };
@@ -488,7 +488,7 @@ class StripeService {
     amount: number,
     currency: string = 'usd',
     customerId?: string,
-    metadata?: Record<string, any>
+    metadata?: Record<string, unknown>
   ): Promise<{ clientSecret: string; id: string }> {
     this.ensureInitialized();
 
@@ -534,7 +534,7 @@ class StripeService {
   /**
    * Confirm payment
    */
-  public async confirmPayment(clientSecret: string, paymentMethod?: any): Promise<any> {
+  public async confirmPayment(clientSecret: string, paymentMethod?: unknown): Promise<unknown> {
     this.ensureInitialized();
 
     if (!this.stripe) {
@@ -663,7 +663,7 @@ class StripeService {
   public async applyDiscountCode(
     customerId: string,
     code: string
-  ): Promise<{ valid: boolean; discount?: any }> {
+  ): Promise<{ valid: boolean; discount?: unknown }> {
     try {
       const response = await fetch('/api/stripe/coupons/validate', {
         method: 'POST',
@@ -767,7 +767,7 @@ class StripeService {
       throw new Error('Subscription plan not found');
     }
 
-    const pricing = plan.pricing as any;
+    const pricing = plan.pricing as unknown;
 
     if (billingInterval === 'month') {
       return pricing.monthly?.stripePriceId || '';
@@ -781,9 +781,7 @@ class StripeService {
   }
 
   private async saveSubscriptionToDatabase(
-    userId: string,
-    stripeSubscription: any
-  ): Promise<Subscription> {
+    userId: string, stripeSubscription: unknown): Promise<Subscription> {
     const subscriptionData = {
       user_id: userId,
       stripe_subscription_id: stripeSubscription.id,
@@ -825,9 +823,7 @@ class StripeService {
     return this.mapDatabaseSubscription(data);
   }
 
-  private async updateSubscriptionInDatabase(
-    stripeSubscription: any
-  ): Promise<Subscription> {
+  private async updateSubscriptionInDatabase(stripeSubscription: unknown): Promise<Subscription> {
     const updateData = {
       status: stripeSubscription.status,
       tier: this.getTierFromPriceId(stripeSubscription.items.data[0].price.id),
@@ -861,9 +857,7 @@ class StripeService {
   }
 
   private async savePaymentMethodToDatabase(
-    userId: string,
-    stripePaymentMethod: any
-  ): Promise<PaymentMethod> {
+    userId: string, stripePaymentMethod: unknown): Promise<PaymentMethod> {
     const paymentMethodData = {
       user_id: userId,
       stripe_payment_method_id: stripePaymentMethod.id,
@@ -896,9 +890,7 @@ class StripeService {
 
   private async saveCancellationSurvey(
     userId: string,
-    subscriptionId: string,
-    surveyData: any
-  ): Promise<void> {
+    subscriptionId: string, surveyData: unknown): Promise<void> {
     await supabase.from('cancellation_surveys').insert({
       user_id: userId,
       subscription_id: subscriptionId,
@@ -923,7 +915,7 @@ class StripeService {
   }
 
   // Mapping functions to convert database records to TypeScript interfaces
-  private mapDatabaseSubscription(data: any): Subscription {
+  private mapDatabaseSubscription(data: unknown): Subscription {
     return {
       id: data.id,
       userId: data.user_id,
@@ -947,7 +939,7 @@ class StripeService {
     };
   }
 
-  private mapDatabasePaymentMethod(data: any): PaymentMethod {
+  private mapDatabasePaymentMethod(data: unknown): PaymentMethod {
     return {
       id: data.id,
       userId: data.user_id,
@@ -961,7 +953,7 @@ class StripeService {
     };
   }
 
-  private mapDatabaseInvoice(data: any): Invoice {
+  private mapDatabaseInvoice(data: unknown): Invoice {
     return {
       id: data.id,
       userId: data.user_id,
@@ -985,7 +977,7 @@ class StripeService {
     };
   }
 
-  private mapStripeInvoice(stripeInvoice: any): Invoice {
+  private mapStripeInvoice(stripeInvoice: unknown): Invoice {
     return {
       id: '', // This would be populated when saved to database
       userId: '', // This would be populated when saved to database
@@ -1006,7 +998,7 @@ class StripeService {
       downloadUrl: stripeInvoice.invoice_pdf,
       receiptUrl: stripeInvoice.hosted_invoice_url,
       items:
-        stripeInvoice.lines?.data?.map((item: any) => ({
+        stripeInvoice.lines?.data?.map((item: unknown) => ({
           id: item.id,
           description: item.description,
           amount: item.amount,

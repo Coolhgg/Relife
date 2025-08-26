@@ -134,7 +134,7 @@ describe('VoiceService', () => {
 
     it('should handle missing SpeechSynthesis gracefully', async () => {
       const originalSpeechSynthesis = global.speechSynthesis;
-      delete (global as any).speechSynthesis;
+      delete (global as unknown).speechSynthesis;
 
       await expect(VoiceService.initialize()).resolves.not.toThrow();
 
@@ -230,7 +230,7 @@ describe('VoiceService', () => {
 
     it('should handle SpeechSynthesis errors gracefully', async () => {
       // Mock speech synthesis _error
-      mockSpeechSynthesis.speak.mockImplementation((utterance: any) => {
+      mockSpeechSynthesis.speak.mockImplementation((utterance: unknown) => {
         setTimeout(() => {
           if (utterance.onerror) {
             utterance.onerror(new Event('_error'));
@@ -276,7 +276,7 @@ describe('VoiceService', () => {
   });
 
   describe('voice mood configuration', () => {
-    let mockUtterance: any;
+    let mockUtterance: unknown;
 
     beforeEach(() => {
       mockUtterance = new mockSpeechSynthesisUtterance('test');
@@ -414,7 +414,7 @@ describe('VoiceService', () => {
     });
 
     it('should handle errors during preload gracefully', async () => {
-      mockSpeechSynthesis.speak.mockImplementation((utterance: any) => {
+      mockSpeechSynthesis.speak.mockImplementation((utterance: unknown) => {
         if (utterance.text.includes('_error')) {
           setTimeout(() => {
             if (utterance.onerror) {
@@ -512,7 +512,7 @@ describe('VoiceService', () => {
     });
 
     it('should handle voice test errors gracefully', async () => {
-      mockSpeechSynthesis.speak.mockImplementation((utterance: any) => {
+      mockSpeechSynthesis.speak.mockImplementation((utterance: unknown) => {
         setTimeout(() => {
           if (utterance.onerror) {
             utterance.onerror(new Event('_error'));
@@ -621,8 +621,8 @@ describe('VoiceService', () => {
     });
 
     it('should handle SpeechSynthesis not available', async () => {
-      delete (global as any).speechSynthesis;
-      delete (global as any).SpeechSynthesisUtterance;
+      delete (global as unknown).speechSynthesis;
+      delete (global as unknown).SpeechSynthesisUtterance;
 
       const result = await VoiceService.generateAlarmMessage(testAlarm, userId);
 
@@ -641,7 +641,7 @@ describe('VoiceService', () => {
 
     it('should handle utterance creation errors', async () => {
       const originalUtterance = global.SpeechSynthesisUtterance;
-      (global as any).SpeechSynthesisUtterance = null;
+      (global as unknown).SpeechSynthesisUtterance = null;
 
       const result = await VoiceService.generateAlarmMessage(testAlarm, userId);
 
@@ -655,7 +655,7 @@ describe('VoiceService', () => {
     });
 
     it('should handle synthesis speaking errors', async () => {
-      mockSpeechSynthesis.speak.mockImplementation((utterance: any) => {
+      mockSpeechSynthesis.speak.mockImplementation((utterance: unknown) => {
         setTimeout(() => {
           if (utterance.onerror) {
             utterance.onerror(

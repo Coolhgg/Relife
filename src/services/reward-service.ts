@@ -296,7 +296,7 @@ export class RewardService implements RewardSystem {
    */
   async checkAndUnlockRewards(
     userId: string,
-    activityData: any
+    activityData: unknown
   ): Promise<UserReward[]> {
     try {
       // Get AI recommendations for potential rewards
@@ -346,7 +346,7 @@ export class RewardService implements RewardSystem {
   async unlockReward(
     userId: string,
     rewardId: string,
-    metadata?: Record<string, any>
+    metadata?: Record<string, unknown>
   ): Promise<UserReward | null> {
     try {
       // Get reward details
@@ -523,7 +523,7 @@ export class RewardService implements RewardSystem {
     userId: string,
     giftId: string,
     paymentMethod: 'points' | 'premium',
-    metadata?: Record<string, any>
+    metadata?: Record<string, unknown>
   ): Promise<UserGiftInventory | null> {
     try {
       // Get gift details
@@ -1055,7 +1055,7 @@ export class RewardService implements RewardSystem {
   private async verifyUnlockConditions(
     userId: string,
     rewardId: string,
-    activityData: any
+    activityData: unknown
   ): Promise<boolean> {
     try {
       const reward = await this.getRewardById(rewardId);

@@ -146,7 +146,7 @@ const MockI18nProvider: React.FC<
     language,
     direction,
     isLoading: false,
-    t: jest.fn((key: string, options?: any) => {
+    t: jest.fn((key: string, options?: unknown) => {
       // Simple mock translation - returns key with options interpolated
       let translated = key;
       if (options) {
@@ -216,7 +216,7 @@ const MockPWAProvider: React.FC<
       testConsole.debug('Mock PWA update');
       return Promise.resolve({ success: true, _error: null });
     }),
-    share: jest.fn((data: any) => {
+    share: jest.fn((data: unknown) => {
       testConsole.debug('Mock PWA share', data);
       return Promise.resolve({ success: true, _error: null });
     }),
@@ -237,14 +237,14 @@ const MockPWAProvider: React.FC<
 // Mock Analytics Context Provider (Enhanced)
 const MockAnalyticsProvider: React.FC<MockProviderProps> = ({ children }) => {
   const mockAnalyticsValue = {
-    track: jest.fn((_event: string, properties?: any) => {
+    track: jest.fn((_event: string, properties?: unknown) => {
       testConsole.debug(`Mock analytics track: ${_event}`, properties);
     }),
-    trackPageView: jest.fn((pageName?: string, properties?: any) => {
+    trackPageView: jest.fn((pageName?: string, properties?: unknown) => {
       testConsole.debug(`Mock analytics page view: ${pageName}`, properties);
     }),
     trackFeatureUsage: jest.fn(
-      (featureName: string, action: string, properties?: any) => {
+      (featureName: string, action: string, properties?: unknown) => {
         testConsole.debug(
           `Mock analytics feature usage: ${featureName}.${action}`,
           properties
@@ -258,17 +258,17 @@ const MockAnalyticsProvider: React.FC<MockProviderProps> = ({ children }) => {
       testConsole.debug(`Mock analytics performance: ${metric} = ${value}`, context);
     }),
     trackUserInteraction: jest.fn(
-      (element: string, action: string, properties?: any) => {
+      (element: string, action: string, properties?: unknown) => {
         testConsole.debug(
           `Mock analytics interaction: ${element}.${action}`,
           properties
         );
       }
     ),
-    identify: jest.fn((userId: string, traits?: any) => {
+    identify: jest.fn((userId: string, traits?: unknown) => {
       testConsole.debug(`Mock analytics identify: ${userId}`, traits);
     }),
-    page: jest.fn((name: string, properties?: any) => {
+    page: jest.fn((name: string, properties?: unknown) => {
       testConsole.debug(`Mock analytics page: ${name}`, properties);
     }),
     isEnabled: jest.fn(() => true),
@@ -333,7 +333,7 @@ const MockFeatureAccessProvider: React.FC<
         return 'ultimate';
       return null;
     }),
-    trackFeatureAttempt: jest.fn((featureId: string, context?: Record<string, any>) => {
+    trackFeatureAttempt: jest.fn((featureId: string, context?: Record<string, unknown>) => {
       testConsole.debug(`Mock feature attempt tracked: ${featureId}`, context);
     }),
     refreshFeatureAccess: jest.fn(() => Promise.resolve()),
@@ -372,7 +372,7 @@ const MockScreenReaderProvider: React.FC<
         `Mock screen reader announcement: ${message} [${priority || 'polite'}]`
       );
     }),
-    updateSettings: jest.fn((settings: any) => {
+    updateSettings: jest.fn((settings: unknown) => {
       testConsole.debug('Mock screen reader settings updated', settings);
     }),
     describeElement: jest.fn((element: string) => {
@@ -399,7 +399,7 @@ const MockEnhancedThemeProvider: React.FC<
   MockProviderProps & {
     theme?: TestTheme;
     themes?: TestTheme[];
-    personalization?: any;
+    personalization?: unknown;
   }
 > = ({ children, theme, themes = [], personalization = {} }) => {
   const mockThemeValue = {
@@ -421,7 +421,7 @@ const MockEnhancedThemeProvider: React.FC<
     },
     isDarkMode: theme?.category === 'dark' || false,
     isSystemTheme: false,
-    setTheme: jest.fn((newTheme: any) => {
+    setTheme: jest.fn((newTheme: unknown) => {
       testConsole.debug(`Mock enhanced theme set to:`, newTheme);
     }),
     toggleTheme: jest.fn(() => {
@@ -430,25 +430,25 @@ const MockEnhancedThemeProvider: React.FC<
     resetTheme: jest.fn(() => {
       testConsole.debug('Mock enhanced theme reset');
     }),
-    updatePersonalization: jest.fn((updates: any) => {
+    updatePersonalization: jest.fn((updates: unknown) => {
       testConsole.debug('Mock personalization updated', updates);
     }),
-    updateColorPreference: jest.fn((property: string, value: any) => {
+    updateColorPreference: jest.fn((property: string, value: unknown) => {
       testConsole.debug(`Mock color preference updated: ${property} = ${value}`);
     }),
-    updateTypographyPreference: jest.fn((property: string, value: any) => {
+    updateTypographyPreference: jest.fn((property: string, value: unknown) => {
       testConsole.debug(`Mock typography preference updated: ${property} = ${value}`);
     }),
-    updateMotionPreference: jest.fn((property: string, value: any) => {
+    updateMotionPreference: jest.fn((property: string, value: unknown) => {
       testConsole.debug(`Mock motion preference updated: ${property} = ${value}`);
     }),
-    updateSoundPreference: jest.fn((property: string, value: any) => {
+    updateSoundPreference: jest.fn((property: string, value: unknown) => {
       testConsole.debug(`Mock sound preference updated: ${property} = ${value}`);
     }),
-    updateLayoutPreference: jest.fn((property: string, value: any) => {
+    updateLayoutPreference: jest.fn((property: string, value: unknown) => {
       testConsole.debug(`Mock layout preference updated: ${property} = ${value}`);
     }),
-    updateAccessibilityPreference: jest.fn((property: string, value: any) => {
+    updateAccessibilityPreference: jest.fn((property: string, value: unknown) => {
       testConsole.debug(
         `Mock accessibility preference updated: ${property} = ${value}`
       );
@@ -499,13 +499,13 @@ const MockPersonaAnalyticsProvider: React.FC<
   const mockPersonaAnalyticsValue = {
     currentPersona,
     personaConfidence: 0.85,
-    trackPersonaAction: jest.fn((action: string, context?: any) => {
+    trackPersonaAction: jest.fn((action: string, context?: unknown) => {
       testConsole.debug(
         `Mock _persona action tracked: ${action} for ${currentPersona}`,
         context
       );
     }),
-    updatePersonaDetection: jest.fn((factors: any) => {
+    updatePersonaDetection: jest.fn((factors: unknown) => {
       testConsole.debug(`Mock _persona detection updated`, factors);
     }),
     getPersonaInsights: jest.fn(() => ({
@@ -546,7 +546,7 @@ interface AllProvidersProps {
   enhancedTheme?: boolean;
   personaAnalytics?: boolean;
   currentPersona?: string;
-  personalization?: any;
+  personalization?: unknown;
 }
 
 const AllProviders: React.FC<AllProvidersProps> = ({
@@ -687,7 +687,7 @@ interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   enhancedTheme?: boolean;
   personaAnalytics?: boolean;
   currentPersona?: string;
-  personalization?: any;
+  personalization?: unknown;
 
   // Render options
   skipProviders?: boolean;

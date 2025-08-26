@@ -287,8 +287,8 @@ export const _createTestUser = <T extends CreateUserOptions = CreateUserOptions>
             id: generateId('sub'),
             userId,
             tier,
-            status: faker.helpers.arrayElement(['active', 'trialing']) as any,
-            billingInterval: faker.helpers.arrayElement(['month', 'year']) as any,
+            status: faker.helpers.arrayElement(['active', 'trialing']) as unknown,
+            billingInterval: faker.helpers.arrayElement(['month', 'year']) as unknown,
             amount: tier === 'premium' ? 999 : tier === 'ultimate' ? 1999 : 499,
             currency: 'usd',
             currentPeriodStart: new Date(),
@@ -317,7 +317,7 @@ export const _createTestUser = <T extends CreateUserOptions = CreateUserOptions>
           battlePremium: true,
           prioritySupport: tier === 'premium' || tier === 'pro',
           apiAccess: tier === 'pro' || tier === 'enterprise',
-        } as any)
+        } as unknown)
       : undefined,
     usage: premium ? createTestPremiumUsage() : undefined,
   };
@@ -346,7 +346,7 @@ export const _createTestUserPreferences = (
       theme: faker.helpers.arrayElement(['light', 'dark', 'auto', 'system']),
       language: faker.helpers.arrayElement(['en', 'es', 'fr', 'de', 'ja', 'hi']),
       timezone: faker.location.timeZone(),
-    } as any,
+    } as unknown,
     notificationsEnabled: faker.datatype.boolean({ probability: 0.8 }),
     soundEnabled: faker.datatype.boolean({ probability: 0.9 }),
     voiceDismissalSensitivity: faker.number.int({ min: 1, max: 10 }),
@@ -369,7 +369,7 @@ export const _createTestUserPreferences = (
     locationChallenges: faker.datatype.boolean({ probability: 0.6 }),
     photoChallenges: faker.datatype.boolean({ probability: 0.5 }),
     theme: faker.helpers.arrayElement(['light', 'dark', 'auto', 'system']),
-    gameTheme: { id: generateId('theme') } as any,
+    gameTheme: { id: generateId('theme') } as unknown,
   };
 };
 
@@ -456,13 +456,13 @@ export const _createTestAlarm = <T extends CreateAlarmOptions = CreateAlarmOptio
         ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][
           day
         ]
-    ) as any,
+    ) as unknown,
     recurringDays: days.map(
       day =>
         ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][
           day
         ]
-    ) as any,
+    ) as unknown,
     voiceMood: faker.helpers.arrayElement(
       premium ? [...COMMON_DATA.voiceMoods] : COMMON_DATA.voiceMoods.slice(0, 6) // Free tier only
     ) as VoiceMood,
@@ -496,7 +496,7 @@ export const _createTestAlarm = <T extends CreateAlarmOptions = CreateAlarmOptio
           adaptiveVolume: faker.datatype.boolean({ probability: 0.7 }),
           sleepCycleDetection: faker.datatype.boolean({ probability: 0.5 }),
           contextualMessages: faker.datatype.boolean({ probability: 0.8 }),
-        } as any)
+        } as unknown)
       : undefined,
   };
 };
@@ -611,7 +611,7 @@ export const _createTestBattleParticipant = (userId?: string): BattleParticipant
       accuracy: faker.number.float({ min: 0.5, max: 1.0, multipleOf: 0.01 }),
       streakDays: faker.number.int({ min: 0, max: 30 }),
       bonusPoints: faker.number.int({ min: 0, max: 500 }),
-    } as any,
+    } as unknown,
   };
 };
 
@@ -650,7 +650,7 @@ const createTestBattleSettings = (options: {
               allowedMisses: faker.number.int({ min: 0, max: 3 }),
             }
           : {},
-  } as any;
+  } as unknown;
 };
 
 const createTestBattlePrize = (options: { premium: boolean }) => {
@@ -661,7 +661,7 @@ const createTestBattlePrize = (options: { premium: boolean }) => {
     badges: randomSubset(['early-bird', 'consistent', 'warrior', 'champion'], 1, 2),
     premiumDays: premium ? faker.number.int({ min: 1, max: 30 }) : 0,
     customization: premium ? randomSubset(['theme', 'voice', 'sound'], 0, 2) : [],
-  } as any;
+  } as unknown;
 };
 
 // ===============================

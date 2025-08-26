@@ -18,8 +18,8 @@ export interface TestAssertionOptions {
 // Test state management
 export class TestStateManager {
   private static instance: TestStateManager;
-  private state: Map<string, any> = new Map();
-  private watchers: Map<string, Array<(value: any) => void>> = new Map();
+  private state: Map<string, unknown> = new Map();
+  private watchers: Map<string, Array<(value: unknown) => void>> = new Map();
 
   static getInstance(): TestStateManager {
     if (!TestStateManager.instance) {
@@ -28,7 +28,7 @@ export class TestStateManager {
     return TestStateManager.instance;
   }
 
-  set(key: string, value: any): void {
+  set(key: string, value: unknown): void {
     this.state.set(key, value);
     this.notifyWatchers(key, value);
   }
@@ -37,7 +37,7 @@ export class TestStateManager {
     return this.state.get(key);
   }
 
-  watch(key: string, callback: (value: any) => void): () => void {
+  watch(key: string, callback: (value: unknown) => void): () => void {
     if (!this.watchers.has(key)) {
       this.watchers.set(key, []);
     }
@@ -55,7 +55,7 @@ export class TestStateManager {
     };
   }
 
-  private notifyWatchers(key: string, value: any): void {
+  private notifyWatchers(key: string, value: unknown): void {
     const callbacks = this.watchers.get(key);
     if (callbacks) {
       callbacks.forEach(callback => callback(value));
@@ -67,11 +67,11 @@ export class TestStateManager {
     this.watchers.clear();
   }
 
-  snapshot(): Record<string, any> {
+  snapshot(): Record<string, unknown> {
     return Object.fromEntries(this.state.entries());
   }
 
-  restore(snapshot: Record<string, any>): void {
+  restore(snapshot: Record<string, unknown>): void {
     this.state.clear();
     Object.entries(snapshot).forEach(([key, value]) => {
       this.state.set(key, value);
@@ -243,7 +243,7 @@ export class TestHelpers {
   // Form testing utilities
   async submitForm(
     form: HTMLElement,
-    expectedResult: 'success' | '_error' | ((result: any) => boolean) = 'success'
+    expectedResult: 'success' | '_error' | ((result: unknown) => boolean) = 'success'
   ): Promise<void> {
     await act(async () => {
       await this.user.click(
@@ -435,7 +435,7 @@ export class TestHelpers {
   async verifyApiCall(
     mockSpy: jest.SpyInstance,
     expectedCalls: number,
-    expectedArgs?: any[]
+    expectedArgs?: unknown[]
   ): Promise<void> {
     await this.waitForCondition(() => {
       return mockSpy.mock.calls.length === expectedCalls;
@@ -656,7 +656,7 @@ export class TestHelpers {
   }
 
   // State management helpers
-  saveTestState(key: string, value: any): void {
+  saveTestState(key: string, value: unknown): void {
     this.stateManager.set(key, value);
   }
 
@@ -664,7 +664,7 @@ export class TestHelpers {
     return this.stateManager.get<T>(key);
   }
 
-  watchTestState(key: string, callback: (value: any) => void): () => void {
+  watchTestState(key: string, callback: (value: unknown) => void): () => void {
     return this.stateManager.watch(key, callback);
   }
 
@@ -672,11 +672,11 @@ export class TestHelpers {
     this.stateManager.clear();
   }
 
-  snapshotTestState(): Record<string, any> {
+  snapshotTestState(): Record<string, unknown> {
     return this.stateManager.snapshot();
   }
 
-  restoreTestState(snapshot: Record<string, any>): void {
+  restoreTestState(snapshot: Record<string, unknown>): void {
     this.stateManager.restore(snapshot);
   }
 }
@@ -687,7 +687,7 @@ export const testHelpers = new TestHelpers();
 // Enhanced assertion utilities
 export class TestAssertions {
   static async expectToLoad(
-    loadFunction: () => Promise<any>,
+    loadFunction: () => Promise<unknown>,
     maxTime: number = 3000
   ): Promise<void> {
     const startTime = performance.now();
@@ -731,14 +731,14 @@ export class TestAssertions {
     expect(isResponsive).toBe(true);
   }
 
-  static expectToMatchSnapshot(component: any, name?: string): void {
+  static expectToMatchSnapshot(component: unknown, name?: string): void {
     expect(component).toMatchSnapshot(name);
   }
 
   static async expectApiToHaveBeenCalled(
     mockFunction: jest.SpyInstance,
     times: number = 1,
-    withArgs?: any[]
+    withArgs?: unknown[]
   ): Promise<void> {
     await testHelpers.waitForCondition(() => {
       return mockFunction.mock.calls.length === times;
@@ -774,7 +774,7 @@ export class TestAssertions {
 export class RelifeTestUtils {
   private helpers = new TestHelpers();
 
-  async createTestAlarm(alarmData: Partial<any> = {}): Promise<void> {
+  async createTestAlarm(alarmData: Partial<unknown> = {}): Promise<void> {
     const defaultAlarm = {
       time: '07:00',
       label: 'Test Alarm',

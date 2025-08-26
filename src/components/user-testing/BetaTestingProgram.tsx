@@ -205,9 +205,9 @@ export function BetaTestingProgram() {
       status: 'draft',
       targetParticipants: newProgram.targetParticipants,
       currentParticipants: 0,
-      features: newProgram.features.filter((f: any) => f.trim()),
-      requirements: newProgram.requirements.filter((r: any) => r.trim()),
-      rewards: newProgram.rewards.filter((r: any) => r.trim()),
+      features: newProgram.features.filter((f: unknown) => f.trim()),
+      requirements: newProgram.requirements.filter((r: unknown) => r.trim()),
+      rewards: newProgram.rewards.filter((r: unknown) => r.trim()),
     };
 
     setPrograms([...programs, program]);
@@ -220,8 +220,8 @@ export function BetaTestingProgram() {
 
     const emails = inviteEmails
       .split('\n')
-      .map((email: any) => email.trim())
-      .filter((email: any) => email);
+      .map((email: unknown) => email.trim())
+      .filter((email: unknown) => email);
 
     // Mock sending invites
     console.log(
@@ -248,7 +248,7 @@ export function BetaTestingProgram() {
 
   const updateProgramStatus = (programId: string, newStatus: BetaProgram['status']) => {
     setPrograms(
-      programs.map((p: any) => (p.id === programId ? { ...p, status: newStatus } : p))
+      programs.map((p: unknown) => (p.id === programId ? { ...p, status: newStatus } : p))
     );
   };
 
@@ -390,7 +390,7 @@ export function BetaTestingProgram() {
 
         <TabsContent value="programs" className="space-y-4">
           <div className="grid gap-4">
-            {programs.map((program: any) => (
+            {programs.map((program: unknown) => (
               <Card key={program.id}>
                 <CardHeader>
                   <div className="flex items-start justify-between">
@@ -493,7 +493,7 @@ export function BetaTestingProgram() {
 
         <TabsContent value="testers" className="space-y-4">
           <div className="grid gap-4">
-            {testers.map((tester: any) => (
+            {testers.map((tester: unknown) => (
               <Card key={tester.id}>
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between">
@@ -502,7 +502,7 @@ export function BetaTestingProgram() {
                         <span className="font-medium text-gray-600">
                           {tester.name
                             .split(' ')
-                            .map((n: any) => n[0])
+                            .map((n: unknown) => n[0])
                             .join('')}
                         </span>
                       </div>
@@ -553,7 +553,7 @@ export function BetaTestingProgram() {
 
         <TabsContent value="feedback" className="space-y-4">
           <div className="grid gap-4">
-            {feedback.map((item: any) => (
+            {feedback.map((item: unknown) => (
               <Card key={item.id}>
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between mb-3">
@@ -578,7 +578,7 @@ export function BetaTestingProgram() {
                   <div className="flex items-center justify-between text-xs text-gray-500">
                     <span>
                       Program:{' '}
-                      {programs.find((p: any) => p.id === item.programId)?.name}
+                      {programs.find((p: unknown) => p.id === item.programId)?.name}
                     </span>
                     <span>{item.timestamp.toLocaleString()}</span>
                   </div>

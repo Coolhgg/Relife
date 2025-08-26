@@ -60,9 +60,9 @@ describe('PushNotificationService', () => {
     jest.clearAllMocks();
 
     // Reset service state
-    (PushNotificationService as any).isInitialized = false;
-    (PushNotificationService as any).hasPermission = false;
-    (PushNotificationService as any).currentToken = null;
+    (PushNotificationService as unknown).isInitialized = false;
+    (PushNotificationService as unknown).hasPermission = false;
+    (PushNotificationService as unknown).currentToken = null;
 
     // Setup default mocks
     (Capacitor.isNativePlatform as jest.Mock).mockReturnValue(false);
@@ -206,7 +206,7 @@ describe('PushNotificationService', () => {
 
     it('should not schedule if no permission', async () => {
       // Override permission
-      (PushNotificationService as any).hasPermission = false;
+      (PushNotificationService as unknown).hasPermission = false;
 
       const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
 
@@ -440,8 +440,8 @@ describe('PushNotificationService', () => {
       const consoleSpy = jest.spyOn(console, '_error').mockImplementation();
 
       // Mock sendPushToServer to throw an _error
-      const originalMethod = (PushNotificationService as any).sendPushToServer;
-      (PushNotificationService as any).sendPushToServer = jest
+      const originalMethod = (PushNotificationService as unknown).sendPushToServer;
+      (PushNotificationService as unknown).sendPushToServer = jest
         .fn()
         .mockRejectedValue(new Error('Network _error'));
 
@@ -453,7 +453,7 @@ describe('PushNotificationService', () => {
       );
 
       // Restore original method
-      (PushNotificationService as any).sendPushToServer = originalMethod;
+      (PushNotificationService as unknown).sendPushToServer = originalMethod;
       consoleSpy.mockRestore();
     });
 

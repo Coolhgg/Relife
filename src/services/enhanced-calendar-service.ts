@@ -113,7 +113,7 @@ export interface CalendarInsight {
   timeframe: 'daily' | 'weekly' | 'monthly';
   confidence: number;
   impact: 'low' | 'medium' | 'high';
-  data: any;
+  data: unknown;
   suggestions: string[];
   createdAt: Date;
 }
@@ -123,7 +123,7 @@ class EnhancedCalendarService {
   private isInitialized = false;
   private config: CalendarConfig;
   private cachedEvents: Map<string, CalendarEvent[]> = new Map();
-  private eventPatterns: Map<string, any> = new Map();
+  private eventPatterns: Map<string, unknown> = new Map();
   private suggestions: CalendarSuggestion[] = [];
   private insights: CalendarInsight[] = [];
   private lastSyncTime: Date | null = null;
@@ -591,7 +591,7 @@ class EnhancedCalendarService {
    */
   public async connectCalendar(
     type: 'google' | 'outlook' | 'apple' | 'caldav',
-    credentials: any
+    credentials: unknown
   ): Promise<string> {
     // This would implement actual OAuth flow in a real application
     const calendarId = `${type}_${Date.now()}`;
@@ -634,7 +634,7 @@ class EnhancedCalendarService {
    * Helper methods
    */
   private async fetchCalendarEvents(
-    calendar: any,
+    calendar: unknown,
     startDate: Date,
     endDate: Date
   ): Promise<CalendarEvent[]> {
@@ -676,8 +676,8 @@ class EnhancedCalendarService {
           end: eventEnd,
           isAllDay: false,
           status: 'confirmed',
-          importance: ['low', 'normal', 'high'][Math.floor(Math.random() * 3)] as any,
-          category: ['work', 'personal'][Math.floor(Math.random() * 2)] as any,
+          importance: ['low', 'normal', 'high'][Math.floor(Math.random() * 3)] as unknown,
+          category: ['work', 'personal'][Math.floor(Math.random() * 2)] as unknown,
           calendarId,
           location: Math.random() > 0.5 ? 'Office Building, 123 Main St' : undefined,
           travelTime:

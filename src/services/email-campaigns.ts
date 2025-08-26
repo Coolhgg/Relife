@@ -31,7 +31,7 @@ export interface EmailPlatformConfig {
 export interface SendEmailOptions {
   to: string;
   templateId: string;
-  variables?: Record<string, any>;
+  variables?: Record<string, unknown>;
   campaignId?: string;
   sequenceId?: string;
   scheduledAt?: Date;
@@ -133,12 +133,12 @@ export class EmailCampaignService {
   // Detect user persona based on behavior and preferences
   async detectUserPersona(
     _user: User,
-    behaviorData?: Record<string, any>
+    behaviorData?: Record<string, unknown>
   ): Promise<PersonaDetectionResult> {
     try {
       console.log(`Detecting _persona for user: ${_user.id}`);
 
-      const factors: any[] = [];
+      const factors: unknown[] = [];
       const scores: Record<PersonaType, number> = {
         struggling_sam: 0,
         busy_ben: 0,
@@ -483,7 +483,7 @@ export class EmailCampaignService {
 
     try {
       const campaignData = campaignConfig[persona];
-      const sequence = campaignData.sequences.find((seq: any) => seq.id === sequenceId);
+      const sequence = campaignData.sequences.find((seq: unknown) => seq.id === sequenceId);
 
       if (!sequence) {
         throw new Error(`Sequence ${sequenceId} not found for persona ${_persona}`);
@@ -738,7 +738,7 @@ export class EmailCampaignService {
   }
 
   // Handle webhook events from email platform
-  async handleWebhook(platform: string, _event: any): Promise<void> {
+  async handleWebhook(platform: string, _event: unknown): Promise<void> {
     try {
       console.log(`Received webhook from ${platform}:`, _event.type);
 
@@ -764,17 +764,17 @@ export class EmailCampaignService {
     }
   }
 
-  private async handleConvertKitWebhook(_event: any): Promise<void> {
+  private async handleConvertKitWebhook(_event: unknown): Promise<void> {
     // Handle ConvertKit webhook events
     console.log('Processing ConvertKit webhook:', _event);
   }
 
-  private async handleMailchimpWebhook(_event: any): Promise<void> {
+  private async handleMailchimpWebhook(_event: unknown): Promise<void> {
     // Handle Mailchimp webhook events
     console.log('Processing Mailchimp webhook:', _event);
   }
 
-  private async handleSendGridWebhook(_event: any): Promise<void> {
+  private async handleSendGridWebhook(_event: unknown): Promise<void> {
     // Handle SendGrid webhook events
     console.log('Processing SendGrid webhook:', _event);
   }

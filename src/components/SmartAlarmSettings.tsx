@@ -387,7 +387,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                     step="15"
                     value={sleepGoal.targetDuration}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setSleepGoal((prev: any) => ({
+                      setSleepGoal((prev: unknown) => ({
                         ...prev,
                         targetDuration: parseInt(e.target.value),
                       }))
@@ -415,7 +415,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                       type="time"
                       value={sleepGoal.targetBedtime}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setSleepGoal((prev: any) => ({
+                        setSleepGoal((prev: unknown) => ({
                           ...prev,
                           targetBedtime: e.target.value,
                         }))
@@ -429,7 +429,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                       type="time"
                       value={sleepGoal.targetWakeTime}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setSleepGoal((prev: any) => ({
+                        setSleepGoal((prev: unknown) => ({
                           ...prev,
                           targetWakeTime: e.target.value,
                         }))
@@ -454,7 +454,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                         type="checkbox"
                         checked={sleepGoal.consistency}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          setSleepGoal((prev: any) => ({
+                          setSleepGoal((prev: unknown) => ({
                             ...prev,
                             consistency: e.target.checked,
                           }))
@@ -476,7 +476,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                       step="15"
                       value={sleepGoal.weekendVariation}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setSleepGoal((prev: any) => ({
+                        setSleepGoal((prev: unknown) => ({
                           ...prev,
                           weekendVariation: parseInt(e.target.value),
                         }))

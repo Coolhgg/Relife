@@ -94,7 +94,7 @@ const ThemeCustomizationStudio: React.FC = () => {
 
   const handleColorChange = useCallback(
     (category: string, shade: string, color: string) => {
-      setCustomTheme((prev: any) => ({
+      setCustomTheme((prev: unknown) => ({
         ...prev,
         colors: {
           ...prev.colors,
@@ -108,8 +108,8 @@ const ThemeCustomizationStudio: React.FC = () => {
     []
   );
 
-  const handleTypographyChange = useCallback((property: string, value: any) => {
-    setCustomTheme((prev: any) => ({
+  const handleTypographyChange = useCallback((property: string, value: unknown) => {
+    setCustomTheme((prev: unknown) => ({
       ...prev,
       typography: {
         ...prev.typography,
@@ -120,7 +120,7 @@ const ThemeCustomizationStudio: React.FC = () => {
 
   const handleAnimationEffectChange = useCallback(
     (effect: keyof PremiumAnimationEffects, enabled: boolean) => {
-      setAnimationEffects((prev: any) => ({
+      setAnimationEffects((prev: unknown) => ({
         ...prev,
         [effect]: enabled,
       }));
@@ -313,7 +313,7 @@ const ThemeCustomizationStudio: React.FC = () => {
             <button
               key={tab.key}
               className={`studio-tab ${activeTab === tab.key ? 'active' : ''}`}
-              onClick={() => setActiveTab(tab.key as any)}
+              onClick={() => setActiveTab(tab.key as unknown)}
             >
               <span className="tab-icon">{tab.icon}</span>
               <span className="tab-label">{tab.label}</span>
@@ -337,7 +337,7 @@ const ThemeCustomizationStudio: React.FC = () => {
                             <ColorPicker
                               key={`${category}-${shade}`}
                               color={color}
-                              onChange={(newColor: any) =>
+                              onChange={(newColor: unknown) =>
                                 handleColorChange(category, shade, newColor)
                               }
                               label={`${shade}`}
@@ -408,7 +408,7 @@ const ThemeCustomizationStudio: React.FC = () => {
                   <h4>Animation Intensity</h4>
                   <select
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      animationService.setAnimationIntensity(e.target.value as any)
+                      animationService.setAnimationIntensity(e.target.value as unknown)
                     }
                     className="intensity-select"
                   >
@@ -506,7 +506,7 @@ const ThemeCustomizationStudio: React.FC = () => {
                             type="text"
                             value={shadow}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                              setCustomTheme((prev: any) => ({
+                              setCustomTheme((prev: unknown) => ({
                                 ...prev,
                                 effects: {
                                   ...prev.effects,
@@ -538,7 +538,7 @@ const ThemeCustomizationStudio: React.FC = () => {
                             step="0.1"
                             value={value}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                              setCustomTheme((prev: any) => ({
+                              setCustomTheme((prev: unknown) => ({
                                 ...prev,
                                 effects: {
                                   ...prev.effects,

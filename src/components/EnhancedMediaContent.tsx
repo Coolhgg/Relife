@@ -269,7 +269,7 @@ export function EnhancedMediaContent({
 
   const playSound = useCallback(
     async (sound: CustomSound) => {
-      setPlayerState((prev: any) => ({ ...prev, loading: true, _error: null }));
+      setPlayerState((prev: unknown) => ({ ...prev, loading: true, _error: null }));
 
       try {
         // Stop current audio if playing
@@ -282,7 +282,7 @@ export function EnhancedMediaContent({
         const audioSource = await audioManager.playAudioFile(sound.fileUrl, {
           volume: playerState.volume,
           onEnded: () => {
-            setPlayerState((prev: any) => ({
+            setPlayerState((prev: unknown) => ({
               ...prev,
               isPlaying: false,
               currentTrack: null,
@@ -294,7 +294,7 @@ export function EnhancedMediaContent({
         if (audioSource) {
           currentAudioSource.current = audioSource;
 
-          setPlayerState((prev: any) => ({
+          setPlayerState((prev: unknown) => ({
             ...prev,
             isPlaying: true,
             currentTrack: sound.id,
@@ -309,7 +309,7 @@ export function EnhancedMediaContent({
             if (currentAudioSource.current === audioSource) {
               const elapsed = (performance.now() - startTime) / 1000;
 
-              setPlayerState((prev: any) => ({
+              setPlayerState((prev: unknown) => ({
                 ...prev,
                 currentTime: Math.min(elapsed, sound.duration),
               }));
@@ -326,7 +326,7 @@ export function EnhancedMediaContent({
       } catch (_error) {
         console.error('Error playing sound:', _error);
 
-        setPlayerState((prev: any) => ({
+        setPlayerState((prev: unknown) => ({
           ...prev,
           loading: false,
           error: error instanceof Error ? _error.message : 'Unknown _error',
@@ -349,7 +349,7 @@ export function EnhancedMediaContent({
       currentAudioSource.current = null;
     }
 
-    setPlayerState((prev: any) => ({
+    setPlayerState((prev: unknown) => ({
       ...prev,
       isPlaying: false,
       currentTrack: null,
@@ -359,7 +359,7 @@ export function EnhancedMediaContent({
   const handleVolumeChange = useCallback((newVolume: number[]) => {
     const volume = newVolume[0] / 100;
 
-    setPlayerState((prev: any) => ({ ...prev, volume }));
+    setPlayerState((prev: unknown) => ({ ...prev, volume }));
 
     // Update current audio volume if playing
     // Note: Web Audio API doesn't allow real-time volume changes easily
@@ -370,7 +370,7 @@ export function EnhancedMediaContent({
     async (playlist: Playlist) => {
       if (playlist.sounds.length === 0) return;
 
-      setPlayerState((prev: any) => ({
+      setPlayerState((prev: unknown) => ({
         ...prev,
         currentPlaylist: playlist.id,
       }));
@@ -405,7 +405,7 @@ export function EnhancedMediaContent({
     try {
       // Simulate upload progress
       const progressInterval = setInterval(() => {
-        setUploadProgress((prev: any) => {
+        setUploadProgress((prev: unknown) => {
           const next = prev + 10;
           if (next >= 100) {
             clearInterval(progressInterval);

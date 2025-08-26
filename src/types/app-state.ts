@@ -800,14 +800,14 @@ export const validateSubscriptionState = (state: SubscriptionState): boolean => 
 };
 
 // Type guards
-export const isAlarmState = (value: any): value is AlarmState => {
+export const isAlarmState = (value: unknown): value is AlarmState => {
   return value && validateAlarmState(value);
 };
 
-export const isUserState = (value: any): value is UserState => {
+export const isUserState = (value: unknown): value is UserState => {
   return value && validateUserState(value);
 };
 
-export const isSubscriptionState = (value: any): value is SubscriptionState => {
+export const isSubscriptionState = (value: unknown): value is SubscriptionState => {
   return value && validateSubscriptionState(value);
 };

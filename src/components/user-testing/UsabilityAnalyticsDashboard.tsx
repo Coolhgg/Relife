@@ -126,7 +126,7 @@ export function UsabilityAnalyticsDashboard() {
       totalEvents: events.length,
       averageEventsPerSession:
         sessions.length > 0 ? events.length / sessions.length : 0,
-      uniqueUsers: new Set(sessions.map((s: any) => s.userId)).size,
+      uniqueUsers: new Set(sessions.map((s: unknown) => s.userId)).size,
       bounceRate: 0.15, // Mock value
     };
   };
@@ -135,7 +135,7 @@ export function UsabilityAnalyticsDashboard() {
     const { events } = data;
 
     const clicksByPage = events
-      .filter((e: any) => e.type === 'click')
+      .filter((e: unknown) => e.type === 'click')
       .reduce(
         (acc, _event) => {
           const page = event.page || 'Unknown';
@@ -146,7 +146,7 @@ export function UsabilityAnalyticsDashboard() {
       );
 
     const navigationFlow = events
-      .filter((e: any) => e.type === 'navigation')
+      .filter((e: unknown) => e.type === 'navigation')
       .reduce(
         (acc, _event) => {
           const key = `${event.metadata.fromPage || 'Unknown'} → ${event.page}`;
@@ -157,7 +157,7 @@ export function UsabilityAnalyticsDashboard() {
       );
 
     const errorsByType = events
-      .filter((e: any) => e.type === 'error')
+      .filter((e: unknown) => e.type === 'error')
       .reduce(
         (acc, _event) => {
           const errorType = event.metadata._error || 'Unknown';
@@ -192,7 +192,7 @@ export function UsabilityAnalyticsDashboard() {
     const { feedback } = data;
 
     const ratingDistribution = feedback
-      .filter((f: any) => f.rating)
+      .filter((f: unknown) => f.rating)
       .reduce(
         (acc, f) => {
           acc[f.rating!] = (acc[f.rating!] || 0) + 1;
@@ -505,7 +505,7 @@ export function UsabilityAnalyticsDashboard() {
             <CardContent>
               {data.feedback.length > 0 ? (
                 <div className="space-y-4">
-                  {data.feedback.slice(0, 5).map((feedback: any) => (
+                  {data.feedback.slice(0, 5).map((feedback: unknown) => (
                     <div key={feedback.id} className="border rounded-lg p-4">
                       <div className="flex items-start justify-between mb-2">
                         <h4 className="font-medium">{feedback.title}</h4>
@@ -560,7 +560,7 @@ export function UsabilityAnalyticsDashboard() {
             <CardContent>
               {data.bugs.length > 0 ? (
                 <div className="space-y-4">
-                  {data.bugs.slice(0, 10).map((bug: any) => (
+                  {data.bugs.slice(0, 10).map((bug: unknown) => (
                     <div key={bug.id} className="border rounded-lg p-4">
                       <div className="flex items-start justify-between mb-2">
                         <h4 className="font-medium">{bug.title}</h4>

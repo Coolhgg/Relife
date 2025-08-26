@@ -500,12 +500,12 @@ export const _reactAnimationHelpers = {
   mockFramerMotion(): void {
     jest.mock('framer-motion', () => ({
       motion: {
-        div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-        button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
-        span: ({ children, ...props }: any) => <span {...props}>{children}</span>,
-        img: ({ children, ...props }: any) => <img {...props}>{children}</img>,
+        div: ({ children, ...props }: unknown) => <div {...props}>{children}</div>,
+        button: ({ children, ...props }: unknown) => <button {...props}>{children}</button>,
+        span: ({ children, ...props }: unknown) => <span {...props}>{children}</span>,
+        img: ({ children, ...props }: unknown) => <img {...props}>{children}</img>,
       },
-      AnimatePresence: ({ children }: any) => children,
+      AnimatePresence: ({ children }: unknown) => children,
       useAnimation: () => ({
         start: jest.fn(),
         stop: jest.fn(),
@@ -542,11 +542,11 @@ export const _reactAnimationHelpers = {
    */
   mockTransitionGroup(): void {
     jest.mock('react-transition-group', () => ({
-      CSSTransition: ({ children, ...props }: any) => {
+      CSSTransition: ({ children, ...props }: unknown) => {
         return props.in ? children : null;
       },
-      TransitionGroup: ({ children }: any) => children,
-      Transition: ({ children, ...props }: any) => {
+      TransitionGroup: ({ children }: unknown) => children,
+      Transition: ({ children, ...props }: unknown) => {
         return typeof children === 'function' ? children('entered') : children;
       },
     }));

@@ -36,7 +36,7 @@ class MockWebSocketManager implements WebSocketManager {
   private connectionInfo: WebSocketConnectionInfo | null = null;
   private metrics: WebSocketMetrics;
   private subscriptions: Map<string, WebSocketSubscription> = new Map();
-  private messageFilters: Array<(message: any) => boolean> = [];
+  private messageFilters: Array<(message: unknown) => boolean> = [];
   private heartbeatInterval: number = 30000;
   private heartbeatTimer: NodeJS.Timeout | null = null;
 
@@ -99,7 +99,7 @@ class MockWebSocketManager implements WebSocketManager {
         resolve(this.connectionInfo);
       });
 
-      this.connection!.addEventListener('close', (_event: any) => {
+      this.connection!.addEventListener('close', (_event: unknown) => {
         this.stopHeartbeat();
         this.metrics.connectionsDropped++;
 
@@ -112,7 +112,7 @@ class MockWebSocketManager implements WebSocketManager {
         }
       });
 
-      this.connection!.addEventListener('_error', (_event: any) => {
+      this.connection!.addEventListener('_error', (_event: unknown) => {
         const error: WebSocketError = {
           type: 'CONNECTION_FAILED',
           message: 'Connection _error',
@@ -129,7 +129,7 @@ class MockWebSocketManager implements WebSocketManager {
         reject(_error);
       });
 
-      this.connection!.addEventListener('message', (_event: any) => {
+      this.connection!.addEventListener('message', (_event: unknown) => {
         this.metrics.messagesReceived++;
         this.metrics.dataTransferred.received += event.data.length || 0;
 
@@ -160,7 +160,7 @@ class MockWebSocketManager implements WebSocketManager {
     }
   }
 
-  async send<T>(message: any): Promise<boolean> {
+  async send<T>(message: unknown): Promise<boolean> {
     if (!this.connection || this.connection.readyState !== MockWebSocket.OPEN) {
       return false;
     }
@@ -201,11 +201,11 @@ class MockWebSocketManager implements WebSocketManager {
     }
   }
 
-  addMessageFilter(filter: (message: any) => boolean): void {
+  addMessageFilter(filter: (message: unknown) => boolean): void {
     this.messageFilters.push(filter);
   }
 
-  removeMessageFilter(filter: (message: any) => boolean): void {
+  removeMessageFilter(filter: (message: unknown) => boolean): void {
     const _index = this.messageFilters.indexOf(filter);
     if (_index > -1) {
       this.messageFilters.splice(_index, 1);
@@ -383,7 +383,7 @@ describe('WebSocket Manager Service Integration Tests', () => {
     });
 
     it('should receive and process messages', async () => {
-      const receivedMessages: any[] = [];
+      const receivedMessages: unknown[] = [];
 
       const handlers: WebSocketEventHandlers = {
         onMessage: message => {
@@ -431,7 +431,7 @@ describe('WebSocket Manager Service Integration Tests', () => {
     });
 
     it('should filter messages based on custom filters', async () => {
-      const receivedMessages: any[] = [];
+      const receivedMessages: unknown[] = [];
 
       const handlers: WebSocketEventHandlers = {
         onMessage: message => {
@@ -468,7 +468,7 @@ describe('WebSocket Manager Service Integration Tests', () => {
     });
 
     it('should allow multiple filters', async () => {
-      const receivedMessages: any[] = [];
+      const receivedMessages: unknown[] = [];
 
       const handlers: WebSocketEventHandlers = {
         onMessage: message => {
@@ -504,7 +504,7 @@ describe('WebSocket Manager Service Integration Tests', () => {
     });
 
     it('should remove message filters', async () => {
-      const receivedMessages: any[] = [];
+      const receivedMessages: unknown[] = [];
 
       const handlers: WebSocketEventHandlers = {
         onMessage: message => {
@@ -515,7 +515,7 @@ describe('WebSocket Manager Service Integration Tests', () => {
       await wsManager.disconnect();
       await wsManager.connect(_config, handlers);
 
-      const alarmFilter = (message: any) => message.type?.startsWith('alarm_');
+      const alarmFilter = (message: unknown) => message.type?.startsWith('alarm_');
 
       wsManager.addMessageFilter(alarmFilter);
 
@@ -599,8 +599,8 @@ describe('WebSocket Manager Service Integration Tests', () => {
 
   describe('Heartbeat Mechanism', () => {
     it('should send heartbeat messages at specified intervals', async () => {
-      const sentMessages: any[] = [];
-      let originalSend: any;
+      const sentMessages: unknown[] = [];
+      let originalSend: unknown;
 
       const handlers: WebSocketEventHandlers = {};
       await wsManager.connect(_config, handlers);
@@ -633,8 +633,8 @@ describe('WebSocket Manager Service Integration Tests', () => {
     });
 
     it('should stop heartbeat when disconnected', async () => {
-      const sentMessages: any[] = [];
-      let originalSend: any;
+      const sentMessages: unknown[] = [];
+      let originalSend: unknown;
 
       const handlers: WebSocketEventHandlers = {};
       await wsManager.connect(_config, handlers);
@@ -687,8 +687,8 @@ describe('WebSocket Manager Service Integration Tests', () => {
 
       // Send invalid JSON to trigger INVALID_MESSAGE error
       if (mockConnection) {
-        (mockConnection as any).triggerMessage('invalid-json{');
-        (mockConnection as any).triggerMessage('another-invalid-json[');
+        (mockConnection as unknown).triggerMessage('invalid-json{');
+        (mockConnection as unknown).triggerMessage('another-invalid-json[');
       }
 
       await new Promise(resolve => setTimeout(resolve, 100));

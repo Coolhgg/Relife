@@ -42,7 +42,7 @@ interface EnhancedSmartAlarmSettingsProps {
   onSave: (alarmData: Partial<EnhancedSmartAlarm>) => void;
 }
 
-const conditionIcons: Record<string, React.ComponentType<any>> = {
+const conditionIcons: Record<string, React.ComponentType<unknown>> = {
   weather: CloudRain,
   calendar: Calendar,
   sleep_debt: Moon,
@@ -132,8 +132,8 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
   };
 
   const updateCondition = (id: string, updates: Partial<ConditionBasedAdjustment>) => {
-    setConditions((prev: any) =>
-      prev.map((cond: any) => (cond.id === id ? { ...cond, ...updates } : cond))
+    setConditions((prev: unknown) =>
+      prev.map((cond: unknown) => (cond.id === id ? { ...cond, ...updates } : cond))
     );
   };
 
@@ -504,7 +504,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                 Condition-Based Adjustments
               </h3>
 
-              {conditions.map((condition: any) => {
+              {conditions.map((condition: unknown) => {
                 const Icon = conditionIcons[condition.type] || Settings;
                 return (
                   <div

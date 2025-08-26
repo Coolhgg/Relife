@@ -74,7 +74,7 @@ interface PredictiveInsight {
   suggestedActions: string[];
   impact: 'minimal' | 'moderate' | 'significant' | 'major';
   timeframe: string;
-  data: Record<string, any>;
+  data: Record<string, unknown>;
   createdAt: Date;
   expiresAt?: Date;
   applied?: Date;
@@ -147,9 +147,9 @@ export class PredictiveAnalyticsService {
           Object.entries(data).map(([k, v]) => [
             k,
             {
-              ...(v as any),
-              firstDetected: new Date((v as any).firstDetected),
-              lastUpdated: new Date((v as any).lastUpdated),
+              ...(v as unknown),
+              firstDetected: new Date((v as unknown).firstDetected),
+              lastUpdated: new Date((v as unknown).lastUpdated),
             },
           ])
         );
@@ -164,7 +164,7 @@ export class PredictiveAnalyticsService {
       const { value } = await Preferences.get({ key: INSIGHTS_HISTORY_KEY });
       if (value) {
         const data = JSON.parse(value);
-        this.insightsHistory = data.map((insight: any) => ({
+        this.insightsHistory = data.map((insight: unknown) => ({
           ...insight,
           createdAt: new Date(insight.createdAt),
           expiresAt: insight.expiresAt ? new Date(insight.expiresAt) : undefined,
@@ -764,7 +764,7 @@ export class PredictiveAnalyticsService {
     const insights: PredictiveInsight[] = [];
 
     // Analyze alarm frequency and distribution
-    const activeAlarms = alarms.filter((a: any) => a.enabled);
+    const activeAlarms = alarms.filter((a: unknown) => a.enabled);
     if (activeAlarms.length > 5) {
       insights.push({
         id: this.generateInsightId(),

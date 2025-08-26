@@ -101,7 +101,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
     const matchesSearch =
       sound.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       sound.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      sound.tags?.some((tag: any) =>
+      sound.tags?.some((tag: unknown) =>
         tag.toLowerCase().includes(searchQuery.toLowerCase())
       );
 
@@ -143,7 +143,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
   };
 
   const stopAllSounds = () => {
-    audioRefs.current.forEach((audio: any) => {
+    audioRefs.current.forEach((audio: unknown) => {
       if (!audio.paused) {
         audio.pause();
         audio.currentTime = 0;
@@ -322,7 +322,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                 {/* Sound Type Tabs */}
                 <Tabs
                   value={activeTab}
-                  onValueChange={(value: any) => setActiveTab(value as CustomSoundType)}
+                  onValueChange={(value: unknown) => setActiveTab(value as CustomSoundType)}
                 >
                   <TabsList>
                     {allowedSoundTypes.includes('uploaded') && (
@@ -475,8 +475,8 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                             </label>
                             <Select
                               value={generatedSoundConfig.type}
-                              onValueChange={(value: any) =>
-                                setGeneratedSoundConfig((prev: any) => ({
+                              onValueChange={(value: unknown) =>
+                                setGeneratedSoundConfig((prev: unknown) => ({
                                   ...prev,
                                   type: value,
                                 }))
@@ -509,7 +509,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                               max="2000"
                               value={generatedSoundConfig.frequency}
                               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                setGeneratedSoundConfig((prev: any) => ({
+                                setGeneratedSoundConfig((prev: unknown) => ({
                                   ...prev,
                                   frequency: parseInt(e.target.value),
                                 }))
@@ -529,7 +529,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                               step="0.5"
                               value={generatedSoundConfig.duration}
                               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                setGeneratedSoundConfig((prev: any) => ({
+                                setGeneratedSoundConfig((prev: unknown) => ({
                                   ...prev,
                                   duration: parseFloat(e.target.value),
                                 }))

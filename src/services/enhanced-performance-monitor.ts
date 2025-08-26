@@ -91,9 +91,9 @@ export interface PerformanceBudget {
 
 export interface PerformanceMonitorDependencies {
   analyticsService?: AnalyticsServiceInterface;
-  notificationService?: any;
-  errorHandler?: any;
-  webhookService?: any;
+  notificationService?: unknown;
+  errorHandler?: unknown;
+  webhookService?: unknown;
 }
 
 export interface PerformanceMetric {
@@ -101,7 +101,7 @@ export interface PerformanceMetric {
   value: number;
   timestamp: Date;
   tags?: Record<string, string>;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   severity?: SeverityLevel['name'];
   threshold?: ThresholdConfig;
 }
@@ -119,7 +119,7 @@ export interface UserInteraction {
   target: string;
   timestamp: Date;
   duration?: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface ResourceMetric {
@@ -505,7 +505,7 @@ export class EnhancedPerformanceMonitor
     this.emit('performance:threshold_updated', { metric, threshold });
   }
 
-  public async getMetrics(timeRange?: { start: Date; end: Date }): Promise<any> {
+  public async getMetrics(timeRange?: { start: Date; end: Date }): Promise<unknown> {
     let metrics = [...this.customMetrics];
 
     if (timeRange) {
@@ -530,7 +530,7 @@ export class EnhancedPerformanceMonitor
     };
   }
 
-  public async createAlert(_config: any): Promise<string> {
+  public async createAlert(_config: unknown): Promise<string> {
     const alert: PerformanceAlert = {
       id: this.generateAlertId(),
       metric: config.metric,
@@ -588,8 +588,7 @@ export class EnhancedPerformanceMonitor
   public trackUserInteraction(
     type: UserInteraction['type'],
     target: string,
-    metadata?: any
-  ): void {
+    metadata?: unknown): void {
     const interaction: UserInteraction = {
       type,
       target,
@@ -668,7 +667,7 @@ export class EnhancedPerformanceMonitor
       // Largest Contentful Paint (LCP)
       const lcpObserver = new PerformanceObserver(list => {
         const entries = list.getEntries();
-        const lastEntry = entries[entries.length - 1] as any;
+        const lastEntry = entries[entries.length - 1] as unknown;
         const value = lastEntry.renderTime || lastEntry.loadTime || 0;
         this.recordWebVital('LCP', value);
       });
@@ -677,7 +676,7 @@ export class EnhancedPerformanceMonitor
 
       // First Input Delay (FID)
       const fidObserver = new PerformanceObserver(list => {
-        list.getEntries().forEach((entry: any) => {
+        list.getEntries().forEach((entry: unknown) => {
           const value = entry.processingStart - entry.startTime;
           this.recordWebVital('FID', value);
         });
@@ -688,7 +687,7 @@ export class EnhancedPerformanceMonitor
       // Cumulative Layout Shift (CLS)
       let clsValue = 0;
       const clsObserver = new PerformanceObserver(list => {
-        list.getEntries().forEach((entry: any) => {
+        list.getEntries().forEach((entry: unknown) => {
           if (!entry.hadRecentInput) {
             clsValue += entry.value;
             this.recordWebVital('CLS', clsValue);
@@ -700,7 +699,7 @@ export class EnhancedPerformanceMonitor
 
       // First Contentful Paint (FCP)
       const paintObserver = new PerformanceObserver(list => {
-        list.getEntries().forEach((entry: any) => {
+        list.getEntries().forEach((entry: unknown) => {
           if (entry.name === 'first-contentful-paint') {
             this.recordWebVital('FCP', entry.startTime);
           }
@@ -728,7 +727,7 @@ export class EnhancedPerformanceMonitor
 
     try {
       const resourceObserver = new PerformanceObserver(list => {
-        list.getEntries().forEach((entry: any) => {
+        list.getEntries().forEach((entry: unknown) => {
           const resourceMetric: ResourceMetric = {
             name: entry.name,
             type: entry.initiatorType || 'unknown',
@@ -764,7 +763,7 @@ export class EnhancedPerformanceMonitor
     if (!('memory' in performance)) return;
 
     const trackMemory = () => {
-      const memory = (performance as any).memory;
+      const memory = (performance as unknown).memory;
       const memoryMetric: MemoryMetric = {
         usedJSHeapSize: memory.usedJSHeapSize,
         totalJSHeapSize: memory.totalJSHeapSize,
@@ -796,7 +795,7 @@ export class EnhancedPerformanceMonitor
     const memoryInterval = setInterval(trackMemory, 30000); // Every 30 seconds
 
     // Store interval for cleanup
-    (this as any).memoryInterval = memoryInterval;
+    (this as unknown).memoryInterval = memoryInterval;
   }
 
   private setupUserInteractionTracking(): void {
@@ -831,7 +830,7 @@ export class EnhancedPerformanceMonitor
   private setupNetworkTracking(): void {
     if (!('connection' in navigator)) return;
 
-    const connection = (navigator as any).connection;
+    const connection = (navigator as unknown).connection;
 
     const trackNetwork = () => {
       const networkMetric: NetworkMetric = {
@@ -894,7 +893,7 @@ export class EnhancedPerformanceMonitor
 
     // Check memory if available
     if ('memory' in performance) {
-      const memory = (performance as any).memory;
+      const memory = (performance as unknown).memory;
       this.recordMetric(
         'heap_usage_percent',
         (memory.usedJSHeapSize / memory.jsHeapSizeLimit) * 100
@@ -1050,8 +1049,8 @@ export class EnhancedPerformanceMonitor
         width: window.innerWidth,
         height: window.innerHeight,
       },
-      connection: (navigator as any).connection?.effectiveType,
-      memory: (performance as any).memory?.jsHeapSizeLimit,
+      connection: (navigator as unknown).connection?.effectiveType,
+      memory: (performance as unknown).memory?.jsHeapSizeLimit,
       hardwareConcurrency: navigator.hardwareConcurrency,
       devicePixelRatio: window.devicePixelRatio,
     };

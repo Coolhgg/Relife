@@ -35,7 +35,7 @@ export class SecureAlarmStorageService {
 
   private integrityCheckTimer: TimeoutHandle | null = null;
   private lastIntegrityCheck: Date | null = null;
-  private tamperedDetectionCallbacks: Array<(details: any) => void> = [];
+  private tamperedDetectionCallbacks: Array<(details: unknown) => void> = [];
 
   private constructor() {
     this.startIntegrityMonitoring();
@@ -131,7 +131,7 @@ export class SecureAlarmStorageService {
       }
 
       // Decrypt the payload
-      let decryptedPayload: any;
+      let decryptedPayload: unknown;
       try {
         decryptedPayload = SecurityService.decryptData(value);
       } catch (decryptError) {
@@ -336,7 +336,7 @@ export class SecureAlarmStorageService {
       // Get all keys to find backup keys
       const { keys } = await Preferences.keys();
       const backupKeys = keys
-        .filter((key: any) =>
+        .filter((key: unknown) =>
           key.startsWith(SecureAlarmStorageService.BACKUP_KEY_PREFIX)
         )
         .sort()
@@ -405,7 +405,7 @@ export class SecureAlarmStorageService {
     try {
       const { keys } = await Preferences.keys();
       const backupKeys = keys
-        .filter((key: any) =>
+        .filter((key: unknown) =>
           key.startsWith(SecureAlarmStorageService.BACKUP_KEY_PREFIX)
         )
         .sort()
@@ -493,7 +493,7 @@ export class SecureAlarmStorageService {
   /**
    * Handle tamper detection events
    */
-  private handleTamperDetection(type: string, details: any): void {
+  private handleTamperDetection(type: string, details: unknown): void {
     const tamperEvent = {
       type,
       details,
@@ -526,14 +526,14 @@ export class SecureAlarmStorageService {
   /**
    * Register callback for tamper detection events
    */
-  onTamperDetected(callback: (details: any) => void): void {
+  onTamperDetected(callback: (details: unknown) => void): void {
     this.tamperedDetectionCallbacks.push(callback);
   }
 
   /**
    * Calculate checksum for data integrity validation
    */
-  private calculateChecksum(data: any): string {
+  private calculateChecksum(data: unknown): string {
     const dataString = JSON.stringify(data, Object.keys(data).sort());
     return SecurityService.hashData(dataString);
   }
@@ -591,7 +591,7 @@ export class SecureAlarmStorageService {
   /**
    * Validate and sanitize retrieved alarm data
    */
-  private validateAndSanitizeAlarms(alarms: any[]): Alarm[] {
+  private validateAndSanitizeAlarms(alarms: unknown[]): Alarm[] {
     if (!Array.isArray(alarms)) {
       return [];
     }
@@ -614,7 +614,7 @@ export class SecureAlarmStorageService {
   /**
    * Log security events for audit trail
    */
-  private logSecurityEvent(_event: string, details: any): void {
+  private logSecurityEvent(_event: string, details: unknown): void {
     const logEntry = {
       event,
       details,
@@ -644,7 +644,7 @@ export class SecureAlarmStorageService {
 
       // Remove all backups
       const { keys } = await Preferences.keys();
-      const backupKeys = keys.filter((key: any) =>
+      const backupKeys = keys.filter((key: unknown) =>
         key.startsWith(SecureAlarmStorageService.BACKUP_KEY_PREFIX)
       );
 
@@ -666,12 +666,12 @@ export class SecureAlarmStorageService {
   /**
    * Get storage status and statistics
    */
-  async getStorageStatus(): Promise<any> {
+  async getStorageStatus(): Promise<unknown> {
     try {
       const { keys } = await Preferences.keys();
       const alarmDataExists = keys.includes(SecureAlarmStorageService.ALARMS_KEY);
       const eventDataExists = keys.includes(SecureAlarmStorageService.ALARM_EVENTS_KEY);
-      const backupCount = keys.filter((key: any) =>
+      const backupCount = keys.filter((key: unknown) =>
         key.startsWith(SecureAlarmStorageService.BACKUP_KEY_PREFIX)
       ).length;
 

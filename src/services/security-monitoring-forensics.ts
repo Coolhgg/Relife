@@ -15,7 +15,7 @@ interface SecurityEvent {
   severity: 'low' | 'medium' | 'high' | 'critical';
   source: string;
   userId?: string;
-  details: any;
+  details: unknown;
   resolved: boolean;
   actions: string[];
   fingerprint: string;
@@ -66,7 +66,7 @@ interface ForensicReport {
   timeframe: { start: Date; end: Date };
   eventCount: number;
   suspiciousActivities: SecurityEvent[];
-  threatAnalysis: any;
+  threatAnalysis: unknown;
   recommendations: string[];
   riskAssessment: {
     level: 'low' | 'medium' | 'high' | 'critical';
@@ -125,7 +125,7 @@ export class SecurityMonitoringForensicsService {
     type: SecurityEventType,
     severity: 'low' | 'medium' | 'high' | 'critical',
     source: string,
-    details: any,
+    details: unknown,
     userId?: string
   ): Promise<string> {
     try {
@@ -802,13 +802,13 @@ export class SecurityMonitoringForensicsService {
   private generateEventFingerprint(
     type: SecurityEventType,
     source: string,
-    details: any
+    details: unknown
   ): string {
     const fingerprintData = { type, source, details: JSON.stringify(details) };
     return SecurityService.hashData(JSON.stringify(fingerprintData));
   }
 
-  private sanitizeDetails(details: any): any {
+  private sanitizeDetails(details: unknown): any {
     // Remove sensitive information from details
     const sanitized = { ...details };
     delete sanitized.password;
@@ -848,7 +848,7 @@ export class SecurityMonitoringForensicsService {
       if (!value) return [];
 
       const events = SecurityService.decryptData(value);
-      return events.map((e: any) => ({
+      return events.map((e: unknown) => ({
         ...e,
         timestamp: new Date(e.timestamp),
       }));
@@ -1100,7 +1100,7 @@ export class SecurityMonitoringForensicsService {
   /**
    * Get security dashboard data
    */
-  async getSecurityDashboardData(): Promise<any> {
+  async getSecurityDashboardData(): Promise<unknown> {
     const metrics = await this.getSecurityMetrics();
     const activeAlerts = await this.getActiveAlerts();
     const recentEvents = await this.getRecentEvents(24 * 60 * 60 * 1000);

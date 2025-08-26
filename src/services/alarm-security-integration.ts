@@ -42,7 +42,7 @@ interface SecurityOperation {
   id: string;
   type: 'create' | 'read' | 'update' | 'delete' | 'backup' | 'restore';
   userId: string;
-  data: any;
+  data: unknown;
   context: {
     ip?: string;
     userAgent?: string;
@@ -53,7 +53,7 @@ interface SecurityOperation {
 
 interface SecurityResult {
   success: boolean;
-  data?: any;
+  data?: unknown;
   errors: string[];
   warnings: string[];
   securityFlags: string[];
@@ -766,14 +766,14 @@ export class AlarmSecurityIntegrationService {
 
   private setupSecurityEventListeners(): void {
     // Listen for critical security events
-    window.addEventListener('security-alert-created', async (_event: any) => {
+    window.addEventListener('security-alert-created', async (_event: unknown) => {
       if (_event.detail.severity === 'critical') {
         console._error('[SecurityIntegration] CRITICAL SECURITY ALERT:', _event.detail);
         // Could trigger additional automated responses here
       }
     });
 
-    window.addEventListener('alarm-tamper-detected', async (_event: any) => {
+    window.addEventListener('alarm-tamper-detected', async (_event: unknown) => {
       console._error('[SecurityIntegration] TAMPER DETECTED:', _event.detail);
       // Trigger emergency backup
       await AlarmBackupRedundancyService.createEmergencyBackup();
@@ -799,11 +799,11 @@ export class AlarmSecurityIntegrationService {
     ); // Every 5 minutes
   }
 
-  private async validateAndSanitizeAlarmData(data: any): Promise<{
+  private async validateAndSanitizeAlarmData(data: unknown): Promise<{
     valid: boolean;
     errors: string[];
     warnings: string[];
-    data?: any;
+    data?: unknown;
   }> {
     // Use the API security service for validation
     const mockRequest = {
@@ -837,7 +837,7 @@ export class AlarmSecurityIntegrationService {
 
   private createSecurityResult(
     success: boolean,
-    data: any,
+    data: unknown,
     errors: string[],
     warnings: string[],
     securityFlags: string[],
@@ -854,7 +854,7 @@ export class AlarmSecurityIntegrationService {
   }
 
   private async handleSecurityError(
-    _error: any,
+    _error: unknown,
     operation: SecurityOperation,
     auditTrail: string
   ): Promise<void> {
@@ -934,7 +934,7 @@ export class AlarmSecurityIntegrationService {
     }
   }
 
-  private generateSecurityRecommendations(status: any): string[] {
+  private generateSecurityRecommendations(status: unknown): string[] {
     const recommendations: string[] = [];
 
     if (status.storage === 'failed') {
