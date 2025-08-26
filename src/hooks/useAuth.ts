@@ -49,6 +49,7 @@ function useAuth(): AuthHook {
 
   const sessionTimerRef = useRef<TimeoutHandle | undefined>(undefined);
   const lastActivityRef = useRef<Date>(new Date());
+  const analytics = useRef(AnalyticsService.getInstance());
 
   // Security constants
   const SESSION_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
@@ -75,8 +76,8 @@ function useAuth(): AuthHook {
         }
 
         if (user) {
-          const analytics = AnalyticsService.getInstance();
-          analytics.trackFeatureUsage('user_session_restored', undefined, {
+          // Using cached analytics service instance
+          analytics.current.trackFeatureUsage('user_session_restored', undefined, {
             userId: user.id,
           });
         }
@@ -118,8 +119,8 @@ function useAuth(): AuthHook {
 
         startSessionManagement();
 
-        const analytics = AnalyticsService.getInstance();
-        analytics.trackFeatureUsage('user_signed_in', undefined, {
+        // Using cached analytics service instance
+        analytics.current.trackFeatureUsage('user_signed_in', undefined, {
           userId: session.user.id,
         });
       } else if (_event === 'SIGNED_OUT') {
@@ -134,8 +135,8 @@ function useAuth(): AuthHook {
           rateLimitRemaining: 10,
         }));
 
-        const analytics = AnalyticsService.getInstance();
-        analytics.trackFeatureUsage('user_signed_out');
+        // Using cached analytics service instance
+        analytics.current.trackFeatureUsage('user_signed_out');
       }
     });
 
@@ -245,7 +246,7 @@ function useAuth(): AuthHook {
     return now < authState.sessionExpiry && timeSinceActivity < INACTIVITY_TIMEOUT_MS;
   }, [authState.user, authState.sessionExpiry]);
 
-  const getRateLimitInfo = (action: string) => {
+  const getRateLimitInfo = useCallback((action: string) => {
     // This would typically be implemented with a more sophisticated rate limiting system
     // For now, we'll use the SecurityService rate limiting
     try {
@@ -261,7 +262,7 @@ function useAuth(): AuthHook {
     } catch {
       return { remaining: 0, resetTime: null };
     }
-  };
+  }, [authState.rateLimitRemaining]);
 
   const signIn = useCallback(async (email: string, password: string): Promise<void> => {
     // Rate limiting check
@@ -283,27 +284,27 @@ function useAuth(): AuthHook {
     }));
 
     try {
-      const analytics = AnalyticsService.getInstance();
+      // Using cached analytics service instance
       const startTime = performance.now();
 
       const { user, _error } = await SupabaseService.signIn(email, password);
 
       if (_error) {
         setAuthState((prev: AuthState) => ({ ...prev, isLoading: false, _error }));
-        analytics.trackError(new Error(_error), 'sign_in_failed');
+        analytics.current.trackError(new Error(_error), 'sign_in_failed');
         return;
       }
 
-      if (_user) {
+      if (user) {
         setAuthState((prev: AuthState) => ({
           ...prev,
-          _user,
+          user,
           isLoading: false,
           _error: null,
         }));
 
         const duration = performance.now() - startTime;
-        analytics.trackFeatureUsage('user_sign_in_success', duration, {
+        analytics.current.trackFeatureUsage('user_sign_in_success', duration, {
           userId: _user.id,
           method: 'email_password',
         });
@@ -315,8 +316,8 @@ function useAuth(): AuthHook {
         }));
       }
     } catch (error) {
-      const analytics = AnalyticsService.getInstance();
-      analytics.trackError(
+      // Using cached analytics service instance
+      analytics.current.trackError(
         error instanceof Error ? error : new Error(String(error)),
         'sign_in_error'
       );
@@ -359,14 +360,14 @@ function useAuth(): AuthHook {
     }));
 
     try {
-      const analytics = AnalyticsService.getInstance();
+      // Using cached analytics service instance
       const startTime = performance.now();
 
       const { user, error } = await SupabaseService.signUp(email, password, name);
 
       if (error) {
         setAuthState((prev: AuthState) => ({ ...prev, isLoading: false, _error: error }));
-        analytics.trackError(new Error(error), 'sign_up_failed');
+        analytics.current.trackError(new Error(error), 'sign_up_failed');
         return;
       }
 
@@ -379,7 +380,7 @@ function useAuth(): AuthHook {
         }));
 
         const duration = performance.now() - startTime;
-        analytics.trackFeatureUsage('user_sign_up_success', duration, {
+        analytics.current.trackFeatureUsage('user_sign_up_success', duration, {
           userId: user.id,
           method: 'email_password',
         });
@@ -391,8 +392,8 @@ function useAuth(): AuthHook {
         }));
       }
     } catch (error) {
-      const analytics = AnalyticsService.getInstance();
-      analytics.trackError(
+      // Using cached analytics service instance
+      analytics.current.trackError(
         error instanceof Error ? error : new Error(String(error)),
         'sign_up_error'
       );
@@ -415,7 +416,7 @@ function useAuth(): AuthHook {
     setAuthState((prev: AuthState) => ({ ...prev, isLoading: true, _error: null }));
 
     try {
-      const analytics = AnalyticsService.getInstance();
+      // Using cached analytics service instance
       const userId = authState.user?.id;
 
       const { error } = await SupabaseService.signOut();
@@ -432,12 +433,12 @@ function useAuth(): AuthHook {
         _error: null,
       }));
 
-      analytics.trackFeatureUsage('user_sign_out_success', undefined, {
+      analytics.current.trackFeatureUsage('user_sign_out_success', undefined, {
         userId,
       });
     } catch (error) {
-      const analytics = AnalyticsService.getInstance();
-      analytics.trackError(
+      // Using cached analytics service instance
+      analytics.current.trackError(
         error instanceof Error ? error : new Error(String(error)),
         'sign_out_error'
       );
@@ -476,7 +477,7 @@ function useAuth(): AuthHook {
     }));
 
     try {
-      const analytics = AnalyticsService.getInstance();
+      // Using cached analytics service instance
 
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/reset-password`,
@@ -488,7 +489,7 @@ function useAuth(): AuthHook {
           isLoading: false,
           _error: error.message,
         }));
-        analytics.trackError(new Error(error.message), 'password_reset_failed');
+        analytics.current.trackError(new Error(error.message), 'password_reset_failed');
         return;
       }
 
@@ -499,12 +500,12 @@ function useAuth(): AuthHook {
         forgotPasswordSuccess: true,
       }));
 
-      analytics.trackFeatureUsage('password_reset_requested', undefined, {
+      analytics.current.trackFeatureUsage('password_reset_requested', undefined, {
         email,
       });
     } catch (error) {
-      const analytics = AnalyticsService.getInstance();
-      analytics.trackError(
+      // Using cached analytics service instance
+      analytics.current.trackError(
         error instanceof Error ? error : new Error(String(error)),
         'password_reset_error'
       );
@@ -539,7 +540,7 @@ function useAuth(): AuthHook {
     setAuthState((prev: AuthState) => ({ ...prev, isLoading: true, _error: null }));
 
     try {
-      const analytics = AnalyticsService.getInstance();
+      // Using cached analytics service instance
 
       // Update user profile in Supabase
       const { error } = await supabase
@@ -573,13 +574,13 @@ function useAuth(): AuthHook {
         _error: null,
       }));
 
-      analytics.trackFeatureUsage('user_profile_updated', undefined, {
+      analytics.current.trackFeatureUsage('user_profile_updated', undefined, {
         userId: authState.user.id,
         updatedFields: Object.keys(updates),
       });
     } catch (error) {
-      const analytics = AnalyticsService.getInstance();
-      analytics.trackError(
+      // Using cached analytics service instance
+      analytics.current.trackError(
         error instanceof Error ? error : new Error(String(error)),
         'profile_update_error'
       );
@@ -601,8 +602,8 @@ function useAuth(): AuthHook {
     }
   }, [authState.user]);
 
-  return useMemo(() => ({
-    ...authState,
+  // Use stable reference for functions object - only recreate when functions change
+  const authMethods = useMemo(() => ({
     signIn,
     signUp,
     signOut,
@@ -612,7 +613,13 @@ function useAuth(): AuthHook {
     refreshSession,
     isSessionValid,
     getRateLimitInfo,
-  }), [authState, signIn, signUp, signOut, resetPassword, clearError, updateUserProfile, refreshSession, isSessionValid, getRateLimitInfo]);
+  }), [signIn, signUp, signOut, resetPassword, clearError, updateUserProfile, refreshSession, isSessionValid, getRateLimitInfo]);
+
+  // Only recreate the full object when state or methods actually change
+  return useMemo(() => ({
+    ...authState,
+    ...authMethods,
+  }), [authState, authMethods]);
 }
 
 export default useAuth;
