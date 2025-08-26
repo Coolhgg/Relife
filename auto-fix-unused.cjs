@@ -172,7 +172,7 @@ try {
   try {
     execSync('bunx prettier --write . --log-level=error', { stdio: 'inherit' });
     console.log('✅ Prettier formatting completed');
-  } catch (error) {
+  } catch (_error) {
     console.log('⚠️ Prettier formatting had issues, but continuing...');
   }
 } catch (error) {
