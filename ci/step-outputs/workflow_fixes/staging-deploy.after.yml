@@ -1,0 +1,435 @@
+# Staging Deployment Pipeline
+# Deploys to staging environment on develop branch or manual trigger
+
+name: 🚧 Staging Deployment
+
+on:
+  push:
+    branches: [develop]
+  workflow_dispatch:
+    inputs:
+      force_deploy:
+        description: "Force deployment (skip tests)"
+        required: false
+        default: false
+        type: boolean
+      environment:
+        description: "Target environment"
+        required: true
+        default: "staging"
+        type: choice
+        options:
+          - staging
+          - dev
+
+env:
+  NODE_VERSION: "20"
+  DOCKER_REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # Build and test for staging
+  build:
+    name: 🏗️ Build for Staging
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      image-tag: ${{ steps.version.outputs.image-tag }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --production=false
+
+      - name: Generate staging version
+        id: version
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          SHORT_SHA=${GITHUB_SHA:0:7}
+          TIMESTAMP=$(date +'%Y%m%d-%H%M')
+
+          if [[ "$BRANCH_NAME" == "develop" ]]; then
+            VERSION="staging-$TIMESTAMP-$SHORT_SHA"
+          else
+            VERSION="dev-$TIMESTAMP-$SHORT_SHA"
+          fi
+
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "image-tag=$VERSION" >> $GITHUB_OUTPUT
+          echo "Generated version: $VERSION"
+
+      - name: Run linting (unless forced)
+        if: ${{ !inputs.force_deploy }}
+        run: npm run lint
+
+      - name: Run type checking (unless forced)
+        if: ${{ !inputs.force_deploy }}
+        run: npx tsc --noEmit
+
+      - name: Run tests (unless forced)
+        if: ${{ !inputs.force_deploy }}
+        run: npm test -- --coverage=false
+
+      - name: Build staging application
+        run: npm run build
+        env:
+          VITE_APP_VERSION: ${{ steps.version.outputs.version }}
+          VITE_BUILD_TIME: ${{ github.event.head_commit.timestamp }}
+          VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY_STAGING }}
+          VITE_POSTHOG_KEY: ${{ secrets.POSTHOG_KEY_STAGING }}
+          VITE_SENTRY_DSN: ${{ secrets.SENTRY_DSN_STAGING }}
+          VITE_ENVIRONMENT: staging
+          VITE_API_URL: https://api-staging.relife.app
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push staging image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.image-tag }}
+            ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:staging-latest
+          labels: |
+            org.opencontainers.image.title=Relife Staging
+            org.opencontainers.image.description=Relife App - Staging Environment
+            org.opencontainers.image.version=${{ steps.version.outputs.version }}
+            org.opencontainers.image.revision=${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # Deploy to staging environment
+  deploy:
+    name: 🚀 Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: ${{ github.event.inputs.environment || 'staging' }}
+      url: ${{ github.event.inputs.environment == 'dev' && 'https://dev.relife.app' || 'https://staging.relife.app' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to staging server
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ github.event.inputs.environment == 'dev' && 'relife-dev' || 'relife-staging' }}
+          slot-name: production
+          images: ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.build.outputs.image-tag }}
+
+      - name: Wait for deployment
+        run: sleep 30
+
+      - name: Health check
+        run: |
+          STAGING_URL="${{ github.event.inputs.environment == 'dev' && 'https://dev.relife.app' || 'https://staging.relife.app' }}"
+
+          echo "Checking health endpoint..."
+          curl -f "$STAGING_URL/health" || exit 1
+
+          echo "Checking main app..."
+          curl -f "$STAGING_URL/" || exit 1
+
+          echo "Checking API..."
+          curl -f "$STAGING_URL/api/health" || exit 1
+
+          echo "✅ Health checks passed"
+
+      - name: Warm up application
+        run: |
+          STAGING_URL="${{ github.event.inputs.environment == 'dev' && 'https://dev.relife.app' || 'https://staging.relife.app' }}"
+
+          # Pre-load critical pages
+          curl -s "$STAGING_URL/" > /dev/null
+          curl -s "$STAGING_URL/manifest.json" > /dev/null
+          curl -s "$STAGING_URL/sw.js" > /dev/null
+
+          echo "✅ Application warmed up"
+
+  # Run staging tests
+  staging-tests:
+    name: 🧪 Staging Tests
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: ${{ !inputs.force_deploy }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --production=false
+
+      - name: Run Lighthouse audit
+        run: |
+          STAGING_URL="${{ github.event.inputs.environment == 'dev' && 'https://dev.relife.app' || 'https://staging.relife.app' }}"
+
+          npx lighthouse "$STAGING_URL" \
+            --output=json \
+            --output=html \
+            --output-path=./lighthouse-staging \
+            --chrome-flags="--no-sandbox --headless"
+
+      - name: Run PWA tests
+        run: |
+          STAGING_URL="${{ github.event.inputs.environment == 'dev' && 'https://dev.relife.app' || 'https://staging.relife.app' }}"
+
+          # Test PWA manifest
+          curl -f "$STAGING_URL/manifest.json" | jq .
+
+          # Test service worker
+          curl -f "$STAGING_URL/sw.js" > /dev/null
+
+          echo "✅ PWA tests passed"
+
+      - name: Run accessibility tests
+        run: |
+          STAGING_URL="${{ github.event.inputs.environment == 'dev' && 'https://dev.relife.app' || 'https://staging.relife.app' }}"
+
+          npx @axe-core/cli "$STAGING_URL" \
+            --save accessibility-staging.json \
+            --timeout 30000
+
+      - name: Performance check
+        run: |
+          # Parse Lighthouse results
+          PERF_SCORE=$(node -p "
+            const fs = require('fs');
+            const report = JSON.parse(fs.readFileSync('./lighthouse-staging.report.json'));
+            Math.round(report.categories.performance.score * 100);
+          ")
+
+          PWA_SCORE=$(node -p "
+            const fs = require('fs');
+            const report = JSON.parse(fs.readFileSync('./lighthouse-staging.report.json'));
+            Math.round(report.categories.pwa.score * 100);
+          ")
+
+          echo "Performance Score: $PERF_SCORE"
+          echo "PWA Score: $PWA_SCORE"
+
+          # Warning if below thresholds (not blocking for staging)
+          if [ $PERF_SCORE -lt 70 ]; then
+            echo "⚠️ Performance score ($PERF_SCORE) is below staging threshold (70)"
+          fi
+
+          if [ $PWA_SCORE -lt 80 ]; then
+            echo "⚠️ PWA score ($PWA_SCORE) is below staging threshold (80)"
+          fi
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: staging-test-results
+          path: |
+            lighthouse-staging.*
+            accessibility-staging.json
+
+  # Integration tests with external services
+  integration-tests:
+    name: 🔗 Integration Tests
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: ${{ !inputs.force_deploy }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --production=false
+
+      - name: Test Supabase integration
+        run: |
+          STAGING_URL="${{ github.event.inputs.environment == 'dev' && 'https://dev.relife.app' || 'https://staging.relife.app' }}"
+
+          # Test API endpoints
+          curl -X POST "$STAGING_URL/api/health" \
+            -H "Content-Type: application/json" \
+            -d '{"test": true}' || echo "API test failed (non-critical)"
+
+      - name: Test analytics integration
+        run: |
+          STAGING_URL="${{ github.event.inputs.environment == 'dev' && 'https://dev.relife.app' || 'https://staging.relife.app' }}"
+
+          # Send test analytics event
+          curl -X POST "$STAGING_URL/api/analytics" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "event": "staging_deployment_test",
+              "version": "${{ needs.build.outputs.version }}",
+              "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"
+            }' || echo "Analytics test failed (non-critical)"
+
+      - name: Test PWA installation
+        run: |
+          STAGING_URL="${{ github.event.inputs.environment == 'dev' && 'https://dev.relife.app' || 'https://staging.relife.app' }}"
+
+          # Check if app is installable
+          node -e "
+            const https = require('https');
+            https.get('$STAGING_URL/manifest.json', (res) => {
+              let data = '';
+              res.on('data', (chunk) => data += chunk);
+              res.on('end', () => {
+                const manifest = JSON.parse(data);
+                console.log('App name:', manifest.name);
+                console.log('Display mode:', manifest.display);
+                console.log('Start URL:', manifest.start_url);
+                console.log('✅ PWA manifest is valid');
+              });
+            }).on('error', (err) => {
+              console.error('❌ PWA manifest test failed:', err.message);
+              process.exit(1);
+            });
+          "
+
+  # Monitoring and alerting
+  monitoring:
+    name: 📊 Setup Monitoring
+    runs-on: ubuntu-latest
+    needs: [deploy, staging-tests]
+    if: always() && needs.deploy.result == 'success'
+
+    steps:
+      - name: Configure monitoring alerts
+        run: |
+          STAGING_URL="${{ github.event.inputs.environment == 'dev' && 'https://dev.relife.app' || 'https://staging.relife.app' }}"
+
+          # Configure uptime monitoring
+          curl -X POST "${{ secrets.UPTIME_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "type": "deployment",
+              "environment": "${{ github.event.inputs.environment || 'staging' }}",
+              "url": "'$STAGING_URL'",
+              "version": "${{ needs.build.outputs.version }}",
+              "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"
+            }' || echo "Uptime monitoring setup failed (non-critical)"
+
+      - name: Update Sentry environment
+        run: |
+          # Update Sentry with new deployment
+          curl -X POST "https://sentry.io/api/0/organizations/${{ secrets.SENTRY_ORG }}/releases/" \
+            -H "Authorization: Bearer ${{ secrets.SENTRY_AUTH_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "version": "${{ needs.build.outputs.version }}",
+              "projects": ["relife-staging"]
+            }' || echo "Sentry update failed (non-critical)"
+
+      - name: Monitor for 5 minutes
+        run: |
+          STAGING_URL="${{ github.event.inputs.environment == 'dev' && 'https://dev.relife.app' || 'https://staging.relife.app' }}"
+
+          echo "Monitoring staging deployment for 5 minutes..."
+
+          for i in {1..5}; do
+            echo "Health check $i/5..."
+            
+            if curl -f "$STAGING_URL/health" > /dev/null 2>&1; then
+              echo "✅ Health check passed"
+            else
+              echo "❌ Health check failed"
+            fi
+            
+            sleep 60
+          done
+
+          echo "✅ Monitoring complete"
+
+  # Notification
+  notify:
+    name: 📢 Notify Team
+    runs-on: ubuntu-latest
+    needs: [build, deploy, staging-tests, integration-tests, monitoring]
+    if: always()
+
+    steps:
+      - name: Determine overall status
+        id: status
+        run: |
+          DEPLOY_STATUS="${{ needs.deploy.result }}"
+          TEST_STATUS="${{ needs.staging-tests.result }}"
+
+          if [[ "$DEPLOY_STATUS" == "success" ]]; then
+            if [[ "$TEST_STATUS" == "success" || "${{ inputs.force_deploy }}" == "true" ]]; then
+              echo "status=success" >> $GITHUB_OUTPUT
+              echo "message=Staging deployment successful!" >> $GITHUB_OUTPUT
+            else
+              echo "status=warning" >> $GITHUB_OUTPUT
+              echo "message=Staging deployed but tests failed" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "status=failure" >> $GITHUB_OUTPUT
+            echo "message=Staging deployment failed" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Notify Slack
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ steps.status.outputs.status }}
+          channel: "#staging-deployments"
+          text: |
+            🚧 ${{ steps.status.outputs.message }}
+
+            **Environment:** ${{ github.event.inputs.environment || 'staging' }}
+            **Version:** ${{ needs.build.outputs.version }}
+            **URL:** ${{ github.event.inputs.environment == 'dev' && 'https://dev.relife.app' || 'https://staging.relife.app' }}
+
+            **Status:**
+            - Deploy: ${{ needs.deploy.result }}
+            - Tests: ${{ needs.staging-tests.result || 'skipped' }}
+            - Integration: ${{ needs.integration-tests.result || 'skipped' }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Update deployment status
+        run: |
+          STAGING_URL="${{ github.event.inputs.environment == 'dev' && 'https://dev.relife.app' || 'https://staging.relife.app' }}"
+
+          # Update deployment tracking
+          curl -X POST https://relife.app/api/deployments \
+            -H "Content-Type: application/json" \
+            -d '{
+              "environment": "${{ github.event.inputs.environment || 'staging' }}",
+              "version": "${{ needs.build.outputs.version }}",
+              "status": "${{ steps.status.outputs.status }}",
+              "url": "'$STAGING_URL'",
+              "commit": "${{ github.sha }}",
+              "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'",
+              "workflow_id": "${{ github.run_id }}"
+            }' || echo "Deployment tracking failed (non-critical)"

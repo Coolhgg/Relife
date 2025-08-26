@@ -1,0 +1,206 @@
+# Enhanced React Hooks CI Workflow
+# Specific validation for React hooks rules to prevent future violations
+
+name: 🎣 React Hooks Validation
+
+on:
+  pull_request:
+    branches: [main, develop]
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+  actions: read
+
+jobs:
+  hooks-validation:
+    name: 🔍 React Hooks Rules Check
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false || github.event_name == 'push'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: |
+          echo "🔧 Installing dependencies..."
+          bun install --frozen-lockfile || bun install
+
+      - name: Run React Hooks ESLint Check
+        id: hooks-check
+        run: |
+          echo "🎣 Running React hooks rules validation..."
+          
+          # Create output directory
+          mkdir -p ci/step-outputs
+          
+          # Run ESLint specifically for hooks rules with detailed output
+          bun run lint:eslint --format json --output-file ci/step-outputs/hooks-eslint-results.json || echo "ESLint check completed"
+          
+          # Extract hooks-specific violations
+          if [ -f "ci/step-outputs/hooks-eslint-results.json" ]; then
+            # Check for react-hooks/rules-of-hooks violations
+            HOOKS_VIOLATIONS=$(jq '[.[] | select(.messages[]?.ruleId == "react-hooks/rules-of-hooks")] | length' ci/step-outputs/hooks-eslint-results.json)
+            HOOKS_EXHAUSTIVE_DEPS=$(jq '[.[] | select(.messages[]?.ruleId == "react-hooks/exhaustive-deps")] | length' ci/step-outputs/hooks-eslint-results.json)
+            
+            echo "hooks_violations=$HOOKS_VIOLATIONS" >> $GITHUB_OUTPUT
+            echo "exhaustive_deps_warnings=$HOOKS_EXHAUSTIVE_DEPS" >> $GITHUB_OUTPUT
+            
+            # Create detailed report
+            echo "# 🎣 React Hooks Validation Report" > ci/step-outputs/hooks-report.md
+            echo "" >> ci/step-outputs/hooks-report.md
+            echo "**Date**: $(date)" >> ci/step-outputs/hooks-report.md
+            echo "**Commit**: ${{ github.sha }}" >> ci/step-outputs/hooks-report.md
+            echo "" >> ci/step-outputs/hooks-report.md
+            echo "## Results Summary" >> ci/step-outputs/hooks-report.md
+            echo "- \`react-hooks/rules-of-hooks\` violations: **$HOOKS_VIOLATIONS**" >> ci/step-outputs/hooks-report.md
+            echo "- \`react-hooks/exhaustive-deps\` warnings: **$HOOKS_EXHAUSTIVE_DEPS**" >> ci/step-outputs/hooks-report.md
+            echo "" >> ci/step-outputs/hooks-report.md
+            
+            if [ "$HOOKS_VIOLATIONS" -gt "0" ]; then
+              echo "## ❌ Hooks Rules Violations Found" >> ci/step-outputs/hooks-report.md
+              echo "" >> ci/step-outputs/hooks-report.md
+              echo "The following files contain \`react-hooks/rules-of-hooks\` violations:" >> ci/step-outputs/hooks-report.md
+              echo "" >> ci/step-outputs/hooks-report.md
+              
+              # Extract detailed violation information
+              jq -r '.[] | select(.messages[]?.ruleId == "react-hooks/rules-of-hooks") | "- **\(.filePath)**: \(.messages | map(select(.ruleId == "react-hooks/rules-of-hooks")) | length) violation(s)"' ci/step-outputs/hooks-eslint-results.json >> ci/step-outputs/hooks-report.md
+              
+              echo "" >> ci/step-outputs/hooks-report.md
+              echo "### Common Causes:" >> ci/step-outputs/hooks-report.md
+              echo "1. **Naming Convention**: Hooks must start with 'use' (e.g., \`useMyHook\`, not \`_useMyHook\`)" >> ci/step-outputs/hooks-report.md
+              echo "2. **Conditional Calls**: Hooks cannot be called inside conditions, loops, or nested functions" >> ci/step-outputs/hooks-report.md
+              echo "3. **Component vs Function**: Hooks can only be called from React components or other custom hooks" >> ci/step-outputs/hooks-report.md
+              echo "" >> ci/step-outputs/hooks-report.md
+              echo "### How to Fix:" >> ci/step-outputs/hooks-report.md
+              echo "- Ensure hook functions start with 'use' prefix" >> ci/step-outputs/hooks-report.md
+              echo "- Move hook calls to the top level of components" >> ci/step-outputs/hooks-report.md
+              echo "- Convert utility functions that use hooks to proper custom hooks" >> ci/step-outputs/hooks-report.md
+              
+              echo "❌ Found $HOOKS_VIOLATIONS react-hooks/rules-of-hooks violations"
+              exit 1
+            else
+              echo "## ✅ No Hooks Rules Violations" >> ci/step-outputs/hooks-report.md
+              echo "" >> ci/step-outputs/hooks-report.md
+              echo "All React hooks are properly following the rules of hooks!" >> ci/step-outputs/hooks-report.md
+              echo "✅ No react-hooks/rules-of-hooks violations found"
+            fi
+          else
+            echo "⚠️ ESLint results file not found"
+            exit 1
+          fi
+
+      - name: Upload hooks validation artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hooks-validation-report
+          path: |
+            ci/step-outputs/hooks-eslint-results.json
+            ci/step-outputs/hooks-report.md
+          retention-days: 30
+
+      - name: Comment PR with hooks status
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const hooksViolations = '${{ steps.hooks-check.outputs.hooks_violations }}';
+            const exhaustiveDeps = '${{ steps.hooks-check.outputs.exhaustive_deps_warnings }}';
+            
+            let reportContent = '';
+            try {
+              reportContent = fs.readFileSync('ci/step-outputs/hooks-report.md', 'utf8');
+            } catch (error) {
+              reportContent = 'Report file not found';
+            }
+            
+            const status = hooksViolations === '0' ? '✅' : '❌';
+            const title = hooksViolations === '0' ? 'React Hooks Validation Passed' : 'React Hooks Violations Found';
+            
+            const body = `## 🎣 ${title} ${status}
+            
+            ${reportContent}
+            
+            ---
+            
+            **Status**: ${hooksViolations === '0' ? 'PASSED' : 'FAILED'} | **Hooks Violations**: ${hooksViolations} | **Dependency Warnings**: ${exhaustiveDeps}
+            
+            ${hooksViolations !== '0' ? '🚨 **This PR cannot be merged until all hooks violations are resolved**' : '✅ **Ready for review - no hooks violations detected**'}
+            
+            <details>
+            <summary>📋 What This Check Does</summary>
+            
+            This automated check validates that all React hooks follow the Rules of Hooks:
+            
+            1. **Only call hooks at the top level** - Never in loops, conditions, or nested functions
+            2. **Only call hooks from React functions** - Components or custom hooks only
+            3. **Hook naming convention** - Custom hooks must start with 'use'
+            
+            This prevents runtime errors and ensures React can properly track state and effects.
+            </details>
+            `;
+
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const botComment = comments.find(comment => 
+              comment.user.type === 'Bot' && comment.body.includes('React Hooks Validation')
+            );
+            
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body
+              });
+            }
+
+      - name: Set check status
+        uses: actions/github-script@v7
+        if: always()
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const hooksViolations = '${{ steps.hooks-check.outputs.hooks_violations }}';
+            const conclusion = hooksViolations === '0' ? 'success' : 'failure';
+            const title = hooksViolations === '0' ? 'No hooks violations' : `${hooksViolations} hooks violations found`;
+            
+            await github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: 'React Hooks Validation',
+              head_sha: context.sha,
+              status: 'completed',
+              conclusion: conclusion,
+              output: {
+                title: title,
+                summary: hooksViolations === '0' 
+                  ? 'All React hooks are following the rules of hooks correctly.' 
+                  : `Found ${hooksViolations} react-hooks/rules-of-hooks violations that must be fixed before merging.`
+              }
+            });

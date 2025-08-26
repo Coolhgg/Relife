@@ -1,0 +1,444 @@
+# Consolidated Security Analysis & Monitoring
+# Replaces: security-analysis.yml, security-scanning.yml, enhanced-security-scan.yml, security-monitoring.yml
+name: 🔒 Security Analysis
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Weekly security scans (reduced from daily to save costs)
+    - cron: "0 2 * * 1" # Monday at 2 AM UTC
+  workflow_dispatch:
+    inputs:
+      scan-type:
+        description: "Type of security scan"
+        required: false
+        default: "full"
+        type: choice
+        options:
+          - full
+          - codeql-only
+          - dependencies-only
+          - quick
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_COLOR: 1
+
+jobs:
+  # CodeQL Security Analysis
+  codeql-analysis:
+    name: 🔍 CodeQL Analysis
+    runs-on: ubuntu-latest
+    if: github.event.inputs.scan-type != 'dependencies-only'
+    timeout-minutes: 360
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ["javascript", "typescript"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          queries: security-extended,security-and-quality
+          config-file: ./.github/codeql/codeql-config.yml
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          cd relife-campaign-dashboard && npm ci
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{matrix.language}}"
+
+  # Comprehensive Dependency Security Scanning
+  dependency-security:
+    name: 🔍 Dependency Security
+    runs-on: ubuntu-latest
+    if: github.event.inputs.scan-type != 'codeql-only'
+
+    outputs:
+      has-vulnerabilities: ${{ steps.evaluate.outputs.has-vulnerabilities }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies (npm)
+        run: npm ci
+
+      - name: Install dependencies (bun)
+        run: bun install --frozen-lockfile
+
+      - name: Dependency Review (PR only)
+        uses: actions/dependency-review-action@v4
+        if: github.event_name == 'pull_request'
+
+      - name: Run npm audit (main project)
+        id: npm_audit_main
+        run: |
+          echo "Running npm audit for main project..."
+          mkdir -p security-results
+          npm audit --audit-level=moderate --json > security-results/npm-audit-main.json || true
+          if [ -s security-results/npm-audit-main.json ]; then
+            CRITICAL=$(cat security-results/npm-audit-main.json | jq '.metadata.vulnerabilities.critical // 0')
+            HIGH=$(cat security-results/npm-audit-main.json | jq '.metadata.vulnerabilities.high // 0')
+            echo "critical=$CRITICAL" >> $GITHUB_OUTPUT
+            echo "high=$HIGH" >> $GITHUB_OUTPUT
+          else
+            echo "critical=0" >> $GITHUB_OUTPUT
+            echo "high=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run npm audit (dashboard)
+        id: npm_audit_dashboard
+        run: |
+          cd relife-campaign-dashboard
+          npm ci
+          echo "Running npm audit for dashboard..."
+          npm audit --audit-level=moderate --json > ../security-results/npm-audit-dashboard.json || true
+          if [ -s ../security-results/npm-audit-dashboard.json ]; then
+            CRITICAL=$(cat ../security-results/npm-audit-dashboard.json | jq '.metadata.vulnerabilities.critical // 0')
+            HIGH=$(cat ../security-results/npm-audit-dashboard.json | jq '.metadata.vulnerabilities.high // 0')
+            echo "critical_dashboard=$CRITICAL" >> $GITHUB_OUTPUT
+            echo "high_dashboard=$HIGH" >> $GITHUB_OUTPUT
+          else
+            echo "critical_dashboard=0" >> $GITHUB_OUTPUT
+            echo "high_dashboard=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run Bun audit
+        run: |
+          echo "Running Bun security audit..."
+          bun audit --json > security-results/bun-audit.json || true
+          bun audit || echo "Issues found - check results"
+
+      - name: Evaluate vulnerabilities
+        id: evaluate
+        run: |
+          MAIN_CRITICAL=${{ steps.npm_audit_main.outputs.critical }}
+          MAIN_HIGH=${{ steps.npm_audit_main.outputs.high }}
+          DASHBOARD_CRITICAL=${{ steps.npm_audit_dashboard.outputs.critical_dashboard }}
+          DASHBOARD_HIGH=${{ steps.npm_audit_dashboard.outputs.high_dashboard }}
+
+          echo "Main project - Critical: $MAIN_CRITICAL, High: $MAIN_HIGH"
+          echo "Dashboard - Critical: $DASHBOARD_CRITICAL, High: $DASHBOARD_HIGH"
+
+          TOTAL_CRITICAL=$((MAIN_CRITICAL + DASHBOARD_CRITICAL))
+          TOTAL_HIGH=$((MAIN_HIGH + DASHBOARD_HIGH))
+
+          if [ "$TOTAL_CRITICAL" -gt 0 ]; then
+            echo "❌ CRITICAL vulnerabilities found: $TOTAL_CRITICAL"
+            echo "has-vulnerabilities=true" >> $GITHUB_OUTPUT
+            exit 1
+          elif [ "$TOTAL_HIGH" -gt 5 ]; then
+            echo "⚠️  Warning: High vulnerabilities found: $TOTAL_HIGH (threshold: 5)"
+            echo "has-vulnerabilities=true" >> $GITHUB_OUTPUT
+          else
+            echo "✅ Security audit passed"
+            echo "has-vulnerabilities=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload audit results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: security-audit-results
+          path: security-results/
+          retention-days: 30
+
+  # License Compliance Check
+  license-compliance:
+    name: 📄 License Compliance
+    runs-on: ubuntu-latest
+    if: github.event.inputs.scan-type == 'full' || github.event_name == 'schedule'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install license-checker
+        run: npm install -g license-checker
+
+      - name: Check licenses (main project)
+        run: |
+          mkdir -p security-results
+          license-checker --production --json --out security-results/license-report-main.json
+          license-checker --production --summary > security-results/license-summary-main.txt
+
+      - name: Check licenses (dashboard)
+        run: |
+          cd relife-campaign-dashboard
+          npm ci
+          license-checker --production --json --out ../security-results/license-report-dashboard.json
+          license-checker --production --summary > ../security-results/license-summary-dashboard.txt
+
+      - name: Check for problematic licenses
+        run: |
+          echo "Checking for problematic licenses..."
+          if grep -q "GPL" security-results/license-summary-*.txt; then
+            echo "⚠️  GPL licenses found - review required"
+          else
+            echo "✅ No problematic licenses detected"
+          fi
+
+      - name: Upload license reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: license-reports
+          path: security-results/license-*
+          retention-days: 30
+
+  # Secrets Detection
+  secrets-detection:
+    name: 🔐 Secrets Detection
+    runs-on: ubuntu-latest
+    if: github.event.inputs.scan-type != 'dependencies-only'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run TruffleHog OSS
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: main
+          head: HEAD
+
+      - name: Code Security Pattern Check
+        run: |
+          echo "Checking for security patterns..."
+          mkdir -p security-results
+          echo "## Security Pattern Scan" > security-results/pattern-scan.txt
+          echo "**Date:** $(date)" >> security-results/pattern-scan.txt
+          echo "" >> security-results/pattern-scan.txt
+          
+          # Check for dangerous patterns
+          if grep -r "eval\|innerHTML" src/ --exclude-dir=__tests__ > security-results/dangerous-patterns.txt 2>/dev/null; then
+            echo "⚠️  Dangerous patterns found:" >> security-results/pattern-scan.txt
+            cat security-results/dangerous-patterns.txt >> security-results/pattern-scan.txt
+          else
+            echo "✅ No dangerous patterns found" >> security-results/pattern-scan.txt
+          fi
+          
+          echo "" >> security-results/pattern-scan.txt
+          
+          # Check for potential secrets (excluding test files)
+          if grep -r -i "password\|secret\|key\|token" src/ --exclude-dir=__tests__ --exclude-dir=__mocks__ > security-results/potential-secrets.txt 2>/dev/null; then
+            echo "⚠️  Potential secrets found (manual review needed):" >> security-results/pattern-scan.txt
+            cat security-results/potential-secrets.txt >> security-results/pattern-scan.txt
+          else
+            echo "✅ No hardcoded secrets detected" >> security-results/pattern-scan.txt
+          fi
+
+      - name: Upload security patterns
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: security-patterns
+          path: security-results/pattern-*
+          retention-days: 30
+
+  # Security Monitoring & Reporting
+  security-monitoring:
+    name: 📊 Security Monitoring
+    runs-on: ubuntu-latest
+    needs: [dependency-security]
+    if: always() && (github.event_name == 'schedule' || github.event.inputs.scan-type == 'full')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download security artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: security-*
+          path: ./security-reports/
+          merge-multiple: true
+        continue-on-error: true
+
+      - name: Generate security summary
+        run: |
+          echo "# Security Monitoring Report" > security-summary.md
+          echo "**Generated**: $(date -u)" >> security-summary.md
+          echo "**Branch**: ${{ github.ref_name }}" >> security-summary.md
+          echo "**Commit**: ${{ github.sha }}" >> security-summary.md
+          echo "" >> security-summary.md
+
+          if [ -f "./security-reports/npm-audit-main.json" ]; then
+            echo "## 📊 Dependency Audit Results" >> security-summary.md
+            MAIN_CRITICAL=$(cat ./security-reports/npm-audit-main.json | jq '.metadata.vulnerabilities.critical // 0')
+            MAIN_HIGH=$(cat ./security-reports/npm-audit-main.json | jq '.metadata.vulnerabilities.high // 0')
+            MAIN_MODERATE=$(cat ./security-reports/npm-audit-main.json | jq '.metadata.vulnerabilities.moderate // 0')
+            
+            echo "### Main Project" >> security-summary.md
+            echo "- Critical: $MAIN_CRITICAL" >> security-summary.md
+            echo "- High: $MAIN_HIGH" >> security-summary.md
+            echo "- Moderate: $MAIN_MODERATE" >> security-summary.md
+            echo "" >> security-summary.md
+          fi
+
+          if [ -f "./security-reports/npm-audit-dashboard.json" ]; then
+            DASH_CRITICAL=$(cat ./security-reports/npm-audit-dashboard.json | jq '.metadata.vulnerabilities.critical // 0')
+            DASH_HIGH=$(cat ./security-reports/npm-audit-dashboard.json | jq '.metadata.vulnerabilities.high // 0')
+            DASH_MODERATE=$(cat ./security-reports/npm-audit-dashboard.json | jq '.metadata.vulnerabilities.moderate // 0')
+            
+            echo "### Campaign Dashboard" >> security-summary.md
+            echo "- Critical: $DASH_CRITICAL" >> security-summary.md
+            echo "- High: $DASH_HIGH" >> security-summary.md
+            echo "- Moderate: $DASH_MODERATE" >> security-summary.md
+            echo "" >> security-summary.md
+          fi
+
+          echo "## 🛡️ Security Tools Status" >> security-summary.md
+          echo "- ✅ CodeQL: Active (weekly scans)" >> security-summary.md
+          echo "- ✅ NPM Audit: Active (CI integration)" >> security-summary.md
+          echo "- ✅ Bun Audit: Active (CI integration)" >> security-summary.md
+          echo "- ✅ TruffleHog: Active (secrets detection)" >> security-summary.md
+          echo "- ✅ License Check: Active (compliance monitoring)" >> security-summary.md
+          echo "- ✅ Pattern Check: Active (code analysis)" >> security-summary.md
+
+      - name: Upload security report
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-monitoring-report
+          path: security-summary.md
+          retention-days: 30
+
+  # Security Alert Notifications
+  security-alerts:
+    name: 🚨 Security Alerts
+    runs-on: ubuntu-latest
+    needs: [codeql-analysis, dependency-security, secrets-detection]
+    if: failure() || (needs.dependency-security.outputs.has-vulnerabilities == 'true')
+
+    steps:
+      - name: Create security alert issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = '🚨 Security Alert - Vulnerabilities Detected';
+            const body = `
+            ## 🚨 Security Alert
+            
+            Security vulnerabilities have been detected and require immediate attention.
+            
+            **Details:**
+            - Workflow: ${{ github.workflow }}
+            - Run ID: ${{ github.run_id }}
+            - Branch: ${{ github.ref_name }}
+            - Commit: ${{ github.sha }}
+            - Has Vulnerabilities: ${{ needs.dependency-security.outputs.has-vulnerabilities }}
+            
+            **Failed Jobs:**
+            - CodeQL Analysis: ${{ needs.codeql-analysis.result }}
+            - Dependency Security: ${{ needs.dependency-security.result }}
+            - Secrets Detection: ${{ needs.secrets-detection.result }}
+            
+            **Next Steps:**
+            1. Review the failed workflow logs
+            2. Check artifact downloads for detailed reports
+            3. Address critical and high-severity issues immediately
+            4. Update dependencies to resolve vulnerabilities
+            5. Update this issue with resolution status
+            
+            **Workflow URL:** https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            
+            ---
+            
+            This issue was automatically created by the Security Analysis workflow.
+            `;
+
+            // Check if similar issue already exists
+            const existingIssues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'security,critical',
+              state: 'open'
+            });
+            
+            const hasExistingAlert = existingIssues.data.some(issue => 
+              issue.title.includes('Security Alert')
+            );
+            
+            if (!hasExistingAlert) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: ['security', 'critical', 'needs-attention']
+              });
+            }
+
+  # Auto-merge dependabot security updates
+  dependabot-automerge:
+    name: 🤖 Auto-merge Security Updates
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]' && github.event_name == 'pull_request'
+
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v1
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Auto-approve and merge security patches
+        if: steps.metadata.outputs.update-type == 'version-update:semver-patch'
+        run: |
+          gh pr review --approve "$PR_URL"
+          gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
