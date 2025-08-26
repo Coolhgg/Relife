@@ -256,15 +256,17 @@ function AppContent() {
         }
 
         // Check and unlock any new rewards
-        await rewardService.checkAndUnlockRewards(auth.user?.id!);
+        if (auth.user?.id) {
+          await rewardService.checkAndUnlockRewards(auth.user.id);
+        }
 
         // Get the comprehensive reward system data from database
-        const rewards = await rewardService.getRewards();
-        const userRewards = await rewardService.getUserRewards(auth.user?.id!);
-        const insights = await rewardService.getUserInsights(auth.user?.id!);
-        const analytics = await rewardService.getUserAnalytics(auth.user?.id!);
-        const habits = await rewardService.getUserHabits(auth.user?.id!);
-        const nicheProfile = await rewardService.getUserNicheProfile(auth.user?.id!);
+        const _rewards = await rewardService.getRewards();
+        const userRewards = auth.user?.id ? await rewardService.getUserRewards(auth.user.id) : null;
+        const _insights = auth.user?.id ? await rewardService.getUserInsights(auth.user.id) : null;
+        const analytics = auth.user?.id ? await rewardService.getUserAnalytics(auth.user.id) : null;
+        const _habits = auth.user?.id ? await rewardService.getUserHabits(auth.user.id) : null;
+        const _nicheProfile = auth.user?.id ? await rewardService.getUserNicheProfile(auth.user.id) : null;
 
         // Build comprehensive reward system object
         const rewardSystem = {
@@ -744,7 +746,7 @@ function AppContent() {
       );
       setSyncStatus('_error');
     }
-  }, [auth.user, setSyncStatus]);
+  }, [auth.user, setSyncStatus, setAppState]);
 
   // Refresh rewards system based on current alarms and analytics
   // Handle quick alarm setup with preset configurations
@@ -894,7 +896,7 @@ function AppContent() {
         timestamp: new Date().toISOString(),
       });
     }
-  }, [auth.user, identify, track, reset, trackDailyActive]);
+  }, [auth.user, identify, track, reset, trackDailyActive, setAppState]);
 
   // Network status monitoring
   useEffect(() => {
@@ -1107,6 +1109,11 @@ function AppContent() {
     }
   }, [handleServiceWorkerMessage]);
 
+  // Extract complex expression for dependency array
+  const currentTriggeredAlarm = appState.alarm.currentlyTriggering.length > 0 
+    ? appState.alarm.alarms.find(a => appState.alarm.currentlyTriggering.includes(a.id)) || null 
+    : null;
+
   // Prevent accidental tab closure when alarms are active
   useEffect(() => {
     const handleBeforeUnload = (_event: BeforeUnloadEvent) => {
@@ -1134,8 +1141,8 @@ function AppContent() {
 
       // Check if there are enabled alarms that could ring soon
       if (tabProtectionSettings.settings.protectionTiming.upcomingAlarmWarning) {
-        // Performance optimization - useMemo for better performance
-        const enabledAlarms = useMemo(() => appState.alarm.alarms.filter((alarm: Alarm) => alarm.enabled), [appState.alarm.alarms]);
+        // Performance optimization - compute enabled alarms
+        const enabledAlarms = appState.alarm.alarms.filter((alarm: Alarm) => alarm.enabled);
         if (enabledAlarms.length > 0) {
           // Check if any alarm is within the configured threshold
           const now = new Date();
@@ -1194,7 +1201,8 @@ function AppContent() {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, [
-    appState.alarm.currentlyTriggering.length > 0 ? appState.alarm.alarms.find(a => appState.alarm.currentlyTriggering.includes(a.id)) || null : null,
+    appState.activeAlarm,
+    currentTriggeredAlarm,
     appState.alarm.alarms,
     announceProtectionWarning,
     tabProtectionSettings.settings,
@@ -2010,7 +2018,7 @@ function AppContent() {
         return (
           <ErrorBoundary context="GiftShop">
             <GiftShop
-              userId={auth.user?.id!}
+              userId={auth.user?.id || ''}
               onGiftPurchased={() => {
                 // Refresh reward system to update user points
                 refreshRewardsSystem();
