@@ -31,7 +31,7 @@ function main() {
     const belowThreshold = languages
       .filter(([_, lang]) => Math.round(lang.qualityScore?.overall || 0) < qualityThreshold
       )
-      .map(_([code]) => code);
+      .map(([code]) => code);
 
     console.log(`Average Quality: ${averageQuality}%`);
     console.log(

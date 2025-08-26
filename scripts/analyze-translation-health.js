@@ -43,7 +43,7 @@ function main() {
 
     if (belowThreshold.length > 0) {
       needsAttention = true;
-      qualityAlerts = belowThreshold.map(_([code, lang]) => ({
+      qualityAlerts = belowThreshold.map(([code, lang]) => ({
         language: code,
         quality: Math.round(lang.qualityScore?.overall || 0),
         issues: lang.culturalIssues?.filter(i => i.severity === 'critical').length || 0,
