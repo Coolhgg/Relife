@@ -3,7 +3,7 @@
  * Shows how to use your existing IndexedDB + Capacitor storage in mobile apps
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { MobileStorageService } from './src/services/mobile-storage';
 import { UnifiedStorageService } from './src/services/unified-storage';
 import type { Alarm } from './src/types/domain';
@@ -15,11 +15,7 @@ export function MobileStorageDemo() {
   const [storageInfo, setStorageInfo] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    initializeMobileStorage();
-  }, []);
-
-  const initializeMobileStorage = async () => {
+  const initializeMobileStorage = useCallback(async () => {
     try {
       // Initialize mobile storage with optimizations
       await mobileStorage.initializeMobile({
@@ -43,7 +39,11 @@ export function MobileStorageDemo() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [mobileStorage, setStorageInfo, setAlarms, setLoading]);
+
+  useEffect(() => {
+    initializeMobileStorage();
+  }, [initializeMobileStorage]);
 
   const saveAlarmMobile = async (alarm: Alarm) => {
     try {
@@ -190,35 +190,6 @@ export function MobileStorageDemo() {
       </div>
     </div>
   );
-}
-
-// Hook for using mobile storage in components
-export function useMobileStorage() {
-  const [mobileStorage] = useState(() => MobileStorageService.getInstance());
-  const [unifiedStorage] = useState(() => UnifiedStorageService.getInstance());
-
-  return {
-    // Mobile-optimized operations
-    saveAlarmOptimized: (alarm: Alarm) => mobileStorage.saveAlarmOptimized(alarm),
-    getAlarmsWithFallback: () => mobileStorage.getEnabledAlarmsWithFallback(),
-
-    // Storage management
-    getStorageInfo: () => mobileStorage.getMobileStorageInfo(),
-    performMaintenance: () => unifiedStorage.performMaintenance(),
-    checkHealth: () => unifiedStorage.checkStorageHealth(),
-
-    // Cache operations
-    clearCache: (tags?: string[]) => unifiedStorage.clearCache(tags),
-    setCache: <T,>(key: string, data: T, ttl?: number, tags?: string[]) =>
-      unifiedStorage.setCache(key, data, ttl, tags),
-    getCache: <T,>(key: string) => unifiedStorage.getCache<T>(key),
-
-    // Native storage integration
-    getCriticalAlarms: () => mobileStorage.getCriticalAlarmsFromNative(),
-
-    // Configuration
-    updateConfig: (config: any) => mobileStorage.updateConfig(config),
-  };
 }
 
 export default MobileStorageDemo;

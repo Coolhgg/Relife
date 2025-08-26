@@ -1,0 +1,398 @@
+name: Code Cleanup Automation
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Run weekly maintenance cleanup every Sunday at 4 AM UTC
+    - cron: "0 4 * * 0"
+  workflow_dispatch:
+    inputs:
+      cleanup_mode:
+        description: "Cleanup mode"
+        required: true
+        default: "analysis"
+        type: choice
+        options:
+          - analysis
+          - dry-run
+          - full-cleanup
+      target_directory:
+        description: "Target directory (optional, defaults to entire repo)"
+        required: false
+        default: ""
+        type: string
+
+jobs:
+  cleanup-analysis:
+    name: Code Cleanup Analysis
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.cleanup_mode == 'analysis')
+    outputs:
+      has_issues: ${{ steps.analysis.outputs.has_issues }}
+      total_issues: ${{ steps.analysis.outputs.total_issues }}
+      report_path: ${{ steps.analysis.outputs.report_path }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create reports directory
+        run: mkdir -p reports
+
+      - name: Run intelligent code analysis
+        id: analysis
+        run: |
+          echo "🔍 Running code analysis..."
+
+          # Determine target directory
+          TARGET_DIR="${{ github.event.inputs.target_directory || '.' }}"
+          echo "Analyzing directory: $TARGET_DIR"
+
+          # Run the analyzer
+          node scripts/intelligent-code-analyzer.mjs "$TARGET_DIR" > analysis-output.log 2>&1 || true
+
+          # Check if analysis report was generated
+          if [ -f "reports/code-analysis-report.json" ]; then
+            # Parse the results
+            TOTAL_UNUSED_IMPORTS=$(jq '.summary.totalUnusedImports // 0' reports/code-analysis-report.json)
+            TOTAL_UNUSED_VARS=$(jq '.summary.totalUnusedVariables // 0' reports/code-analysis-report.json)
+            SAFE_TO_REMOVE=$(jq '.summary.safeToRemove // 0' reports/code-analysis-report.json)
+            
+            TOTAL_ISSUES=$((TOTAL_UNUSED_IMPORTS + TOTAL_UNUSED_VARS))
+            
+            echo "total_issues=$TOTAL_ISSUES" >> $GITHUB_OUTPUT
+            echo "safe_to_remove=$SAFE_TO_REMOVE" >> $GITHUB_OUTPUT
+            echo "report_path=reports/code-analysis-report.json" >> $GITHUB_OUTPUT
+            
+            if [ "$TOTAL_ISSUES" -gt 0 ]; then
+              echo "has_issues=true" >> $GITHUB_OUTPUT
+            else
+              echo "has_issues=false" >> $GITHUB_OUTPUT
+            fi
+            
+            echo "📊 Analysis completed: $TOTAL_ISSUES total issues found ($SAFE_TO_REMOVE safe to remove)"
+          else
+            echo "⚠️ Analysis report not generated"
+            echo "has_issues=false" >> $GITHUB_OUTPUT
+            echo "total_issues=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload analysis report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cleanup-analysis-report-${{ github.run_id }}
+          path: |
+            reports/code-analysis-report.json
+            analysis-output.log
+          retention-days: 30
+
+      - name: Comment on PR with analysis
+        if: github.event_name == 'pull_request' && steps.analysis.outputs.has_issues == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+
+            let reportSummary = "## 🔍 Code Cleanup Analysis\n\n";
+
+            try {
+              if (fs.existsSync('reports/code-analysis-report.json')) {
+                const report = JSON.parse(fs.readFileSync('reports/code-analysis-report.json', 'utf8'));
+                
+                reportSummary += `### Summary\n`;
+                reportSummary += `- **Total Issues Found**: ${report.summary.totalUnusedImports + report.summary.totalUnusedVariables || 0}\n`;
+                reportSummary += `- **Unused Imports**: ${report.summary.totalUnusedImports || 0}\n`;
+                reportSummary += `- **Unused Variables**: ${report.summary.totalUnusedVariables || 0}\n`;
+                reportSummary += `- **Safe to Remove**: ${report.summary.safeToRemove || 0}\n`;
+                reportSummary += `- **Requires Manual Review**: ${(report.summary.totalUnusedImports + report.summary.totalUnusedVariables - report.summary.safeToRemove) || 0}\n\n`;
+                
+                if (report.summary.safeToRemove > 0) {
+                  reportSummary += `### 🚀 Recommendations\n`;
+                  reportSummary += `${report.summary.safeToRemove} items can be safely auto-removed. Consider running:\n`;
+                  reportSummary += `\`\`\`bash\n`;
+                  reportSummary += `node scripts/smart-cleanup.mjs --mode=auto-fix\n`;
+                  reportSummary += `\`\`\`\n\n`;
+                }
+                
+                reportSummary += `### 🛡️ Safety\n`;
+                reportSummary += `- All changes will create automatic backups\n`;
+                reportSummary += `- Essential imports (React, types, tests) are preserved\n`;
+                reportSummary += `- Cross-reference analysis prevents false positives\n\n`;
+                reportSummary += `📋 Full analysis report available in workflow artifacts.`;
+              }
+            } catch (error) {
+              reportSummary += `⚠️ Error reading analysis report: ${error.message}`;
+            }
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: reportSummary
+            });
+
+  dry-run-cleanup:
+    name: Dry Run Cleanup
+    runs-on: ubuntu-latest
+    needs: cleanup-analysis
+    if: (github.event_name == 'workflow_dispatch' && github.event.inputs.cleanup_mode == 'dry-run') || (github.event_name == 'schedule')
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create reports directory
+        run: mkdir -p reports
+
+      - name: Run dry-run cleanup
+        run: |
+          echo "🧪 Running dry-run cleanup..."
+
+          # Run cleanup orchestrator in dry-run mode
+          node scripts/cleanup-orchestrator.mjs --mode=dry-run --auto-approve=false > cleanup-dry-run.log 2>&1 || true
+
+          echo "📋 Dry-run completed"
+
+          # Show summary if available
+          if [ -f "reports/cleanup-summary.json" ]; then
+            echo "## Cleanup Summary"
+            cat reports/cleanup-summary.json | jq -r '.summary | "Files analyzed: \(.filesAnalyzed // 0), Issues found: \(.totalIssuesFound // 0), Safe fixes: \(.safeFixes // 0)"'
+          fi
+
+      - name: Upload dry-run results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cleanup-dry-run-results-${{ github.run_id }}
+          path: |
+            reports/
+            cleanup-dry-run.log
+          retention-days: 30
+
+  automated-cleanup:
+    name: Automated Cleanup (Full)
+    runs-on: ubuntu-latest
+    if: (github.event_name == 'workflow_dispatch' && github.event.inputs.cleanup_mode == 'full-cleanup') || (github.event_name == 'schedule')
+    environment:
+      name: cleanup-automation
+      url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config --global user.name 'Cleanup Bot'
+          git config --global user.email 'cleanup-bot@users.noreply.github.com'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create reports directory
+        run: mkdir -p reports
+
+      - name: Run automated cleanup
+        run: |
+          echo "🚀 Starting automated cleanup..."
+
+          # Create a new branch for cleanup changes
+          CLEANUP_BRANCH="automated-cleanup-$(date +%Y%m%d-%H%M%S)"
+          git checkout -b "$CLEANUP_BRANCH"
+
+          # Run the cleanup orchestrator
+          node scripts/cleanup-orchestrator.mjs --mode=auto-fix --auto-approve=true --create-backups=true > cleanup-full.log 2>&1 || true
+
+          # Check if any changes were made
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "📝 Changes detected, committing..."
+            
+            # Add all changes
+            git add .
+            
+            # Create commit message with summary
+            COMMIT_MSG="feat: automated code cleanup via workflow
+            
+            - Removed unused imports and variables
+            - Applied safe code quality fixes
+            - Created automatic backups for all changes
+            - Generated via cleanup automation on $(date)
+            
+            Co-authored-by: Cleanup Bot <cleanup-bot@users.noreply.github.com>"
+            
+            git commit -m "$COMMIT_MSG"
+            
+            # Push the branch
+            git push origin "$CLEANUP_BRANCH"
+            
+            # Create PR using GitHub CLI
+            CLEANUP_PR_BODY="## 🤖 Automated Code Cleanup
+            
+            This PR contains automated code cleanup changes generated by the intelligent cleanup system.
+            
+            ### 🔧 Changes Applied
+            - Removed unused imports with safety validation
+            - Fixed unused variable naming conventions
+            - Applied code quality improvements
+            - Created automatic backups for all modified files
+            
+            ### 🛡️ Safety Guarantees
+            - All essential imports (React, types, tests) preserved
+            - Cross-reference analysis prevented false positives
+            - Conservative approach with high-confidence fixes only
+            - Automatic backups created for rollback capability
+            
+            ### 📊 Cleanup Report
+            Detailed analysis and cleanup reports are available in the workflow artifacts.
+            
+            ### ✅ Review Checklist
+            - [ ] Verify no essential imports were removed
+            - [ ] Check that functionality is preserved
+            - [ ] Review backup files if rollback needed
+            - [ ] Validate CI/CD tests pass
+            
+            **Generated by**: [Cleanup Automation Workflow](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            **Cleanup Branch**: \`$CLEANUP_BRANCH\`"
+            
+            # Install GitHub CLI if not available
+            if ! command -v gh &> /dev/null; then
+              curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+              echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+              sudo apt update
+              sudo apt install gh
+            fi
+            
+            # Create the PR
+            gh pr create \
+              --title "🤖 Automated Code Cleanup - $(date +%Y-%m-%d)" \
+              --body "$CLEANUP_PR_BODY" \
+              --base main \
+              --head "$CLEANUP_BRANCH" \
+              --label "automated-cleanup,code-quality,scout"
+            
+            echo "✅ Created cleanup PR: $CLEANUP_BRANCH"
+            echo "cleanup_branch=$CLEANUP_BRANCH" >> $GITHUB_OUTPUT
+            
+          else
+            echo "✨ No cleanup changes needed - codebase is already clean!"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload cleanup results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: automated-cleanup-results-${{ github.run_id }}
+          path: |
+            reports/
+            cleanup-full.log
+            *.backup.*
+          retention-days: 90
+
+      - name: Notify on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue_body = `## 🚨 Automated Cleanup Failure
+
+            The automated code cleanup workflow failed during execution.
+
+            **Workflow Run**: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            **Branch**: ${{ github.ref_name }}
+            **Commit**: ${{ github.sha }}
+            **Triggered by**: ${{ github.event_name }}
+
+            Please review the workflow logs and investigate the issue.
+
+            ### Immediate Actions
+            1. Check workflow logs for error details
+            2. Verify cleanup scripts are functioning correctly  
+            3. Ensure repository permissions are adequate
+            4. Review any recent changes to cleanup configuration
+
+            ---
+            *This issue was automatically created by the cleanup automation workflow.*`;
+
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🚨 Cleanup Automation Failure - ${new Date().toISOString().split('T')[0]}`,
+              body: issue_body,
+              labels: ['bug', 'automation', 'cleanup', 'high-priority']
+            });
+
+  cleanup-metrics:
+    name: Cleanup Metrics & Reporting
+    runs-on: ubuntu-latest
+    needs: [cleanup-analysis, dry-run-cleanup, automated-cleanup]
+    if: always() && (needs.cleanup-analysis.result != 'cancelled' || needs.dry-run-cleanup.result != 'cancelled' || needs.automated-cleanup.result != 'cancelled')
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+
+      - name: Generate metrics summary
+        run: |
+          echo "## 📊 Cleanup Automation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Workflow Results" >> $GITHUB_STEP_SUMMARY
+          echo "- **Analysis**: ${{ needs.cleanup-analysis.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Dry Run**: ${{ needs.dry-run-cleanup.result || 'Skipped' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Full Cleanup**: ${{ needs.automated-cleanup.result || 'Skipped' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Key Metrics" >> $GITHUB_STEP_SUMMARY
+          if [ -n "${{ needs.cleanup-analysis.outputs.total_issues }}" ]; then
+            echo "- **Issues Found**: ${{ needs.cleanup-analysis.outputs.total_issues }}" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "- **Execution Time**: $(date)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Trigger**: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Artifacts Generated" >> $GITHUB_STEP_SUMMARY
+          ls -la artifacts/ 2>/dev/null | grep -E '^d' | wc -l | xargs -I {} echo "- **Artifact Sets**: {}" >> $GITHUB_STEP_SUMMARY || true
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🔗 **Full Details**: [Workflow Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY

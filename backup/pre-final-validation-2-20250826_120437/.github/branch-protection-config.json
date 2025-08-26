@@ -1,0 +1,187 @@
+{
+  "description": "Branch protection configuration with strict quality gates and accessibility requirements",
+  "branches": ["main", "develop"],
+  "protection": {
+    "required_status_checks": {
+      "strict": true,
+      "contexts": [
+        "🛡️ Quality Gates / dependencies",
+        "🛡️ Quality Gates / typescript",
+        "🛡️ Quality Gates / eslint",
+        "🛡️ Quality Gates / prettier",
+        "🛡️ Quality Gates / tests",
+        "🛡️ Quality Gates / integration-tests",
+        "🛡️ Quality Gates / build",
+        "🛡️ Quality Gates / quality-gates-status",
+        "Accessibility Testing / unit-a11y-tests",
+        "Accessibility Testing / e2e-a11y-tests",
+        "Accessibility Testing / lighthouse-audits",
+        "Accessibility Testing / pa11y-audits",
+        "Accessibility Testing / comprehensive-report"
+      ]
+    },
+    "enforce_admins": true,
+    "required_pull_request_reviews": {
+      "required_approving_review_count": 1,
+      "dismiss_stale_reviews": true,
+      "require_code_owner_reviews": true,
+      "dismissal_restrictions": {
+        "users": [],
+        "teams": ["accessibility-reviewers", "senior-developers"]
+      }
+    },
+    "restrictions": null,
+    "allow_force_pushes": false,
+    "allow_deletions": false
+  },
+  "accessibility_requirements": {
+    "automated_tests": {
+      "jest_axe": {
+        "required": true,
+        "max_failures": 0,
+        "description": "Component-level accessibility tests must pass"
+      },
+      "playwright_axe": {
+        "required": true,
+        "max_critical_violations": 0,
+        "max_serious_violations": 0,
+        "description": "E2E accessibility tests with zero critical/serious violations"
+      },
+      "lighthouse": {
+        "required": true,
+        "min_score": 90,
+        "description": "Lighthouse accessibility score must be 90 or higher"
+      },
+      "pa11y": {
+        "required": true,
+        "max_errors": 0,
+        "description": "pa11y WCAG 2.1 AA audit must pass with zero errors"
+      }
+    },
+    "manual_requirements": {
+      "pr_template": {
+        "required": true,
+        "accessibility_checklist": "Must complete accessibility testing checklist in PR template"
+      },
+      "artifacts": {
+        "required": ["accessibility-summary.json", "accessibility-report.html"],
+        "optional": [
+          "lighthouse-report.html",
+          "pa11y-results.json",
+          "playwright-report/"
+        ]
+      }
+    },
+    "review_requirements": {
+      "accessibility_reviewer": {
+        "required_for": [
+          "UI/UX changes",
+          "Component modifications",
+          "New interactive elements",
+          "Form implementations",
+          "Modal/dialog implementations"
+        ]
+      },
+      "senior_reviewer": {
+        "required_for": [
+          "Breaking accessibility changes",
+          "New accessibility patterns",
+          "Accessibility infrastructure changes"
+        ]
+      }
+    }
+  },
+  "setup_instructions": {
+    "github_cli": [
+      "gh api repos/Coolhgg/Relife/branches/main/protection --method PUT --input .github/branch-protection-config.json",
+      "gh api repos/Coolhgg/Relife/branches/develop/protection --method PUT --input .github/branch-protection-config.json"
+    ],
+    "github_ui": [
+      "1. Go to Repository Settings > Branches",
+      "2. Click 'Add rule' or edit existing rule for main/develop",
+      "3. Enable 'Require status checks to pass before merging'",
+      "4. Select accessibility testing workflow checks",
+      "5. Enable 'Require pull request reviews before merging'",
+      "6. Set required reviewers to 1",
+      "7. Enable 'Dismiss stale reviews when new commits are pushed'",
+      "8. Save protection rule"
+    ],
+    "required_secrets": [
+      "LHCI_GITHUB_APP_TOKEN - For Lighthouse CI GitHub integration (optional)"
+    ]
+  },
+  "enforcement_levels": {
+    "strict": {
+      "description": "All accessibility tests must pass, no exceptions",
+      "critical_violations": 0,
+      "serious_violations": 0,
+      "lighthouse_min_score": 95,
+      "manual_review_required": true
+    },
+    "moderate": {
+      "description": "Critical violations blocked, some serious violations allowed with approval",
+      "critical_violations": 0,
+      "serious_violations": 3,
+      "lighthouse_min_score": 90,
+      "manual_review_required": true
+    },
+    "minimal": {
+      "description": "Only critical violations blocked",
+      "critical_violations": 0,
+      "serious_violations": 10,
+      "lighthouse_min_score": 85,
+      "manual_review_required": false
+    }
+  },
+  "current_enforcement": "moderate",
+  "quality_gates": {
+    "enforcement_level": "strict",
+    "description": "Zero tolerance quality enforcement",
+    "gates": {
+      "dependencies": {
+        "required": true,
+        "description": "Security audit and lockfile validation must pass"
+      },
+      "typescript": {
+        "required": true,
+        "max_errors": 0,
+        "description": "TypeScript compilation must pass with zero errors"
+      },
+      "eslint": {
+        "required": true,
+        "max_warnings": 0,
+        "description": "ESLint must pass with zero warnings or errors"
+      },
+      "prettier": {
+        "required": true,
+        "description": "Code formatting must be consistent"
+      },
+      "tests": {
+        "required": true,
+        "min_coverage_lines": 80,
+        "min_coverage_branches": 80,
+        "description": "Unit tests must pass with 80%+ coverage"
+      },
+      "integration_tests": {
+        "required": true,
+        "description": "Integration tests for critical user flows must pass"
+      },
+      "build": {
+        "required": true,
+        "max_bundle_size": "2MB",
+        "description": "Production build must complete successfully"
+      }
+    }
+  },
+  "notes": [
+    "This configuration enforces strict quality gates with zero tolerance for violations",
+    "All quality gates must pass: TypeScript, ESLint, Prettier, Tests, Coverage, Build",
+    "Coverage threshold: 80% lines and 80% branches minimum",
+    "Security audit must pass for all dependencies",
+    "WCAG 2.1 AA compliance enforced for accessibility",
+    "Manual accessibility review required for UI/UX changes",
+    "Lighthouse accessibility score must be 90+ for production deployments",
+    "See docs/A11Y-Guide.md for accessibility implementation details",
+    "See .github/workflows/ci-quality-gates.yml for quality gate implementation"
+  ]
+}

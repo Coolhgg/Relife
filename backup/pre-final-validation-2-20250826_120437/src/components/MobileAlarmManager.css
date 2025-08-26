@@ -1,0 +1,436 @@
+/* Mobile Alarm Manager Styles */
+
+.mobile-alarm-manager {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Loading State */
+.mobile-alarm-manager.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #f0f0f0;
+  border-top: 3px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Header */
+.manager-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.manager-header h2 {
+  margin: 0;
+  color: #333;
+}
+
+.storage-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.storage-status.healthy {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.storage-status.warning {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+/* Error Message */
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  border: 1px solid #f5c6cb;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+/* Storage Information */
+.storage-info {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border: 1px solid #e9ecef;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.info-item label {
+  font-weight: 500;
+  color: #666;
+}
+
+.info-item span {
+  font-weight: 600;
+  color: #333;
+}
+
+.info-item span.online {
+  color: #28a745;
+}
+
+.info-item span.offline {
+  color: #dc3545;
+}
+
+.memory-warning {
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background-color: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 4px;
+  color: #856404;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* Alarms Section */
+.alarms-section {
+  margin-bottom: 2rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.section-header h3 {
+  margin: 0;
+  color: #333;
+}
+
+.add-button {
+  background-color: #667eea;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.add-button:hover:not(:disabled) {
+  background-color: #5a67d8;
+}
+
+.add-button:disabled {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+}
+
+/* Alarms List */
+.alarms-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #666;
+}
+
+.empty-state p {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.empty-state button {
+  background-color: #667eea;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.empty-state button:hover {
+  background-color: #5a67d8;
+}
+
+.alarm-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  transition: box-shadow 0.2s;
+}
+
+.alarm-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.alarm-info h4 {
+  margin: 0 0 0.25rem 0;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.alarm-time {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #667eea;
+  margin-right: 0.5rem;
+}
+
+.alarm-label {
+  font-size: 0.85rem;
+  color: #666;
+  background-color: #f1f3f4;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+}
+
+.alarm-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.alarm-actions button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.alarm-actions button:hover:not(:disabled) {
+  background-color: #f8f9fa;
+}
+
+.alarm-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.delete-button {
+  background-color: #dc3545 !important;
+  color: white !important;
+  border-color: #dc3545 !important;
+}
+
+.delete-button:hover:not(:disabled) {
+  background-color: #c82333 !important;
+}
+
+/* Actions Section */
+.actions-section {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.actions-section button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.sync-button {
+  background-color: #28a745;
+  color: white;
+}
+
+.sync-button:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.cache-button {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.cache-button:hover:not(:disabled) {
+  background-color: #e0a800;
+}
+
+.refresh-button {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.refresh-button:hover:not(:disabled) {
+  background-color: #138496;
+}
+
+.actions-section button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Features Info */
+.features-info {
+  background-color: #e7f3ff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #b3d9ff;
+}
+
+.features-info h4 {
+  margin: 0 0 1rem 0;
+  color: #0056b3;
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 0.5rem;
+}
+
+.features-list li {
+  font-size: 0.9rem;
+  color: #333;
+  padding: 0.25rem 0;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .mobile-alarm-manager {
+    padding: 0.75rem;
+  }
+
+  .manager-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .alarm-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .alarm-actions {
+    justify-content: stretch;
+  }
+
+  .alarm-actions button {
+    flex: 1;
+  }
+
+  .actions-section {
+    flex-direction: column;
+  }
+
+  .actions-section button {
+    width: 100%;
+  }
+
+  .features-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .mobile-alarm-manager {
+    color: #e0e0e0;
+  }
+
+  .manager-header h2,
+  .section-header h3,
+  .info-item span,
+  .alarm-info h4 {
+    color: #e0e0e0;
+  }
+
+  .storage-info {
+    background-color: #2d3748;
+    border-color: #4a5568;
+  }
+
+  .alarm-item {
+    background-color: #2d3748;
+    border-color: #4a5568;
+  }
+
+  .features-info {
+    background-color: #2a4a6b;
+    border-color: #3d5a73;
+  }
+
+  .features-info h4 {
+    color: #90cdf4;
+  }
+}
