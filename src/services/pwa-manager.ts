@@ -1,4 +1,4 @@
-import AnalyticsService from './analytics';
+import _AnalyticsService from './analytics';
 import { AnyFn } from 'src/types/utility-types';
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
@@ -177,7 +177,7 @@ export class PWAManager {
   private setupServiceWorkerMessaging() {
     if (!this.capabilities.serviceWorker) return;
 
-    navigator.serviceWorker.addEventListener('message', event => {
+    navigator.serviceWorker.addEventListener('message', _event => {
       const { type, data } = _event.data;
 
       switch (type) {
