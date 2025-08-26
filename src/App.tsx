@@ -1,6 +1,6 @@
 /// <reference lib="dom" />
 import React from 'react';
-import { useState, useEffect, useCallback, useReducer } from 'react';
+import { useState, useEffect, useCallback, useMemo, useReducer } from 'react';
 import { Provider } from 'react-redux';
 // Removed stub imports - using actual implementations
 import {
@@ -219,9 +219,8 @@ function AppContent() {
   const tabProtectionSettings = useTabProtectionSettings();
   const { announceProtectionWarning } = useTabProtectionAnnouncements({
     activeAlarm: appState.alarm.currentlyTriggering.length > 0 ? appState.alarm.alarms.find(a => appState.alarm.currentlyTriggering.includes(a.id)) || null : null,
-    // TODO: Performance optimization - Move to useMemo to prevent re-renders
-    // const enabledAlarms = useMemo(() => appState.alarms.filter(alarm => alarm.enabled), [appState.alarms]);
-    enabledAlarms: appState.alarms.filter((alarm: unknown) => alarm.enabled),
+    // Performance optimization - useMemo to prevent re-renders
+    enabledAlarms: useMemo(() => appState.alarm.alarms.filter((alarm: Alarm) => alarm.enabled), [appState.alarm.alarms]),
     settings: tabProtectionSettings.settings,
   });
 
@@ -235,13 +234,14 @@ function AppContent() {
     setShowPWAInstall(false);
   };
 
+  // Stable service references to avoid dependency issues
+  const rewardService = useMemo(() => RewardService.getInstance(), []);
+  const appAnalytics = useMemo(() => AppAnalyticsService.getInstance(), []);
+  const errorHandler = useMemo(() => ErrorHandler, []);
+
   const refreshRewardsSystem = useCallback(
     async (alarms: Alarm[] = appState.alarm.alarms) => {
       try {
-        // Get the database-backed reward service
-        const rewardService = RewardService.getInstance();
-
-        // Update user habits based on current alarms
         // Update user habits based on current alarms
         if (alarms.length > 0) {
           const habitData = {
@@ -282,21 +282,20 @@ function AppContent() {
         }));
 
         // Track rewards analysis
-        const appAnalytics = AppAnalyticsService.getInstance();
         appAnalytics.trackFeatureUsage('rewards_analysis', 'system_updated', {
           totalRewards: rewardSystem.unlockedRewards.length,
           level: rewardSystem.level,
           currentStreak: rewardSystem.currentStreak,
         });
       } catch (_error) {
-        ErrorHandler.handleError(
+        errorHandler.handleError(
           _error instanceof Error ? _error : new Error(String(_error)),
           'Failed to refresh rewards system',
           { context: 'rewards_refresh' }
         );
       }
     },
-    [appState.alarm.alarms, setAppState, auth.user?.id]
+    [appState.alarm.alarms, setAppState, auth.user?.id, rewardService, appAnalytics, errorHandler]
   );
 
   const loadUserAlarms = useCallback(async () => {
@@ -369,7 +368,7 @@ function AppContent() {
         { context: 'load_user_alarms', metadata: { userId: auth.user.id } }
       );
     }
-  }, [auth.user, setSyncStatus, refreshRewardsSystem]);
+  }, [auth.user, setSyncStatus, refreshRewardsSystem, setAppState]);
 
   // Handle alarm snooze functionality
   const handleAlarmSnooze = useCallback(
@@ -1135,9 +1134,8 @@ function AppContent() {
 
       // Check if there are enabled alarms that could ring soon
       if (tabProtectionSettings.settings.protectionTiming.upcomingAlarmWarning) {
-        // TODO: Performance optimization - Replace with useMemo for better performance
-        // const enabledAlarms = useMemo(() => appState.alarms.filter(alarm => alarm.enabled), [appState.alarms]);
-        const enabledAlarms = appState.alarms.filter((alarm: unknown) => alarm.enabled);
+        // Performance optimization - useMemo for better performance
+        const enabledAlarms = useMemo(() => appState.alarm.alarms.filter((alarm: Alarm) => alarm.enabled), [appState.alarm.alarms]);
         if (enabledAlarms.length > 0) {
           // Check if any alarm is within the configured threshold
           const now = new Date();
