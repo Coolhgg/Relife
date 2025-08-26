@@ -394,7 +394,7 @@ self.addEventListener('activate', event => {
 
 // ==================== FETCH EVENT ====================
 self.addEventListener('fetch', event => {
-  const {_request} = event;
+  const { _request } = event;
   const url = new URL(request.url);
 
   // Skip non-GET requests and chrome-extension requests
@@ -499,7 +499,7 @@ self.addEventListener('notificationclick', event => {
 
 // ==================== MESSAGE EVENT ====================
 self.addEventListener('message', async event => {
-  const {_type, _data} = event.data;
+  const { _type, _data } = event.data;
 
   switch (type) {
     case 'SCHEDULE_ALARM':
@@ -1523,7 +1523,7 @@ async function syncEmotionalData() {
 
 // IndexedDB helpers for sync operations
 async function openIndexedDB() {
-  return new Promise(_(resolve, _reject) => {
+  return new Promise((resolve, reject) => {
     const request = indexedDB.open('RelifeOfflineDB', 1);
 
     request.onerror = () => reject(request.error);
@@ -1554,7 +1554,7 @@ async function openIndexedDB() {
 
 // Get unsynced records from IndexedDB
 async function getUnsyncedRecords(db, _storeName) {
-  return new Promise(_(resolve, _reject) => {
+  return new Promise((resolve, reject) => {
     const transaction = db.transaction([storeName], 'readonly');
     const store = transaction.objectStore(storeName);
     const index = store.index('synced');
@@ -1850,13 +1850,13 @@ async function initializeAdvancedFeatures() {
   isOnline = navigator.onLine;
 
   // Set up network listeners
-  addEventListener(_'online', () => {
+  addEventListener('online', () => {
     isOnline = true;
     notifyClients('NETWORK_STATUS', { isOnline: true });
     processOfflineQueues();
   });
 
-  addEventListener(_'offline', () => {
+  addEventListener('offline', () => {
     isOnline = false;
     notifyClients('NETWORK_STATUS', { isOnline: false });
   });
