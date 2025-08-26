@@ -211,7 +211,9 @@ export class AlarmTriggerProcessor {
     }
   }
 
-  private async generateAIWakeupMessage(context: Record<string, unknown>): Promise<string> {
+  private async generateAIWakeupMessage(
+    context: Record<string, unknown>
+  ): Promise<string> {
     if (!this.env.OPENAI_API_KEY) {
       return 'Rise and shine! Time to start your amazing day!';
     }
@@ -326,7 +328,10 @@ export class AlarmTriggerProcessor {
     return patternData;
   }
 
-  private async getOptimalVoiceSettings(userId: string, _context: Record<string, unknown>): Promise<unknown> {
+  private async getOptimalVoiceSettings(
+    userId: string,
+    _context: Record<string, unknown>
+  ): Promise<unknown> {
     // Get user's most effective voice settings based on history
     const effectiveSettings = await this.env.DB.prepare(
       `

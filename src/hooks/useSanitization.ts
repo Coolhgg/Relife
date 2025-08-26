@@ -4,10 +4,10 @@
  */
 
 import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
-import InputSanitizationService, { 
-  SanitizationOptions, 
-  SanitizationResult, 
-  InputType 
+import InputSanitizationService, {
+  SanitizationOptions,
+  SanitizationResult,
+  InputType,
 } from '../services/input-sanitization';
 
 export interface UseSanitizedInputOptions extends SanitizationOptions {
@@ -45,7 +45,7 @@ export function useSanitizedInput(
 } {
   const sanitizationService = InputSanitizationService.getInstance();
   const timeoutRef = useRef<NodeJS.Timeout>();
-  
+
   const {
     type = 'text',
     validateOnChange = true,
@@ -81,7 +81,7 @@ export function useSanitizedInput(
 
       const sanitize = () => {
         const result = sanitizationService.sanitize(value, type, sanitizationOptions);
-        
+
         setState({
           value,
           sanitizedValue: result.sanitized,
@@ -121,7 +121,7 @@ export function useSanitizedInput(
   // Validate function (immediate, no debounce)
   const validate = useCallback(() => {
     const result = sanitizationService.sanitize(state.value, type, sanitizationOptions);
-    
+
     setState(prev => ({
       ...prev,
       sanitizedValue: result.sanitized,
@@ -136,7 +136,11 @@ export function useSanitizedInput(
 
   // Reset function
   const reset = useCallback(() => {
-    const result = sanitizationService.sanitize(initialValue, type, sanitizationOptions);
+    const result = sanitizationService.sanitize(
+      initialValue,
+      type,
+      sanitizationOptions
+    );
     setState({
       value: initialValue,
       sanitizedValue: result.sanitized,
@@ -182,7 +186,10 @@ export function useSanitizedInput(
 export function useSanitizedForm<T extends Record<string, any>>(
   initialValues: T,
   fieldTypes: Record<keyof T, InputType> = {} as Record<keyof T, InputType>,
-  fieldOptions: Record<keyof T, SanitizationOptions> = {} as Record<keyof T, SanitizationOptions>
+  fieldOptions: Record<keyof T, SanitizationOptions> = {} as Record<
+    keyof T,
+    SanitizationOptions
+  >
 ): {
   values: T;
   sanitizedValues: T;
@@ -196,7 +203,7 @@ export function useSanitizedForm<T extends Record<string, any>>(
   getSanitizedData: () => T;
 } {
   const sanitizationService = InputSanitizationService.getInstance();
-  
+
   const [values, setValues] = useState<T>(initialValues);
   const [sanitizedValues, setSanitizedValues] = useState<T>(() => {
     const sanitized = {} as T;
@@ -208,8 +215,10 @@ export function useSanitizedForm<T extends Record<string, any>>(
     }
     return sanitized;
   });
-  
-  const [violations, setViolations] = useState<Record<keyof T, string[]>>({} as Record<keyof T, string[]>);
+
+  const [violations, setViolations] = useState<Record<keyof T, string[]>>(
+    {} as Record<keyof T, string[]>
+  );
 
   // Sanitize and update a single field
   const sanitizeField = useCallback(
@@ -217,17 +226,17 @@ export function useSanitizedForm<T extends Record<string, any>>(
       const type = fieldTypes[field] || 'text';
       const options = fieldOptions[field] || {};
       const result = sanitizationService.sanitize(value, type, options);
-      
+
       setSanitizedValues(prev => ({
         ...prev,
         [field]: result.sanitized,
       }));
-      
+
       setViolations(prev => ({
         ...prev,
         [field]: result.violations,
       }));
-      
+
       return result;
     },
     [fieldTypes, fieldOptions]
@@ -246,7 +255,7 @@ export function useSanitizedForm<T extends Record<string, any>>(
   const setValuesCallback = useCallback(
     (newValues: Partial<T>) => {
       setValues(prev => ({ ...prev, ...newValues }));
-      
+
       // Sanitize all updated fields
       for (const [key, value] of Object.entries(newValues)) {
         sanitizeField(key as keyof T, value);
@@ -257,42 +266,45 @@ export function useSanitizedForm<T extends Record<string, any>>(
 
   // Validate all fields
   const validate = useCallback(() => {
-    const results: Record<keyof T, SanitizationResult> = {} as Record<keyof T, SanitizationResult>;
+    const results: Record<keyof T, SanitizationResult> = {} as Record<
+      keyof T,
+      SanitizationResult
+    >;
     const newSanitizedValues = {} as T;
     const newViolations = {} as Record<keyof T, string[]>;
-    
+
     for (const [key, value] of Object.entries(values)) {
       const type = fieldTypes[key as keyof T] || 'text';
       const options = fieldOptions[key as keyof T] || {};
       const result = sanitizationService.sanitize(value, type, options);
-      
+
       results[key as keyof T] = result;
       newSanitizedValues[key as keyof T] = result.sanitized as T[keyof T];
       newViolations[key as keyof T] = result.violations;
     }
-    
+
     setSanitizedValues(newSanitizedValues);
     setViolations(newViolations);
-    
+
     return results;
   }, [values, fieldTypes, fieldOptions]);
 
   // Reset form
   const reset = useCallback(() => {
     setValues(initialValues);
-    
+
     const newSanitizedValues = {} as T;
     const newViolations = {} as Record<keyof T, string[]>;
-    
+
     for (const [key, value] of Object.entries(initialValues)) {
       const type = fieldTypes[key as keyof T] || 'text';
       const options = fieldOptions[key as keyof T] || {};
       const result = sanitizationService.sanitize(value, type, options);
-      
+
       newSanitizedValues[key as keyof T] = result.sanitized as T[keyof T];
       newViolations[key as keyof T] = result.violations;
     }
-    
+
     setSanitizedValues(newSanitizedValues);
     setViolations(newViolations);
   }, [initialValues, fieldTypes, fieldOptions]);
@@ -302,12 +314,12 @@ export function useSanitizedForm<T extends Record<string, any>>(
 
   // Computed values
   const isValid = useMemo(
-    () => Object.values(violations).every((v) => Array.isArray(v) && v.length === 0),
+    () => Object.values(violations).every(v => Array.isArray(v) && v.length === 0),
     [violations]
   );
-  
+
   const hasViolations = useMemo(
-    () => Object.values(violations).some((v) => Array.isArray(v) && v.length > 0),
+    () => Object.values(violations).some(v => Array.isArray(v) && v.length > 0),
     [violations]
   );
 
@@ -365,15 +377,15 @@ export function useSecureInput(
 
   const securityWarnings = useMemo(() => {
     const warnings: string[] = [];
-    
+
     if (isDangerous) {
       warnings.push('This input contains potentially dangerous content');
     }
-    
+
     if (state.violations.length > 0 && showSecurityWarnings) {
       warnings.push(...state.violations);
     }
-    
+
     return warnings;
   }, [isDangerous, state.violations, showSecurityWarnings]);
 
@@ -383,7 +395,7 @@ export function useSecureInput(
       if (blockDangerousInput && sanitizationService.isDangerous(value)) {
         return;
       }
-      
+
       setValueInternal(value);
     },
     [blockDangerousInput, setValueInternal]

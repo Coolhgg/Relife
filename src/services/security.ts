@@ -310,13 +310,16 @@ class SecurityService {
   /**
    * Enhanced password validation against comprehensive security requirements
    */
-  validatePasswordSecurity(password: string, options?: {
-    enforceMinScore?: number;
-    maxLength?: number;
-    checkDictionary?: boolean;
-    checkKeyboardPatterns?: boolean;
-    requireMinEntropy?: boolean;
-  }): {
+  validatePasswordSecurity(
+    password: string,
+    options?: {
+      enforceMinScore?: number;
+      maxLength?: number;
+      checkDictionary?: boolean;
+      checkKeyboardPatterns?: boolean;
+      requireMinEntropy?: boolean;
+    }
+  ): {
     isValid: boolean;
     errors: string[];
     warnings: string[];
@@ -350,7 +353,8 @@ class SecurityService {
     const lowercaseCount = (password.match(/[a-z]/g) || []).length;
     const uppercaseCount = (password.match(/[A-Z]/g) || []).length;
     const digitCount = (password.match(/\d/g) || []).length;
-    const specialCount = (password.match(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\?]/g) || []).length;
+    const specialCount = (password.match(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\?]/g) || [])
+      .length;
 
     if (lowercaseCount < 2) {
       errors.push('Password must contain at least 2 lowercase letters');
@@ -367,7 +371,9 @@ class SecurityService {
 
     // Advanced pattern checks
     if (/(.)\1{2,}/.test(password)) {
-      errors.push('Password must not contain more than 2 consecutive identical characters');
+      errors.push(
+        'Password must not contain more than 2 consecutive identical characters'
+      );
     }
 
     // Sequential character check
@@ -382,7 +388,9 @@ class SecurityService {
 
     // Dictionary word check
     if (opts.checkDictionary && this.containsDictionaryWords(password)) {
-      warnings.push('Password contains common dictionary words - consider using more random combinations');
+      warnings.push(
+        'Password contains common dictionary words - consider using more random combinations'
+      );
     }
 
     // Common password patterns
@@ -392,7 +400,9 @@ class SecurityService {
 
     // Entropy requirements
     if (opts.requireMinEntropy && entropy < 50) {
-      warnings.push(`Password entropy (${entropy.toFixed(1)}) is below recommended minimum of 50 bits`);
+      warnings.push(
+        `Password entropy (${entropy.toFixed(1)}) is below recommended minimum of 50 bits`
+      );
     }
 
     // Personal information check (basic)
@@ -402,7 +412,9 @@ class SecurityService {
 
     // zxcvbn strength check (enhanced)
     if (strength.score < opts.enforceMinScore) {
-      errors.push(`Password strength is too low (${strength.score}/${opts.enforceMinScore} required). ${strength.feedback.warning}`);
+      errors.push(
+        `Password strength is too low (${strength.score}/${opts.enforceMinScore} required). ${strength.feedback.warning}`
+      );
       if (strength.feedback.suggestions.length > 0) {
         warnings.push(...strength.feedback.suggestions);
       }
@@ -473,10 +485,16 @@ class SecurityService {
    */
   private hasKeyboardPattern(password: string): boolean {
     const patterns = [
-      'qwertyuiop', 'asdfghjkl', 'zxcvbnm',
-      'poiuytrewq', 'lkjhgfdsa', 'mnbvcxz',
-      '1234567890', '0987654321',
-      '!@#$%^&*()', ')(*&^%$#@!',
+      'qwertyuiop',
+      'asdfghjkl',
+      'zxcvbnm',
+      'poiuytrewq',
+      'lkjhgfdsa',
+      'mnbvcxz',
+      '1234567890',
+      '0987654321',
+      '!@#$%^&*()',
+      ')(*&^%$#@!',
     ];
 
     const lowerPassword = password.toLowerCase();
@@ -495,17 +513,43 @@ class SecurityService {
    */
   private containsDictionaryWords(password: string): boolean {
     const commonWords = [
-      'password', 'admin', 'user', 'login', 'welcome', 'hello', 'world',
-      'love', 'life', 'money', 'home', 'work', 'email', 'phone', 'name',
-      'address', 'birthday', 'family', 'friend', 'school', 'company',
-      'computer', 'internet', 'website', 'security', 'private', 'secret',
-      'account', 'access', 'system', 'network', 'server', 'database',
+      'password',
+      'admin',
+      'user',
+      'login',
+      'welcome',
+      'hello',
+      'world',
+      'love',
+      'life',
+      'money',
+      'home',
+      'work',
+      'email',
+      'phone',
+      'name',
+      'address',
+      'birthday',
+      'family',
+      'friend',
+      'school',
+      'company',
+      'computer',
+      'internet',
+      'website',
+      'security',
+      'private',
+      'secret',
+      'account',
+      'access',
+      'system',
+      'network',
+      'server',
+      'database',
     ];
 
     const lowerPassword = password.toLowerCase();
-    return commonWords.some(word => 
-      word.length >= 4 && lowerPassword.includes(word)
-    );
+    return commonWords.some(word => word.length >= 4 && lowerPassword.includes(word));
   }
 
   /**
@@ -542,7 +586,10 @@ class SecurityService {
   /**
    * Check password against previous passwords (for password history)
    */
-  validatePasswordHistory(newPassword: string, previousPasswords: string[] = []): {
+  validatePasswordHistory(
+    newPassword: string,
+    previousPasswords: string[] = []
+  ): {
     isValid: boolean;
     error?: string;
   } {
@@ -558,7 +605,9 @@ class SecurityService {
 
     // Check for similar passwords (edit distance)
     for (const prevPwd of previousPasswords) {
-      if (this.calculateEditDistance(newPassword.toLowerCase(), prevPwd.toLowerCase()) < 3) {
+      if (
+        this.calculateEditDistance(newPassword.toLowerCase(), prevPwd.toLowerCase()) < 3
+      ) {
         return {
           isValid: false,
           error: 'New password is too similar to a recently used password.',
@@ -574,15 +623,15 @@ class SecurityService {
    */
   private calculateEditDistance(str1: string, str2: string): number {
     const matrix: number[][] = [];
-    
+
     for (let i = 0; i <= str2.length; i++) {
       matrix[i] = [i];
     }
-    
+
     for (let j = 0; j <= str1.length; j++) {
       matrix[0][j] = j;
     }
-    
+
     for (let i = 1; i <= str2.length; i++) {
       for (let j = 1; j <= str1.length; j++) {
         if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
@@ -596,7 +645,7 @@ class SecurityService {
         }
       }
     }
-    
+
     return matrix[str2.length][str1.length];
   }
 

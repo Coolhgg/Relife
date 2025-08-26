@@ -594,33 +594,35 @@ const VoiceAnalyticsDashboard: React.FC = () => {
                     Voice Mood Effectiveness
                   </h3>
                   <div className="space-y-4">
-                    {analytics.personalization.moodEffectiveness.map((mood: unknown) => (
-                      <div
-                        key={mood.mood}
-                        className="p-4 bg-gradient-to-r from-slate-50 to-purple-50 rounded-xl"
-                      >
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center space-x-3">
-                            <Volume2 className="h-5 w-5 text-purple-600" />
-                            <span className="font-medium capitalize text-slate-800">
-                              {mood.mood}
-                            </span>
-                            <span className="text-sm text-slate-500">
-                              ({mood.usage_count} uses)
+                    {analytics.personalization.moodEffectiveness.map(
+                      (mood: unknown) => (
+                        <div
+                          key={mood.mood}
+                          className="p-4 bg-gradient-to-r from-slate-50 to-purple-50 rounded-xl"
+                        >
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center space-x-3">
+                              <Volume2 className="h-5 w-5 text-purple-600" />
+                              <span className="font-medium capitalize text-slate-800">
+                                {mood.mood}
+                              </span>
+                              <span className="text-sm text-slate-500">
+                                ({mood.usage_count} uses)
+                              </span>
+                            </div>
+                            <span className="font-semibold text-purple-600">
+                              {mood.success_rate}%
                             </span>
                           </div>
-                          <span className="font-semibold text-purple-600">
-                            {mood.success_rate}%
-                          </span>
+                          <div className="bg-slate-200 rounded-full h-2">
+                            <div
+                              className="bg-gradient-to-r from-purple-500 to-purple-400 h-full rounded-full"
+                              style={{ width: `${mood.success_rate}%` }}
+                            />
+                          </div>
                         </div>
-                        <div className="bg-slate-200 rounded-full h-2">
-                          <div
-                            className="bg-gradient-to-r from-purple-500 to-purple-400 h-full rounded-full"
-                            style={{ width: `${mood.success_rate}%` }}
-                          />
-                        </div>
-                      </div>
-                    ))}
+                      )
+                    )}
                   </div>
                 </div>
               </div>

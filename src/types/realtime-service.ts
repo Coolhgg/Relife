@@ -2,10 +2,7 @@
  * Real-time Service Interface
  * Complete interface for real-time functionality combining WebSockets, push notifications, and Supabase real-time
  */
-import {
-  MockDataRecord, MockDataStore
-} from '../../types/common-types';
-
+import { MockDataRecord, MockDataStore } from '../../types/common-types';
 
 import type {
   WebSocketManager,
@@ -126,7 +123,10 @@ export interface RealtimeService {
 export interface AlarmRealtimeFeatures {
   // Alarm state synchronization
   syncAlarmState(alarmId: string): Promise<void>;
-  subscribeToAlarmChanges(userId: string, handler: (alarm: unknown) => void): () => void;
+  subscribeToAlarmChanges(
+    userId: string,
+    handler: (alarm: unknown) => void
+  ): () => void;
 
   // Real-time alarm events
   onAlarmTriggered(handler: (data: AlarmTriggeredPayload) => void): () => void;
@@ -157,7 +157,10 @@ export interface UserRealtimeFeatures {
 
   // Activity tracking
   trackActivity(activity: unknown): Promise<void>;
-  subscribeToUserActivity(userId: string, handler: (activity: unknown) => void): () => void;
+  subscribeToUserActivity(
+    userId: string,
+    handler: (activity: unknown) => void
+  ): () => void;
 
   // Social features
   sendFriendRequest(toUserId: string): Promise<void>;
@@ -421,7 +424,11 @@ export interface MockRealtimeService extends RealtimeService {
   // Test helpers
   getReceivedMessages(): RealtimeMessage[];
   getSentMessages(): RealtimeMessage[];
-  getMethodCallHistory(): Array<{ method: string; args: MockDataRecord[]; timestamp: Date }>;
+  getMethodCallHistory(): Array<{
+    method: string;
+    args: MockDataRecord[];
+    timestamp: Date;
+  }>;
 }
 
 export interface RealtimeServiceTestHarness {

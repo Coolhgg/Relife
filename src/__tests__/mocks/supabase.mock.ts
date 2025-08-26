@@ -1,6 +1,10 @@
 // Supabase database and auth mock for testing
 import {
-  DatabaseResponse, MockAuthState, MockDataRecord, MockDataStore, QueryOptions
+  DatabaseResponse,
+  MockAuthState,
+  MockDataRecord,
+  MockDataStore,
+  QueryOptions,
 } from '../../types/common-types';
 
 /**
@@ -33,7 +37,8 @@ const mockSupabaseClient = {
     select: jest.fn((columns?: string) => ({
       eq: jest.fn((column: string, value: unknown) => ({
         single: jest.fn(() => {
-          const data = mockDataStore[table]?.find((item: MockDataRecord) => item[column] === value
+          const data = mockDataStore[table]?.find(
+            (item: MockDataRecord) => item[column] === value
           );
           return Promise.resolve({ data, _error: null });
         }),
@@ -59,28 +64,34 @@ const mockSupabaseClient = {
         })),
         then: jest.fn((callback: unknown) => {
           const data =
-            mockDataStore[table]?.filter((item: unknown) => item[column] === value) || [];
+            mockDataStore[table]?.filter((item: unknown) => item[column] === value) ||
+            [];
           return Promise.resolve(callback({ data, _error: null }));
         }),
       })),
       neq: jest.fn((column: string, value: unknown) => ({
-        data: mockDataStore[table]?.filter((item: unknown) => item[column] !== value) || [],
+        data:
+          mockDataStore[table]?.filter((item: unknown) => item[column] !== value) || [],
         _error: null,
       })),
       gt: jest.fn((column: string, value: unknown) => ({
-        data: mockDataStore[table]?.filter((item: unknown) => item[column] > value) || [],
+        data:
+          mockDataStore[table]?.filter((item: unknown) => item[column] > value) || [],
         _error: null,
       })),
       gte: jest.fn((column: string, value: unknown) => ({
-        data: mockDataStore[table]?.filter((item: unknown) => item[column] >= value) || [],
+        data:
+          mockDataStore[table]?.filter((item: unknown) => item[column] >= value) || [],
         _error: null,
       })),
       lt: jest.fn((column: string, value: unknown) => ({
-        data: mockDataStore[table]?.filter((item: unknown) => item[column] < value) || [],
+        data:
+          mockDataStore[table]?.filter((item: unknown) => item[column] < value) || [],
         _error: null,
       })),
       lte: jest.fn((column: string, value: unknown) => ({
-        data: mockDataStore[table]?.filter((item: unknown) => item[column] <= value) || [],
+        data:
+          mockDataStore[table]?.filter((item: unknown) => item[column] <= value) || [],
         _error: null,
       })),
       like: jest.fn((column: string, pattern: string) => ({
@@ -92,12 +103,14 @@ const mockSupabaseClient = {
       })),
       in: jest.fn((column: string, values: MockDataRecord[]) => ({
         data:
-          mockDataStore[table]?.filter((item: unknown) => values.includes(item[column])) ||
-          [],
+          mockDataStore[table]?.filter((item: unknown) =>
+            values.includes(item[column])
+          ) || [],
         _error: null,
       })),
       is: jest.fn((column: string, value: unknown) => ({
-        data: mockDataStore[table]?.filter((item: unknown) => item[column] === value) || [],
+        data:
+          mockDataStore[table]?.filter((item: unknown) => item[column] === value) || [],
         _error: null,
       })),
       then: jest.fn((callback: unknown) => {
@@ -164,7 +177,9 @@ const mockSupabaseClient = {
             return item;
           });
           mockDataStore[table] = updated;
-          const updatedItems = updated.filter((item: unknown) => item[column] === value);
+          const updatedItems = updated.filter(
+            (item: unknown) => item[column] === value
+          );
           return Promise.resolve({ data: updatedItems, _error: null });
         }),
         single: jest.fn(() => {
@@ -197,7 +212,9 @@ const mockSupabaseClient = {
             return item;
           });
           mockDataStore[table] = updated;
-          const updatedItems = updated.filter((item: unknown) => item[column] === value);
+          const updatedItems = updated.filter(
+            (item: unknown) => item[column] === value
+          );
           return Promise.resolve(callback({ data: updatedItems, _error: null }));
         }),
       })),
@@ -363,28 +380,30 @@ const mockSupabaseClient = {
     }),
 
     // Auth state changes
-    onAuthStateChange: jest.fn((callback: (_event: string, session: unknown) => void) => {
-      console.log('👀 Mock Supabase onAuthStateChange');
+    onAuthStateChange: jest.fn(
+      (callback: (_event: string, session: unknown) => void) => {
+        console.log('👀 Mock Supabase onAuthStateChange');
 
-      // Simulate initial session check
-      setTimeout(() => {
-        callback(
-          mockAuthState.session ? 'SIGNED_IN' : 'SIGNED_OUT',
-          mockAuthState.session
-        );
-      }, 100);
+        // Simulate initial session check
+        setTimeout(() => {
+          callback(
+            mockAuthState.session ? 'SIGNED_IN' : 'SIGNED_OUT',
+            mockAuthState.session
+          );
+        }, 100);
 
-      return {
-        data: {
-          subscription: {
-            unsubscribe: jest.fn(() => {
-              console.log('🔌 Mock Supabase auth subscription unsubscribed');
-            }),
+        return {
+          data: {
+            subscription: {
+              unsubscribe: jest.fn(() => {
+                console.log('🔌 Mock Supabase auth subscription unsubscribed');
+              }),
+            },
           },
-        },
-        error: null,
-      };
-    }),
+          error: null,
+        };
+      }
+    ),
 
     // Admin functions (for testing)
     admin: {

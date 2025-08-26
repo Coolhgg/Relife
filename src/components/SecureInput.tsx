@@ -10,18 +10,22 @@ import { Label } from './ui/label';
 import { Alert, AlertDescription } from './ui/alert';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
-import { 
-  Shield, 
-  ShieldAlert, 
-  ShieldCheck, 
-  Eye, 
-  EyeOff, 
+import {
+  Shield,
+  ShieldAlert,
+  ShieldCheck,
+  Eye,
+  EyeOff,
   Info,
   AlertTriangle,
-  CheckCircle 
+  CheckCircle,
 } from 'lucide-react';
 import { cn } from '../lib/utils';
-import { useSanitizedInput, useSecureInput, UseSanitizedInputOptions } from '../hooks/useSanitization';
+import {
+  useSanitizedInput,
+  useSecureInput,
+  UseSanitizedInputOptions,
+} from '../hooks/useSanitization';
 import { InputType } from '../services/input-sanitization';
 
 export interface SecureInputProps
@@ -39,7 +43,10 @@ export interface SecureInputProps
 }
 
 export interface SecureTextareaProps
-  extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'onChange' | 'value'> {
+  extends Omit<
+    React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+    'onChange' | 'value'
+  > {
   inputType?: InputType;
   value?: string;
   onChange?: (value: string, sanitizedValue: string, isValid: boolean) => void;
@@ -75,7 +82,7 @@ export const SecureInput = forwardRef<HTMLInputElement, SecureInputProps>(
     ref
   ) => {
     const [showPassword, setShowPassword] = useState(false);
-    
+
     const {
       value,
       sanitizedValue,
@@ -120,12 +127,24 @@ export const SecureInput = forwardRef<HTMLInputElement, SecureInputProps>(
 
     const getSecurityBadge = () => {
       if (isDangerous) {
-        return <Badge variant="destructive" className="text-xs">Dangerous</Badge>;
+        return (
+          <Badge variant="destructive" className="text-xs">
+            Dangerous
+          </Badge>
+        );
       }
       if (securityWarnings.length > 0) {
-        return <Badge variant="outline" className="text-xs text-yellow-600">Sanitized</Badge>;
+        return (
+          <Badge variant="outline" className="text-xs text-yellow-600">
+            Sanitized
+          </Badge>
+        );
       }
-      return <Badge variant="outline" className="text-xs text-green-600">Secure</Badge>;
+      return (
+        <Badge variant="outline" className="text-xs text-green-600">
+          Secure
+        </Badge>
+      );
     };
 
     return (
@@ -146,9 +165,7 @@ export const SecureInput = forwardRef<HTMLInputElement, SecureInputProps>(
         )}
 
         {/* Description */}
-        {description && (
-          <p className="text-sm text-muted-foreground">{description}</p>
-        )}
+        {description && <p className="text-sm text-muted-foreground">{description}</p>}
 
         {/* Input Field */}
         <div className="relative">
@@ -160,10 +177,12 @@ export const SecureInput = forwardRef<HTMLInputElement, SecureInputProps>(
             className={cn(
               className,
               isDangerous && 'border-destructive bg-destructive/5',
-              securityWarnings.length > 0 && !isDangerous && 'border-yellow-500 bg-yellow-50'
+              securityWarnings.length > 0 &&
+                !isDangerous &&
+                'border-yellow-500 bg-yellow-50'
             )}
           />
-          
+
           {/* Password Toggle */}
           {isPassword && (
             <Button
@@ -281,12 +300,24 @@ export const SecureTextarea = forwardRef<HTMLTextAreaElement, SecureTextareaProp
 
     const getSecurityBadge = () => {
       if (isDangerous) {
-        return <Badge variant="destructive" className="text-xs">Dangerous</Badge>;
+        return (
+          <Badge variant="destructive" className="text-xs">
+            Dangerous
+          </Badge>
+        );
       }
       if (securityWarnings.length > 0) {
-        return <Badge variant="outline" className="text-xs text-yellow-600">Sanitized</Badge>;
+        return (
+          <Badge variant="outline" className="text-xs text-yellow-600">
+            Sanitized
+          </Badge>
+        );
       }
-      return <Badge variant="outline" className="text-xs text-green-600">Secure</Badge>;
+      return (
+        <Badge variant="outline" className="text-xs text-green-600">
+          Secure
+        </Badge>
+      );
     };
 
     return (
@@ -307,9 +338,7 @@ export const SecureTextarea = forwardRef<HTMLTextAreaElement, SecureTextareaProp
         )}
 
         {/* Description */}
-        {description && (
-          <p className="text-sm text-muted-foreground">{description}</p>
-        )}
+        {description && <p className="text-sm text-muted-foreground">{description}</p>}
 
         {/* Textarea Field */}
         <Textarea
@@ -319,7 +348,9 @@ export const SecureTextarea = forwardRef<HTMLTextAreaElement, SecureTextareaProp
           className={cn(
             className,
             isDangerous && 'border-destructive bg-destructive/5',
-            securityWarnings.length > 0 && !isDangerous && 'border-yellow-500 bg-yellow-50'
+            securityWarnings.length > 0 &&
+              !isDangerous &&
+              'border-yellow-500 bg-yellow-50'
           )}
         />
 
@@ -370,7 +401,9 @@ export const SecurityStatusIndicator: React.FC<{
   className?: string;
 }> = ({ value, inputType = 'text', showDetails = false, className }) => {
   const { state } = useSanitizedInput(value, { type: inputType });
-  const isDangerous = state.violations.some(v => v.includes('XSS') || v.includes('SQL') || v.includes('Code injection'));
+  const isDangerous = state.violations.some(
+    v => v.includes('XSS') || v.includes('SQL') || v.includes('Code injection')
+  );
 
   if (showDetails) {
     return (
@@ -384,12 +417,14 @@ export const SecurityStatusIndicator: React.FC<{
             <ShieldCheck className="w-5 h-5 text-green-500" />
           )}
           <span className="text-sm font-medium">
-            {isDangerous ? 'Security Risk Detected' : 
-             state.violations.length > 0 ? 'Input Sanitized' : 
-             'Input Secure'}
+            {isDangerous
+              ? 'Security Risk Detected'
+              : state.violations.length > 0
+                ? 'Input Sanitized'
+                : 'Input Secure'}
           </span>
         </div>
-        
+
         {state.violations.length > 0 && (
           <div className="text-xs text-muted-foreground space-y-1">
             {state.violations.map((violation, index) => (
@@ -413,16 +448,26 @@ export const SecurityStatusIndicator: React.FC<{
       ) : (
         <ShieldCheck className="w-4 h-4 text-green-500" />
       )}
-      
-      <Badge 
-        variant={isDangerous ? 'destructive' : state.violations.length > 0 ? 'outline' : 'outline'}
+
+      <Badge
+        variant={
+          isDangerous
+            ? 'destructive'
+            : state.violations.length > 0
+              ? 'outline'
+              : 'outline'
+        }
         className={cn(
           'text-xs',
           !isDangerous && state.violations.length > 0 && 'text-yellow-600',
           !isDangerous && state.violations.length === 0 && 'text-green-600'
         )}
       >
-        {isDangerous ? 'Dangerous' : state.violations.length > 0 ? 'Sanitized' : 'Secure'}
+        {isDangerous
+          ? 'Dangerous'
+          : state.violations.length > 0
+            ? 'Sanitized'
+            : 'Secure'}
       </Badge>
     </div>
   );

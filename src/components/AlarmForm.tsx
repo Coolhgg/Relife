@@ -442,7 +442,9 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
     if (confirm(`Are you sure you want to delete "${sound.name}"?`)) {
       const success = await customSoundManager.deleteCustomSound(sound.id, userId);
       if (success) {
-        setCustomSounds((prev: unknown) => prev.filter((s: unknown) => s.id !== sound.id));
+        setCustomSounds((prev: unknown) =>
+          prev.filter((s: unknown) => s.id !== sound.id)
+        );
         // If the deleted sound was selected, reset to voice-only
         if (formData.customSoundId === sound.id) {
           setFormData((prev: unknown) => ({
@@ -870,7 +872,10 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                     }));
                     // Clear nuclear challenges when changing difficulty
                     if (difficulty.id !== 'nuclear') {
-                      setFormData((prev: unknown) => ({ ...prev, nuclearChallenges: [] }));
+                      setFormData((prev: unknown) => ({
+                        ...prev,
+                        nuclearChallenges: [],
+                      }));
                     }
                   }}
                   className={`p-3 rounded-lg border-2 text-left transition-all ${

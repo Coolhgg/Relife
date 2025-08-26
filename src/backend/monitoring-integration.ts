@@ -694,7 +694,10 @@ export class MonitoringIntegrationService {
     return timeMap[timeRange] || '-7 days';
   }
 
-  private calculateDeploymentSuccessRate(deployments: unknown[], errors: unknown): number {
+  private calculateDeploymentSuccessRate(
+    deployments: unknown[],
+    errors: unknown
+  ): number {
     if (!deployments || deployments.length === 0) return 1.0;
 
     const totalDeployments = deployments.reduce(

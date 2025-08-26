@@ -597,21 +597,22 @@ function useSubscription(
   }, []);
 
   // Plan comparison function - optimized with static tier hierarchy
-  const tierHierarchy: SubscriptionTier[] = useMemo(() => [
-    'free',
-    'basic',
-    'premium',
-    'pro',
-    'enterprise',
-  ], []);
+  const tierHierarchy: SubscriptionTier[] = useMemo(
+    () => ['free', 'basic', 'premium', 'pro', 'enterprise'],
+    []
+  );
 
   const comparePlans = useCallback(
     (currentTier: SubscriptionTier, targetTier: SubscriptionTier) => {
       const currentLevel = tierHierarchy.indexOf(currentTier);
       const targetLevel = tierHierarchy.indexOf(targetTier);
 
-      const currentPlan = state.availablePlans.find((p: unknown) => p.tier === currentTier);
-      const targetPlan = state.availablePlans.find((p: unknown) => p.tier === targetTier);
+      const currentPlan = state.availablePlans.find(
+        (p: unknown) => p.tier === currentTier
+      );
+      const targetPlan = state.availablePlans.find(
+        (p: unknown) => p.tier === targetTier
+      );
 
       const currentPrice = currentPlan?.pricing.monthly?.amount || 0;
       const targetPrice = targetPlan?.pricing.monthly?.amount || 0;
@@ -627,44 +628,47 @@ function useSubscription(
     [state.availablePlans, tierHierarchy]
   );
 
-  return useMemo(() => ({
-    // State
-    ...state,
+  return useMemo(
+    () => ({
+      // State
+      ...state,
 
-    // Actions
-    createSubscription,
-    updateSubscription,
-    cancelSubscription,
-    hasFeatureAccess,
-    trackFeatureUsage,
-    getUpgradeRequirement,
-    addPaymentMethod,
-    removePaymentMethod,
-    setDefaultPaymentMethod,
-    startFreeTrial,
-    validateDiscountCode,
-    refreshSubscription,
-    clearError,
-    resetUIState,
-    comparePlans,
-  }), [
-    state,
-    createSubscription,
-    updateSubscription,
-    cancelSubscription,
-    hasFeatureAccess,
-    trackFeatureUsage,
-    getUpgradeRequirement,
-    addPaymentMethod,
-    removePaymentMethod,
-    setDefaultPaymentMethod,
-    startFreeTrial,
-    validateDiscountCode,
-    refreshSubscription,
-    clearError,
-    resetUIState,
-    comparePlans,
-  ]);
+      // Actions
+      createSubscription,
+      updateSubscription,
+      cancelSubscription,
+      hasFeatureAccess,
+      trackFeatureUsage,
+      getUpgradeRequirement,
+      addPaymentMethod,
+      removePaymentMethod,
+      setDefaultPaymentMethod,
+      startFreeTrial,
+      validateDiscountCode,
+      refreshSubscription,
+      clearError,
+      resetUIState,
+      comparePlans,
+    }),
+    [
+      state,
+      createSubscription,
+      updateSubscription,
+      cancelSubscription,
+      hasFeatureAccess,
+      trackFeatureUsage,
+      getUpgradeRequirement,
+      addPaymentMethod,
+      removePaymentMethod,
+      setDefaultPaymentMethod,
+      startFreeTrial,
+      validateDiscountCode,
+      refreshSubscription,
+      clearError,
+      resetUIState,
+      comparePlans,
+    ]
+  );
 }
 
 export default useSubscription;

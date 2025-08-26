@@ -689,7 +689,8 @@ export class AdvancedBehavioralIntelligence {
     return recentSuccess - olderSuccess;
   }
 
-  private generatePersonalizedMessage(pattern: unknown,
+  private generatePersonalizedMessage(
+    pattern: unknown,
     profile: PsychologicalProfile
   ): string {
     const { bigFiveTraits } = profile;
@@ -705,7 +706,10 @@ export class AdvancedBehavioralIntelligence {
     }
   }
 
-  private generateAnomalyMessage(anomaly: unknown, profile: PsychologicalProfile): string {
+  private generateAnomalyMessage(
+    anomaly: unknown,
+    profile: PsychologicalProfile
+  ): string {
     if (profile.stressResponse === 'low_resilience') {
       return `I've detected some changes in your routine that might be causing stress. Let's address this gently with some supportive adjustments.`;
     } else {
@@ -713,7 +717,8 @@ export class AdvancedBehavioralIntelligence {
     }
   }
 
-  private generateOptimizationMessage(optimization: unknown,
+  private generateOptimizationMessage(
+    optimization: unknown,
     profile: PsychologicalProfile
   ): string {
     if (profile.bigFiveTraits.openness > 0.7) {
@@ -723,7 +728,8 @@ export class AdvancedBehavioralIntelligence {
     }
   }
 
-  private generateInterventionMessage(intervention: unknown,
+  private generateInterventionMessage(
+    intervention: unknown,
     profile: PsychologicalProfile
   ): string {
     if (profile.changeAdaptability === 'high') {
@@ -756,7 +762,9 @@ export class AdvancedBehavioralIntelligence {
   }
 
   // Placeholder implementations for various recommendation generators
-  private generateSleepQualityRecommendations(userModel: UserBehavioralModel): unknown[] {
+  private generateSleepQualityRecommendations(
+    userModel: UserBehavioralModel
+  ): unknown[] {
     return [
       {
         type: 'sleep_optimization',
@@ -774,7 +782,9 @@ export class AdvancedBehavioralIntelligence {
     ];
   }
 
-  private generateProductivityRecommendations(userModel: UserBehavioralModel): unknown[] {
+  private generateProductivityRecommendations(
+    userModel: UserBehavioralModel
+  ): unknown[] {
     return [
       {
         type: 'productivity_boost',

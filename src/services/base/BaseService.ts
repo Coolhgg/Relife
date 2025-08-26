@@ -324,7 +324,8 @@ export abstract class BaseService implements IBaseService {
   // Error Handling
   // ============================================================================
 
-  protected handleError(_error: unknown,
+  protected handleError(
+    _error: unknown,
     message: string,
     context?: Record<string, unknown>
   ): void {

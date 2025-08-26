@@ -51,7 +51,8 @@ export interface BaseService {
 // Service Configuration
 // ============================================================================
 
-export interface ServiceConfig { [key: string]: unknown;
+export interface ServiceConfig {
+  [key: string]: unknown;
 }
 
 export interface CacheConfig {
@@ -167,7 +168,8 @@ export interface CacheManager {
 // Event System
 // ============================================================================
 
-export interface ServiceEvent { [key: string]: unknown;
+export interface ServiceEvent {
+  [key: string]: unknown;
   correlationId?: string;
 }
 
@@ -195,7 +197,8 @@ export interface ServiceLifecycle {
 // Performance Monitoring
 // ============================================================================
 
-export interface PerformanceTracker { [key: string]: unknown): void;
+export interface PerformanceTracker {
+  [key: string]: unknown;
   getMetrics(timeRange?: { start: Date; end: Date }): Promise<PerformanceMetrics>;
 }
 
@@ -221,7 +224,8 @@ export interface OperationMetrics {
   successRate: number;
 }
 
-export interface EventMetrics { [key: string]: unknown;
+export interface EventMetrics {
+  [key: string]: unknown;
 }
 
 // ============================================================================

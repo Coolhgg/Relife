@@ -501,7 +501,9 @@ export const _reactAnimationHelpers = {
     jest.mock('framer-motion', () => ({
       motion: {
         div: ({ children, ...props }: unknown) => <div {...props}>{children}</div>,
-        button: ({ children, ...props }: unknown) => <button {...props}>{children}</button>,
+        button: ({ children, ...props }: unknown) => (
+          <button {...props}>{children}</button>
+        ),
         span: ({ children, ...props }: unknown) => <span {...props}>{children}</span>,
         img: ({ children, ...props }: unknown) => <img {...props}>{children}</img>,
       },

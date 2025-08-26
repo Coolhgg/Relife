@@ -335,7 +335,10 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
             personalization?.typographyPreferences?.lineHeightPreference || 'normal'
           }
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            updateTypographyPreference('lineHeightPreference', e.target.value as unknown)
+            updateTypographyPreference(
+              'lineHeightPreference',
+              e.target.value as unknown
+            )
           }
           className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"
         >

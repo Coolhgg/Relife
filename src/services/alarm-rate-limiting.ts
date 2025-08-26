@@ -201,7 +201,8 @@ export class AlarmRateLimitingService {
     userId: string,
     operation: AlarmOperation,
     ip?: string,
-    metadata?: unknown): Promise<RateLimitResult> {
+    metadata?: unknown
+  ): Promise<RateLimitResult> {
     try {
       // Get user rate limits
       const userLimits = this.getUserLimits(userId);
@@ -711,7 +712,8 @@ export class AlarmRateLimitingService {
     userId: string,
     operation: AlarmOperation,
     ip?: string,
-    metadata?: unknown): Promise<void> {
+    metadata?: unknown
+  ): Promise<void> {
     const entry: RateLimitEntry = {
       userId,
       operation,

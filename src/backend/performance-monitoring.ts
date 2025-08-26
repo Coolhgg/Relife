@@ -1094,7 +1094,10 @@ export class PerformanceMonitoringAPI {
     }
   }
 
-  private calculateHealthScore(recentErrors: unknown, performanceMetrics: unknown[]): number {
+  private calculateHealthScore(
+    recentErrors: unknown,
+    performanceMetrics: unknown[]
+  ): number {
     let score = 1.0;
 
     // Deduct for errors

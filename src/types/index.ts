@@ -44,9 +44,9 @@ export * from './service-interfaces';
 export * from './domain-service-interfaces';
 
 // Additional commonly used type definitions
-export type DayOfWeek = 
+export type DayOfWeek =
   | 'sunday'
-  | 'monday' 
+  | 'monday'
   | 'tuesday'
   | 'wednesday'
   | 'thursday'

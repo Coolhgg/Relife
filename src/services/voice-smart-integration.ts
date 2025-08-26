@@ -740,7 +740,9 @@ class VoiceSmartIntegrationService {
 
   private async executeSmartHomeCommand(
     device: string,
-    action: string, entities: unknown): Promise<unknown> {
+    action: string,
+    entities: unknown
+  ): Promise<unknown> {
     const handler = this.deviceCommands.get(device);
     if (handler) {
       return await handler({ action, ...entities });
@@ -853,10 +855,14 @@ class VoiceSmartIntegrationService {
   ): Promise<unknown> {}
   private async learnFromCommand(
     command: EnhancedVoiceCommand,
-    context: VoiceContext, result: unknown): Promise<void> {}
+    context: VoiceContext,
+    result: unknown
+  ): Promise<void> {}
   private async updateVoiceAnalytics(
     command: EnhancedVoiceCommand,
-    context: VoiceContext, result: unknown): Promise<void> {}
+    context: VoiceContext,
+    result: unknown
+  ): Promise<void> {}
   private async executeShortcutActions(
     actions: VoiceAction[],
     context: VoiceContext
