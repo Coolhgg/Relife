@@ -55,7 +55,8 @@ import MobileAccessibilityService from './utils/mobile-accessibility';
 import EnhancedFocusService from './utils/enhanced-focus';
 import { PerformanceMonitor } from './services/performance-monitor';
 import AppAnalyticsService from './services/app-analytics';
-import AIRewardsService from './services/ai-rewards';
+import EmailCampaignService from './services/email-campaign';
+import _AIRewardsService from './services/ai-rewards';
 import RewardService from './services/reward-service';
 import { SupabaseService } from './services/supabase';
 import { PushNotificationService } from './services/push-notifications';
@@ -79,7 +80,10 @@ import { useUISound } from './hooks/useSoundEffects';
 import './App.css';
 
 // Email Campaign Integration - now using DI service
-import { PersonaType, PersonaDetectionResult } from './types';
+import {
+  PersonaType as _PersonaType,
+  PersonaDetectionResult as _PersonaDetectionResult,
+} from './types';
 
 // Inner App component that uses i18n hooks
 function AppContent() {
@@ -205,7 +209,11 @@ function AppContent() {
       );
       updateServiceWorkerAlarms(appState.alarm.alarms);
     }
-  }, [appState.alarm.alarms, serviceWorkerState.isInitialized, updateServiceWorkerAlarms]);
+  }, [
+    appState.alarm.alarms,
+    serviceWorkerState.isInitialized,
+    updateServiceWorkerAlarms,
+  ]);
 
   // Emotional Intelligence Notifications Hook
   const [_emotionalState, emotionalActions] = useEmotionalNotifications({
@@ -216,7 +224,12 @@ function AppContent() {
   // Tab Protection Announcements Hook
   const tabProtectionSettings = useTabProtectionSettings();
   const { announceProtectionWarning } = useTabProtectionAnnouncements({
-    activeAlarm: appState.alarm.currentlyTriggering.length > 0 ? appState.alarm.alarms.find(a => appState.alarm.currentlyTriggering.includes(a.id)) || null : null,
+    activeAlarm:
+      appState.alarm.currentlyTriggering.length > 0
+        ? appState.alarm.alarms.find(a =>
+            appState.alarm.currentlyTriggering.includes(a.id)
+          ) || null
+        : null,
     // TODO: Performance optimization - Move to useMemo to prevent re-renders
     // const enabledAlarms = useMemo(() => appState.alarms.filter(alarm => alarm.enabled), [appState.alarms]);
     enabledAlarms: appState.alarms.filter((alarm: unknown) => alarm.enabled),
@@ -243,24 +256,24 @@ function AppContent() {
         // Update user habits based on current alarms
         if (alarms.length > 0) {
           const habitData = {
-            habit_name: "daily_alarms",
+            habit_name: 'daily_alarms',
             current_count: alarms.filter(a => a.enabled).length,
             target_count: alarms.length,
-            last_activity: new Date().toISOString()
+            last_activity: new Date().toISOString(),
           };
-          await rewardService.updateUserHabits(auth.user?.id!, habitData);
+          await rewardService.updateUserHabits(auth.user!.id, habitData);
         }
 
         // Check and unlock any new rewards
-        await rewardService.checkAndUnlockRewards(auth.user?.id!);
+        await rewardService.checkAndUnlockRewards(auth.user!.id);
 
         // Get the comprehensive reward system data from database
-        const rewards = await rewardService.getRewards();
-        const userRewards = await rewardService.getUserRewards(auth.user?.id!);
-        const insights = await rewardService.getUserInsights(auth.user?.id!);
-        const analytics = await rewardService.getUserAnalytics(auth.user?.id!);
-        const habits = await rewardService.getUserHabits(auth.user?.id!);
-        const nicheProfile = await rewardService.getUserNicheProfile(auth.user?.id!);
+        const _rewards = await rewardService.getRewards();
+        const userRewards = await rewardService.getUserRewards(auth.user!.id);
+        const _insights = await rewardService.getUserInsights(auth.user!.id);
+        const analytics = await rewardService.getUserAnalytics(auth.user!.id);
+        const _habits = await rewardService.getUserHabits(auth.user!.id);
+        const _nicheProfile = await rewardService.getUserNicheProfile(auth.user!.id);
 
         // Build comprehensive reward system object
         const rewardSystem = {
@@ -268,7 +281,9 @@ function AppContent() {
           level: analytics?.current_level || 1,
           experience: analytics?.total_points || 0, // Using points as experience
           streakDays: analytics?.current_streak || 0,
-          unlockedRewards: (userRewards || []).map(r => r.reward_id || r.id || String(r)),
+          unlockedRewards: (userRewards || []).map(
+            r => r.reward_id || r.id || String(r)
+          ),
         };
 
         setAppState((prev: AppState) => ({
@@ -292,7 +307,7 @@ function AppContent() {
         );
       }
     },
-    [appState.alarm.alarms, setAppState, auth.user?.id]
+    [appState.alarm.alarms, setAppState, auth.user]
   );
 
   const loadUserAlarms = useCallback(async () => {
@@ -365,7 +380,7 @@ function AppContent() {
         { context: 'load_user_alarms', metadata: { userId: auth.user.id } }
       );
     }
-  }, [auth.user, setSyncStatus, refreshRewardsSystem]);
+  }, [auth.user, setSyncStatus, refreshRewardsSystem, setAppState]);
 
   // Handle alarm snooze functionality
   const handleAlarmSnooze = useCallback(
@@ -398,14 +413,14 @@ function AppContent() {
           duration,
         });
         analytics.trackError(
-          error instanceof Error ? error : new Error(String(_error)),
+          _error instanceof Error ? _error : new Error(String(_error)),
           {
             action: 'snooze_alarm',
           }
         );
 
         ErrorHandler.handleError(
-          error instanceof Error ? error : new Error(String(_error)),
+          _error instanceof Error ? _error : new Error(String(_error)),
           'Failed to snooze alarm',
           {
             context: 'snooze_alarm',
@@ -602,7 +617,7 @@ function AppContent() {
 
         // Set up service worker message listener
         navigator.serviceWorker.addEventListener('message', event => {
-          const { type, data } = _event.data;
+          const { type, data } = event.data;
 
           switch (type) {
             case 'ALARM_TRIGGERED':
@@ -741,7 +756,7 @@ function AppContent() {
       );
       setSyncStatus('_error');
     }
-  }, [auth.user, setSyncStatus]);
+  }, [auth.user, setSyncStatus, setAppState]);
 
   // Refresh rewards system based on current alarms and analytics
   // Handle quick alarm setup with preset configurations
@@ -891,7 +906,7 @@ function AppContent() {
         timestamp: new Date().toISOString(),
       });
     }
-  }, [auth.user, identify, track, reset, trackDailyActive]);
+  }, [auth.user, identify, track, reset, trackDailyActive, setAppState]);
 
   // Network status monitoring
   useEffect(() => {
@@ -986,17 +1001,17 @@ function AppContent() {
     const initialize = async () => {
       try {
         // Initialize performance monitoring and analytics
-        await performanceService.initialize();
-        await analyticsService.initialize();
+        await PerformanceMonitor.getInstance().initialize();
+        await AppAnalyticsService.getInstance().initialize();
 
         // Start performance tracking
-        appAnalytics.startPerformanceMarker('app_initialization');
+        AppAnalyticsService.getInstance().startPerformanceMarker('app_initialization');
 
         // Initialize analytics services (Sentry + PostHog)
-        await appAnalytics.initializeAnalytics();
+        await AppAnalyticsService.getInstance().initializeAnalytics();
 
         // Track app launch
-        appAnalytics.trackPageView('dashboard', {
+        AppAnalyticsService.getInstance().trackPageView('dashboard', {
           isInitialLoad: true,
           userAuthenticated: !!auth.user,
         });
@@ -1188,8 +1203,8 @@ function AppContent() {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, [
-    appState.alarm.currentlyTriggering.length > 0 ? appState.alarm.alarms.find(a => appState.alarm.currentlyTriggering.includes(a.id)) || null : null,
-    appState.alarm.alarms,
+    appState.activeAlarm,
+    appState.alarms,
     announceProtectionWarning,
     tabProtectionSettings.settings,
   ]); // Re-run when activeAlarm, alarms, announcement function, or protection settings change
@@ -1226,7 +1241,7 @@ function AppContent() {
     const appAnalytics = AppAnalyticsService.getInstance();
 
     // Start performance tracking
-    appAnalytics.startPerformanceMarker('alarm_creation');
+    AppAnalyticsService.getInstance().startPerformanceMarker('alarm_creation');
 
     try {
       let newAlarm: Alarm;
@@ -1361,7 +1376,7 @@ function AppContent() {
         duration,
       });
       appAnalytics.trackError(
-        error instanceof Error ? error : new Error(String(_error)),
+        _error instanceof Error ? _error : new Error(String(_error)),
         {
           action: 'create_alarm',
           alarmData,
@@ -1369,7 +1384,7 @@ function AppContent() {
       );
 
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(_error)),
+        _error instanceof Error ? _error : new Error(String(_error)),
         'Failed to create alarm',
         {
           context: 'create_alarm',
@@ -1462,12 +1477,15 @@ function AppContent() {
         error: _error instanceof Error ? _error.message : String(_error),
         duration,
       });
-      analytics.trackError(error instanceof Error ? error : new Error(String(_error)), {
-        action: 'edit_alarm',
-      });
+      analytics.trackError(
+        _error instanceof Error ? _error : new Error(String(_error)),
+        {
+          action: 'edit_alarm',
+        }
+      );
 
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(_error)),
+        _error instanceof Error ? _error : new Error(String(_error)),
         'Failed to edit alarm',
         {
           context: 'edit_alarm',
@@ -1538,12 +1556,15 @@ function AppContent() {
         error: _error instanceof Error ? _error.message : String(_error),
         duration,
       });
-      analytics.trackError(error instanceof Error ? error : new Error(String(_error)), {
-        action: 'delete_alarm',
-      });
+      analytics.trackError(
+        _error instanceof Error ? _error : new Error(String(_error)),
+        {
+          action: 'delete_alarm',
+        }
+      );
 
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(_error)),
+        _error instanceof Error ? _error : new Error(String(_error)),
         'Failed to delete alarm',
         {
           context: 'delete_alarm',
@@ -1626,12 +1647,15 @@ function AppContent() {
         error: _error instanceof Error ? _error.message : String(_error),
         duration,
       });
-      analytics.trackError(error instanceof Error ? error : new Error(String(_error)), {
-        action: 'toggle_alarm',
-      });
+      analytics.trackError(
+        _error instanceof Error ? _error : new Error(String(_error)),
+        {
+          action: 'toggle_alarm',
+        }
+      );
 
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(_error)),
+        _error instanceof Error ? _error : new Error(String(_error)),
         'Failed to toggle alarm',
         {
           context: 'toggle_alarm',
@@ -1698,12 +1722,12 @@ function AppContent() {
           duration,
         });
         analytics.trackError(
-          error instanceof Error ? error : new Error(String(_error)),
+          _error instanceof Error ? _error : new Error(String(_error)),
           { action: 'dismiss_alarm' }
         );
 
         ErrorHandler.handleError(
-          error instanceof Error ? error : new Error(String(_error)),
+          _error instanceof Error ? _error : new Error(String(_error)),
           'Failed to dismiss alarm',
           {
             context: 'dismiss_alarm',
@@ -1843,7 +1867,7 @@ function AppContent() {
 
     switch (appState.navigation.currentView) {
       case 'dashboard':
-        appAnalytics.trackPageView('dashboard', {
+        AppAnalyticsService.getInstance().trackPageView('dashboard', {
           totalAlarms: appState.alarm.alarms.length,
           activeAlarms: appState.alarm.alarms.filter((a: any) => a.enabled).length,
           totalAlarms: appState.alarms.length,
@@ -1873,7 +1897,7 @@ function AppContent() {
           </ErrorBoundary>
         );
       case 'alarms':
-        appAnalytics.trackPageView('alarms', {
+        AppAnalyticsService.getInstance().trackPageView('alarms', {
           totalAlarms: appState.alarm.alarms.length,
         });
         return (
@@ -1894,7 +1918,7 @@ function AppContent() {
           </ErrorBoundary>
         );
       case 'advanced-scheduling':
-        appAnalytics.trackPageView('advanced_scheduling');
+        AppAnalyticsService.getInstance().trackPageView('advanced_scheduling');
         appAnalytics.trackFeatureUsage('advanced_scheduling', 'accessed');
         return (
           <ErrorBoundary context="AdvancedScheduling">
@@ -1902,7 +1926,7 @@ function AppContent() {
           </ErrorBoundary>
         );
       case 'gaming':
-        appAnalytics.trackPageView('gaming');
+        AppAnalyticsService.getInstance().trackPageView('gaming');
         appAnalytics.trackFeatureUsage('gaming_hub', 'accessed');
         return (
           <ErrorBoundary context="GamingHub">
@@ -1956,7 +1980,7 @@ function AppContent() {
           </ErrorBoundary>
         );
       case 'settings':
-        appAnalytics.trackPageView('settings');
+        AppAnalyticsService.getInstance().trackPageView('settings');
         return (
           <ErrorBoundary context="EnhancedSettings">
             <div className="p-4 space-y-6 max-w-4xl mx-auto">
@@ -1999,12 +2023,12 @@ function AppContent() {
           </ErrorBoundary>
         );
       case 'gift-shop':
-        appAnalytics.trackPageView('gift_shop');
+        AppAnalyticsService.getInstance().trackPageView('gift_shop');
         appAnalytics.trackFeatureUsage('gift_shop', 'accessed');
         return (
           <ErrorBoundary context="GiftShop">
             <GiftShop
-              userId={auth.user?.id!}
+              userId={auth.user!.id}
               onGiftPurchased={() => {
                 // Refresh reward system to update user points
                 refreshRewardsSystem();
@@ -2017,7 +2041,7 @@ function AppContent() {
           </ErrorBoundary>
         );
       case 'pricing':
-        appAnalytics.trackPageView('pricing');
+        AppAnalyticsService.getInstance().trackPageView('pricing');
         appAnalytics.trackFeatureUsage('pricing_page', 'accessed');
         return (
           <ErrorBoundary context="PricingPage">
@@ -2260,7 +2284,9 @@ function AppContent() {
                   }}
                   role="tab"
                   aria-selected={appState.navigation.currentView === 'alarms'}
-                  aria-current={appState.navigation.currentView === 'alarms' ? 'page' : undefined}
+                  aria-current={
+                    appState.navigation.currentView === 'alarms' ? 'page' : undefined
+                  }
                   aria-label="Alarms - Manage your alarm list"
                   aria-controls="main-content"
                 >
@@ -2291,9 +2317,13 @@ function AppContent() {
                       : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
                   }`}
                   role="tab"
-                  aria-selected={appState.navigation.currentView === 'advanced-scheduling'}
+                  aria-selected={
+                    appState.navigation.currentView === 'advanced-scheduling'
+                  }
                   aria-current={
-                    appState.navigation.currentView === 'advanced-scheduling' ? 'page' : undefined
+                    appState.navigation.currentView === 'advanced-scheduling'
+                      ? 'page'
+                      : undefined
                   }
                   aria-label="Advanced Scheduling - Create smart alarms with AI optimization"
                   aria-controls="main-content"
@@ -2326,7 +2356,9 @@ function AppContent() {
                   }`}
                   role="tab"
                   aria-selected={appState.navigation.currentView === 'gaming'}
-                  aria-current={appState.navigation.currentView === 'gaming' ? 'page' : undefined}
+                  aria-current={
+                    appState.navigation.currentView === 'gaming' ? 'page' : undefined
+                  }
                   aria-label="Gaming - Rewards, battles, and community challenges"
                   aria-controls="main-content"
                 >
@@ -2415,7 +2447,9 @@ function AppContent() {
                   }`}
                   role="tab"
                   aria-selected={appState.navigation.currentView === 'pricing'}
-                  aria-current={appState.navigation.currentView === 'pricing' ? 'page' : undefined}
+                  aria-current={
+                    appState.navigation.currentView === 'pricing' ? 'page' : undefined
+                  }
                   aria-label="Premium - Subscription plans and premium features"
                   aria-controls="main-content"
                 >
