@@ -199,27 +199,27 @@ function AppContent() {
 
   // Sync alarms with enhanced service worker when they change
   useEffect(() => {
-    if (serviceWorkerState.isInitialized && appState.alarms) {
+    if (serviceWorkerState.isInitialized && appState.alarm.alarms) {
       console.log(
-        `App: Syncing ${appState.alarms.length} alarms with enhanced service worker`
+        `App: Syncing ${appState.alarm.alarms.length} alarms with enhanced service worker`
       );
-      updateServiceWorkerAlarms(appState.alarms);
+      updateServiceWorkerAlarms(appState.alarm.alarms);
     }
-  }, [appState.alarms, serviceWorkerState.isInitialized, updateServiceWorkerAlarms]);
+  }, [appState.alarm.alarms, serviceWorkerState.isInitialized, updateServiceWorkerAlarms]);
 
   // Emotional Intelligence Notifications Hook
   const [_emotionalState, emotionalActions] = useEmotionalNotifications({
     userId: auth.user?.id || '',
-    enabled: !!auth._user && appState.permissions.notifications.granted,
+    enabled: !!auth.user && appState.alarm.settings?.vibrationEnabled,
   });
 
   // Tab Protection Announcements Hook
   const tabProtectionSettings = useTabProtectionSettings();
   const { announceProtectionWarning } = useTabProtectionAnnouncements({
-    activeAlarm: appState.activeAlarm,
+    activeAlarm: appState.alarm.currentlyTriggering.length > 0 ? appState.alarm.alarms.find(a => appState.alarm.currentlyTriggering.includes(a.id)) || null : null,
     // TODO: Performance optimization - Move to useMemo to prevent re-renders
-    // const enabledAlarms = useMemo(() => appState.alarms.filter(alarm => alarm.enabled), [appState.alarms]);
-    enabledAlarms: appState.alarms.filter((alarm: any) => alarm.enabled),
+    // const enabledAlarms = useMemo(() => appState.alarm.alarms.filter(alarm => alarm.enabled), [appState.alarm.alarms]);
+    enabledAlarms: appState.alarm.alarms.filter((alarm: any) => alarm.enabled),
     settings: tabProtectionSettings.settings,
   });
 
@@ -234,24 +234,24 @@ function AppContent() {
   };
 
   const refreshRewardsSystem = useCallback(
-    async (alarms: Alarm[] = appState.alarms) => {
+    async (alarms: Alarm[] = appState.alarm.alarms) => {
       try {
         // Get the database-backed reward service
         const rewardService = RewardService.getInstance();
 
         // Update user habits based on current alarms
-        await rewardService.updateUserHabits(auth._user?.id!, alarms);
+        await rewardService.updateUserHabits(auth.user?.id!, alarms);
 
         // Check and unlock any new rewards
-        await rewardService.checkAndUnlockRewards(auth._user?.id!);
+        await rewardService.checkAndUnlockRewards(auth.user?.id!);
 
         // Get the comprehensive reward system data from database
         const rewards = await rewardService.getRewards();
-        const userRewards = await rewardService.getUserRewards(auth._user?.id!);
-        const insights = await rewardService.getUserInsights(auth._user?.id!);
-        const analytics = await rewardService.getUserAnalytics(auth._user?.id!);
-        const habits = await rewardService.getUserHabits(auth._user?.id!);
-        const nicheProfile = await rewardService.getUserNicheProfile(auth._user?.id!);
+        const userRewards = await rewardService.getUserRewards(auth.user?.id!);
+        const insights = await rewardService.getUserInsights(auth.user?.id!);
+        const analytics = await rewardService.getUserAnalytics(auth.user?.id!);
+        const habits = await rewardService.getUserHabits(auth.user?.id!);
+        const nicheProfile = await rewardService.getUserNicheProfile(auth.user?.id!);
 
         // Build comprehensive reward system object
         const rewardSystem = {
@@ -287,11 +287,11 @@ function AppContent() {
         );
       }
     },
-    [appState.alarms, setAppState, auth._user?.id]
+    [appState.alarm.alarms, setAppState, auth.user?.id]
   );
 
   const loadUserAlarms = useCallback(async () => {
-    if (!auth._user) return;
+    if (!auth.user) return;
 
     try {
       // Load alarms from offline storage first (faster)
@@ -310,7 +310,7 @@ function AppContent() {
       if (navigator.onLine) {
         try {
           const { alarms: savedAlarms } = await SupabaseService.loadUserAlarms(
-            auth._user.id
+            auth.user.id
           );
           setAppState((prev: AppState) => ({
             // type-safe replacement
@@ -332,11 +332,11 @@ function AppContent() {
           await refreshRewardsSystem(savedAlarms);
         } catch (_error) {
           ErrorHandler.handleError(
-            error instanceof Error ? _error : new Error(String(_error)),
+            _error instanceof Error ? _error : new Error(String(_error)),
             'Remote alarm loading failed, using offline alarms',
             { context: 'load_remote_alarms', metadata: { userId: auth.user.id } }
           );
-          setSyncStatus('_error');
+          setSyncStatus('error');
 
           // Initialize rewards system with offline alarms
           await refreshRewardsSystem(offlineAlarms);
@@ -355,12 +355,12 @@ function AppContent() {
       }
     } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? _error : new Error(String(_error)),
+        _error instanceof Error ? _error : new Error(String(_error)),
         'Failed to load user alarms',
         { context: 'load_user_alarms', metadata: { userId: auth.user.id } }
       );
     }
-  }, [auth._user, setSyncStatus, refreshRewardsSystem]);
+  }, [auth.user, setSyncStatus, refreshRewardsSystem]);
 
   // Handle alarm snooze functionality
   const handleAlarmSnooze = useCallback(
@@ -389,7 +389,7 @@ function AppContent() {
         const duration = performance.now() - startTime;
         analytics.trackAlarmAction('snooze', alarmId, {
           success: false,
-          error: error instanceof Error ? _error.message : String(_error),
+          error: _error instanceof Error ? _error.message : String(_error),
           duration,
         });
         analytics.trackError(
@@ -569,9 +569,9 @@ function AppContent() {
         const readyRegistration = await navigator.serviceWorker.ready;
 
         // Send alarms to service worker
-        if (readyRegistration.active && appState.alarms.length > 0) {
+        if (readyRegistration.active && appState.alarm.alarms.length > 0) {
           console.log(
-            `App: Sending ${appState.alarms.length} alarms to service worker`
+            `App: Sending ${appState.alarm.alarms.length} alarms to service worker`
           );
 
           // Use MessageChannel for reliable communication
@@ -589,7 +589,7 @@ function AppContent() {
           readyRegistration.active.postMessage(
             {
               type: 'UPDATE_ALARMS',
-              data: { alarms: appState.alarms },
+              data: { alarms: appState.alarm.alarms },
             },
             [messageChannel.port2]
           );
@@ -663,7 +663,7 @@ function AppContent() {
       } catch (_error) {
         console.error('App: Service worker registration failed:', _error);
         ErrorHandler.handleError(
-          error instanceof Error ? _error : new Error(String(_error)),
+          _error instanceof Error ? _error : new Error(String(_error)),
           'Enhanced service worker registration failed',
           { context: 'service_worker_registration' }
         );
@@ -671,10 +671,10 @@ function AppContent() {
     } else {
       console.warn('App: Service workers not supported in this browser');
     }
-  }, [appState.alarms, handleServiceWorkerAlarmTrigger]);
+  }, [appState.alarm.alarms, handleServiceWorkerAlarmTrigger]);
 
   const syncOfflineChanges = useCallback(async () => {
-    if (!auth._user) return;
+    if (!auth.user) return;
 
     try {
       const pendingChanges = await OfflineStorage.getPendingChanges();
@@ -704,7 +704,7 @@ function AppContent() {
             }
           } catch (_error) {
             ErrorHandler.handleError(
-              error instanceof Error ? _error : new Error(String(_error)),
+              _error instanceof Error ? _error : new Error(String(_error)),
               'Failed to sync offline change',
               {
                 context: 'sync_offline_change',
@@ -720,7 +720,7 @@ function AppContent() {
 
         // Reload alarms from server to ensure consistency
         const { alarms: updatedAlarms } = await SupabaseService.loadUserAlarms(
-          auth._user.id
+          auth.user.id
         );
         setAppState((prev: AppState) => ({
           // type-safe replacement
@@ -731,12 +731,12 @@ function AppContent() {
       }
     } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? _error : new Error(String(_error)),
+        _error instanceof Error ? _error : new Error(String(_error)),
         'Failed to sync offline changes'
       );
       setSyncStatus('_error');
     }
-  }, [auth._user, setSyncStatus]);
+  }, [auth.user, setSyncStatus]);
 
   // Refresh rewards system based on current alarms and analytics
   // Handle quick alarm setup with preset configurations
@@ -805,7 +805,7 @@ function AppContent() {
       });
     } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? _error : new Error(String(_error)),
+        _error instanceof Error ? _error : new Error(String(_error)),
         'Failed to initialize accessibility services',
         { context: 'accessibility_initialization' }
       );
@@ -820,14 +820,14 @@ function AppContent() {
 
     setAppState((prev: AppState) => ({
       ...prev,
-      user: auth._user,
+      user: auth.user,
     }));
 
     // Set analytics user context when user signs in/out
-    if (auth._user) {
+    if (auth.user) {
       // Use both analytics services for comprehensive tracking
       appAnalytics.setUserContext(auth.user.id, {
-        email: auth._user.email,
+        email: auth.user.email,
         signInMethod: 'supabase',
       });
 
@@ -837,7 +837,7 @@ function AppContent() {
         email: auth.user.email,
         createdAt:
           auth.user.createdAt instanceof Date
-            ? auth._user.createdAt.toISOString()
+            ? auth.user.createdAt.toISOString()
             : auth.user.createdAt,
         deviceType: navigator.userAgent.includes('Mobile') ? 'mobile' : 'desktop',
       });
@@ -857,13 +857,13 @@ function AppContent() {
       (async () => {
         try {
           await emailService.initialize();
-          const personaResult = await emailService.detectPersona(auth._user);
+          const personaResult = await emailService.detectPersona(auth.user);
           console.log(
             `Detected persona: ${personaResult._persona} (confidence: ${personaResult.confidence})`
           );
 
           // Add user to appropriate email campaign
-          await emailService.addUserToCampaign(auth._user, personaResult._persona);
+          await emailService.addUserToCampaign(auth.user, personaResult._persona);
 
           // Track persona detection for analytics
           track('PERSONA_DETECTED', {
@@ -886,7 +886,7 @@ function AppContent() {
         timestamp: new Date().toISOString(),
       });
     }
-  }, [auth._user, identify, track, reset, trackDailyActive]);
+  }, [auth.user, identify, track, reset, trackDailyActive]);
 
   // Network status monitoring
   useEffect(() => {
@@ -993,7 +993,7 @@ function AppContent() {
         // Track app launch
         appAnalytics.trackPageView('dashboard', {
           isInitialLoad: true,
-          userAuthenticated: !!auth._user,
+          userAuthenticated: !!auth.user,
         });
 
         // Track session activity with enhanced analytics
@@ -1029,14 +1029,14 @@ function AppContent() {
         await initializeAccessibilityServices();
 
         // Only load alarms if user is authenticated
-        if (auth._user) {
+        if (auth.user) {
           await loadUserAlarms();
         }
 
         setIsInitialized(true);
       } catch (_error) {
         ErrorHandler.handleError(
-          error instanceof Error ? _error : new Error(String(_error)),
+          _error instanceof Error ? _error : new Error(String(_error)),
           'Failed to initialize app',
           {
             context: 'app_initialization',
@@ -1051,7 +1051,7 @@ function AppContent() {
     }
   }, [
     auth.isInitialized,
-    auth._user,
+    auth.user,
     loadUserAlarms,
     registerEnhancedServiceWorker,
     track,
@@ -1123,8 +1123,8 @@ function AppContent() {
       // Check if there are enabled alarms that could ring soon
       if (tabProtectionSettings.settings.protectionTiming.upcomingAlarmWarning) {
         // TODO: Performance optimization - Replace with useMemo for better performance
-        // const enabledAlarms = useMemo(() => appState.alarms.filter(alarm => alarm.enabled), [appState.alarms]);
-        const enabledAlarms = appState.alarms.filter((alarm: any) => alarm.enabled);
+        // const enabledAlarms = useMemo(() => appState.alarm.alarms.filter(alarm => alarm.enabled), [appState.alarm.alarms]);
+        const enabledAlarms = appState.alarm.alarms.filter((alarm: any) => alarm.enabled);
         if (enabledAlarms.length > 0) {
           // Check if any alarm is within the configured threshold
           const now = new Date();
@@ -1183,8 +1183,8 @@ function AppContent() {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, [
-    appState.activeAlarm,
-    appState.alarms,
+    appState.alarm.currentlyTriggering.length > 0 ? appState.alarm.alarms.find(a => appState.alarm.currentlyTriggering.includes(a.id)) || null : null,
+    appState.alarm.alarms,
     announceProtectionWarning,
     tabProtectionSettings.settings,
   ]); // Re-run when activeAlarm, alarms, announcement function, or protection settings change
@@ -1210,7 +1210,7 @@ function AppContent() {
     snoozeInterval?: number;
     maxSnoozes?: number;
   }) => {
-    if (!auth._user) {
+    if (!auth.user) {
       ErrorHandler.handleError(
         new Error('User not authenticated'),
         'Cannot create alarm without authentication'
@@ -1301,7 +1301,7 @@ function AppContent() {
         await OfflineStorage.saveAlarm(newAlarm);
       }
 
-      const updatedAlarms = [...appState.alarms, newAlarm];
+      const updatedAlarms = [...appState.alarm.alarms, newAlarm];
       setAppState((prev: AppState) => ({
         ...prev,
         alarms: updatedAlarms,
@@ -1335,7 +1335,7 @@ function AppContent() {
       appAnalytics.trackAlarmAction('create', newAlarm.id, { success: true, duration });
 
       // Update service worker
-      updateServiceWorkerAlarms([...appState.alarms, newAlarm]);
+      updateServiceWorkerAlarms([...appState.alarm.alarms, newAlarm]);
 
       // Schedule push notification for new alarm
       try {
@@ -1347,12 +1347,12 @@ function AppContent() {
       // Track error and performance
       const duration = appAnalytics.endPerformanceMarker('alarm_creation', {
         success: false,
-        error: error instanceof Error ? _error.message : String(_error),
+        error: _error instanceof Error ? _error.message : String(_error),
       });
 
       appAnalytics.trackAlarmAction('create', 'unknown', {
         success: false,
-        error: error instanceof Error ? _error.message : String(_error),
+        error: _error instanceof Error ? _error.message : String(_error),
         duration,
       });
       appAnalytics.trackError(
@@ -1386,7 +1386,7 @@ function AppContent() {
       maxSnoozes?: number;
     }
   ) => {
-    if (!auth._user) {
+    if (!auth.user) {
       ErrorHandler.handleError(
         new Error('User not authenticated'),
         'Cannot edit alarm without authentication'
@@ -1399,7 +1399,7 @@ function AppContent() {
 
     try {
       analytics.trackAlarmAction('edit', alarmId, { voiceMood: alarmData.voiceMood });
-      const existingAlarm = appState.alarms.find((a: any) => a.id === alarmId);
+      const existingAlarm = appState.alarm.alarms.find((a: any) => a.id === alarmId);
       if (!existingAlarm) throw new Error('Alarm not found');
 
       const updatedAlarm: Alarm = {
@@ -1420,7 +1420,7 @@ function AppContent() {
         await OfflineStorage.saveAlarm(updatedAlarm);
       }
 
-      const updatedAlarms = appState.alarms.map((alarm: any) =>
+      const updatedAlarms = appState.alarm.alarms.map((alarm: any) =>
         alarm.id === alarmId ? updatedAlarm : alarm
       );
 
@@ -1454,7 +1454,7 @@ function AppContent() {
       const duration = performance.now() - startTime;
       analytics.trackAlarmAction('edit', editingAlarm?.id || 'unknown', {
         success: false,
-        error: error instanceof Error ? _error.message : String(_error),
+        error: _error instanceof Error ? _error.message : String(_error),
         duration,
       });
       analytics.trackError(error instanceof Error ? error : new Error(String(_error)), {
@@ -1473,7 +1473,7 @@ function AppContent() {
   };
 
   const handleDeleteAlarm = async (alarmId: string) => {
-    if (!auth._user) {
+    if (!auth.user) {
       ErrorHandler.handleError(
         new Error('User not authenticated'),
         'Cannot delete alarm without authentication'
@@ -1498,8 +1498,8 @@ function AppContent() {
         await OfflineStorage.deleteAlarm(alarmId);
       }
 
-      const alarmToDelete = appState.alarms.find((a: any) => a.id === alarmId);
-      const updatedAlarms = appState.alarms.filter(
+      const alarmToDelete = appState.alarm.alarms.find((a: any) => a.id === alarmId);
+      const updatedAlarms = appState.alarm.alarms.filter(
         (alarm: any) => alarm.id !== alarmId
       );
       setAppState((prev: any) => ({
@@ -1530,7 +1530,7 @@ function AppContent() {
       const duration = performance.now() - startTime;
       analytics.trackAlarmAction('delete', alarmId, {
         success: false,
-        error: error instanceof Error ? _error.message : String(_error),
+        error: _error instanceof Error ? _error.message : String(_error),
         duration,
       });
       analytics.trackError(error instanceof Error ? error : new Error(String(_error)), {
@@ -1549,7 +1549,7 @@ function AppContent() {
   };
 
   const handleToggleAlarm = async (alarmId: string, enabled: boolean) => {
-    if (!auth._user) {
+    if (!auth.user) {
       ErrorHandler.handleError(
         new Error('User not authenticated'),
         'Cannot toggle alarm without authentication'
@@ -1562,7 +1562,7 @@ function AppContent() {
 
     try {
       analytics.trackAlarmAction('toggle', alarmId, { enabled });
-      const existingAlarm = appState.alarms.find((a: any) => a.id === alarmId);
+      const existingAlarm = appState.alarm.alarms.find((a: any) => a.id === alarmId);
       if (!existingAlarm) throw new Error('Alarm not found');
 
       const updatedAlarm: Alarm = {
@@ -1583,7 +1583,7 @@ function AppContent() {
         await OfflineStorage.saveAlarm(updatedAlarm);
       }
 
-      const updatedAlarms = appState.alarms.map((alarm: any) =>
+      const updatedAlarms = appState.alarm.alarms.map((alarm: any) =>
         alarm.id === alarmId ? updatedAlarm : alarm
       );
 
@@ -1618,7 +1618,7 @@ function AppContent() {
       analytics.trackAlarmAction('toggle', alarmId, {
         success: false,
         enabled,
-        error: error instanceof Error ? _error.message : String(_error),
+        error: _error instanceof Error ? _error.message : String(_error),
         duration,
       });
       analytics.trackError(error instanceof Error ? error : new Error(String(_error)), {
@@ -1689,7 +1689,7 @@ function AppContent() {
         analytics.trackAlarmAction('dismiss', alarmId, {
           success: false,
           method,
-          error: error instanceof Error ? _error.message : String(_error),
+          error: _error instanceof Error ? _error.message : String(_error),
           duration,
         });
         analytics.trackError(
@@ -1744,7 +1744,7 @@ function AppContent() {
   }
 
   // Show authentication flow if user is not logged in
-  if (!auth._user) {
+  if (!auth.user) {
     return (
       <ErrorBoundary
         context="Authentication"
@@ -1836,16 +1836,16 @@ function AppContent() {
   const renderContent = () => {
     const appAnalytics = AppAnalyticsService.getInstance();
 
-    switch (appState.currentView) {
+    switch (appState.navigation.currentView) {
       case 'dashboard':
         appAnalytics.trackPageView('dashboard', {
-          totalAlarms: appState.alarms.length,
-          activeAlarms: appState.alarms.filter((a: any) => a.enabled).length,
+          totalAlarms: appState.alarm.alarms.length,
+          activeAlarms: appState.alarm.alarms.filter((a: any) => a.enabled).length,
         });
         return (
           <ErrorBoundary context="Dashboard">
             <Dashboard
-              alarms={appState.alarms}
+              alarms={appState.alarm.alarms}
               onAddAlarm={() => {
                 appAnalytics.trackFeatureUsage('add_alarm', 'button_clicked');
                 setShowAlarmForm(true);
@@ -1867,12 +1867,12 @@ function AppContent() {
         );
       case 'alarms':
         appAnalytics.trackPageView('alarms', {
-          totalAlarms: appState.alarms.length,
+          totalAlarms: appState.alarm.alarms.length,
         });
         return (
           <ErrorBoundary context="AlarmList">
             <AlarmList
-              alarms={appState.alarms}
+              alarms={appState.alarm.alarms}
               onToggleAlarm={handleToggleAlarm}
               onEditAlarm={(alarm: any) => {
                 appAnalytics.trackFeatureUsage('edit_alarm', 'button_clicked', {
@@ -1900,7 +1900,7 @@ function AppContent() {
         return (
           <ErrorBoundary context="GamingHub">
             <GamingHub
-              currentUser={auth._user as User}
+              currentUser={auth.user as User}
               rewardSystem={appState.rewardSystem}
               activeBattles={appState.activeBattles || []}
               friends={appState.friends || []}
@@ -1997,7 +1997,7 @@ function AppContent() {
         return (
           <ErrorBoundary context="GiftShop">
             <GiftShop
-              userId={auth._user?.id!}
+              userId={auth.user?.id!}
               onGiftPurchased={() => {
                 // Refresh reward system to update user points
                 refreshRewardsSystem();
@@ -2015,7 +2015,7 @@ function AppContent() {
         return (
           <ErrorBoundary context="PricingPage">
             <PricingPage
-              user={auth._user as User}
+              user={auth.user as User}
               onUpgrade={(plan: any) => {
                 appAnalytics.trackFeatureUsage('subscription', 'upgraded', {
                   plan: plan.id,
@@ -2106,7 +2106,7 @@ function AppContent() {
                         .showVisualWarning && (
                         <TabProtectionWarning
                           activeAlarm={appState.activeAlarm}
-                          enabledAlarms={appState.alarms.filter(
+                          enabledAlarms={appState.alarm.alarms.filter(
                             (alarm: any) => alarm.enabled
                           )}
                           settings={tabProtectionSettings.settings}
@@ -2172,7 +2172,7 @@ function AppContent() {
                   })}
                   className="flex flex-col items-center py-2 rounded-lg transition-colors border-2"
                   style={
-                    appState.currentView === 'dashboard'
+                    appState.navigation.currentView === 'dashboard'
                       ? {
                           color: 'var(--theme-primary-800)',
                           backgroundColor: 'var(--theme-primary-100)',
@@ -2185,22 +2185,22 @@ function AppContent() {
                         }
                   }
                   onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
-                    if (appState.currentView !== 'dashboard') {
+                    if (appState.navigation.currentView !== 'dashboard') {
                       e.currentTarget.style.backgroundColor =
                         'var(--theme-surface-hover)';
                       e.currentTarget.style.color = 'var(--theme-text-primary)';
                     }
                   }}
                   onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
-                    if (appState.currentView !== 'dashboard') {
+                    if (appState.navigation.currentView !== 'dashboard') {
                       e.currentTarget.style.backgroundColor = 'transparent';
                       e.currentTarget.style.color = 'var(--theme-text-secondary)';
                     }
                   }}
                   role="tab"
-                  aria-selected={appState.currentView === 'dashboard'}
+                  aria-selected={appState.navigation.currentView === 'dashboard'}
                   aria-current={
-                    appState.currentView === 'dashboard' ? 'page' : undefined
+                    appState.navigation.currentView === 'dashboard' ? 'page' : undefined
                   }
                   aria-label="Dashboard - Overview of your alarms"
                   aria-controls="main-content"
@@ -2215,7 +2215,7 @@ function AppContent() {
                   onClick={createClickHandler(() => {
                     const appAnalytics = AppAnalyticsService.getInstance();
                     appAnalytics.trackFeatureUsage('navigation', 'alarms_clicked', {
-                      totalAlarms: appState.alarms.length,
+                      totalAlarms: appState.alarm.alarms.length,
                     });
                     setAppState((prev: AppState) => ({
                       // type-safe replacement
@@ -2226,7 +2226,7 @@ function AppContent() {
                   })}
                   className="flex flex-col items-center py-2 rounded-lg transition-colors border-2"
                   style={
-                    appState.currentView === 'alarms'
+                    appState.navigation.currentView === 'alarms'
                       ? {
                           color: 'var(--theme-primary-800)',
                           backgroundColor: 'var(--theme-primary-100)',
@@ -2239,21 +2239,21 @@ function AppContent() {
                         }
                   }
                   onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
-                    if (appState.currentView !== 'alarms') {
+                    if (appState.navigation.currentView !== 'alarms') {
                       e.currentTarget.style.backgroundColor =
                         'var(--theme-surface-hover)';
                       e.currentTarget.style.color = 'var(--theme-text-primary)';
                     }
                   }}
                   onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
-                    if (appState.currentView !== 'alarms') {
+                    if (appState.navigation.currentView !== 'alarms') {
                       e.currentTarget.style.backgroundColor = 'transparent';
                       e.currentTarget.style.color = 'var(--theme-text-secondary)';
                     }
                   }}
                   role="tab"
-                  aria-selected={appState.currentView === 'alarms'}
-                  aria-current={appState.currentView === 'alarms' ? 'page' : undefined}
+                  aria-selected={appState.navigation.currentView === 'alarms'}
+                  aria-current={appState.navigation.currentView === 'alarms' ? 'page' : undefined}
                   aria-label="Alarms - Manage your alarm list"
                   aria-controls="main-content"
                 >
@@ -2279,14 +2279,14 @@ function AppContent() {
                     AccessibilityUtils.announcePageChange('Advanced Scheduling');
                   })}
                   className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
-                    appState.currentView === 'advanced-scheduling'
+                    appState.navigation.currentView === 'advanced-scheduling'
                       ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
                       : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
                   }`}
                   role="tab"
-                  aria-selected={appState.currentView === 'advanced-scheduling'}
+                  aria-selected={appState.navigation.currentView === 'advanced-scheduling'}
                   aria-current={
-                    appState.currentView === 'advanced-scheduling' ? 'page' : undefined
+                    appState.navigation.currentView === 'advanced-scheduling' ? 'page' : undefined
                   }
                   aria-label="Advanced Scheduling - Create smart alarms with AI optimization"
                   aria-controls="main-content"
@@ -2313,13 +2313,13 @@ function AppContent() {
                     AccessibilityUtils.announcePageChange('Gaming Hub');
                   })}
                   className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
-                    appState.currentView === 'gaming'
+                    appState.navigation.currentView === 'gaming'
                       ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
                       : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
                   }`}
                   role="tab"
-                  aria-selected={appState.currentView === 'gaming'}
-                  aria-current={appState.currentView === 'gaming' ? 'page' : undefined}
+                  aria-selected={appState.navigation.currentView === 'gaming'}
+                  aria-current={appState.navigation.currentView === 'gaming' ? 'page' : undefined}
                   aria-label="Gaming - Rewards, battles, and community challenges"
                   aria-controls="main-content"
                 >
@@ -2344,14 +2344,14 @@ function AppContent() {
                     AccessibilityUtils.announcePageChange('Gift Shop');
                   })}
                   className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
-                    appState.currentView === 'gift-shop'
+                    appState.navigation.currentView === 'gift-shop'
                       ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
                       : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
                   }`}
                   role="tab"
-                  aria-selected={appState.currentView === 'gift-shop'}
+                  aria-selected={appState.navigation.currentView === 'gift-shop'}
                   aria-current={
-                    appState.currentView === 'gift-shop' ? 'page' : undefined
+                    appState.navigation.currentView === 'gift-shop' ? 'page' : undefined
                   }
                   aria-label="Gift Shop - Browse and purchase gifts with your points"
                   aria-controls="main-content"
@@ -2372,14 +2372,14 @@ function AppContent() {
                     AccessibilityUtils.announcePageChange('Settings');
                   })}
                   className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
-                    appState.currentView === 'settings'
+                    appState.navigation.currentView === 'settings'
                       ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
                       : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
                   }`}
                   role="tab"
-                  aria-selected={appState.currentView === 'settings'}
+                  aria-selected={appState.navigation.currentView === 'settings'}
                   aria-current={
-                    appState.currentView === 'settings' ? 'page' : undefined
+                    appState.navigation.currentView === 'settings' ? 'page' : undefined
                   }
                   aria-label="Settings - App preferences, analytics, and accessibility"
                   aria-controls="main-content"
@@ -2402,13 +2402,13 @@ function AppContent() {
                     AccessibilityUtils.announcePageChange('Premium Plans');
                   }}
                   className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
-                    appState.currentView === 'pricing'
+                    appState.navigation.currentView === 'pricing'
                       ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
                       : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
                   }`}
                   role="tab"
-                  aria-selected={appState.currentView === 'pricing'}
-                  aria-current={appState.currentView === 'pricing' ? 'page' : undefined}
+                  aria-selected={appState.navigation.currentView === 'pricing'}
+                  aria-current={appState.navigation.currentView === 'pricing' ? 'page' : undefined}
                   aria-label="Premium - Subscription plans and premium features"
                   aria-controls="main-content"
                 >
