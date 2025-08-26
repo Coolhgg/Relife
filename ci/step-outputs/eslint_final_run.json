@@ -1,0 +1,6 @@
+{
+  "validation_note": "ESLint configuration error - cannot run validation",
+  "error": "Missing dependencies: @eslint/js and es-abstract module issues",
+  "status": "CONFIGURATION_ERROR",
+  "recommendation": "Fix ESLint configuration before running validation"
+}
