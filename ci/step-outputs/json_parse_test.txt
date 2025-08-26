@@ -1,0 +1,7 @@
+=== Testing JSON parsing ===
+Testing backup/pre-final-lint-20250825_093523/ci/step-outputs/eslint_after.json
+  ✓ Valid JSON
+Testing backup/pre-final-lint-20250825_093523/package.json
+  ✓ Valid JSON
+Testing backup/pre-final-lint-20250825_093523/tsconfig.json
+  ✓ Valid JSON
