@@ -242,7 +242,6 @@ export const CustomThemeCreator: React.FC = () => {
                         type="checkbox"
                         value={time}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                          // auto: implicit any
                           if (e.target.checked) {
                             setCustomTheme({
                               ...customTheme,

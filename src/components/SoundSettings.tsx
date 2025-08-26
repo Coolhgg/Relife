@@ -341,7 +341,6 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
                         variant="ghost"
                         size="sm"
                         onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                          // auto: implicit any
                           e.stopPropagation();
                           handleThemePreview(theme.id);
                         }}
@@ -754,7 +753,6 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
                 userId={userId}
                 onClose={() => setShowCustomThemeCreator(false)}
                 onThemeCreated={(theme: any) => {
-                  // auto: implicit any
                   // Refresh available themes
                   refreshThemes();
                   setShowCustomThemeCreator(false);
@@ -778,7 +776,6 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
                 userId={userId}
                 onClose={() => setShowCustomThemeManager(false)}
                 onThemeUpdated={(theme: any) => {
-                  // auto: implicit any
                   // Refresh available themes
                   refreshThemes();
                 }}
