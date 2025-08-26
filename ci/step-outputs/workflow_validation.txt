@@ -1,0 +1,75 @@
+# GitHub Workflow YAML Validation Report
+Generated: 2025-08-26T09:26:11.141Z
+Total files processed: 32
+
+## Summary
+✅ Valid files: 32
+🔧 Fixed files: 0
+❌ Failed files: 0
+
+## Results
+✅ VALID - .github/workflows/accessibility-testing.yml
+
+✅ VALID - .github/workflows/chromatic.yml
+
+✅ VALID - .github/workflows/ci-quality-gates.yml
+
+✅ VALID - .github/workflows/cleanup-automation.yml
+
+✅ VALID - .github/workflows/code-cleanup-automation.yml
+
+✅ VALID - .github/workflows/dependency-review-enhanced.yml
+
+✅ VALID - .github/workflows/deploy-production-bun.yml
+
+✅ VALID - .github/workflows/e2e-tests.yml
+
+✅ VALID - .github/workflows/enhanced-ci-cd.yml
+
+✅ VALID - .github/workflows/enhanced-security-scan.yml
+
+✅ VALID - .github/workflows/hooks-validation.yml
+
+✅ VALID - .github/workflows/integration-tests.yml
+
+✅ VALID - .github/workflows/maintenance-consolidated.yml
+
+✅ VALID - .github/workflows/mobile-release.yml
+
+✅ VALID - .github/workflows/mobile-testing.yml
+
+✅ VALID - .github/workflows/performance-monitoring.yml
+
+✅ VALID - .github/workflows/pr-validation.yml
+
+✅ VALID - .github/workflows/quality-checks.yml
+
+✅ VALID - .github/workflows/quality-consolidated.yml
+
+✅ VALID - .github/workflows/security-analysis.yml
+
+✅ VALID - .github/workflows/security-consolidated.yml
+
+✅ VALID - .github/workflows/security-monitoring.yml
+
+✅ VALID - .github/workflows/security-scanning.yml
+
+✅ VALID - .github/workflows/staging-deploy.yml
+
+✅ VALID - .github/workflows/strict-quality-gates.yml
+
+✅ VALID - .github/workflows/test-reporting.yml
+
+✅ VALID - .github/workflows/translation-consolidated.yml
+
+✅ VALID - .github/workflows/translation-deployment.yml
+
+✅ VALID - .github/workflows/translation-monitoring.yml
+
+✅ VALID - .github/workflows/translation-notifications.yml
+
+✅ VALID - .github/workflows/translation-reports.yml
+
+✅ VALID - .github/workflows/translation-validation.yml
+
+## Final Status: ✅ All workflows are valid
