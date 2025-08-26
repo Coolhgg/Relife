@@ -1,0 +1,420 @@
+name: Performance Monitoring
+
+on:
+  push:
+    branches: [main, staging, test/performance-load-setup]
+  pull_request:
+    branches: [main, staging]
+  schedule:
+    # Run performance tests daily at 2 AM UTC
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+    inputs:
+      test_type:
+        description: "Type of performance test to run"
+        required: true
+        default: "ci"
+        type: choice
+        options:
+          - ci
+          - baseline
+          - load
+          - stress
+          - full-suite
+      environment:
+        description: "Environment to test against"
+        required: true
+        default: "staging"
+        type: choice
+        options:
+          - staging
+          - production
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  performance-baseline:
+    name: Baseline Performance Tests
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' || github.event.inputs.test_type == 'baseline' || github.event.inputs.test_type == 'ci'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Setup Docker for k6
+        run: docker pull grafana/k6
+
+      - name: Create performance reports directory
+        run: mkdir -p performance/reports
+
+      - name: Run k6 validation test
+        run: npm run test:perf:validation
+        continue-on-error: true
+
+      - name: Run k6 baseline test
+        run: npm run test:perf:baseline:ci
+        continue-on-error: true
+
+      - name: Start preview server
+        run: npm run preview &
+        env:
+          CI: true
+
+      - name: Wait for server
+        run: npx wait-on http://localhost:4173 --timeout 30000
+
+      - name: Run Lighthouse CI
+        run: npm run test:perf:lighthouse:full
+        continue-on-error: true
+
+      - name: Generate performance report
+        run: npm run test:perf:report
+        continue-on-error: true
+
+      - name: Upload performance artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-baseline-${{ github.sha }}
+          path: |
+            performance/reports/
+            artifacts/perf-baseline-report.json
+            artifacts/performance-test-report.md
+            .lighthouseci/
+          retention-days: 30
+
+      - name: Comment PR with performance results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = './artifacts/performance-test-report.md';
+
+            if (fs.existsSync(path)) {
+              const report = fs.readFileSync(path, 'utf8');
+              const truncatedReport = report.length > 65000 ? 
+                report.substring(0, 65000) + '\n\n... (truncated)' : 
+                report;
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `## 🔬 Performance Test Results\n\n${truncatedReport}`
+              });
+            }
+
+  performance-load:
+    name: Load Performance Tests
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.event.inputs.test_type == 'load' || github.event.inputs.test_type == 'full-suite'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Setup Docker for k6
+        run: docker pull grafana/k6
+
+      - name: Create performance reports directory
+        run: mkdir -p performance/reports
+
+      - name: Start preview server
+        run: npm run preview &
+        env:
+          CI: true
+
+      - name: Wait for server
+        run: npx wait-on http://localhost:4173 --timeout 30000
+
+      - name: Run k6 load tests
+        run: npm run test:perf:load
+        env:
+          BASE_URL: http://localhost:4173
+          API_URL: http://localhost:4173/api
+        continue-on-error: true
+
+      - name: Upload load test artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-load-${{ github.sha }}
+          path: |
+            performance/reports/alarm-lifecycle-report.html
+          retention-days: 30
+
+  performance-stress:
+    name: Stress Performance Tests
+    runs-on: ubuntu-latest
+    if: github.event.inputs.test_type == 'stress' || github.event.inputs.test_type == 'full-suite'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Setup Docker for k6
+        run: docker pull grafana/k6
+
+      - name: Create performance reports directory
+        run: mkdir -p performance/reports
+
+      - name: Start preview server
+        run: npm run preview &
+        env:
+          CI: true
+
+      - name: Wait for server
+        run: npx wait-on http://localhost:4173 --timeout 30000
+
+      - name: Run k6 stress tests
+        run: npm run test:perf:stress
+        env:
+          BASE_URL: http://localhost:4173
+          API_URL: http://localhost:4173/api
+          STRESS_LEVEL: high
+        continue-on-error: true
+
+      - name: Upload stress test artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-stress-${{ github.sha }}
+          path: |
+            performance/reports/critical-endpoints-report.html
+          retention-days: 30
+
+  performance-regression:
+    name: Performance Regression Detection
+    runs-on: ubuntu-latest
+    needs: performance-baseline
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Download current performance data
+        uses: actions/download-artifact@v4
+        with:
+          name: performance-baseline-${{ github.sha }}
+          path: ./current
+
+      - name: Checkout base branch
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          git checkout origin/${{ github.base_ref }}
+
+      - name: Install dependencies (base)
+        run: npm ci
+
+      - name: Build application (base)
+        run: npm run build
+
+      - name: Setup Docker for k6
+        run: docker pull grafana/k6
+
+      - name: Create performance reports directory
+        run: mkdir -p performance/reports
+
+      - name: Run baseline tests (base branch)
+        run: |
+          npm run test:perf:baseline:ci
+          npm run test:perf:report
+        continue-on-error: true
+
+      - name: Compare performance results
+        run: |
+          node -e "
+            const fs = require('fs');
+            const path = require('path');
+            
+            // Load current results
+            const currentPath = './current/artifacts/perf-baseline-report.json';
+            const basePath = './artifacts/perf-baseline-report.json';
+            
+            if (!fs.existsSync(currentPath) || !fs.existsSync(basePath)) {
+              console.log('Performance data not found, skipping comparison');
+              process.exit(0);
+            }
+            
+            const current = JSON.parse(fs.readFileSync(currentPath, 'utf8'));
+            const base = JSON.parse(fs.readFileSync(basePath, 'utf8'));
+            
+            // Compare key metrics
+            let regressionFound = false;
+            const comparison = {
+              lighthouse_regression: false,
+              k6_regression: false,
+              details: []
+            };
+            
+            // Lighthouse comparison (if available)
+            if (current.lighthouse_performance && base.lighthouse_performance) {
+              // This would compare Lighthouse scores
+              console.log('Lighthouse comparison available');
+            }
+            
+            // k6 comparison (if available)
+            if (current.k6_load_testing && base.k6_load_testing) {
+              const currentDuration = current.k6_load_testing.http_req_duration?.avg || 0;
+              const baseDuration = base.k6_load_testing.http_req_duration?.avg || 0;
+              
+              if (currentDuration > baseDuration * 1.1) {
+                regressionFound = true;
+                comparison.k6_regression = true;
+                comparison.details.push('Response time increased by more than 10%');
+              }
+              
+              const currentErrors = current.k6_load_testing.http_req_failed?.rate || 0;
+              const baseErrors = base.k6_load_testing.http_req_failed?.rate || 0;
+              
+              if (currentErrors > baseErrors * 1.5) {
+                regressionFound = true;
+                comparison.k6_regression = true;
+                comparison.details.push('Error rate increased significantly');
+              }
+            }
+            
+            fs.writeFileSync('./performance-comparison.json', JSON.stringify(comparison, null, 2));
+            
+            if (regressionFound) {
+              console.error('Performance regression detected!');
+              console.error(JSON.stringify(comparison, null, 2));
+              process.exit(1);
+            } else {
+              console.log('No performance regression detected');
+            }
+          "
+
+      - name: Comment PR with regression results
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+
+            let message = '## ⚠️ Performance Regression Detected\n\n';
+            message += 'The performance tests indicate a regression in this PR.\n\n';
+
+            if (fs.existsSync('./performance-comparison.json')) {
+              const comparison = JSON.parse(fs.readFileSync('./performance-comparison.json', 'utf8'));
+              if (comparison.details.length > 0) {
+                message += '### Issues Found:\n';
+                comparison.details.forEach(detail => {
+                  message += `- ${detail}\n`;
+                });
+              }
+            }
+
+            message += '\nPlease review the performance impact before merging.';
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: message
+            });
+
+  performance-monitoring:
+    name: Continuous Performance Monitoring
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Setup Docker for k6
+        run: docker pull grafana/k6
+
+      - name: Create performance reports directory
+        run: mkdir -p performance/reports
+
+      - name: Start preview server
+        run: npm run preview &
+        env:
+          CI: true
+
+      - name: Wait for server
+        run: npx wait-on http://localhost:4173 --timeout 30000
+
+      - name: Run comprehensive performance suite
+        run: npm run test:perf:ci
+        env:
+          BASE_URL: http://localhost:4173
+          API_URL: http://localhost:4173/api
+        continue-on-error: true
+
+      - name: Upload monitoring artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-monitoring-${{ github.sha }}
+          path: |
+            performance/reports/
+            artifacts/
+            .lighthouseci/
+          retention-days: 90
+
+      - name: Send performance alert (if degraded)
+        if: failure()
+        run: |
+          echo "Performance monitoring detected issues"
+          # This would integrate with your alerting system
+          # curl -X POST "$WEBHOOK_URL" -d "Performance issues detected in main branch"

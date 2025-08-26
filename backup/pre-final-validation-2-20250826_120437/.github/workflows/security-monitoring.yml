@@ -1,0 +1,148 @@
+name: Security Monitoring
+
+on:
+  workflow_run:
+    workflows: ["Security Analysis"]
+    types:
+      - completed
+  schedule:
+    - cron: "0 6 * * 1" # Weekly on Mondays at 6 AM UTC
+
+permissions:
+  contents: read
+  issues: write
+  security-events: write
+
+jobs:
+  security-report:
+    name: Generate Security Report
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'schedule' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download security artifacts
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          workflow: security-analysis.yml
+          name: security-audit-results
+          path: ./security-reports/
+        continue-on-error: true
+
+      - name: Download license reports
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          workflow: security-analysis.yml
+          name: license-reports
+          path: ./security-reports/
+        continue-on-error: true
+
+      - name: Generate security summary
+        run: |
+          echo "# Security Monitoring Report" > security-summary.md
+          echo "**Generated**: $(date -u)" >> security-summary.md
+          echo "" >> security-summary.md
+
+          if [ -f "./security-reports/npm-audit-main.json" ]; then
+            echo "## Dependency Audit Results" >> security-summary.md
+            MAIN_CRITICAL=$(cat ./security-reports/npm-audit-main.json | jq '.metadata.vulnerabilities.critical // 0')
+            MAIN_HIGH=$(cat ./security-reports/npm-audit-main.json | jq '.metadata.vulnerabilities.high // 0')
+            MAIN_MODERATE=$(cat ./security-reports/npm-audit-main.json | jq '.metadata.vulnerabilities.moderate // 0')
+            
+            echo "### Main Project" >> security-summary.md
+            echo "- Critical: $MAIN_CRITICAL" >> security-summary.md
+            echo "- High: $MAIN_HIGH" >> security-summary.md
+            echo "- Moderate: $MAIN_MODERATE" >> security-summary.md
+            echo "" >> security-summary.md
+          fi
+
+          if [ -f "./security-reports/npm-audit-dashboard.json" ]; then
+            DASH_CRITICAL=$(cat ./security-reports/npm-audit-dashboard.json | jq '.metadata.vulnerabilities.critical // 0')
+            DASH_HIGH=$(cat ./security-reports/npm-audit-dashboard.json | jq '.metadata.vulnerabilities.high // 0')
+            DASH_MODERATE=$(cat ./security-reports/npm-audit-dashboard.json | jq '.metadata.vulnerabilities.moderate // 0')
+            
+            echo "### Campaign Dashboard" >> security-summary.md
+            echo "- Critical: $DASH_CRITICAL" >> security-summary.md
+            echo "- High: $DASH_HIGH" >> security-summary.md
+            echo "- Moderate: $DASH_MODERATE" >> security-summary.md
+            echo "" >> security-summary.md
+          fi
+
+          echo "## Security Tools Status" >> security-summary.md
+          echo "- ✅ Dependabot: Active (daily scans)" >> security-summary.md
+          echo "- ✅ CodeQL: Active (daily scans)" >> security-summary.md
+          echo "- ✅ NPM Audit: Active (CI integration)" >> security-summary.md
+          echo "- ✅ TruffleHog: Active (secrets detection)" >> security-summary.md
+          echo "- ✅ License Check: Active (compliance monitoring)" >> security-summary.md
+
+      - name: Upload security report
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-monitoring-report
+          path: security-summary.md
+          retention-days: 30
+
+  security-notifications:
+    name: Security Notifications
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+
+    steps:
+      - name: Create security alert issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = '🚨 Security Analysis Failed - Investigation Required';
+            const body = `
+            ## Security Alert
+
+            The security analysis workflow has failed and requires immediate attention.
+
+            **Details:**
+            - Workflow: ${{ github.event.workflow_run.name }}
+            - Run ID: ${{ github.event.workflow_run.id }}
+            - Conclusion: ${{ github.event.workflow_run.conclusion }}
+            - Branch: ${{ github.event.workflow_run.head_branch }}
+            - Commit: ${{ github.event.workflow_run.head_sha }}
+
+            **Next Steps:**
+            1. Review the failed workflow logs
+            2. Investigate any security vulnerabilities found
+            3. Address critical and high-severity issues immediately
+            4. Update this issue with resolution status
+
+            **Workflow URL:** ${{ github.event.workflow_run.html_url }}
+
+            ---
+
+            This issue was automatically created by the Security Monitoring workflow.
+            `;
+
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['security', 'critical', 'needs-attention']
+            });
+
+  dependabot-auto-merge:
+    name: Auto-merge Security Updates
+    runs-on: ubuntu-latest
+    if: ${{ github.actor == 'dependabot[bot]' }}
+
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v1
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Auto-merge security updates
+        if: ${{ steps.metadata.outputs.update-type == 'version-update:semver-patch' && contains(steps.metadata.outputs.dependency-names, 'security') }}
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
