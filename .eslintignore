@@ -38,11 +38,7 @@ Thumbs.db
 # Git
 .git/
 
-# Python-specific (handled by black/isort)
-*.py
-*.pyi
-
-# Config files that should maintain their format
+# Config files
 .env
 .env.*
 *.ini
@@ -52,23 +48,10 @@ package-lock.json
 yarn.lock
 bun.lockb
 
-# Existing workflow files with syntax errors (to be fixed separately)
-.github/workflows/e2e-tests.yml
-.github/workflows/deploy-production-bun.yml
-.github/workflows/accessibility-testing.yml
-.github/workflows/chromatic.yml
-
-# Large generated files
+# Test and build artifacts
 artifacts/
 test-results/
-node_modules/
 playwright-report/
-dist/
-build/
-
-# Files that need manual review before formatting
-.detoxrc.json
-.github/branch-protection-config.json
 
 # Backup directories
 backup/
