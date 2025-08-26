@@ -1,5 +1,5 @@
 import {
-import { ErrorHandler } from './error-handler';
+  ErrorHandler,
   SleepAnalysisService,
   SmartAlarmRecommendation,
   SleepPattern,

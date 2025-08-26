@@ -3,7 +3,7 @@
 // Powerful hooks for creating smooth, delightful animations
 
 import {
-import { config } from '../config/environment';
+  config,
   useAnimation,
   useMotionValue,
   useTransform,

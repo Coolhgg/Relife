@@ -3,13 +3,12 @@
 
 import React, { useState } from 'react';
 import {
-// auto: restored by scout - verify import path
+import path
 import { SubscriptionTier } from '@/types';
-// auto: restored by scout - verify import path
-import { Textarea } from '@/components/ui/textarea';
-// auto: restored by scout - verify import path
-import { Textarea } from '@/components/ui/textarea';
-// auto: restored by scout - verify import path
+import path
+import { Textarea } from './ui/textarea';
+import path
+import path
 import { SubscriptionTier } from '@/types';
   Alert,
   ArrowUpCircle,
@@ -38,7 +37,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { Progress } from '../ui/textarea';
+import { Progress } from './ui/progress';
 import { Label } from '../ui/label';
 import { Checkbox } from '../ui/checkbox';
 import PricingTable from './PricingTable';

@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import {
-// auto: restored by scout - verify import path
+import path
 import { AppState } from '@/types';
-// auto: restored by scout - verify import path
+import path
 import { AppState } from '@/types';
   capacitorEnhanced,
   DeviceFeatures,

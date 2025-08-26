@@ -4,8 +4,9 @@
  */
 
 import {
-import { config } from '../config/environment';
-import { ErrorHandler } from '../services/error-handler';
+  config,
+  import { ErrorHandler
+} from '../services/error-handler';
   HttpClient,
   HttpClientConfig,
   HttpRequestConfig,

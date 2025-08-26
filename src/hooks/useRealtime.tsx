@@ -1,6 +1,6 @@
-// auto: restored by scout - verify import path
+import path
 import React from 'react';
-// auto: restored by scout - verify import path
+import path
 import React from 'react';
 /* eslint-disable react-refresh/only-export-components */
 /**
@@ -9,8 +9,9 @@ import React from 'react';
  */
 
 import {
-import { config } from '../config/environment';
-import { ErrorHandler } from '../services/error-handler';
+  config,
+  import { ErrorHandler
+} from '../services/error-handler';
   useEffect,
   useRef,
   useState,
