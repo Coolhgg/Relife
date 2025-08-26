@@ -10,6 +10,8 @@ import helmet from 'helmet';
 import cors from 'cors';
 import { body, param, query, validationResult } from 'express-validator';
 import crypto from 'crypto';
+import APIKeyManagementService, { APIKeyScope } from '../services/api-key-management';
+import { createClient } from '@supabase/supabase-js';
 
 // Types for security context
 interface AuthenticatedRequest extends Request {
@@ -23,8 +25,10 @@ interface AuthenticatedRequest extends Request {
   apiKey?: {
     id: string;
     name: string;
-    permissions: string[];
+    permissions: APIKeyScope[];
     rateLimit: number;
+    userId?: string;
+    environment?: string;
   };
 }
 
@@ -38,10 +42,18 @@ interface SecurityConfig {
   csrfProtection: boolean;
 }
 
+// Validate required environment variables
+if (!process.env.JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required for security');
+}
+if (!process.env.API_KEY_SECRET) {
+  throw new Error('API_KEY_SECRET environment variable is required for security');
+}
+
 // Security configuration
 const securityConfig: SecurityConfig = {
-  jwtSecret: process.env.JWT_SECRET || 'ai-params-secret-key',
-  apiKeySecret: process.env.API_KEY_SECRET || 'api-key-secret',
+  jwtSecret: process.env.JWT_SECRET,
+  apiKeySecret: process.env.API_KEY_SECRET,
   sessionTimeout: 24 * 60 * 60 * 1000, // 24 hours
   maxLoginAttempts: 5,
   lockoutDuration: 15 * 60 * 1000, // 15 minutes
@@ -138,27 +150,96 @@ export const rateLimiters = {
   ),
 };
 
+// Generate nonce for inline scripts/styles
+const generateNonce = (): string => {
+  return crypto.randomBytes(16).toString('base64');
+};
+
 // Security headers middleware
-export const securityHeaders = helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'", 'data:', 'https:'],
-      connectSrc: ["'self'"],
-      fontSrc: ["'self'"],
-      objectSrc: ["'none'"],
-      mediaSrc: ["'self'"],
-      frameSrc: ["'none'"],
+export const securityHeaders = (req: Request, res: Response, next: NextFunction) => {
+  const nonce = generateNonce();
+  res.locals.nonce = nonce;
+  
+  // Apply helmet security headers
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", `'nonce-${nonce}'`, 'https://cdnjs.cloudflare.com'],
+        styleSrc: ["'self'", `'nonce-${nonce}'`, 'https://fonts.googleapis.com'],
+        imgSrc: ["'self'", 'data:', 'https:', 'blob:'],
+        connectSrc: ["'self'", 'https:'],
+        fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+        objectSrc: ["'none'"],
+        mediaSrc: ["'self'"],
+        frameSrc: ["'none'"],
+        baseUri: ["'self'"],
+        formAction: ["'self'"],
+        upgradeInsecureRequests: [],
+      },
     },
-  },
-  hsts: {
-    maxAge: 31536000, // 1 year
-    includeSubDomains: true,
-    preload: true,
-  },
-});
+    hsts: {
+      maxAge: 31536000, // 1 year
+      includeSubDomains: true,
+      preload: true,
+    },
+    noSniff: true,
+    frameguard: { action: 'deny' },
+    xssFilter: true,
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+    crossOriginOpenerPolicy: { policy: 'same-origin' },
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+    crossOriginEmbedderPolicy: { policy: 'credentialless' },
+  })(req, res, next);
+  
+  // Additional security headers not covered by helmet
+  res.setHeader('Permissions-Policy', [
+    'accelerometer=()',
+    'ambient-light-sensor=()',
+    'autoplay=()',
+    'battery=()',
+    'camera=()',
+    'cross-origin-isolated=()',
+    'display-capture=()',
+    'document-domain=()',
+    'encrypted-media=()',
+    'execution-while-not-rendered=()',
+    'execution-while-out-of-viewport=()',
+    'fullscreen=(self)',
+    'geolocation=()',
+    'gyroscope=()',
+    'keyboard-map=()',
+    'magnetometer=()',
+    'microphone=()',
+    'midi=()',
+    'navigation-override=()',
+    'payment=()',
+    'picture-in-picture=()',
+    'publickey-credentials-get=()',
+    'screen-wake-lock=()',
+    'sync-xhr=()',
+    'usb=()',
+    'web-share=()',
+    'xr-spatial-tracking=()',
+  ].join(', '));
+  
+  // Clear site data on logout
+  if (req.path === '/api/auth/logout') {
+    res.setHeader('Clear-Site-Data', '"cache", "cookies", "storage"');
+  }
+  
+  // Server timing information (development only)
+  if (process.env.NODE_ENV === 'development') {
+    res.setHeader('Server-Timing', 'total;dur=0');
+  }
+  
+  // Custom security headers for API endpoints
+  if (req.path.startsWith('/api/')) {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, nosnippet, noarchive');
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+  }
+};
 
 // CORS configuration
 export const corsOptions = {
@@ -230,32 +311,37 @@ export const authenticateJWT = async (
   }
 };
 
-// API Key authentication middleware
+// Initialize Supabase client for API key management
+const supabaseUrl = process.env.VITE_SUPABASE_URL;
+const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error('Supabase configuration missing for API key management');
+}
+
+const supabase = createClient(supabaseUrl, supabaseKey);
+const apiKeyService = APIKeyManagementService.getInstance(supabase);
+
+// API Key authentication middleware with enhanced security
 export const authenticateAPIKey = async (
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ) => {
+  const startTime = Date.now();
+  
   try {
     const apiKey = req.headers['x-api-key'] as string;
+    const clientIp = req.ip || req.connection.remoteAddress;
+    const origin = req.headers.origin;
+    const userAgent = req.headers['user-agent'];
 
     if (!apiKey) {
-      return res.status(401).json({
-        success: false,
-        error: 'API key required',
-        code: 'MISSING_API_KEY',
-      });
-    }
-
-    // Verify API key (in production, check against database)
-    const validApiKeys = process.env.VALID_API_KEYS?.split(',') || [];
-
-    if (!validApiKeys.includes(apiKey)) {
       AuditLogger.getInstance().log(
         'auth_failure',
         'unknown',
         {
-          error: 'Invalid API key',
+          error: 'Missing API key',
           method: 'api_key',
         },
         req
@@ -263,29 +349,118 @@ export const authenticateAPIKey = async (
 
       return res.status(401).json({
         success: false,
-        error: 'Invalid API key',
+        error: 'API key required',
+        code: 'MISSING_API_KEY',
+      });
+    }
+
+    // Validate API key using the new service
+    const validation = await apiKeyService.validateAPIKey(
+      apiKey,
+      [], // No specific scopes required for basic auth
+      clientIp,
+      origin
+    );
+
+    if (!validation.valid) {
+      const responseTime = Date.now() - startTime;
+      
+      // Log security violation if API key is invalid
+      if (validation.apiKey) {
+        await apiKeyService.logUsage(
+          validation.apiKey.id,
+          req.method,
+          req.path,
+          401,
+          {
+            ipAddress: clientIp,
+            userAgent,
+            origin,
+            responseTimeMs: responseTime,
+            errorMessage: validation.error,
+            securityViolation: true,
+            violationType: 'invalid_key',
+          }
+        );
+      }
+
+      AuditLogger.getInstance().log(
+        'auth_failure',
+        'unknown',
+        {
+          error: validation.error,
+          method: 'api_key',
+        },
+        req
+      );
+
+      return res.status(401).json({
+        success: false,
+        error: validation.error || 'Invalid API key',
         code: 'INVALID_API_KEY',
       });
     }
 
-    // Set API key context
+    const { apiKey: validatedKey, rateLimitInfo } = validation;
+
+    // Set API key context with enhanced information
     req.apiKey = {
-      id: crypto.createHash('sha256').update(apiKey).digest('hex').substring(0, 16),
-      name: 'API Client',
-      permissions: ['parameter_read', 'parameter_write'],
-      rateLimit: 100,
+      id: validatedKey!.id,
+      name: validatedKey!.keyName,
+      permissions: validatedKey!.scopes,
+      rateLimit: validatedKey!.rateLimitPerMinute,
+      userId: validatedKey!.userId,
+      environment: validatedKey!.environment,
     };
 
+    // Set rate limit headers
+    if (rateLimitInfo) {
+      res.setHeader('X-RateLimit-Remaining', rateLimitInfo.remaining.toString());
+      res.setHeader('X-RateLimit-Reset', rateLimitInfo.resetAt.toISOString());
+    }
+
+    // Log successful authentication
     AuditLogger.getInstance().log(
       'auth_success',
-      req.apiKey.id,
-      { method: 'api_key' },
+      validatedKey!.id,
+      { 
+        method: 'api_key',
+        keyName: validatedKey!.keyName,
+        scopes: validatedKey!.scopes,
+        rateLimitRemaining: rateLimitInfo?.remaining,
+      },
       req
+    );
+
+    // Log API usage for analytics
+    const responseTime = Date.now() - startTime;
+    await apiKeyService.logUsage(
+      validatedKey!.id,
+      req.method,
+      req.path,
+      200, // Will be updated later if needed
+      {
+        ipAddress: clientIp,
+        userAgent,
+        origin,
+        responseTimeMs: responseTime,
+        rateLimitRemaining: rateLimitInfo?.remaining,
+      }
     );
 
     next();
   } catch (error) {
-    return res.status(401).json({
+    AuditLogger.getInstance().log(
+      'auth_error',
+      'unknown',
+      {
+        error: error.message,
+        method: 'api_key',
+      },
+      req
+    );
+
+    return res.status(500).json({
       success: false,
       error: 'API key authentication failed',
       code: 'API_KEY_AUTH_FAILED',
@@ -315,22 +490,25 @@ export const authenticate = (
   }
 };
 
-// Authorization middleware for role-based access
-export const authorize = (requiredPermissions: string[]) => {
+// Authorization middleware for role-based access with enhanced API key support
+export const authorize = (requiredPermissions: (string | APIKeyScope)[]) => {
   return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const user = req.user;
     const apiKey = req.apiKey;
 
-    let userPermissions: string[] = [];
+    let userPermissions: (string | APIKeyScope)[] = [];
+    let userId = 'unknown';
 
     if (user) {
       userPermissions = user.permissions;
+      userId = user.id;
       // Admin role has all permissions
       if (user.role === 'admin') {
         return next();
       }
     } else if (apiKey) {
       userPermissions = apiKey.permissions;
+      userId = apiKey.id;
     }
 
     // Check if user has required permissions
@@ -341,10 +519,11 @@ export const authorize = (requiredPermissions: string[]) => {
     if (!hasPermission) {
       AuditLogger.getInstance().log(
         'authorization_failure',
-        user?.id || apiKey?.id || 'unknown',
+        userId,
         {
           required: requiredPermissions,
           available: userPermissions,
+          authMethod: user ? 'jwt' : 'api_key',
         },
         req
       );
@@ -354,6 +533,7 @@ export const authorize = (requiredPermissions: string[]) => {
         error: 'Insufficient permissions',
         code: 'INSUFFICIENT_PERMISSIONS',
         required: requiredPermissions,
+        available: userPermissions,
       });
     }
 

@@ -308,53 +308,296 @@ class SecurityService {
   }
 
   /**
-   * Validate password against security requirements
+   * Enhanced password validation against comprehensive security requirements
    */
-  validatePasswordSecurity(password: string): {
+  validatePasswordSecurity(password: string, options?: {
+    enforceMinScore?: number;
+    maxLength?: number;
+    checkDictionary?: boolean;
+    checkKeyboardPatterns?: boolean;
+    requireMinEntropy?: boolean;
+  }): {
     isValid: boolean;
     errors: string[];
+    warnings: string[];
     strength: PasswordStrength;
+    entropy: number;
+    riskLevel: 'low' | 'medium' | 'high' | 'critical';
   } {
     const errors: string[] = [];
-    const strength = this.checkPasswordStrength(password);
+    const warnings: string[] = [];
+    const opts = {
+      enforceMinScore: 3,
+      maxLength: 128,
+      checkDictionary: true,
+      checkKeyboardPatterns: true,
+      requireMinEntropy: true,
+      ...options,
+    };
 
-    // Basic requirements
+    const strength = this.checkPasswordStrength(password);
+    const entropy = this.calculatePasswordEntropy(password);
+
+    // Length requirements
     if (!password || password.length < 12) {
       errors.push('Password must be at least 12 characters long');
     }
-
-    if (!/(?=.*[a-z])/.test(password)) {
-      errors.push('Password must contain at least one lowercase letter');
+    if (password && password.length > opts.maxLength) {
+      errors.push(`Password must not exceed ${opts.maxLength} characters`);
     }
 
-    if (!/(?=.*[A-Z])/.test(password)) {
-      errors.push('Password must contain at least one uppercase letter');
+    // Character diversity requirements (enhanced)
+    const lowercaseCount = (password.match(/[a-z]/g) || []).length;
+    const uppercaseCount = (password.match(/[A-Z]/g) || []).length;
+    const digitCount = (password.match(/\d/g) || []).length;
+    const specialCount = (password.match(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\?]/g) || []).length;
+
+    if (lowercaseCount < 2) {
+      errors.push('Password must contain at least 2 lowercase letters');
+    }
+    if (uppercaseCount < 2) {
+      errors.push('Password must contain at least 2 uppercase letters');
+    }
+    if (digitCount < 2) {
+      errors.push('Password must contain at least 2 numbers');
+    }
+    if (specialCount < 2) {
+      errors.push('Password must contain at least 2 special characters');
     }
 
-    if (!/(?=.*\d)/.test(password)) {
-      errors.push('Password must contain at least one number');
-    }
-
-    if (!/(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\?])/.test(password)) {
-      errors.push('Password must contain at least one special character');
-    }
-
-    // Check for common patterns
+    // Advanced pattern checks
     if (/(.)\1{2,}/.test(password)) {
-      errors.push('Password should not contain repeated characters');
+      errors.push('Password must not contain more than 2 consecutive identical characters');
     }
 
-    // zxcvbn strength check
-    if (strength.score < 3) {
-      errors.push(`Password is too weak. ${strength.feedback.warning}`);
-      errors.push(...strength.feedback.suggestions);
+    // Sequential character check
+    if (this.hasSequentialChars(password)) {
+      errors.push('Password must not contain sequential characters (abc, 123, etc.)');
+    }
+
+    // Keyboard pattern check
+    if (opts.checkKeyboardPatterns && this.hasKeyboardPattern(password)) {
+      errors.push('Password must not contain keyboard patterns (qwerty, asdf, etc.)');
+    }
+
+    // Dictionary word check
+    if (opts.checkDictionary && this.containsDictionaryWords(password)) {
+      warnings.push('Password contains common dictionary words - consider using more random combinations');
+    }
+
+    // Common password patterns
+    if (this.isCommonPasswordPattern(password)) {
+      errors.push('Password follows a common pattern that is easily guessable');
+    }
+
+    // Entropy requirements
+    if (opts.requireMinEntropy && entropy < 50) {
+      warnings.push(`Password entropy (${entropy.toFixed(1)}) is below recommended minimum of 50 bits`);
+    }
+
+    // Personal information check (basic)
+    if (this.containsPersonalInfo(password)) {
+      errors.push('Password must not contain obvious personal information');
+    }
+
+    // zxcvbn strength check (enhanced)
+    if (strength.score < opts.enforceMinScore) {
+      errors.push(`Password strength is too low (${strength.score}/${opts.enforceMinScore} required). ${strength.feedback.warning}`);
+      if (strength.feedback.suggestions.length > 0) {
+        warnings.push(...strength.feedback.suggestions);
+      }
+    }
+
+    // Determine risk level
+    let riskLevel: 'low' | 'medium' | 'high' | 'critical' = 'low';
+    if (errors.length > 0) {
+      riskLevel = 'critical';
+    } else if (strength.score < 2 || entropy < 40) {
+      riskLevel = 'high';
+    } else if (strength.score < 3 || entropy < 50 || warnings.length > 2) {
+      riskLevel = 'medium';
     }
 
     return {
       isValid: errors.length === 0,
       errors,
+      warnings,
       strength,
+      entropy,
+      riskLevel,
     };
+  }
+
+  /**
+   * Calculate password entropy in bits
+   */
+  private calculatePasswordEntropy(password: string): number {
+    if (!password) return 0;
+
+    let charset = 0;
+    if (/[a-z]/.test(password)) charset += 26;
+    if (/[A-Z]/.test(password)) charset += 26;
+    if (/\d/.test(password)) charset += 10;
+    if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\?]/.test(password)) charset += 32;
+    if (/[^a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\?]/.test(password)) charset += 50; // Other unicode
+
+    return Math.log2(Math.pow(charset, password.length));
+  }
+
+  /**
+   * Check for sequential characters
+   */
+  private hasSequentialChars(password: string): boolean {
+    const sequences = [
+      'abcdefghijklmnopqrstuvwxyz',
+      'zyxwvutsrqponmlkjihgfedcba',
+      '0123456789',
+      '9876543210',
+      'qwertyuiopasdfghjklzxcvbnm',
+      'mnbvcxzlkjhgfdsapoiuytrewq',
+    ];
+
+    const lowerPassword = password.toLowerCase();
+    return sequences.some(seq => {
+      for (let i = 0; i <= seq.length - 3; i++) {
+        if (lowerPassword.includes(seq.substring(i, i + 3))) {
+          return true;
+        }
+      }
+      return false;
+    });
+  }
+
+  /**
+   * Check for keyboard patterns
+   */
+  private hasKeyboardPattern(password: string): boolean {
+    const patterns = [
+      'qwertyuiop', 'asdfghjkl', 'zxcvbnm',
+      'poiuytrewq', 'lkjhgfdsa', 'mnbvcxz',
+      '1234567890', '0987654321',
+      '!@#$%^&*()', ')(*&^%$#@!',
+    ];
+
+    const lowerPassword = password.toLowerCase();
+    return patterns.some(pattern => {
+      for (let i = 0; i <= pattern.length - 3; i++) {
+        if (lowerPassword.includes(pattern.substring(i, i + 3))) {
+          return true;
+        }
+      }
+      return false;
+    });
+  }
+
+  /**
+   * Check for common dictionary words
+   */
+  private containsDictionaryWords(password: string): boolean {
+    const commonWords = [
+      'password', 'admin', 'user', 'login', 'welcome', 'hello', 'world',
+      'love', 'life', 'money', 'home', 'work', 'email', 'phone', 'name',
+      'address', 'birthday', 'family', 'friend', 'school', 'company',
+      'computer', 'internet', 'website', 'security', 'private', 'secret',
+      'account', 'access', 'system', 'network', 'server', 'database',
+    ];
+
+    const lowerPassword = password.toLowerCase();
+    return commonWords.some(word => 
+      word.length >= 4 && lowerPassword.includes(word)
+    );
+  }
+
+  /**
+   * Check for common password patterns
+   */
+  private isCommonPasswordPattern(password: string): boolean {
+    const patterns = [
+      /^password\d*[!@#$%^&*]*$/i,
+      /^\w*123[!@#$%^&*]*$/i,
+      /^\w*\d{4}[!@#$%^&*]*$/i, // year patterns
+      /^[a-zA-Z]+\d{1,4}[!@#$%^&*]*$/, // word + numbers
+      /^\d{4,}[a-zA-Z]*[!@#$%^&*]*$/, // numbers + letters
+      /^[!@#$%^&*]+\w+[!@#$%^&*]*$/, // symbols + word
+      /^(..)\1+/, // repeated pairs
+    ];
+
+    return patterns.some(pattern => pattern.test(password));
+  }
+
+  /**
+   * Basic check for personal information patterns
+   */
+  private containsPersonalInfo(password: string): boolean {
+    const personalPatterns = [
+      /admin|user|guest|test|demo/i,
+      /(19|20)\d{2}/, // years
+      /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\b/i, // months
+      /\b(mon|tue|wed|thu|fri|sat|sun)\b/i, // days
+    ];
+
+    return personalPatterns.some(pattern => pattern.test(password));
+  }
+
+  /**
+   * Check password against previous passwords (for password history)
+   */
+  validatePasswordHistory(newPassword: string, previousPasswords: string[] = []): {
+    isValid: boolean;
+    error?: string;
+  } {
+    const hashedNew = this.hashData(newPassword);
+    const hashedPrevious = previousPasswords.map(pwd => this.hashData(pwd));
+
+    if (hashedPrevious.includes(hashedNew)) {
+      return {
+        isValid: false,
+        error: 'Password has been used recently. Please choose a different password.',
+      };
+    }
+
+    // Check for similar passwords (edit distance)
+    for (const prevPwd of previousPasswords) {
+      if (this.calculateEditDistance(newPassword.toLowerCase(), prevPwd.toLowerCase()) < 3) {
+        return {
+          isValid: false,
+          error: 'New password is too similar to a recently used password.',
+        };
+      }
+    }
+
+    return { isValid: true };
+  }
+
+  /**
+   * Calculate Levenshtein distance between two strings
+   */
+  private calculateEditDistance(str1: string, str2: string): number {
+    const matrix: number[][] = [];
+    
+    for (let i = 0; i <= str2.length; i++) {
+      matrix[i] = [i];
+    }
+    
+    for (let j = 0; j <= str1.length; j++) {
+      matrix[0][j] = j;
+    }
+    
+    for (let i = 1; i <= str2.length; i++) {
+      for (let j = 1; j <= str1.length; j++) {
+        if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
+          matrix[i][j] = matrix[i - 1][j - 1];
+        } else {
+          matrix[i][j] = Math.min(
+            matrix[i - 1][j - 1] + 1,
+            matrix[i][j - 1] + 1,
+            matrix[i - 1][j] + 1
+          );
+        }
+      }
+    }
+    
+    return matrix[str2.length][str1.length];
   }
 
   /**
