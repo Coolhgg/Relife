@@ -3,10 +3,8 @@
  * Provides common functionality and standardized patterns for all services
  */
 
+import { ErrorHandler } from '../error-handler';
 import {
-  ErrorHandler,
-  import { ErrorHandler
-} from './error-handler';
   BaseService as IBaseService,
   ServiceConfig,
   ServiceHealth,

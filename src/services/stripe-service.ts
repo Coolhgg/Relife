@@ -2,10 +2,10 @@
 // Handles subscriptions, payments, invoices, and customer management
 
 import { Stripe } from '@stripe/stripe-js';
-import type {
 import { config } from '../config/environment';
 import { ErrorHandler } from './error-handler';
 // Note: User data should be passed as parameters or retrieved from auth context
+import type {
   Subscription,
   SubscriptionPlan,
   PaymentMethod,

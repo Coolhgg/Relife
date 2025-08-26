@@ -3,10 +3,9 @@
  * Handles all backend operations for streaks, achievements, challenges, and A/B testing
  */
 
+import { config } from '../config/environment';
+import { ErrorHandler } from './error-handler';
 import {
-  config,
-  import { ErrorHandler
-} from './error-handler';
   UserStreak,
   SamAchievement,
   SocialChallenge,

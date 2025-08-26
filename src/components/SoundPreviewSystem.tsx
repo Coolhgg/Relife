@@ -1,11 +1,9 @@
 /// <reference types="node" />
 /// <reference lib="dom" />
 import React, { useState, useRef, useEffect } from 'react';
+import path from 'path';
 import {
-import path
-import { Loader2 } from 'lucide-react';
-import path
-import { Loader2 } from 'lucide-react';
+  Loader2,
   Play,
   Pause,
   Square,

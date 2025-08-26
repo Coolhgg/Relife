@@ -1,9 +1,8 @@
 /// <reference lib="dom" />
 import React, { useState, useCallback, useRef } from 'react';
-import {
-import path
+import path from 'path';
 import { Textarea } from './ui/textarea';
-import path
+import {
   Upload,
   X,
   Play,
@@ -21,7 +20,6 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Progress } from './ui/progress';
 import { Badge } from './ui/badge';
-import { Progress } from './ui/progress';
 import { Alert, AlertDescription } from './ui/alert';
 import {
   Select,

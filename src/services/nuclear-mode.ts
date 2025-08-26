@@ -1,6 +1,6 @@
-import type {
 import { ErrorHandler } from './error-handler';
 // Note: User data should come from auth context or be passed as parameter
+import type {
   Alarm,
   NuclearModeChallenge,
   NuclearChallengeType,
@@ -12,7 +12,6 @@ import { ErrorHandler } from './error-handler';
 } from '../types';
 import { premiumService } from './premium';
 import { supabase } from './supabase';
-import { ErrorHandler } from './error-handler';
 import AppAnalyticsService from './app-analytics';
 import { Preferences } from '@capacitor/preferences';
 

@@ -1,30 +1,12 @@
 import { Capacitor } from '@capacitor/core';
+import path from 'path';
 import { AnyFn } from 'src/types/utility-types';
+import { KeepAwake } from '@capacitor/keep-awake';
+import { AppState, AppInfo } from '../types';
+import { Network } from '@capacitor/network';
+import App from '../App';
+import { BackgroundMode } from '@capacitor/background-mode';
 import {
-import path
-import { KeepAwake } from '@capacitor/keep-awake';
-import path
-import { AppState } from '@/types';
-import path
-import { Network } from '@capacitor/network';
-import path
-import { AppInfo } from '@/types';
-import path
-import App from '@/App';
-import path
-import { BackgroundMode } from '@capacitor/background-mode';
-import path
-import { BackgroundMode } from '@capacitor/background-mode';
-import path
-import { AppInfo } from '@/types';
-import path
-import App from '@/App';
-import path
-import { KeepAwake } from '@capacitor/keep-awake';
-import path
-import { AppState } from '@/types';
-import path
-import { Network } from '@capacitor/network';
   LocalNotifications,
   ActionPerformed,
   LocalNotificationSchema,

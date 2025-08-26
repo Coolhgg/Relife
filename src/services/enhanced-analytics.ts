@@ -8,8 +8,8 @@ import { config as envConfig, isEnvironment } from '../config/environment';
 import { BaseService } from './base/BaseService';
 import { CacheProvider, getCacheManager } from './base/CacheManager';
 // NavigationTiming is a native Web API type - available globally
-import {
 import AnalyticsService from './analytics';
+import {
   AnalyticsServiceInterface,
   ServiceConfig,
   ServiceHealth,

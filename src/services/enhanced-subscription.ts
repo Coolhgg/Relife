@@ -3,9 +3,9 @@
  * Refactored to use standardized service architecture with improved caching and error handling
  */
 
-import type {
 import { config } from '../config/environment';
 import { ErrorHandler } from './error-handler';
+import type {
   Subscription,
   SubscriptionStatus,
   PremiumFeatureAccess,

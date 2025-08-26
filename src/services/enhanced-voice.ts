@@ -7,10 +7,9 @@ import type { Alarm, VoiceMood } from '../types';
 import { formatTime } from '../utils';
 import { BaseService } from './base/BaseService';
 import { CacheProvider, getCacheManager } from './base/CacheManager';
+import { config } from '../config/environment';
+import { ErrorHandler } from './error-handler';
 import {
-  config,
-  import { ErrorHandler
-} from './error-handler';
   VoiceServiceInterface,
   ServiceConfig,
   ServiceHealth,

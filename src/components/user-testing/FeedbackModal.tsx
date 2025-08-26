@@ -1,9 +1,8 @@
 /// <reference lib="dom" />
 import React, { useState, useRef } from 'react';
+import path from 'path';
+import { Textarea } from '../ui/textarea';
 import {
-import path
-import { Textarea } from './ui/textarea';
-import path
   Dialog,
   DialogContent,
   DialogHeader,
@@ -12,7 +11,7 @@ import path
 } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { Progress } from './ui/progress';
+import { Progress } from '../ui/progress';
 import { Label } from '../ui/label';
 import { Badge } from '../ui/badge';
 import { Card, CardContent } from '../ui/card';
