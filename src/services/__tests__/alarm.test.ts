@@ -85,8 +85,8 @@ import { ErrorHandler } from '../error-handler';
 describe('AlarmService', () => {
   let mockAlarms: Alarm[];
   let mockUser: User;
-  let mockSecureStorage: any;
-  let mockAnalytics: any;
+  let mock: unknown;
+  let mock: unknown;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -118,8 +118,8 @@ describe('AlarmService', () => {
     (SecurityService.checkRateLimit as jest.Mock).mockReturnValue(true);
 
     // Reset static state
-    (AlarmService as any).alarms = [];
-    (AlarmService as any).checkInterval = null;
+    (AlarmService as unknown).alarms = [];
+    (AlarmService as unknown).checkInterval = null;
   });
 
   describe('loadAlarms', () => {
@@ -440,7 +440,7 @@ describe('AlarmService', () => {
 
     it('should validate alarm data after toggle', async () => {
       // Mock validation to fail
-      jest.spyOn(AlarmService as any, 'validateAlarmData').mockReturnValue(false);
+      jest.spyOn(AlarmService as unknown, 'validateAlarmData').mockReturnValue(false);
 
       await expect(AlarmService.toggleAlarm(existingAlarm.id, true)).rejects.toThrow(
         'Invalid alarm data after toggle'
@@ -729,7 +729,7 @@ describe('AlarmService', () => {
     });
 
     it('should allow access to legacy alarms without userId', () => {
-      existingAlarm.userId = undefined as any;
+      existingAlarm.userId = undefined as unknown;
       const result = AlarmService.validateAlarmOwnership(existingAlarm.id, 'any_user');
 
       expect(result).toBe(true);
@@ -757,7 +757,7 @@ describe('AlarmService', () => {
     });
 
     it('should include legacy alarms without userId', () => {
-      mockAlarms[0].userId = undefined as any;
+      mockAlarms[0].userId = undefined as unknown;
       const result = AlarmService.getUserAlarms('any_user');
 
       expect(result.some(alarm => !alarm.userId)).toBe(true);
@@ -775,7 +775,7 @@ describe('AlarmService', () => {
         snoozeInterval: 5,
       };
 
-      const result = (AlarmService as any).validateAlarmData(validAlarm);
+      const result = (AlarmService as unknown).validateAlarmData(validAlarm);
       expect(result).toBe(true);
     });
 
@@ -786,7 +786,7 @@ describe('AlarmService', () => {
         // Missing id, voiceMood, days
       };
 
-      const result = (AlarmService as any).validateAlarmData(invalidAlarm);
+      const result = (AlarmService as unknown).validateAlarmData(invalidAlarm);
       expect(result).toBe(false);
     });
 
@@ -799,7 +799,7 @@ describe('AlarmService', () => {
         days: [1, 2, 3],
       };
 
-      const result = (AlarmService as any).validateAlarmData(invalidAlarm);
+      const result = (AlarmService as unknown).validateAlarmData(invalidAlarm);
       expect(result).toBe(false);
     });
 
@@ -812,7 +812,7 @@ describe('AlarmService', () => {
         days: [],
       };
 
-      const result = (AlarmService as any).validateAlarmData(invalidAlarm);
+      const result = (AlarmService as unknown).validateAlarmData(invalidAlarm);
       expect(result).toBe(false);
     });
 
@@ -825,7 +825,7 @@ describe('AlarmService', () => {
         days: [1, 2, 8], // 8 is invalid (should be 0-6)
       };
 
-      const result = (AlarmService as any).validateAlarmData(invalidAlarm);
+      const result = (AlarmService as unknown).validateAlarmData(invalidAlarm);
       expect(result).toBe(false);
     });
 
@@ -838,7 +838,7 @@ describe('AlarmService', () => {
         days: [1, 2, 3],
       };
 
-      const result = (AlarmService as any).validateAlarmData(invalidAlarm);
+      const result = (AlarmService as unknown).validateAlarmData(invalidAlarm);
       expect(result).toBe(false);
     });
 
@@ -852,7 +852,7 @@ describe('AlarmService', () => {
         snoozeInterval: 65, // Too high (max 60)
       };
 
-      const result = (AlarmService as any).validateAlarmData(invalidAlarm);
+      const result = (AlarmService as unknown).validateAlarmData(invalidAlarm);
       expect(result).toBe(false);
     });
   });
@@ -879,7 +879,7 @@ describe('AlarmService', () => {
 
       jest.spyOn(window, 'dispatchEvent');
 
-      (AlarmService as any).checkForTriggeredAlarms();
+      (AlarmService as unknown).checkForTriggeredAlarms();
 
       expect(window.dispatchEvent).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -899,7 +899,7 @@ describe('AlarmService', () => {
 
       jest.spyOn(window, 'dispatchEvent');
 
-      (AlarmService as any).checkForTriggeredAlarms();
+      (AlarmService as unknown).checkForTriggeredAlarms();
 
       expect(window.dispatchEvent).not.toHaveBeenCalled();
     });
@@ -912,7 +912,7 @@ describe('AlarmService', () => {
 
       jest.spyOn(window, 'dispatchEvent');
 
-      (AlarmService as any).checkForTriggeredAlarms();
+      (AlarmService as unknown).checkForTriggeredAlarms();
 
       expect(window.dispatchEvent).not.toHaveBeenCalled();
     });
@@ -924,7 +924,7 @@ describe('AlarmService', () => {
       testAlarm.enabled = true;
       testAlarm.battleId = 'battle123';
 
-      (AlarmService as any).checkForTriggeredAlarms();
+      (AlarmService as unknown).checkForTriggeredAlarms();
 
       expect(alarmBattleIntegration.handleAlarmTrigger).toHaveBeenCalled();
     });
@@ -991,7 +991,7 @@ describe('AlarmService', () => {
 describe('enhancedAlarmTracking', () => {
   let mockUser: User;
   let mockAlarm: Alarm;
-  let mockAnalytics: any;
+  let mock: unknown;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -1001,7 +1001,7 @@ describe('enhancedAlarmTracking', () => {
     mockAnalytics = { track: jest.fn() };
 
     (AppAnalyticsService.getInstance as jest.Mock).mockReturnValue(mockAnalytics);
-    (AlarmService as any).alarms = [mockAlarm];
+    (AlarmService as unknown).alarms = [mockAlarm];
 
     jest.spyOn(AlarmService, 'validateAlarmOwnership').mockReturnValue(true);
   });

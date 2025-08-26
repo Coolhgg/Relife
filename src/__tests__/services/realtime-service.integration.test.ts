@@ -66,7 +66,7 @@ class MockRealtimeService {
         reject(_error);
       });
 
-      this.websocket.addEventListener('message', (_event: any) => {
+      this.websocket.addEventListener('message', (_event: unknown) => {
         try {
           const message: WebSocketMessage = JSON.parse(_event.data);
           this.handleMessage(message);
@@ -129,7 +129,7 @@ class MockRealtimeService {
     return this.on('alarm_triggered', handler);
   }
 
-  onAlarmDismissed(handler: (payload: any) => void): () => void {
+  onAlarmDismissed(handler: (payload: unknown) => void): () => void {
     return this.on('alarm_dismissed', handler);
   }
 
@@ -169,7 +169,7 @@ class MockRealtimeService {
     return this.on('recommendation_generated', handler);
   }
 
-  async requestAnalysis(type: string, data: any): Promise<string> {
+  async requestAnalysis(type: string, data: unknown): Promise<string> {
     const analysisId = `analysis_${Date.now()}`;
     const message = WebSocketTypeMocks.createMockWebSocketMessage(
       'ai_analysis_request',
@@ -211,7 +211,7 @@ class MockRealtimeService {
     this.emit('message', message);
   }
 
-  private emit(eventType: string, data: any): void {
+  private emit(eventType: string, data: unknown): void {
     const handlers = this.eventHandlers.get(eventType) || [];
     handlers.forEach(handler => {
       try {
@@ -337,7 +337,7 @@ describe('Real-time Service Integration Tests', () => {
     });
 
     it('should handle alarm dismissed events with voice data', async () => {
-      const dismissedAlarms: any[] = [];
+      const dismissedAlarms: unknown[] = [];
 
       const unsubscribe = realtimeService.onAlarmDismissed(payload => {
         dismissedAlarms.push(payload);
@@ -357,7 +357,7 @@ describe('Real-time Service Integration Tests', () => {
     });
 
     it('should sync alarm state with server', async () => {
-      const sentMessages: any[] = [];
+      const sentMessages: unknown[] = [];
 
       const ws = realtimeService.getWebSocket();
       const originalSend = ws?.send;
@@ -403,7 +403,7 @@ describe('Real-time Service Integration Tests', () => {
     });
 
     it('should update own presence status', async () => {
-      const sentMessages: any[] = [];
+      const sentMessages: unknown[] = [];
 
       const ws = realtimeService.getWebSocket();
       const originalSend = ws?.send;
@@ -483,7 +483,7 @@ describe('Real-time Service Integration Tests', () => {
     });
 
     it('should request AI analysis', async () => {
-      const sentMessages: any[] = [];
+      const sentMessages: unknown[] = [];
 
       const ws = realtimeService.getWebSocket();
       const originalSend = ws?.send;
@@ -562,7 +562,7 @@ describe('Real-time Service Integration Tests', () => {
     });
 
     it('should handle emergency alerts', async () => {
-      const alerts: any[] = [];
+      const alerts: unknown[] = [];
 
       realtimeService.on('emergency_alert', payload => {
         alerts.push(payload);
@@ -607,7 +607,7 @@ describe('Real-time Service Integration Tests', () => {
     });
 
     it('should handle sync conflicts', async () => {
-      const conflicts: any[] = [];
+      const conflicts: unknown[] = [];
 
       realtimeService.on('sync_conflict_detected', payload => {
         conflicts.push(payload);
@@ -631,7 +631,7 @@ describe('Real-time Service Integration Tests', () => {
     });
 
     it('should handle invalid messages gracefully', async () => {
-      const errors: any[] = [];
+      const errors: unknown[] = [];
 
       realtimeService.on('_error', _error => {
         errors.push(_error);
@@ -640,7 +640,7 @@ describe('Real-time Service Integration Tests', () => {
       const ws = realtimeService.getWebSocket();
       if (ws) {
         // Send invalid JSON
-        (ws as any).triggerMessage('invalid-json{');
+        (ws as unknown).triggerMessage('invalid-json{');
       }
 
       await new Promise(resolve => setTimeout(resolve, 100));
@@ -650,7 +650,7 @@ describe('Real-time Service Integration Tests', () => {
     });
 
     it('should handle connection drops', async () => {
-      const disconnectionEvents: any[] = [];
+      const disconnectionEvents: unknown[] = [];
 
       realtimeService.on('disconnected', _event => {
         disconnectionEvents.push(_event);
@@ -674,9 +674,9 @@ describe('Real-time Service Integration Tests', () => {
     });
 
     it('should manage multiple _event subscriptions', async () => {
-      const alarmEvents: any[] = [];
-      const userEvents: any[] = [];
-      const systemEvents: any[] = [];
+      const alarmEvents: unknown[] = [];
+      const userEvents: unknown[] = [];
+      const systemEvents: unknown[] = [];
 
       const unsubscribeAlarm = realtimeService.onAlarmTriggered(payload => {
         alarmEvents.push(payload);
@@ -729,7 +729,7 @@ describe('Real-time Service Integration Tests', () => {
     });
 
     it('should handle unsubscription correctly', async () => {
-      const events: any[] = [];
+      const events: unknown[] = [];
 
       const unsubscribe = realtimeService.onAlarmTriggered(payload => {
         events.push(payload);

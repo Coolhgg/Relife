@@ -218,7 +218,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
           ].map(({ id, label, icon: Icon }) => (
             <button
               key={id}
-              onClick={() => setSelectedTab(id as any)}
+              onClick={() => setSelectedTab(id as unknown)}
               className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-medium transition-colors ${
                 selectedTab === id
                   ? 'bg-blue-600 text-white shadow-sm'
@@ -242,7 +242,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
               Recent Achievements
             </h2>
             <div className="grid gap-3">
-              {rewardSystem.unlockedRewards.slice(0, 3).map((reward: any) => {
+              {rewardSystem.unlockedRewards.slice(0, 3).map((reward: unknown) => {
                 const CategoryIcon = getCategoryIcon(reward.category);
                 return (
                   <div
@@ -368,7 +368,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
               Unlocked Achievements ({rewardSystem.unlockedRewards.length})
             </h2>
             <div className="grid gap-3 md:grid-cols-2">
-              {rewardSystem.unlockedRewards.map((reward: any) => {
+              {rewardSystem.unlockedRewards.map((reward: unknown) => {
                 const CategoryIcon = getCategoryIcon(reward.category);
                 return (
                   <div
@@ -416,9 +416,9 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
               {rewardSystem.availableRewards
                 .filter(
                   reward =>
-                    !rewardSystem.unlockedRewards.find((ur: any) => ur.id === reward.id)
+                    !rewardSystem.unlockedRewards.find((ur: unknown) => ur.id === reward.id)
                 )
-                .map((reward: any) => {
+                .map((reward: unknown) => {
                   const CategoryIcon = getCategoryIcon(reward.category);
                   return (
                     <div
@@ -478,7 +478,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
               AI-Powered Insights
             </h2>
             <div className="space-y-4">
-              {rewardSystem.aiInsights.map((insight: any) => (
+              {rewardSystem.aiInsights.map((insight: unknown) => (
                 <div
                   key={insight.id}
                   className={`p-4 rounded-lg border-2 ${getPriorityColor(insight.priority)}`}
@@ -589,7 +589,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
 
             {/* Identified Habits */}
             <div className="space-y-3">
-              {rewardSystem.habits.map((habit: any) => (
+              {rewardSystem.habits.map((habit: unknown) => (
                 <div
                   key={habit.id}
                   className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg"

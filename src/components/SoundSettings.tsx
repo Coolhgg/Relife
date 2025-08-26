@@ -69,7 +69,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
   const [testResults, setTestResults] = useState<{ [key: string]: boolean | null }>({});
   const [isTestingAll, setIsTestingAll] = useState(false);
   const [availableThemes, setAvailableThemes] = useState(getAvailableThemes());
-  const [customThemes, setCustomThemes] = useState<any[]>([]);
+  const [customThemes, setCustomThemes] = useState<unknown[]>([]);
   const [allThemes, setAllThemes] = useState(getAvailableThemes());
   const [showCustomThemeCreator, setShowCustomThemeCreator] = useState(false);
   const [showCustomThemeManager, setShowCustomThemeManager] = useState(false);
@@ -143,7 +143,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
     try {
       const userCustomThemes = soundEffectsService.getCustomThemesByUser(userId);
       // Transform custom themes to match built-in theme format
-      const transformedThemes = userCustomThemes.map((theme: any) => ({
+      const transformedThemes = userCustomThemes.map((theme: unknown) => ({
         id: theme.id,
         name: theme.displayName || theme.name,
         description: theme.description || 'Custom theme',
@@ -175,19 +175,19 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
 
   // Test individual sound
   const handleTestSound = async (soundId: SoundEffectId) => {
-    setTestResults((prev: any) => ({ ...prev, [soundId]: null }));
+    setTestResults((prev: unknown) => ({ ...prev, [soundId]: null }));
 
     try {
       const result = await testSound(soundId);
 
-      setTestResults((prev: any) => ({ ...prev, [soundId]: result }));
+      setTestResults((prev: unknown) => ({ ...prev, [soundId]: result }));
 
       // Clear result after 3 seconds
       setTimeout(() => {
-        setTestResults((prev: any) => ({ ...prev, [soundId]: null }));
+        setTestResults((prev: unknown) => ({ ...prev, [soundId]: null }));
       }, 3000);
     } catch (_error) {
-      setTestResults((prev: any) => ({ ...prev, [soundId]: false }));
+      setTestResults((prev: unknown) => ({ ...prev, [soundId]: false }));
     }
   };
 
@@ -291,7 +291,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
           </div>
           <Slider
             value={[settings.masterVolume * 100]}
-            onValueChange={(value: any) => handleVolumeChange('master', value)}
+            onValueChange={(value: unknown) => handleVolumeChange('master', value)}
             max={100}
             step={5}
             className="w-full"
@@ -306,12 +306,12 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
               <span className="text-sm font-medium">Sound Theme</span>
             </div>
             <Badge variant="outline">
-              {allThemes.find((theme: any) => theme.id === settings.soundTheme)?.name ||
+              {allThemes.find((theme: unknown) => theme.id === settings.soundTheme)?.name ||
                 'Default'}
             </Badge>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
-            {allThemes.map((theme: any) => (
+            {allThemes.map((theme: unknown) => (
               <Card
                 key={theme.id}
                 className={`cursor-pointer transition-colors ${
@@ -403,7 +403,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
                   </div>
                   <Switch
                     checked={settings.uiSoundsEnabled}
-                    onCheckedChange={(enabled: any) =>
+                    onCheckedChange={(enabled: unknown) =>
                       handleToggleCategory('ui', enabled)
                     }
                   />
@@ -419,7 +419,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
                   </div>
                   <Slider
                     value={[settings.uiVolume * 100]}
-                    onValueChange={(value: any) => handleVolumeChange('ui', value)}
+                    onValueChange={(value: unknown) => handleVolumeChange('ui', value)}
                     max={100}
                     step={5}
                     disabled={!settings.uiSoundsEnabled}
@@ -440,7 +440,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
                   </div>
                   <Switch
                     checked={settings.notificationSoundsEnabled}
-                    onCheckedChange={(enabled: any) =>
+                    onCheckedChange={(enabled: unknown) =>
                       handleToggleCategory('notification', enabled)
                     }
                   />
@@ -456,7 +456,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
                   </div>
                   <Slider
                     value={[settings.notificationVolume * 100]}
-                    onValueChange={(value: any) =>
+                    onValueChange={(value: unknown) =>
                       handleVolumeChange('notification', value)
                     }
                     max={100}
@@ -479,7 +479,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
                   </div>
                   <Switch
                     checked={settings.alarmSoundsEnabled}
-                    onCheckedChange={(enabled: any) =>
+                    onCheckedChange={(enabled: unknown) =>
                       handleToggleCategory('alarm', enabled)
                     }
                   />
@@ -495,7 +495,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
                   </div>
                   <Slider
                     value={[settings.alarmVolume * 100]}
-                    onValueChange={(value: any) => handleVolumeChange('alarm', value)}
+                    onValueChange={(value: unknown) => handleVolumeChange('alarm', value)}
                     max={100}
                     step={5}
                     disabled={!settings.alarmSoundsEnabled}
@@ -516,7 +516,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
                   </div>
                   <Switch
                     checked={settings.ambientSoundsEnabled}
-                    onCheckedChange={(enabled: any) =>
+                    onCheckedChange={(enabled: unknown) =>
                       handleToggleCategory('ambient', enabled)
                     }
                   />
@@ -532,7 +532,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
                   </div>
                   <Slider
                     value={[settings.ambientVolume * 100]}
-                    onValueChange={(value: any) => handleVolumeChange('ambient', value)}
+                    onValueChange={(value: unknown) => handleVolumeChange('ambient', value)}
                     max={100}
                     step={5}
                     disabled={!settings.ambientSoundsEnabled}
@@ -752,7 +752,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
               <CustomSoundThemeCreator
                 userId={userId}
                 onClose={() => setShowCustomThemeCreator(false)}
-                onThemeCreated={(theme: any) => {
+                onThemeCreated={(theme: unknown) => {
                   // Refresh available themes
                   refreshThemes();
                   setShowCustomThemeCreator(false);
@@ -775,7 +775,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
               <CustomThemeManager
                 userId={userId}
                 onClose={() => setShowCustomThemeManager(false)}
-                onThemeUpdated={(theme: any) => {
+                onThemeUpdated={(theme: unknown) => {
                   // Refresh available themes
                   refreshThemes();
                 }}

@@ -179,8 +179,8 @@ export class AdvancedTranslationValidator {
    */
   public async validateAdvanced(
     language: SupportedLanguage,
-    translations: Record<string, any>,
-    referenceTranslations: Record<string, any>
+    translations: Record<string, unknown>,
+    referenceTranslations: Record<string, unknown>
   ): Promise<AdvancedValidationResult> {
     console.log(`🔍 Running advanced validation for ${language}...`);
 
@@ -211,8 +211,8 @@ export class AdvancedTranslationValidator {
    * Calculate comprehensive quality score (0-100)
    */
   private calculateQualityScore(
-    translations: Record<string, any>,
-    reference: Record<string, any>,
+    translations: Record<string, unknown>,
+    reference: Record<string, unknown>,
     language: SupportedLanguage
   ): QualityScore {
     const completeness = this.calculateCompleteness(translations, reference);
@@ -243,7 +243,7 @@ export class AdvancedTranslationValidator {
    * Detect cultural sensitivity issues
    */
   private detectCulturalIssues(
-    translations: Record<string, any>,
+    translations: Record<string, unknown>,
     language: SupportedLanguage
   ): CulturalIssue[] {
     const issues: CulturalIssue[] = [];
@@ -322,7 +322,7 @@ export class AdvancedTranslationValidator {
    * Analyze terminology and style consistency
    */
   private analyzeConsistency(
-    translations: Record<string, any>,
+    translations: Record<string, unknown>,
     language: SupportedLanguage
   ): ConsistencyIssue[] {
     const issues: ConsistencyIssue[] = [];
@@ -374,7 +374,7 @@ export class AdvancedTranslationValidator {
    * Calculate performance metrics
    */
   private calculatePerformanceMetrics(
-    translations: Record<string, any>,
+    translations: Record<string, unknown>,
     language: SupportedLanguage
   ): PerformanceMetrics {
     const allTexts: string[] = [];
@@ -469,13 +469,13 @@ export class AdvancedTranslationValidator {
   }
 
   // Helper methods for calculations
-  private calculateCompleteness(translations: any, reference: any): number {
+  private calculateCompleteness(translations: unknown, reference: unknown): number {
     const refKeys = this.getAllKeys(reference);
     const transKeys = this.getAllKeys(translations);
     return Math.round((transKeys.length / refKeys.length) * 100);
   }
 
-  private calculateConsistency(translations: any, language: SupportedLanguage): number {
+  private calculateConsistency(translations: unknown, language: SupportedLanguage): number {
     // Simplified consistency calculation based on terminology usage
     const termMap = this.terminologyMap.get(language) || new Map();
     let consistencyScore = 100;
@@ -491,7 +491,7 @@ export class AdvancedTranslationValidator {
   }
 
   private calculateCulturalAdaptation(
-    translations: any,
+    translations: unknown,
     language: SupportedLanguage
   ): number {
     const issues = this.detectCulturalIssues(translations, language);
@@ -517,7 +517,7 @@ export class AdvancedTranslationValidator {
     return Math.max(0, score);
   }
 
-  private calculateTechnicalAccuracy(translations: any, reference: any): number {
+  private calculateTechnicalAccuracy(translations: unknown, reference: unknown): number {
     // Check for interpolation variable preservation
     const score = 100;
     let errors = 0;
@@ -540,7 +540,7 @@ export class AdvancedTranslationValidator {
     return Math.max(0, score - errors * 5);
   }
 
-  private calculateReadability(translations: any, language: SupportedLanguage): number {
+  private calculateReadability(translations: unknown, language: SupportedLanguage): number {
     const texts: string[] = [];
     this.traverseTranslations(translations, (key, value) => {
       if (typeof value === 'string') texts.push(value);
@@ -667,8 +667,8 @@ export class AdvancedTranslationValidator {
   }
 
   private traverseTranslations(
-    obj: any,
-    callback: (key: string, value: any, fullKey?: string) => void,
+    obj: unknown,
+    callback: (key: string, value: unknown, fullKey?: string) => void,
     prefix = ''
   ): void {
     Object.keys(obj).forEach(key => {
@@ -683,7 +683,7 @@ export class AdvancedTranslationValidator {
     });
   }
 
-  private getAllKeys(obj: any, prefix = ''): string[] {
+  private getAllKeys(obj: unknown, prefix = ''): string[] {
     const keys: string[] = [];
 
     Object.keys(obj).forEach(key => {
@@ -700,7 +700,7 @@ export class AdvancedTranslationValidator {
     return keys;
   }
 
-  private getValue(obj: any, path: string): any {
+  private getValue(obj: unknown, path: string): any {
     return path.split('.').reduce((current, key) => current && current[key], obj);
   }
 

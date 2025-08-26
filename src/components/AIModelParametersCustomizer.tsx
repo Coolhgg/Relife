@@ -180,11 +180,11 @@ const AIModelParametersCustomizer: React.FC<AIModelParametersCustomizerProps> = 
     setHasUnsavedChanges(true);
   }, [config, onParametersChange]);
 
-  const updateConfig = (path: string, value: any) => {
+  const updateConfig = (path: string, value: unknown) => {
     setConfig(prev => {
       const newConfig = { ...prev };
       const keys = path.split('.');
-      let current: any = newConfig;
+      let current: unknown = newConfig;
 
       for (let i = 0; i < keys.length - 1; i++) {
         current = current[keys[i]];

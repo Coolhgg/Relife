@@ -25,7 +25,7 @@ export interface ApiTestConfig {
 
 // Response assertion utilities
 export class ApiAssertions {
-  static assertSuccessResponse<T = any>(response: any, expectedData?: Partial<T>) {
+  static assertSuccessResponse<T = any>(response: unknown, expectedData?: Partial<T>) {
     expect(response).toHaveProperty('success', true);
     if (expectedData) {
       expect(response.data).toMatchObject(expectedData);
@@ -33,8 +33,7 @@ export class ApiAssertions {
     expect(response).toHaveProperty('timestamp');
   }
 
-  static assertErrorResponse(
-    response: any,
+  static assertErrorResponse(response: unknown,
     expectedStatus?: number,
     expectedMessage?: string
   ) {
@@ -50,7 +49,7 @@ export class ApiAssertions {
     }
   }
 
-  static assertPaginatedResponse<T = any>(response: any, expectedItems?: Partial<T>[]) {
+  static assertPaginatedResponse<T = any>(response: unknown, expectedItems?: Partial<T>[]) {
     expect(response).toHaveProperty('success', true);
     expect(response).toHaveProperty('data');
     expect(response).toHaveProperty('meta');
@@ -175,13 +174,13 @@ export class ApiTestClient {
     return data;
   }
 
-  async createTestAlarm(overrides: any = {}) {
+  async createTestAlarm(overrides: unknown = {}) {
     const alarmData = MockDataFactory.createAlarm(overrides);
     const { data } = await this.post('/api/alarms', alarmData);
     return data;
   }
 
-  async createTestBattle(overrides: any = {}) {
+  async createTestBattle(overrides: unknown = {}) {
     const battleData = MockDataFactory.createBattle(overrides);
     const { data } = await this.post('/api/battles', battleData);
     return data;
@@ -202,7 +201,7 @@ export class ApiInterceptors {
       method: string;
       url: string;
       headers: Record<string, string>;
-      body: any;
+      body: unknown;
       timestamp: number;
     }> = [];
 
@@ -365,7 +364,7 @@ export class ScenarioTester {
       try {
         const result = await this.client.get('/api/test/rate-limit');
         results.push({ success: true, response: result.data });
-      } catch (_error: any) {
+      } catch (_error: unknown) {
         if (_error.status === 429) {
           ApiAssertions.assertRateLimitHeaders(_error.headers);
           results.push({ success: false, rateLimited: true });
@@ -401,7 +400,7 @@ export class ScenarioTester {
 
 // Data validation utilities
 export class ApiDataValidation {
-  static validateUser(_user: any) {
+  static validateUser(_user: unknown) {
     expect(_user).toHaveProperty('id');
     expect(_user).toHaveProperty('email');
     expect(_user).toHaveProperty('created_at');
@@ -409,7 +408,7 @@ export class ApiDataValidation {
     expect(new Date(_user.created_at)).toBeInstanceOf(Date);
   }
 
-  static validateAlarm(alarm: any) {
+  static validateAlarm(alarm: unknown) {
     expect(alarm).toHaveProperty('id');
     expect(alarm).toHaveProperty('user_id');
     expect(alarm).toHaveProperty('time');
@@ -419,7 +418,7 @@ export class ApiDataValidation {
     expect(typeof alarm.is_active).toBe('boolean');
   }
 
-  static validateBattle(battle: any) {
+  static validateBattle(battle: unknown) {
     expect(battle).toHaveProperty('id');
     expect(battle).toHaveProperty('creator_id');
     expect(battle).toHaveProperty('title');
@@ -429,7 +428,7 @@ export class ApiDataValidation {
     expect(Array.isArray(battle.participants)).toBe(true);
   }
 
-  static validateSubscription(subscription: any) {
+  static validateSubscription(subscription: unknown) {
     expect(subscription).toHaveProperty('id');
     expect(subscription).toHaveProperty('status');
     expect(subscription).toHaveProperty('current_period_start');
@@ -445,7 +444,7 @@ export class ApiDataValidation {
     ]).toContain(subscription.status);
   }
 
-  static validateApiResponse(response: any) {
+  static validateApiResponse(response: unknown) {
     expect(response).toHaveProperty('success');
     expect(typeof response.success).toBe('boolean');
 

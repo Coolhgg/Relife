@@ -200,7 +200,7 @@ const GiftCatalog: React.FC<GiftCatalogProps> = ({
     return matchesCategory && matchesSearch;
   });
 
-  const giftCategories: { id: GiftType | 'all'; label: string; icon: any }[] = [
+  const giftCategories: { id: GiftType | 'all'; label: string; icon: unknown }[] = [
     { id: 'all', label: 'All Items', icon: Package },
     { id: 'theme', label: 'Themes', icon: Palette },
     { id: 'sound_pack', label: 'Sounds', icon: Music },
@@ -455,7 +455,7 @@ const GiftCatalog: React.FC<GiftCatalogProps> = ({
                     )}
                     {selectedGift.type === 'sound_pack' && (
                       <div className="space-y-1">
-                        {(selectedGift.preview_data as any)?.tracks?.map(
+                        {(selectedGift.preview_data as unknown)?.tracks?.map(
                           (track: string, index: number) => (
                             <div key={index} className="flex items-center space-x-2">
                               <Music className="h-3 w-3 text-gray-400" />

@@ -12,7 +12,7 @@ interface APIRequest {
   method: string;
   url: string;
   headers: Record<string, string>;
-  body?: any;
+  body?: unknown;
   params?: Record<string, string>;
   query?: Record<string, string>;
   userId?: string;
@@ -44,7 +44,7 @@ interface ValidationResult {
   valid: boolean;
   errors: string[];
   warnings: string[];
-  sanitizedData?: any;
+  sanitizedData?: unknown;
   securityFlags?: string[];
 }
 
@@ -143,7 +143,7 @@ export class AlarmAPISecurityService {
   async validateRequest(request: APIRequest): Promise<{
     context: APISecurityContext;
     proceed: boolean;
-    response?: { status: number; headers: SecurityHeaders; body: any };
+    response?: { status: number; headers: SecurityHeaders; body: unknown };
   }> {
     const requestId = this.generateRequestId();
     const startTime = new Date();
@@ -351,9 +351,7 @@ export class AlarmAPISecurityService {
    */
   async finalizeResponse(
     context: APISecurityContext,
-    status: number,
-    responseData: any
-  ): Promise<{ status: number; headers: SecurityHeaders; body: any }> {
+    status: number, responseData: unknown): Promise<{ status: number; headers: SecurityHeaders; body: unknown }> {
     try {
       // Calculate response time
       const responseTime = Date.now() - context.startTime.getTime();
@@ -428,7 +426,7 @@ export class AlarmAPISecurityService {
   ): Promise<ValidationResult> {
     const errors: string[] = [];
     const warnings: string[] = [];
-    let sanitizedData: any = null;
+    let sanitizedData: unknown = null;
 
     try {
       if (request.body) {
@@ -457,7 +455,7 @@ export class AlarmAPISecurityService {
             } else if (sanitizedData.alarms.length > 100) {
               errors.push('Bulk operation limited to 100 alarms per request');
             } else {
-              sanitizedData.alarms = sanitizedData.alarms.map((alarm: any) => {
+              sanitizedData.alarms = sanitizedData.alarms.map((alarm: unknown) => {
                 const validation = this.validateAlarmData(alarm);
                 errors.push(...validation.errors);
                 warnings.push(...validation.warnings);
@@ -513,10 +511,10 @@ export class AlarmAPISecurityService {
   /**
    * Validate alarm data structure and content
    */
-  private validateAlarmData(alarm: any): ValidationResult {
+  private validateAlarmData(alarm: unknown): ValidationResult {
     const errors: string[] = [];
     const warnings: string[] = [];
-    const sanitizedData: any = {};
+    const sanitizedData: unknown = {};
 
     // Required fields validation
     if (!alarm.label || typeof alarm.label !== 'string') {
@@ -596,10 +594,10 @@ export class AlarmAPISecurityService {
   /**
    * Validate import data
    */
-  private validateImportData(data: any): ValidationResult {
+  private validateImportData(data: unknown): ValidationResult {
     const errors: string[] = [];
     const warnings: string[] = [];
-    const sanitizedData: any = {};
+    const sanitizedData: unknown = {};
 
     if (!data.alarms || !Array.isArray(data.alarms)) {
       errors.push('Import data must contain an array of alarms');
@@ -611,7 +609,7 @@ export class AlarmAPISecurityService {
       return { valid: false, errors, warnings };
     }
 
-    sanitizedData.alarms = data.alarms.map((alarm: any, _index: number) => {
+    sanitizedData.alarms = data.alarms.map((alarm: unknown, _index: number) => {
       const validation = this.validateAlarmData(alarm);
       validation.errors.forEach(_error => errors.push(`Alarm ${_index}: ${_error}`));
       validation.warnings.forEach(warning =>
@@ -939,7 +937,7 @@ export class AlarmAPISecurityService {
     return suspiciousPatterns.some(pattern => pattern.test(url));
   }
 
-  private isJSONBomb(obj: any, depth = 0, maxDepth = 100): boolean {
+  private isJSONBomb(obj: unknown, depth = 0, maxDepth = 100): boolean {
     if (depth > maxDepth) return true;
 
     if (typeof obj === 'object' && obj !== null) {
@@ -988,7 +986,7 @@ export class AlarmAPISecurityService {
   }
 
   private mapEndpointToOperation(endpoint: string): any {
-    const operationMap: Record<string, any> = {
+    const operationMap: Record<string, unknown> = {
       'POST /alarms': 'create_alarm',
       'PUT /alarms/:id': 'update_alarm',
       'DELETE /alarms/:id': 'delete_alarm',
@@ -1022,7 +1020,7 @@ export class AlarmAPISecurityService {
     return SecurityService.hashData(JSON.stringify(signatureData));
   }
 
-  private sanitizeForSecurity(data: any): any {
+  private sanitizeForSecurity(data: unknown): any {
     if (typeof data === 'string') {
       return SecurityService.sanitizeInput(data);
     }
@@ -1032,7 +1030,7 @@ export class AlarmAPISecurityService {
     }
 
     if (typeof data === 'object' && data !== null) {
-      const sanitized: any = {};
+      const sanitized: unknown = {};
       Object.entries(data).forEach(([key, value]) => {
         const sanitizedKey = SecurityService.sanitizeInput(key);
         sanitized[sanitizedKey] = this.sanitizeForSecurity(value);
@@ -1043,7 +1041,7 @@ export class AlarmAPISecurityService {
     return data;
   }
 
-  private sanitizeResponseData(data: any, securityLevel: string): any {
+  private sanitizeResponseData(data: unknown, securityLevel: string): any {
     // Remove sensitive fields based on security level
     if (securityLevel === 'low') {
       return data; // No sanitization for low security
@@ -1058,7 +1056,7 @@ export class AlarmAPISecurityService {
     return sanitized;
   }
 
-  private removeSensitiveFields(obj: any): void {
+  private removeSensitiveFields(obj: unknown): void {
     if (typeof obj === 'object' && obj !== null) {
       const sensitiveFields = [
         'password',
@@ -1086,11 +1084,11 @@ export class AlarmAPISecurityService {
     status: number,
     message: string,
     errors: string[] = [],
-    additional: any = {}
+    additional: unknown = {}
   ): {
     context: APISecurityContext;
     proceed: false;
-    response: { status: number; headers: SecurityHeaders; body: any };
+    response: { status: number; headers: SecurityHeaders; body: unknown };
   } {
     return {
       context,
@@ -1112,7 +1110,7 @@ export class AlarmAPISecurityService {
   private async logAPISecurityEvent(
     _event: string,
     context: APISecurityContext,
-    details: any = {}
+    details: unknown = {}
   ): Promise<void> {
     await SecurityMonitoringForensicsService.logSecurityEvent(
       event === 'request_validated' ? 'data_access' : 'security_test_failure',

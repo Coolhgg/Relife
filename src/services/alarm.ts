@@ -28,7 +28,7 @@ export class AlarmService {
       // Convert date strings back to Date objects and validate
       this.alarms = alarmData
 
-        .map((alarm: any) => ({
+        .map((alarm: unknown) => ({
           ...alarm,
           createdAt: new Date(alarm.createdAt),
           updatedAt: new Date(alarm.updatedAt),
@@ -36,7 +36,7 @@ export class AlarmService {
             ? new Date(alarm.lastTriggered)
             : undefined,
         }))
-        .filter((alarm: any) => {
+        .filter((alarm: unknown) => {
           // Additional validation for loaded alarms
           return (
             alarm.id &&
@@ -133,11 +133,11 @@ export class AlarmService {
             'thursday',
             'friday',
             'saturday',
-          ][d] as any
+          ][d] as unknown
       ),
       voiceMood: data.voiceMood,
       sound: data.sound || 'default',
-      difficulty: data.difficulty || ('medium' as any),
+      difficulty: data.difficulty || ('medium' as unknown),
       snoozeEnabled: data.snoozeEnabled ?? true,
       snoozeInterval: data.snoozeInterval || 5,
       snoozeCount: 0,
@@ -203,11 +203,11 @@ export class AlarmService {
             'thursday',
             'friday',
             'saturday',
-          ][d] as any
+          ][d] as unknown
       ),
       voiceMood: data.voiceMood,
       sound: data.sound || this.alarms[alarmIndex].sound,
-      difficulty: (data.difficulty || this.alarms[alarmIndex].difficulty) as any,
+      difficulty: (data.difficulty || this.alarms[alarmIndex].difficulty) as unknown,
       snoozeEnabled: data.snoozeEnabled ?? this.alarms[alarmIndex].snoozeEnabled,
       snoozeInterval: data.snoozeInterval || this.alarms[alarmIndex].snoozeInterval,
       maxSnoozes: data.maxSnoozes ?? this.alarms[alarmIndex].maxSnoozes,
@@ -566,7 +566,7 @@ export class AlarmService {
             experience: 0,
             joinDate: new Date().toISOString(),
             lastActive: new Date().toISOString(),
-            preferences: {} as any,
+            preferences: {} as unknown,
             createdAt: new Date().toISOString(),
           };
 
@@ -619,11 +619,11 @@ export class AlarmService {
               'thursday',
               'friday',
               'saturday',
-            ][d] as any
+            ][d] as unknown
         ),
         voiceMood: data.voiceMood,
         sound: 'default',
-        difficulty: (data.difficulty || 'medium') as any,
+        difficulty: (data.difficulty || 'medium') as unknown,
         snoozeEnabled: false,
         snoozeInterval: 5,
         snoozeCount: 0,
@@ -638,7 +638,7 @@ export class AlarmService {
         experience: 0,
         joinDate: new Date().toISOString(),
         lastActive: new Date().toISOString(),
-        preferences: {} as any,
+        preferences: {} as unknown,
         createdAt: new Date().toISOString(),
       }
     );
@@ -762,7 +762,7 @@ export class AlarmService {
   /**
    * Log security events for audit trail
    */
-  private static logSecurityEvent(event: string, details: any): void {
+  private static logSecurityEvent(event: string, details: unknown): void {
     const logEntry = {
       event,
       details,

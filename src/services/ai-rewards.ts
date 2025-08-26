@@ -24,7 +24,7 @@ interface BehaviorPattern {
     | 'dismissal_method'
     | 'frequency';
   strength: number; // 0-1
-  data: Record<string, any>;
+  data: Record<string, unknown>;
 }
 
 interface PersonalityProfile {
@@ -114,7 +114,7 @@ export class AIRewardsService {
   private analyzeBehaviorPatterns(
     alarms: Alarm[],
     alarmEvents: AlarmEvent[],
-    behavior: any
+    behavior: unknown
   ): BehaviorPattern[] {
     const patterns: BehaviorPattern[] = [];
 
@@ -236,7 +236,7 @@ export class AIRewardsService {
    */
   private generatePersonalityProfile(
     patterns: BehaviorPattern[],
-    behavior: any
+    behavior: unknown
   ): PersonalityProfile {
     const traits: string[] = [];
     const timePattern = patterns.find(p => p.type === 'time_preference');
@@ -363,7 +363,7 @@ export class AIRewardsService {
           primary: 'fitness',
           confidence: 0.9,
           traits: ['health-conscious'],
-          preferences: {} as any,
+          preferences: {} as unknown,
         },
         lastAnalyzed: new Date(),
       });
@@ -632,7 +632,7 @@ export class AIRewardsService {
 
   private inferPrimaryNiche(
     traits: string[],
-    frequencyData: any,
+    frequencyData: unknown,
     morningPerson: boolean
   ): UserNiche['primary'] {
     if (traits.some(t => t.includes('discipline') || t.includes('goal'))) {
@@ -659,7 +659,7 @@ export class AIRewardsService {
         primary: 'fitness',
         confidence: 0.8,
         traits: ['health-conscious'],
-        preferences: {} as any,
+        preferences: {} as unknown,
       };
     }
     if (
@@ -671,7 +671,7 @@ export class AIRewardsService {
         primary: 'work',
         confidence: 0.8,
         traits: ['professional'],
-        preferences: {} as any,
+        preferences: {} as unknown,
       };
     }
     if (
@@ -683,7 +683,7 @@ export class AIRewardsService {
         primary: 'study',
         confidence: 0.8,
         traits: ['academic'],
-        preferences: {} as any,
+        preferences: {} as unknown,
       };
     }
 
@@ -691,7 +691,7 @@ export class AIRewardsService {
       primary: 'health',
       confidence: 0.5,
       traits: ['routine-focused'],
-      preferences: {} as any,
+      preferences: {} as unknown,
     };
   }
 
@@ -981,14 +981,14 @@ export class AIRewardsService {
   /**
    * Get current reward system configuration
    */
-  async getCurrentConfiguration(): Promise<Record<string, any>> {
+  async getCurrentConfiguration(): Promise<Record<string, unknown>> {
     return { ...this.parameters };
   }
 
   /**
    * Update reward system configuration with validation
    */
-  async updateConfiguration(newParameters: Record<string, any>): Promise<boolean> {
+  async updateConfiguration(newParameters: Record<string, unknown>): Promise<boolean> {
     try {
       for (const [key, value] of Object.entries(newParameters)) {
         if (key in this.parameters) {
@@ -1106,7 +1106,7 @@ export class AIRewardsService {
   /**
    * Get reward system parameter metadata for UI configuration
    */
-  getConfigurationMetadata(): Record<string, any> {
+  getConfigurationMetadata(): Record<string, unknown> {
     return {
       gamificationIntensity: {
         type: 'slider',

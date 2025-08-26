@@ -49,9 +49,9 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
   userId = 'demo-_user',
 }) => {
   const { alarm: nextAlarm, timeUntil } = getTimeUntilNextAlarm(alarms);
-  const enabledAlarms = alarms?.filter((a: any) => a.enabled) || [];
-  const [smartInsights, setSmartInsights] = useState<any[]>([]);
-  const [optimizationSuggestions, setOptimizationSuggestions] = useState<any[]>([]);
+  const enabledAlarms = alarms?.filter((a: unknown) => a.enabled) || [];
+  const [smartInsights, setSmartInsights] = useState<unknown[]>([]);
+  const [optimizationSuggestions, setOptimizationSuggestions] = useState<unknown[]>([]);
   const [advancedFeaturesEnabled, setAdvancedFeaturesEnabled] = useState(false);
 
   // Struggling Sam Integration
@@ -117,7 +117,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
   };
 
   // Handle milestone celebrations
-  const handleMilestoneReached = (milestone: any) => {
+  const handleMilestoneReached = (milestone: unknown) => {
     trackFeatureUsage('streaks', 'milestone_reached', {
       days: milestone.streakDays,
     });
@@ -282,12 +282,12 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
           {shouldShowAchievements && achievements.length > 0 && (
             <AchievementBadges
               achievements={achievements}
-              onAchievementClick={(achievement: any) => {
+              onAchievementClick={(achievement: unknown) => {
                 trackFeatureUsage('achievements', 'clicked', {
                   type: achievement.achievementType,
                 });
               }}
-              onAchievementShare={(achievement: any) => {
+              onAchievementShare={(achievement: unknown) => {
                 trackFeatureUsage('achievements', 'shared', {
                   type: achievement.achievementType,
                 });
@@ -315,15 +315,15 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
       {shouldShowChallenges && activeChallenges.length > 0 && (
         <CommunityChallenge
           challenges={activeChallenges}
-          onJoinChallenge={(challengeId: any) => {
+          onJoinChallenge={(challengeId: unknown) => {
             trackFeatureUsage('challenges', 'joined', { challengeId });
             joinChallenge(challengeId);
           }}
-          onLeaveChallenge={(challengeId: any) => {
+          onLeaveChallenge={(challengeId: unknown) => {
             trackFeatureUsage('challenges', 'left', { challengeId });
             leaveChallenge(challengeId);
           }}
-          onChallengeShare={(challengeId: any) => {
+          onChallengeShare={(challengeId: unknown) => {
             trackFeatureUsage('challenges', 'shared', { challengeId });
           }}
         />
@@ -369,7 +369,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
 
       {/* Smart Upgrade Prompts for Struggling Sam */}
       {shouldShowUpgradePrompts &&
-        upgradePrompts.map((prompt: any) => (
+        upgradePrompts.map((prompt: unknown) => (
           <SmartUpgradePrompt
             key={prompt.id}
             prompt={prompt}
@@ -397,7 +397,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
             Recent Alarms
           </h3>
           <ul className="space-y-3" role="list" aria-label="Recent alarm summaries">
-            {alarms.slice(0, 3).map((alarm: any) => {
+            {alarms.slice(0, 3).map((alarm: unknown) => {
               const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
 
               return (
@@ -511,7 +511,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
             ))}
 
             {/* Smart Insights */}
-            {smartInsights.map((insight: any) => (
+            {smartInsights.map((insight: unknown) => (
               <div
                 key={insight.id}
                 className="bg-white dark:bg-dark-800 rounded-lg p-3 border border-blue-200 dark:border-blue-700"
@@ -677,11 +677,11 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
 
       {/* Habit Celebrations */}
       {shouldShowCelebrations &&
-        pendingCelebrations.map((celebration: any) => (
+        pendingCelebrations.map((celebration: unknown) => (
           <HabitCelebration
             key={celebration.id}
             celebration={celebration}
-            onShare={(platform: any) => {
+            onShare={(platform: unknown) => {
               trackFeatureUsage('celebrations', 'shared', {
                 platform,
                 type: celebration.celebrationType,

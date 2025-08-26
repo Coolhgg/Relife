@@ -38,7 +38,7 @@ const startApp = async () => {
   try {
     // Initialize app (including i18n)
     await initializeApp();
-    
+
     // Initialize Redux store with persisted state
     // Note: This is also called in App.tsx but calling here ensures early initialization
     initializeStoreWithPersistedState();

@@ -261,7 +261,7 @@ jobs:
           echo "## Security Pattern Scan" > security-results/pattern-scan.txt
           echo "**Date:** $(date)" >> security-results/pattern-scan.txt
           echo "" >> security-results/pattern-scan.txt
-          
+
           # Check for dangerous patterns
           if grep -r "eval\|innerHTML" src/ --exclude-dir=__tests__ > security-results/dangerous-patterns.txt 2>/dev/null; then
             echo "⚠️  Dangerous patterns found:" >> security-results/pattern-scan.txt
@@ -269,9 +269,9 @@ jobs:
           else
             echo "✅ No dangerous patterns found" >> security-results/pattern-scan.txt
           fi
-          
+
           echo "" >> security-results/pattern-scan.txt
-          
+
           # Check for potential secrets (excluding test files)
           if grep -r -i "password\|secret\|key\|token" src/ --exclude-dir=__tests__ --exclude-dir=__mocks__ > security-results/potential-secrets.txt 2>/dev/null; then
             echo "⚠️  Potential secrets found (manual review needed):" >> security-results/pattern-scan.txt
@@ -370,32 +370,32 @@ jobs:
             const title = '🚨 Security Alert - Vulnerabilities Detected';
             const body = `
             ## 🚨 Security Alert
-            
+
             Security vulnerabilities have been detected and require immediate attention.
-            
+
             **Details:**
             - Workflow: ${{ github.workflow }}
             - Run ID: ${{ github.run_id }}
             - Branch: ${{ github.ref_name }}
             - Commit: ${{ github.sha }}
             - Has Vulnerabilities: ${{ needs.dependency-security.outputs.has-vulnerabilities }}
-            
+
             **Failed Jobs:**
             - CodeQL Analysis: ${{ needs.codeql-analysis.result }}
             - Dependency Security: ${{ needs.dependency-security.result }}
             - Secrets Detection: ${{ needs.secrets-detection.result }}
-            
+
             **Next Steps:**
             1. Review the failed workflow logs
             2. Check artifact downloads for detailed reports
             3. Address critical and high-severity issues immediately
             4. Update dependencies to resolve vulnerabilities
             5. Update this issue with resolution status
-            
+
             **Workflow URL:** https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-            
+
             ---
-            
+
             This issue was automatically created by the Security Analysis workflow.
             `;
 
@@ -406,11 +406,11 @@ jobs:
               labels: 'security,critical',
               state: 'open'
             });
-            
+
             const hasExistingAlert = existingIssues.data.some(issue => 
               issue.title.includes('Security Alert')
             );
-            
+
             if (!hasExistingAlert) {
               await github.rest.issues.create({
                 owner: context.repo.owner,

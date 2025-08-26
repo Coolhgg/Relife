@@ -1,10 +1,12 @@
 # 🛡️ Production Server Security Hardening Guide
 
-This guide implements enterprise-grade security measures to protect your Relife monitoring server against threats and vulnerabilities.
+This guide implements enterprise-grade security measures to protect your Relife monitoring server
+against threats and vulnerabilities.
 
 ## 🎯 Security Hardening Overview
 
 We'll implement multiple layers of security:
+
 - **SSH Security** - Key-based authentication, rate limiting, port changes
 - **User & Access Control** - Privilege separation, sudo hardening
 - **Network Security** - Advanced firewall rules, fail2ban, port security
@@ -21,6 +23,7 @@ We'll implement multiple layers of security:
 ## 🔐 Step 1: SSH Security Hardening
 
 ### Create SSH Key Pair (if not exists)
+
 ```bash
 # On your LOCAL machine (not the server)
 ssh-keygen -t ed25519 -b 4096 -f ~/.ssh/relife_monitoring_key -C "relife-monitoring-$(date +%Y%m%d)"
@@ -30,6 +33,7 @@ ssh-copy-id -i ~/.ssh/relife_monitoring_key.pub username@your-server-ip
 ```
 
 ### Harden SSH Configuration
+
 ```bash
 # On the server - backup current SSH config
 sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.backup.$(date +%Y%m%d)
@@ -93,7 +97,7 @@ sudo tee /etc/ssh/banner > /dev/null <<EOF
 ***************************************************************************
                          AUTHORIZED ACCESS ONLY
                         Relife Monitoring Server
-                        
+
 This system is for authorized users only. All activities are logged and
 monitored. Unauthorized access attempts will be prosecuted to the full
 extent of the law.
@@ -116,6 +120,7 @@ sudo ufw allow 2222/tcp comment "SSH Hardened"
 ## 🔒 Step 2: User and Access Control Hardening
 
 ### Create Dedicated Monitoring User
+
 ```bash
 # Create monitoring service user with restricted privileges
 sudo useradd -r -s /bin/false -d /var/lib/monitoring -c "Relife Monitoring Service" monitoring
@@ -138,6 +143,7 @@ sudo chmod 440 /etc/sudoers.d/monitoring-admins
 ```
 
 ### Implement Account Security Policies
+
 ```bash
 # Configure password policies
 sudo tee /etc/security/pwquality.conf > /dev/null <<EOF
@@ -173,6 +179,7 @@ EOF
 ## 🔥 Step 3: Advanced Firewall and Network Security
 
 ### Install and Configure fail2ban
+
 ```bash
 # Install fail2ban
 sudo apt-get install -y fail2ban
@@ -251,6 +258,7 @@ sudo systemctl start fail2ban
 ```
 
 ### Configure Advanced UFW Rules
+
 ```bash
 # Create more restrictive firewall rules
 sudo ufw --force reset
@@ -292,6 +300,7 @@ sudo ufw status numbered
 ## 🔧 Step 4: System Hardening
 
 ### Kernel and System Security
+
 ```bash
 # Configure kernel security parameters
 sudo tee /etc/sysctl.d/99-security-hardening.conf > /dev/null <<EOF
@@ -353,6 +362,7 @@ sudo sysctl -p /etc/sysctl.d/99-security-hardening.conf
 ```
 
 ### Disable Unnecessary Services
+
 ```bash
 # List and disable unnecessary services
 sudo systemctl disable avahi-daemon
@@ -367,6 +377,7 @@ sudo apt-get autoremove -y
 ```
 
 ### File System Security
+
 ```bash
 # Set secure permissions on sensitive files
 sudo chmod 600 /etc/ssh/sshd_config
@@ -390,6 +401,7 @@ echo 'umask 027' | sudo tee -a /etc/bash.bashrc
 ## 🐳 Step 5: Docker Security Hardening
 
 ### Secure Docker Daemon Configuration
+
 ```bash
 # Create secure Docker daemon configuration
 sudo tee /etc/docker/daemon.json > /dev/null <<EOF
@@ -744,6 +756,7 @@ sudo systemctl restart docker
 ## 📊 Step 6: Monitoring and Intrusion Detection
 
 ### Install and Configure AIDE (Advanced Intrusion Detection Environment)
+
 ```bash
 # Install AIDE
 sudo apt-get install -y aide
@@ -802,7 +815,7 @@ aide --check > "$LOG_FILE" 2>&1
 if [ $? -ne 0 ]; then
     # Send alert email if configured
     mail -s "AIDE Integrity Check Failed on $(hostname)" admin@yourdomain.com < "$LOG_FILE" 2>/dev/null || true
-    
+
     # Log to syslog
     logger -t aide "AIDE integrity check failed. See $LOG_FILE for details."
 fi
@@ -812,6 +825,7 @@ sudo chmod +x /etc/cron.daily/aide-check
 ```
 
 ### Install and Configure Logwatch
+
 ```bash
 # Install logwatch for log analysis
 sudo apt-get install -y logwatch
@@ -853,7 +867,7 @@ my %Warnings = ();
 
 while (defined(my $ThisLine = <STDIN>)) {
     chomp($ThisLine);
-    
+
     if ($ThisLine =~ /ERROR|error|Error/) {
         $Errors{$ThisLine}++;
     } elsif ($ThisLine =~ /WARNING|warning|Warning|WARN/) {
@@ -884,6 +898,7 @@ sudo chmod +x /etc/logwatch/scripts/services/monitoring
 ## 🔐 Step 7: SSL/TLS Security Enhancement
 
 ### Enhanced SSL Configuration for Nginx (if using)
+
 ```bash
 # Create enhanced SSL configuration
 sudo mkdir -p /etc/nginx/ssl
@@ -929,6 +944,7 @@ EOF
 ## 🚨 Step 8: Security Monitoring and Alerting
 
 ### Create Security Monitoring Script
+
 ```bash
 # Create comprehensive security monitoring script
 sudo tee /usr/local/bin/security-monitor.sh > /dev/null <<'EOF'
@@ -947,15 +963,15 @@ log_event() {
 send_alert() {
     local subject="$1"
     local message="$2"
-    
+
     # Log the alert
     log_event "ALERT: $subject"
-    
+
     # Send email if mail is configured
     if command -v mail &> /dev/null; then
         echo "$message" | mail -s "$subject" "$ALERT_EMAIL" 2>/dev/null
     fi
-    
+
     # Send to syslog
     logger -t security-monitor "ALERT: $subject - $message"
 }
@@ -963,7 +979,7 @@ send_alert() {
 # Check for failed SSH attempts
 check_ssh_attacks() {
     local failed_attempts=$(grep "$(date '+%b %d')" /var/log/auth.log | grep "Failed password" | wc -l)
-    
+
     if [ $failed_attempts -gt 10 ]; then
         send_alert "SSH Attack Detected" "Detected $failed_attempts failed SSH attempts today"
     fi
@@ -972,7 +988,7 @@ check_ssh_attacks() {
 # Check for privilege escalation attempts
 check_privilege_escalation() {
     local sudo_failures=$(grep "$(date '+%b %d')" /var/log/auth.log | grep "sudo.*COMMAND" | grep "incorrect password" | wc -l)
-    
+
     if [ $sudo_failures -gt 5 ]; then
         send_alert "Privilege Escalation Attempts" "Detected $sudo_failures failed sudo attempts today"
     fi
@@ -983,7 +999,7 @@ check_system_load() {
     local load_avg=$(uptime | awk -F'load average:' '{print $2}' | awk '{print $1}' | sed 's/,//')
     local cpu_count=$(nproc)
     local load_threshold=$((cpu_count * 2))
-    
+
     if (( $(echo "$load_avg > $load_threshold" | bc -l) )); then
         send_alert "High System Load" "System load is $load_avg (threshold: $load_threshold)"
     fi
@@ -992,7 +1008,7 @@ check_system_load() {
 # Check disk usage
 check_disk_usage() {
     local disk_usage=$(df / | awk 'NR==2{print $5}' | sed 's/%//')
-    
+
     if [ $disk_usage -gt 90 ]; then
         send_alert "High Disk Usage" "Root disk usage is at ${disk_usage}%"
     fi
@@ -1001,7 +1017,7 @@ check_disk_usage() {
 # Check for unusual network connections
 check_network_connections() {
     local unusual_connections=$(netstat -tuln | grep -E ":(22|80|443|3000|9090|9093)\s" | wc -l)
-    
+
     if [ $unusual_connections -gt 50 ]; then
         send_alert "Unusual Network Activity" "Detected $unusual_connections active connections"
     fi
@@ -1013,10 +1029,10 @@ check_file_changes() {
         # AIDE check is handled by daily cron job
         return 0
     fi
-    
+
     # Basic check for changes in critical directories
     local critical_dirs="/etc /usr/bin /usr/sbin /boot"
-    
+
     for dir in $critical_dirs; do
         if [ -d "$dir" ]; then
             local recent_changes=$(find "$dir" -mtime -1 -type f | wc -l)
@@ -1102,7 +1118,7 @@ echo ""
 echo "🔥 Firewall Configuration:"
 if ufw status | grep -q "Status: active"; then
     echo -e "  ✅ UFW firewall: ${GREEN}Active${NC}"
-    
+
     if ufw status | grep -q "22/tcp.*ALLOW"; then
         echo -e "  ⚠️  Default SSH port: ${YELLOW}Still open${NC}"
     else
@@ -1119,7 +1135,7 @@ echo ""
 echo "🚫 Intrusion Prevention:"
 if systemctl is-active --quiet fail2ban; then
     echo -e "  ✅ fail2ban: ${GREEN}Running${NC}"
-    
+
     local banned_ips=$(fail2ban-client status sshd 2>/dev/null | grep "Banned IP list" | wc -w)
     echo -e "  ℹ️  Currently banned IPs: $banned_ips"
 else
@@ -1272,39 +1288,46 @@ chmod +x /tmp/security-hardening.sh
 After implementing these security measures, your server will have:
 
 ### 🔐 **Authentication Security**
+
 - SSH key-only authentication
 - Custom SSH port (2222)
 - Account lockout policies
 - Session timeout controls
 
 ### 🔥 **Network Security**
+
 - Advanced firewall rules with rate limiting
 - fail2ban intrusion prevention
 - Network attack mitigation
 - Service-specific access controls
 
 ### 🛡️ **System Hardening**
+
 - Kernel security parameters
 - File system protections
 - Service restrictions
 - Privilege separation
 
 ### 🐳 **Container Security**
+
 - Docker security profiles
 - Container isolation
 - Resource limitations
 - Security scanning
 
 ### 📊 **Monitoring & Detection**
+
 - File integrity monitoring (AIDE)
 - Security event monitoring
 - Log analysis and alerting
 - Intrusion detection
 
 ### 🔒 **SSL/TLS Security**
+
 - Strong cipher suites
 - HSTS enforcement
 - Security headers
 - Certificate validation
 
-**Your server is now enterprise-ready with military-grade security! Ready for monitoring deployment.** 🚀
+**Your server is now enterprise-ready with military-grade security! Ready for monitoring
+deployment.** 🚀

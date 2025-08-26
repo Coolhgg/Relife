@@ -42,7 +42,7 @@ import { TimeoutHandle } from '../types/timers';
 interface NuclearModeChallengeProps {
   session: NuclearModeSession;
   currentChallenge: NuclearModeChallenge;
-  onChallengeComplete: (successful: boolean, data?: any) => void;
+  onChallengeComplete: (successful: boolean, data?: unknown) => void;
   onSessionComplete: () => void;
   onSessionFailed: () => void;
   className?: string;
@@ -51,7 +51,7 @@ interface NuclearModeChallengeProps {
 // Math Challenge Component
 const MathChallenge: React.FC<{
   challenge: NuclearModeChallenge;
-  onComplete: (success: boolean, data: any) => void;
+  onComplete: (success: boolean, data: unknown) => void;
 }> = ({ challenge, onComplete }) => {
   const [problems, setProblems] = useState<
     Array<{
@@ -138,7 +138,7 @@ const MathChallenge: React.FC<{
         setCurrentProblem(0);
 
         setProblems(
-          problems.map((p: any) => ({
+          problems.map((p: unknown) => ({
             ...p,
             userAnswer: '',
             correct: undefined,
@@ -218,7 +218,7 @@ const MathChallenge: React.FC<{
 // Memory Challenge Component
 const MemoryChallenge: React.FC<{
   challenge: NuclearModeChallenge;
-  onComplete: (success: boolean, data: any) => void;
+  onComplete: (success: boolean, data: unknown) => void;
 }> = ({ challenge, onComplete }) => {
   const [sequence, setSequence] = useState<number[]>([]);
   const [userSequence, setUserSequence] = useState<number[]>([]);
@@ -365,7 +365,7 @@ const MemoryChallenge: React.FC<{
 // Photo Challenge Component
 const PhotoChallenge: React.FC<{
   challenge: NuclearModeChallenge;
-  onComplete: (success: boolean, data: any) => void;
+  onComplete: (success: boolean, data: unknown) => void;
 }> = ({ challenge, onComplete }) => {
   const [photosTaken, setPhotosTaken] = useState<File[]>([]);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
@@ -466,7 +466,7 @@ const PhotoChallenge: React.FC<{
 // Voice Challenge Component
 const VoiceChallenge: React.FC<{
   challenge: NuclearModeChallenge;
-  onComplete: (success: boolean, data: any) => void;
+  onComplete: (success: boolean, data: unknown) => void;
 }> = ({ challenge, onComplete }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [currentPhrase, setCurrentPhrase] = useState(0);
@@ -598,7 +598,7 @@ export const NuclearModeChallenge: React.FC<NuclearModeChallengeProps> = ({
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeRemaining((prev: any) => {
+      setTimeRemaining((prev: unknown) => {
         if (prev <= 1) {
           // Time's up!
           onChallengeComplete(false, { reason: 'timeout' });

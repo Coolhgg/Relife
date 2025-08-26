@@ -94,7 +94,7 @@ const PHASE_NAMES = {
 export const AIDeploymentDashboard: React.FC<AIDeploymentDashboardProps> = ({
   className = '',
 }) => {
-  const [deploymentData, setDeploymentData] = useState<any>(null);
+  const [deploymentData, setDeploymentData] = useState<unknown>(null);
   const [loading, setLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState('overview');
   const [refreshing, setRefreshing] = useState(false);
@@ -164,7 +164,7 @@ export const AIDeploymentDashboard: React.FC<AIDeploymentDashboardProps> = ({
     ).length;
     const avgUserAdoption =
       metrics.length > 0
-        ? metrics.reduce((sum: number, m: any) => sum + m.userAdoption, 0) /
+        ? metrics.reduce((sum: number, m: unknown) => sum + m.userAdoption, 0) /
           metrics.length
         : 0;
 

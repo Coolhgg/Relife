@@ -29,7 +29,7 @@
   "description": "Branch protection rules for main branch with React hooks validation",
   "setup_instructions": [
     "1. Go to GitHub repository Settings → Branches",
-    "2. Add branch protection rule for 'main' branch", 
+    "2. Add branch protection rule for 'main' branch",
     "3. Import this configuration or manually configure:",
     "   - Require pull request reviews: 1 review required",
     "   - Require status checks: PR Validation + React Hooks Validation",

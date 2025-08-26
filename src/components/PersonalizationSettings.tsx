@@ -335,7 +335,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
             personalization?.typographyPreferences?.lineHeightPreference || 'normal'
           }
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            updateTypographyPreference('lineHeightPreference', e.target.value as any)
+            updateTypographyPreference('lineHeightPreference', e.target.value as unknown)
           }
           className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"
         >
@@ -399,7 +399,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
         <select
           value={personalization?.motionPreferences?.animationSpeed || 'normal'}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            updateMotionPreference('animationSpeed', e.target.value as any)
+            updateMotionPreference('animationSpeed', e.target.value as unknown)
           }
           className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"
         >
@@ -573,7 +573,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
         <select
           value={personalization?.layoutPreferences?.density || 'comfortable'}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            updateLayoutPreference('density', e.target.value as any)
+            updateLayoutPreference('density', e.target.value as unknown)
           }
           className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"
         >
@@ -590,7 +590,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
         <select
           value={personalization?.layoutPreferences?.cardStyle || 'rounded'}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            updateLayoutPreference('cardStyle', e.target.value as any)
+            updateLayoutPreference('cardStyle', e.target.value as unknown)
           }
           className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"
         >

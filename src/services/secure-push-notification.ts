@@ -257,11 +257,11 @@ export class SecurePushNotificationService {
   /**
    * Validate push notification security
    */
-  private static async validateNotificationSecurity(notification: any): Promise<{
+  private static async validateNotificationSecurity(notification: unknown): Promise<{
     isValid: boolean;
     reasons: string[];
     trustLevel: 'trusted' | 'suspicious' | 'malicious';
-    metadata?: any;
+    metadata?: unknown;
   }> {
     const reasons: string[] = [];
     let trustLevel: 'trusted' | 'suspicious' | 'malicious' = 'trusted';
@@ -395,8 +395,8 @@ export class SecurePushNotificationService {
    * Handle validated secure push notifications
    */
   private static handleSecurePushReceived(
-    notification: any,
-    validationResult: any
+    notification: unknown,
+    validationResult: unknown
   ): void {
     console.log('Processing validated push notification:', notification);
 
@@ -426,8 +426,8 @@ export class SecurePushNotificationService {
    * Handle suspicious notifications
    */
   private static handleSuspiciousNotification(
-    notification: any,
-    validationResult: any
+    notification: unknown,
+    validationResult: unknown
   ): void {
     console.warn('Suspicious push notification detected:', {
       notification,
@@ -735,7 +735,7 @@ export class SecurePushNotificationService {
   }
 
   // Enhanced secure handlers
-  private static handleSecureAlarmPush(notification: any): void {
+  private static handleSecureAlarmPush(notification: unknown): void {
     const alarmId = notification.data?.alarmId;
     if (alarmId) {
       window.dispatchEvent(
@@ -746,12 +746,12 @@ export class SecurePushNotificationService {
     }
   }
 
-  private static handleSecureGeneralPush(notification: any): void {
+  private static handleSecureGeneralPush(notification: unknown): void {
     // Handle general secure notifications
     console.log('Secure general push notification processed');
   }
 
-  private static handleSecureEmergencyPush(notification: any): void {
+  private static handleSecureEmergencyPush(notification: unknown): void {
     // Emergency notifications bypass some security checks but are still validated
     NotificationService.showNotification({
       title: notification.title,
@@ -762,8 +762,8 @@ export class SecurePushNotificationService {
   }
 
   private static handleSecurePushAction(
-    notification: any,
-    validationResult: any
+    notification: unknown,
+    validationResult: unknown
   ): void {
     // Handle secure push actions
     const action = notification.actionId;
@@ -816,7 +816,7 @@ export class SecurePushNotificationService {
   }
 
   // Helper methods (continuing from original service)
-  private static logSecurityEvent(_event: string, details: any): void {
+  private static logSecurityEvent(_event: string, details: unknown): void {
     const logEntry = {
       event,
       details,
@@ -833,7 +833,7 @@ export class SecurePushNotificationService {
     );
   }
 
-  private static trackNotificationEvent(_event: string, data: any): void {
+  private static trackNotificationEvent(_event: string, data: unknown): void {
     window.dispatchEvent(
       new CustomEvent('secure-notification-analytics', {
         detail: { _event, data, timestamp: new Date() },
@@ -861,10 +861,10 @@ export class SecurePushNotificationService {
   private static getAlarmScheduleTime(alarm: Alarm): Date {
     return new Date();
   }
-  private static handleDismissAction(data: any): void {}
-  private static handleSnoozeAction(data: any): void {}
-  private static handleViewAction(data: any): void {}
-  private static handleDefaultAction(data: any): void {}
+  private static handleDismissAction(data: unknown): void {}
+  private static handleSnoozeAction(data: unknown): void {}
+  private static handleViewAction(data: unknown): void {}
+  private static handleDefaultAction(data: unknown): void {}
   private setupEventListeners(): void {}
 }
 

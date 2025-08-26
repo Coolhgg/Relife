@@ -83,7 +83,7 @@ const Dashboard: React.FC<DashboardProps> = ({
     [alarms]
   );
   const enabledAlarms = useMemo(
-    () => alarms?.filter((a: any) => a.enabled) || [],
+    () => alarms?.filter((a: unknown) => a.enabled) || [],
     [alarms]
   );
 
@@ -106,8 +106,8 @@ const Dashboard: React.FC<DashboardProps> = ({
       todaySleepScore: mockSleepData[mockSleepData.length - 1]?.quality || 0,
     };
   }, [alarms, enabledAlarms]);
-  const [smartInsights, setSmartInsights] = useState<any[]>([]);
-  const [optimizationSuggestions, setOptimizationSuggestions] = useState<any[]>([]);
+  const [smartInsights, setSmartInsights] = useState<unknown[]>([]);
+  const [optimizationSuggestions, setOptimizationSuggestions] = useState<unknown[]>([]);
   const [advancedFeaturesEnabled, setAdvancedFeaturesEnabled] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -494,7 +494,7 @@ const Dashboard: React.FC<DashboardProps> = ({
             </div>
 
             <div className="space-y-3" role="list" aria-label="Recent alarm summaries">
-              {alarms.slice(0, 4).map((alarm: any) => {
+              {alarms.slice(0, 4).map((alarm: unknown) => {
                 const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
                 return (
                   <div
@@ -840,7 +840,7 @@ const Dashboard: React.FC<DashboardProps> = ({
               </div>
             ))}
 
-            {smartInsights.map((insight: any) => (
+            {smartInsights.map((insight: unknown) => (
               <div
                 key={insight.id}
                 className="p-4 bg-theme-surface-50 dark:bg-theme-surface-800 rounded-xl border border-theme-border-200 dark:border-theme-border-700"

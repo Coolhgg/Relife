@@ -44,19 +44,17 @@ export interface ThemeContextValue {
 
   // Personalization
   updatePersonalization: (updates: Partial<PersonalizationSettings>) => void;
-  updateColorPreference: (property: string, value: any) => void;
-  updateTypographyPreference: (property: string, value: any) => void;
-  updateMotionPreference: (property: string, value: any) => void;
-  updateSoundPreference: (property: string, value: any) => void;
-  updateLayoutPreference: (property: string, value: any) => void;
-  updateAccessibilityPreference: (property: string, value: any) => void;
+  updateColorPreference: (property: string, value: unknown) => void;
+  updateTypographyPreference: (property: string, value: unknown) => void;
+  updateMotionPreference: (property: string, value: unknown) => void;
+  updateSoundPreference: (property: string, value: unknown) => void;
+  updateLayoutPreference: (property: string, value: unknown) => void;
+  updateAccessibilityPreference: (property: string, value: unknown) => void;
 
   // Theme presets and customization
   availableThemes: ThemePreset[];
   createCustomTheme: (
-    baseTheme: Theme,
-    customizations: any
-  ) => Promise<CustomThemeConfig>;
+    baseTheme: Theme, customizations: unknown) => Promise<CustomThemeConfig>;
   saveThemePreset: (preset: ThemePreset) => Promise<void>;
   loadThemePreset: (presetId: string) => Promise<void>;
 
@@ -2270,18 +2268,18 @@ export function ThemeProvider({
     const syncService = cloudSyncServiceRef.current;
 
     // Listen for sync status changes
-    const unsubscribe = syncService.onStatusChange((status: any) => {
+    const unsubscribe = syncService.onStatusChange((status: unknown) => {
       // auto
       setCloudSyncStatus(status);
       // Notify all registered listeners
-      syncListenersRef.current.forEach((listener: any) => listener(status));
+      syncListenersRef.current.forEach((listener: unknown) => listener(status));
     });
 
     // Initialize with current status
     setCloudSyncStatus(syncService.getStatus());
 
     // Start auto-sync if enabled
-    syncService.initialize().catch((_error: any) => {
+    syncService.initialize().catch((_error: unknown) => {
       // auto
       console._error('Failed to initialize cloud sync:', _error);
     });
@@ -2306,7 +2304,7 @@ export function ThemeProvider({
 
     // Debounce sync to avoid too frequent calls
     const timeoutId = setTimeout(() => {
-      syncService.updatePreferences(preferences).catch((_error: any) => {
+      syncService.updatePreferences(preferences).catch((_error: unknown) => {
         // auto
         console._error('Failed to sync preferences:', _error);
       });
@@ -2378,7 +2376,7 @@ export function ThemeProvider({
   );
 
   const updateColorPreference = useCallback(
-    (property: string, value: any) => {
+    (property: string, value: unknown) => {
       updatePersonalization({
         colorPreferences: {
           ...personalization.colorPreferences,
@@ -2390,7 +2388,7 @@ export function ThemeProvider({
   );
 
   const updateTypographyPreference = useCallback(
-    (property: string, value: any) => {
+    (property: string, value: unknown) => {
       updatePersonalization({
         typographyPreferences: {
           ...personalization.typographyPreferences,
@@ -2402,7 +2400,7 @@ export function ThemeProvider({
   );
 
   const updateMotionPreference = useCallback(
-    (property: string, value: any) => {
+    (property: string, value: unknown) => {
       updatePersonalization({
         motionPreferences: {
           ...personalization.motionPreferences,
@@ -2414,7 +2412,7 @@ export function ThemeProvider({
   );
 
   const updateSoundPreference = useCallback(
-    (property: string, value: any) => {
+    (property: string, value: unknown) => {
       updatePersonalization({
         soundPreferences: {
           ...personalization.soundPreferences,
@@ -2426,7 +2424,7 @@ export function ThemeProvider({
   );
 
   const updateLayoutPreference = useCallback(
-    (property: string, value: any) => {
+    (property: string, value: unknown) => {
       updatePersonalization({
         layoutPreferences: {
           ...personalization.layoutPreferences,
@@ -2438,7 +2436,7 @@ export function ThemeProvider({
   );
 
   const updateAccessibilityPreference = useCallback(
-    (property: string, value: any) => {
+    (property: string, value: unknown) => {
       updatePersonalization({
         accessibilityPreferences: {
           ...personalization.accessibilityPreferences,
@@ -2450,7 +2448,7 @@ export function ThemeProvider({
   );
 
   const createCustomTheme = useCallback(
-    async (baseTheme: Theme, customizations: any): Promise<CustomThemeConfig> => {
+    async (baseTheme: Theme, customizations: unknown): Promise<CustomThemeConfig> => {
       // This would integrate with a backend service in a real app
       const customTheme: CustomThemeConfig = {
         ...DEFAULT_THEMES[baseTheme],
@@ -2476,7 +2474,7 @@ export function ThemeProvider({
 
   const loadThemePreset = useCallback(
     async (presetId: string): Promise<void> => {
-      const preset = availableThemes.find((t: any) => t.id === presetId);
+      const preset = availableThemes.find((t: unknown) => t.id === presetId);
       if (preset) {
         setTheme(preset.theme);
         if (preset.personalization) {
@@ -2489,7 +2487,7 @@ export function ThemeProvider({
 
   const getThemeRecommendations = useCallback((): ThemePreset[] => {
     // This would use AI/ML in a real app
-    return availableThemes.filter((theme: any) => !theme.isDefault).slice(0, 3);
+    return availableThemes.filter((theme: unknown) => !theme.isDefault).slice(0, 3);
   }, [availableThemes]);
 
   const exportThemes = useCallback(async (): Promise<string> => {
@@ -2610,7 +2608,7 @@ export function ThemeProvider({
 
     if (enabled) {
       // Perform initial sync when enabling
-      syncService.sync().catch((_error: any) => {
+      syncService.sync().catch((_error: unknown) => {
         // auto
         console._error('Failed to perform initial sync:', _error);
       });

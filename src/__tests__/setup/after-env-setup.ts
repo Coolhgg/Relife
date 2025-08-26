@@ -1,4 +1,8 @@
 /// <reference lib="dom" />
+import {
+  MockDataRecord, MockDataStore
+} from '../../types/common-types';
+
 import { vi } from 'vitest';
 // After environment setup - runs after each test environment is created
 import '@testing-library/jest-dom';
@@ -42,7 +46,7 @@ if (typeof global !== 'undefined') {
       public options?: FilePropertyBag
     ) {}
     get size() {
-      return this.chunks.reduce((acc, chunk) => acc + (chunk as any).length, 0);
+      return this.chunks.reduce((acc, chunk) => acc + (chunk as unknown).length, 0);
     }
     get type() {
       return this.options?.type || '';
@@ -50,7 +54,7 @@ if (typeof global !== 'undefined') {
     get lastModified() {
       return this.options?.lastModified || Date.now();
     }
-  } as any;
+  } as unknown;
 
   global.FileReader = class MockFileReader {
     result: string | ArrayBuffer | null = null;
@@ -100,7 +104,7 @@ if (typeof global !== 'undefined') {
       this.onabort?.(new ProgressEvent('abort'));
     }
 
-    addEventListener(type: string, listener: any) {
+    addEventListener(type: string, listener: unknown) {
       this[`on${type}` as keyof this] = listener;
     }
 
@@ -108,7 +112,7 @@ if (typeof global !== 'undefined') {
     dispatchEvent() {
       return true;
     }
-  } as any;
+  } as unknown;
 
   // Blob polyfill
   global.Blob = class MockBlob {
@@ -117,7 +121,7 @@ if (typeof global !== 'undefined') {
       public options: BlobPropertyBag = {}
     ) {}
     get size() {
-      return this.parts.reduce((acc, part) => acc + (part as any).length, 0);
+      return this.parts.reduce((acc, part) => acc + (part as unknown).length, 0);
     }
     get type() {
       return this.options.type || '';
@@ -134,17 +138,17 @@ if (typeof global !== 'undefined') {
     arrayBuffer() {
       return Promise.resolve(new ArrayBuffer(8));
     }
-  } as any;
+  } as unknown;
 
   // FormData polyfill for file upload testing
   global.FormData = class MockFormData {
     private data = new Map<string, any>();
 
-    append(name: string, value: any, filename?: string) {
+    append(name: string, value: unknown, filename?: string) {
       this.data.set(name, { value, filename });
     }
 
-    set(name: string, value: any, filename?: string) {
+    set(name: string, value: unknown, filename?: string) {
       this.data.set(name, { value, filename });
     }
 
@@ -176,15 +180,15 @@ if (typeof global !== 'undefined') {
       return Array.from(this.data.entries()).map(([key, item]) => [key, item.value]);
     }
 
-    forEach(callback: any) {
+    forEach(callback: unknown) {
       this.data.forEach((item, key) => callback(item.value, key, this));
     }
-  } as any;
+  } as unknown;
 
   // Enhanced crypto polyfill for secure operations testing
   if (!global.crypto) {
     global.crypto = {
-      getRandomValues: (arr: any) => {
+      getRandomValues: (arr: unknown) => {
         for (let i = 0; i < arr.length; i++) {
           arr[i] = Math.floor(Math.random() * 256);
         }
@@ -211,7 +215,7 @@ if (typeof global !== 'undefined') {
         wrapKey: jest.fn(() => Promise.resolve(new ArrayBuffer(32))),
         unwrapKey: jest.fn(() => Promise.resolve({})),
       },
-    } as any;
+    } as unknown;
   }
 
   // Navigator polyfills for PWA testing
@@ -332,7 +336,7 @@ if (typeof global !== 'undefined') {
 // Enhanced window polyfills
 if (typeof window !== 'undefined') {
   // Notification API mock for push notification testing
-  (window as any).Notification = class MockNotification {
+  (window as unknown).Notification = class MockNotification {
     static permission = 'granted';
     static requestPermission = jest.fn(() => Promise.resolve('granted'));
 
@@ -353,7 +357,7 @@ if (typeof window !== 'undefined') {
       setTimeout(() => this.onclose?.(), 0);
     }
 
-    addEventListener(type: string, listener: any) {
+    addEventListener(type: string, listener: unknown) {
       this[`on${type}` as keyof this] = listener;
     }
 
@@ -364,7 +368,7 @@ if (typeof window !== 'undefined') {
   };
 
   // Screen Wake Lock API mock
-  (window.navigator as any).wakeLock = {
+  (window.navigator as unknown).wakeLock = {
     request: jest.fn(() =>
       Promise.resolve({
         type: 'screen',
@@ -377,7 +381,7 @@ if (typeof window !== 'undefined') {
   };
 
   // Battery API mock
-  (window.navigator as any).getBattery = jest.fn(() =>
+  (window.navigator as unknown).getBattery = jest.fn(() =>
     Promise.resolve({
       charging: true,
       chargingTime: 0,
@@ -435,7 +439,7 @@ if (typeof window !== 'undefined') {
   }));
 
   // Web Audio API mock for sound testing
-  (window as any).AudioContext = class MockAudioContext {
+  (window as unknown).AudioContext = class MockAudioContext {
     state = 'running';
     sampleRate = 44100;
     currentTime = 0;
@@ -483,9 +487,9 @@ if (typeof window !== 'undefined') {
   };
 
   // Payment Request API mock
-  (window as any).PaymentRequest = class MockPaymentRequest {
+  (window as unknown).PaymentRequest = class MockPaymentRequest {
     constructor(
-      public methodData: any[],
+      public methodData: MockDataRecord[],
       public details: any,
       public options?: any
     ) {}
@@ -567,7 +571,7 @@ if (global && typeof global === 'object') {
       .then(() => {
         console.log('🔧 Enhanced service architecture initialized');
       })
-      .catch((_error: any) => {
+      .catch((_error: unknown) => {
         console.warn('⚠️ Enhanced service initialization failed:', _error);
       });
   } catch (_error) {

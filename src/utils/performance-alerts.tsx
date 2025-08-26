@@ -21,7 +21,7 @@ export interface PerformanceAlert {
   severity: 1 | 2 | 3 | 4 | 5; // 1 = low, 5 = critical
   resolved?: boolean;
   autoResolve?: boolean;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface AlertRule {
@@ -40,7 +40,7 @@ export interface AlertRule {
 
 export interface AlertAction {
   type: 'notification' | 'console' | 'storage' | 'callback' | 'optimization';
-  _config: Record<string, any>;
+  _config: Record<string, unknown>;
 }
 
 export interface PerformanceTrend {
@@ -238,7 +238,7 @@ class PerformanceAlertManager {
   /**
    * Record performance metric and check for alerts
    */
-  recordMetric(name: string, value: number, metadata?: Record<string, any>) {
+  recordMetric(name: string, value: number, metadata?: Record<string, unknown>) {
     // Store metric history
     if (!this.metricHistory.has(name)) {
       this.metricHistory.set(name, []);
@@ -262,7 +262,7 @@ class PerformanceAlertManager {
   private checkMetricAlerts(
     metric: string,
     value: number,
-    metadata?: Record<string, any>
+    metadata?: Record<string, unknown>
   ) {
     this.alertRules.forEach(rule => {
       if (rule.metric !== metric || !rule.enabled) return;
@@ -312,7 +312,7 @@ class PerformanceAlertManager {
   /**
    * Create and process alert
    */
-  private createAlert(rule: AlertRule, value: number, metadata?: Record<string, any>) {
+  private createAlert(rule: AlertRule, value: number, metadata?: Record<string, unknown>) {
     const alertId = `${rule.id}-${Date.now()}`;
 
     const alert: PerformanceAlert = {
@@ -425,7 +425,7 @@ class PerformanceAlertManager {
   /**
    * Show browser notification
    */
-  private showNotification(alert: PerformanceAlert, _config: Record<string, any>) {
+  private showNotification(alert: PerformanceAlert, _config: Record<string, unknown>) {
     if ('Notification' in window && Notification.permission === 'granted') {
       const notification = new Notification(_config.title || 'Performance Alert', {
         body: alert.message,
@@ -452,7 +452,7 @@ class PerformanceAlertManager {
   /**
    * Log alert to console
    */
-  private logToConsole(alert: PerformanceAlert, _config: Record<string, any>) {
+  private logToConsole(alert: PerformanceAlert, _config: Record<string, unknown>) {
     const level = _config.level || 'warn';
     const method = console[level as keyof Console] as Function;
 
@@ -464,7 +464,7 @@ class PerformanceAlertManager {
   /**
    * Store alert for persistence
    */
-  private storeAlert(alert: PerformanceAlert, _config: Record<string, any>) {
+  private storeAlert(alert: PerformanceAlert, _config: Record<string, unknown>) {
     try {
       const key = _config.key || 'performance-alerts';
       const stored = JSON.parse(localStorage.getItem(key) || '[]');
@@ -481,7 +481,7 @@ class PerformanceAlertManager {
   /**
    * Trigger optimization based on alert
    */
-  private triggerOptimization(alert: PerformanceAlert, _config: Record<string, any>) {
+  private triggerOptimization(alert: PerformanceAlert, _config: Record<string, unknown>) {
     switch (_config.type) {
       case 'memory_cleanup':
         this.triggerMemoryCleanup();
@@ -527,7 +527,7 @@ class PerformanceAlertManager {
    */
   private forceGarbageCollection() {
     if (typeof window !== 'undefined' && 'gc' in window) {
-      (window as any).gc();
+      (window as unknown).gc();
     }
   }
 
@@ -537,7 +537,7 @@ class PerformanceAlertManager {
   private checkAllMetrics() {
     // Get current performance data
     if (typeof performance !== 'undefined' && 'memory' in performance) {
-      const memory = (performance as any).memory;
+      const memory = (performance as unknown).memory;
       this.recordMetric('memory_used', memory.usedJSHeapSize);
     }
 
@@ -882,7 +882,7 @@ export function usePerformanceAlerts() {
   }, []);
 
   const recordMetric = React.useCallback(
-    (name: string, value: number, metadata?: Record<string, any>) => {
+    (name: string, value: number, metadata?: Record<string, unknown>) => {
       performanceAlertManager.recordMetric(name, value, metadata);
     },
     []
@@ -917,7 +917,7 @@ export const PerformanceAlertDisplay: React.FC<PerformanceAlertDisplayProps> = (
   const { alerts, suggestions, resolveAlert } = usePerformanceAlerts();
 
   const displayAlerts = alerts.slice(0, maxAlerts);
-  const criticalAlerts = alerts.filter((alert: any) => a.lert.severity >= 4);
+  const criticalAlerts = alerts.filter((alert: unknown) => a.lert.severity >= 4);
 
   if (displayAlerts.length === 0 && (!showSuggestions || suggestions.length === 0)) {
     return null;
@@ -938,7 +938,7 @@ export const PerformanceAlertDisplay: React.FC<PerformanceAlertDisplayProps> = (
         <div className="active-alerts mb-4">
           <h4 className="font-semibold text-gray-800 mb-2">Performance Alerts</h4>
           <div className="space-y-2">
-            {displayAlerts.map((alert: any) => (
+            {displayAlerts.map((alert: unknown) => (
               <div
                 key={alert.id}
                 className={`alert-item p-3 rounded border-l-4 ${
@@ -977,7 +977,7 @@ export const PerformanceAlertDisplay: React.FC<PerformanceAlertDisplayProps> = (
         <div className="optimization-suggestions">
           <h4 className="font-semibold text-gray-800 mb-2">Optimization Suggestions</h4>
           <div className="space-y-2">
-            {suggestions.slice(0, 3).map((suggestion: any) => (
+            {suggestions.slice(0, 3).map((suggestion: unknown) => (
               <div
                 key={suggestion.id}
                 className={`suggestion-item p-3 rounded border ${

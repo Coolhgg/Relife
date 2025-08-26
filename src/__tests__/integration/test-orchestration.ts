@@ -34,7 +34,7 @@ export interface TestScenarioResult {
   passed: boolean;
   duration: number;
   steps: TestStepResult[];
-  metrics?: Record<string, any>;
+  metrics?: Record<string, unknown>;
   errors?: string[];
   warnings?: string[];
 }
@@ -44,7 +44,7 @@ export interface TestStepResult {
   passed: boolean;
   duration: number;
   _error?: string;
-  data?: any;
+  data?: unknown;
 }
 
 export interface TestSuite {
@@ -319,7 +319,7 @@ export interface TestReport {
     averageDuration: number;
   };
   scenarios: Record<string, TestScenarioResult>;
-  performanceMetrics?: any;
+  performanceMetrics?: unknown;
   generatedAt: string;
 }
 
@@ -340,7 +340,7 @@ export class RelifeIntegrationScenarios {
       tags: ['integration', 'onboarding', 'user-flow'],
       execute: async () => {
         const steps: TestStepResult[] = [];
-        const metrics: Record<string, any> = {};
+        const metrics: Record<string, unknown> = {};
 
         // Step 1: Registration
         const registrationStart = performance.now();
@@ -482,7 +482,7 @@ export class RelifeIntegrationScenarios {
       tags: ['integration', 'alarms', 'core-features'],
       execute: async () => {
         const steps: TestStepResult[] = [];
-        const metrics: Record<string, any> = {};
+        const metrics: Record<string, unknown> = {};
 
         // Step 1: Create Alarm
         const createStart = performance.now();
@@ -634,7 +634,7 @@ export class RelifeIntegrationScenarios {
       tags: ['integration', 'battles', 'real-time'],
       execute: async () => {
         const steps: TestStepResult[] = [];
-        const metrics: Record<string, any> = {};
+        const metrics: Record<string, unknown> = {};
 
         // Step 1: Join Battle
         const joinStart = performance.now();
@@ -766,7 +766,7 @@ export class RelifeIntegrationScenarios {
       tags: ['integration', 'subscription', 'payments'],
       execute: async () => {
         const steps: TestStepResult[] = [];
-        const metrics: Record<string, any> = {};
+        const metrics: Record<string, unknown> = {};
 
         // Step 1: Purchase Subscription
         const purchaseStart = performance.now();

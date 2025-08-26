@@ -93,7 +93,7 @@ interface BehavioralInsight {
     difficulty: 'easy' | 'moderate' | 'challenging';
     timeframe: string;
   }>;
-  supportingData: Record<string, any>;
+  supportingData: Record<string, unknown>;
   createdAt: Date;
   priority: 'critical' | 'high' | 'medium' | 'low';
 }
@@ -114,7 +114,7 @@ interface UserBehavioralModel {
 export class AdvancedBehavioralIntelligence {
   private static instance: AdvancedBehavioralIntelligence;
   private userModels: Map<string, UserBehavioralModel> = new Map();
-  private crossPlatformData: Map<string, Record<string, any>> = new Map();
+  private crossPlatformData: Map<string, Record<string, unknown>> = new Map();
 
   private constructor() {
     this.initializeAdvancedAnalytics();
@@ -134,7 +134,7 @@ export class AdvancedBehavioralIntelligence {
     userId: string,
     alarms: Alarm[],
     alarmEvents: AlarmEvent[],
-    crossPlatformData?: Record<string, any>
+    crossPlatformData?: Record<string, unknown>
   ): Promise<{
     insights: BehavioralInsight[];
     psychologicalProfile: PsychologicalProfile;
@@ -316,7 +316,7 @@ export class AdvancedBehavioralIntelligence {
       difficulty: 'easy' | 'moderate' | 'challenging';
       timeframe: string;
     }>;
-    data: Record<string, any>;
+    data: Record<string, unknown>;
     priority: 'critical' | 'high' | 'medium' | 'low';
   }> {
     const patterns = [];
@@ -689,8 +689,7 @@ export class AdvancedBehavioralIntelligence {
     return recentSuccess - olderSuccess;
   }
 
-  private generatePersonalizedMessage(
-    pattern: any,
+  private generatePersonalizedMessage(pattern: unknown,
     profile: PsychologicalProfile
   ): string {
     const { bigFiveTraits } = profile;
@@ -706,7 +705,7 @@ export class AdvancedBehavioralIntelligence {
     }
   }
 
-  private generateAnomalyMessage(anomaly: any, profile: PsychologicalProfile): string {
+  private generateAnomalyMessage(anomaly: unknown, profile: PsychologicalProfile): string {
     if (profile.stressResponse === 'low_resilience') {
       return `I've detected some changes in your routine that might be causing stress. Let's address this gently with some supportive adjustments.`;
     } else {
@@ -714,8 +713,7 @@ export class AdvancedBehavioralIntelligence {
     }
   }
 
-  private generateOptimizationMessage(
-    optimization: any,
+  private generateOptimizationMessage(optimization: unknown,
     profile: PsychologicalProfile
   ): string {
     if (profile.bigFiveTraits.openness > 0.7) {
@@ -725,8 +723,7 @@ export class AdvancedBehavioralIntelligence {
     }
   }
 
-  private generateInterventionMessage(
-    intervention: any,
+  private generateInterventionMessage(intervention: unknown,
     profile: PsychologicalProfile
   ): string {
     if (profile.changeAdaptability === 'high') {
@@ -740,7 +737,7 @@ export class AdvancedBehavioralIntelligence {
   private detectBehavioralAnomalies(
     userModel: UserBehavioralModel,
     alarmEvents: AlarmEvent[]
-  ): any[] {
+  ): unknown[] {
     // Implementation for anomaly detection
     return [];
   }
@@ -748,18 +745,18 @@ export class AdvancedBehavioralIntelligence {
   private identifyOptimizationOpportunities(
     userModel: UserBehavioralModel,
     alarms: Alarm[]
-  ): any[] {
+  ): unknown[] {
     // Implementation for optimization opportunities
     return [];
   }
 
-  private predictNecessaryInterventions(userModel: UserBehavioralModel): any[] {
+  private predictNecessaryInterventions(userModel: UserBehavioralModel): unknown[] {
     // Implementation for intervention prediction
     return [];
   }
 
   // Placeholder implementations for various recommendation generators
-  private generateSleepQualityRecommendations(userModel: UserBehavioralModel): any[] {
+  private generateSleepQualityRecommendations(userModel: UserBehavioralModel): unknown[] {
     return [
       {
         type: 'sleep_optimization',
@@ -777,7 +774,7 @@ export class AdvancedBehavioralIntelligence {
     ];
   }
 
-  private generateProductivityRecommendations(userModel: UserBehavioralModel): any[] {
+  private generateProductivityRecommendations(userModel: UserBehavioralModel): unknown[] {
     return [
       {
         type: 'productivity_boost',
@@ -794,7 +791,7 @@ export class AdvancedBehavioralIntelligence {
     ];
   }
 
-  private generateWellbeingRecommendations(userModel: UserBehavioralModel): any[] {
+  private generateWellbeingRecommendations(userModel: UserBehavioralModel): unknown[] {
     return [
       {
         type: 'wellbeing_enhancement',
@@ -813,7 +810,7 @@ export class AdvancedBehavioralIntelligence {
 
   private generateSocialOptimizationRecommendations(
     userModel: UserBehavioralModel
-  ): any[] {
+  ): unknown[] {
     return [
       {
         type: 'social_optimization',
@@ -832,7 +829,7 @@ export class AdvancedBehavioralIntelligence {
 
   private generateHabitDevelopmentRecommendations(
     userModel: UserBehavioralModel
-  ): any[] {
+  ): unknown[] {
     return [
       {
         type: 'habit_development',
@@ -854,7 +851,7 @@ export class AdvancedBehavioralIntelligence {
     userId: string,
     alarms: Alarm[],
     alarmEvents: AlarmEvent[],
-    crossPlatformData?: Record<string, any>
+    crossPlatformData?: Record<string, unknown>
   ): Promise<void> {
     if (crossPlatformData) {
       this.crossPlatformData.set(userId, crossPlatformData);
@@ -1013,14 +1010,14 @@ export class AdvancedBehavioralIntelligence {
   /**
    * Get current parameter configuration
    */
-  async getCurrentParameters(): Promise<Record<string, any>> {
+  async getCurrentParameters(): Promise<Record<string, unknown>> {
     return { ...this.parameters };
   }
 
   /**
    * Update parameter configuration with validation
    */
-  async updateParameters(newParameters: Record<string, any>): Promise<boolean> {
+  async updateParameters(newParameters: Record<string, unknown>): Promise<boolean> {
     try {
       // Validate and apply parameters
       for (const [key, value] of Object.entries(newParameters)) {
@@ -1110,7 +1107,7 @@ export class AdvancedBehavioralIntelligence {
   /**
    * Get parameter constraints and descriptions
    */
-  getParameterMetadata(): Record<string, any> {
+  getParameterMetadata(): Record<string, unknown> {
     return {
       analysisDepth: {
         type: 'select',

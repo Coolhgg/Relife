@@ -1,5 +1,5 @@
 import type {
-// Note: alarms should come from app state or be passed as parameter
+  // Note: alarms should come from app state or be passed as parameter
   User,
   SleepPattern,
   WakeUpBehavior,

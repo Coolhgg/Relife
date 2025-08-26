@@ -67,15 +67,15 @@ export interface IAlarmService extends BaseService {
 
 export interface IAnalyticsService extends BaseService {
   // Event Tracking
-  track(event: string, properties?: Record<string, any>): Promise<void>;
-  identify(userId: string, traits?: Record<string, any>): Promise<void>;
-  page(name: string, properties?: Record<string, any>): Promise<void>;
+  track(event: string, properties?: Record<string, unknown>): Promise<void>;
+  identify(userId: string, traits?: Record<string, unknown>): Promise<void>;
+  page(name: string, properties?: Record<string, unknown>): Promise<void>;
 
   // User Analytics
   trackUserAction(
     userId: string,
     action: string,
-    metadata?: Record<string, any>
+    metadata?: Record<string, unknown>
   ): Promise<void>;
   trackPerformanceMetric(
     metric: string,
@@ -93,9 +93,9 @@ export interface IAnalyticsService extends BaseService {
 
 export interface ISubscriptionService extends BaseService {
   // Subscription Management
-  getSubscription(userId: string): Promise<any>; // TODO: Define Subscription type
-  createSubscription(data: any): Promise<any>;
-  updateSubscription(id: string, updates: any): Promise<any>;
+  getSubscription(userId: string): Promise<unknown>; // TODO: Define Subscription type
+  createSubscription(data: unknown): Promise<unknown>;
+  updateSubscription(id: string, updates: unknown): Promise<unknown>;
   cancelSubscription(id: string): Promise<void>;
 
   // Feature Access
@@ -103,8 +103,8 @@ export interface ISubscriptionService extends BaseService {
   getFeatureLimits(userId: string): Promise<Record<string, number>>;
 
   // Premium Features
-  upgradeSubscription(userId: string, planId: string): Promise<any>;
-  downgradeSubscription(userId: string, planId: string): Promise<any>;
+  upgradeSubscription(userId: string, planId: string): Promise<unknown>;
+  downgradeSubscription(userId: string, planId: string): Promise<unknown>;
 }
 
 export interface IVoiceService extends BaseService {
@@ -145,9 +145,9 @@ export interface IBattleService extends BaseService {
     maxParticipants?: number;
     isPublic?: boolean;
     createdBy: string;
-  }): Promise<any>; // TODO: Define Battle type
+  }): Promise<unknown>; // TODO: Define Battle type
 
-  joinBattle(battleId: string, userId: string): Promise<any>;
+  joinBattle(battleId: string, userId: string): Promise<unknown>;
   leaveBattle(battleId: string, userId: string): Promise<void>;
 
   // Battle Progress
@@ -166,7 +166,7 @@ export interface IBattleService extends BaseService {
 
   // Battle Lifecycle
   startBattle(battleId: string): Promise<void>;
-  endBattle(battleId: string): Promise<any>;
+  endBattle(battleId: string): Promise<unknown>;
 }
 
 // ============================================================================
@@ -228,12 +228,12 @@ export interface ISecurityService extends BaseService {
   decrypt(encryptedData: string): Promise<string>;
 
   // Token Management
-  generateToken(payload: any, expiresIn?: string): Promise<string>;
-  verifyToken(token: string): Promise<any>;
+  generateToken(payload: unknown, expiresIn?: string): Promise<string>;
+  verifyToken(token: string): Promise<unknown>;
   revokeToken(token: string): Promise<void>;
 
   // Security Monitoring
-  logSecurityEvent(event: string, details: any): void;
+  logSecurityEvent(event: string, details: unknown): void;
   getSecurityEvents(startDate?: Date, endDate?: Date): Promise<any[]>;
 }
 
@@ -248,7 +248,7 @@ export interface INotificationService extends BaseService {
     notification: {
       title: string;
       body: string;
-      data?: Record<string, any>;
+      data?: Record<string, unknown>;
       icon?: string;
       badge?: string;
     }
@@ -260,20 +260,20 @@ export interface INotificationService extends BaseService {
     title: string;
     body: string;
     schedule: Date;
-    data?: Record<string, any>;
+    data?: Record<string, unknown>;
   }): Promise<void>;
 
   cancelLocalNotification(id: number): Promise<void>;
 
   // Subscription Management
-  subscribeUser(userId: string, subscription: any): Promise<void>;
+  subscribeUser(userId: string, subscription: unknown): Promise<void>;
   unsubscribeUser(userId: string): Promise<void>;
 
   // Notification Templates
   sendTemplate(
     userId: string,
     templateId: string,
-    data: Record<string, any>
+    data: Record<string, unknown>
   ): Promise<void>;
 }
 
@@ -330,7 +330,7 @@ export interface IPerformanceService extends BaseService {
   }>;
 
   // Performance Reports
-  getPerformanceReport(startDate?: Date, endDate?: Date): Promise<any>;
+  getPerformanceReport(startDate?: Date, endDate?: Date): Promise<unknown>;
 }
 
 // ============================================================================
@@ -357,7 +357,7 @@ export interface ServiceRegistrationOptions {
   dependencies?: string[];
   tags?: string[];
   config?: Partial<ServiceConfig>;
-  factory: IServiceFactory<any> | ServiceFactoryFunction<any>;
+  factory: IServiceFactory<unknown> | ServiceFactoryFunction<unknown>;
 }
 
 // ============================================================================
@@ -374,6 +374,6 @@ export interface IServiceDiscovery extends BaseService {
   findServicesByTag(tag: string): Promise<BaseService[]>;
 
   // Health Monitoring
-  checkServiceHealth(name: string): Promise<any>;
-  getSystemHealth(): Promise<any>;
+  checkServiceHealth(name: string): Promise<unknown>;
+  getSystemHealth(): Promise<unknown>;
 }

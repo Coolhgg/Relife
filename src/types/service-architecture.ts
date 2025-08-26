@@ -36,53 +36,21 @@ export interface ServiceError {
   code: string;
   timestamp: Date;
   severity: 'low' | 'medium' | 'high' | 'critical';
-  context?: Record<string, any>;
+  context?: Record<string, unknown>;
 }
 
 // ============================================================================
 // Base Service Interface
 // ============================================================================
 
-export interface BaseService {
-  readonly name: string;
-  readonly version: string;
-
-  // Lifecycle methods
-  initialize(_config?: ServiceConfig): Promise<void>;
-  start?(): Promise<void>;
-  stop?(): Promise<void>;
-  cleanup(): Promise<void>;
-
-  // Status and health
-  isReady(): boolean;
-  isInitialized(): boolean;
-  getHealth(): Promise<ServiceHealth>;
-
-  // Configuration
-  getConfig(): ServiceConfig;
-  updateConfig(_config: Partial<ServiceConfig>): Promise<void>;
-
-  // Event handling
-  on?(_event: string, handler: (...args: any[]) => void): void;
-  off?(_event: string, handler: (...args: any[]) => void): void;
-  emit?(_event: string, ...args: any[]): void;
+export interface BaseService { [key: string]: unknown[]): void;
 }
 
 // ============================================================================
 // Service Configuration
 // ============================================================================
 
-export interface ServiceConfig {
-  enabled: boolean;
-  environment: 'development' | 'staging' | 'production';
-  debug?: boolean;
-  timeout?: number;
-  retryAttempts?: number;
-  retryDelay?: number;
-  caching?: CacheConfig;
-  errorHandling?: ErrorHandlingConfig;
-  monitoring?: MonitoringConfig;
-  [key: string]: any;
+export interface ServiceConfig { [key: string]: unknown;
 }
 
 export interface CacheConfig {
@@ -131,7 +99,7 @@ export interface AlertingConfig {
 
 export interface ServiceDescriptor {
   name: string;
-  factory: ServiceFactory<any>;
+  factory: ServiceFactory<unknown>;
   dependencies: string[];
   singleton: boolean;
   _config?: ServiceConfig;
@@ -198,11 +166,7 @@ export interface CacheManager {
 // Event System
 // ============================================================================
 
-export interface ServiceEvent {
-  type: string;
-  source: string;
-  timestamp: Date;
-  data?: any;
+export interface ServiceEvent { [key: string]: unknown;
   correlationId?: string;
 }
 
@@ -230,11 +194,7 @@ export interface ServiceLifecycle {
 // Performance Monitoring
 // ============================================================================
 
-export interface PerformanceTracker {
-  startTimer(operation: string): string;
-  endTimer(timerId: string): number;
-  recordMetric(name: string, value: number, tags?: Record<string, string>): void;
-  recordEvent(name: string, data?: any): void;
+export interface PerformanceTracker { [key: string]: unknown): void;
   getMetrics(timeRange?: { start: Date; end: Date }): Promise<PerformanceMetrics>;
 }
 
@@ -260,11 +220,7 @@ export interface OperationMetrics {
   successRate: number;
 }
 
-export interface EventMetrics {
-  name: string;
-  count: number;
-  lastOccurrence: Date;
-  data?: any;
+export interface EventMetrics { [key: string]: unknown;
 }
 
 // ============================================================================
@@ -306,8 +262,8 @@ export interface ServiceRegistryHealth {
 // ============================================================================
 
 export interface AlarmServiceInterface extends BaseService {
-  createAlarm(alarm: any): Promise<any>;
-  updateAlarm(id: string, updates: any): Promise<any>;
+  createAlarm(alarm: unknown): Promise<unknown>;
+  updateAlarm(id: string, updates: unknown): Promise<unknown>;
   deleteAlarm(id: string): Promise<boolean>;
   getAlarms(): Promise<any[]>;
   triggerAlarm(id: string): Promise<void>;
@@ -315,27 +271,27 @@ export interface AlarmServiceInterface extends BaseService {
 }
 
 export interface AnalyticsServiceInterface extends BaseService {
-  track(_event: string, properties?: Record<string, any>): Promise<void>;
-  identify(userId: string, traits?: Record<string, any>): Promise<void>;
-  page(name: string, properties?: Record<string, any>): Promise<void>;
+  track(_event: string, properties?: Record<string, unknown>): Promise<void>;
+  identify(userId: string, traits?: Record<string, unknown>): Promise<void>;
+  page(name: string, properties?: Record<string, unknown>): Promise<void>;
   flush(): Promise<void>;
   getQueueSize(): number;
 }
 
 export interface SubscriptionServiceInterface extends BaseService {
-  getSubscription(userId: string): Promise<any>;
-  createSubscription(data: any): Promise<any>;
-  updateSubscription(id: string, updates: any): Promise<any>;
+  getSubscription(userId: string): Promise<unknown>;
+  createSubscription(data: unknown): Promise<unknown>;
+  updateSubscription(id: string, updates: unknown): Promise<unknown>;
   cancelSubscription(id: string): Promise<void>;
   checkFeatureAccess(feature: string): boolean;
 }
 
 export interface BattleServiceInterface extends BaseService {
-  createBattle(_config: any): Promise<any>;
-  joinBattle(battleId: string, userId: string): Promise<any>;
-  updateBattleProgress(battleId: string, progress: any): Promise<void>;
+  createBattle(_config: unknown): Promise<unknown>;
+  joinBattle(battleId: string, userId: string): Promise<unknown>;
+  updateBattleProgress(battleId: string, progress: unknown): Promise<void>;
   getBattleHistory(userId: string): Promise<any[]>;
-  endBattle(battleId: string): Promise<any>;
+  endBattle(battleId: string): Promise<unknown>;
 }
 
 export interface VoiceServiceInterface extends BaseService {
@@ -350,15 +306,15 @@ export interface PerformanceMonitorInterface extends BaseService {
   recordMetric(name: string, value: number, tags?: Record<string, string>): void;
   recordWebVital(name: string, value: number): void;
   setThreshold(metric: string, threshold: number): void;
-  getMetrics(timeRange?: { start: Date; end: Date }): Promise<any>;
-  createAlert(_config: any): Promise<string>;
+  getMetrics(timeRange?: { start: Date; end: Date }): Promise<unknown>;
+  createAlert(_config: unknown): Promise<string>;
 }
 
 // ============================================================================
 // Type Guards and Utilities
 // ============================================================================
 
-export function isBaseService(obj: any): obj is BaseService {
+export function isBaseService(obj: unknown): obj is BaseService {
   return (
     obj &&
     typeof obj.name === 'string' &&
@@ -370,7 +326,7 @@ export function isBaseService(obj: any): obj is BaseService {
   );
 }
 
-export function isServiceConfig(obj: any): obj is ServiceConfig {
+export function isServiceConfig(obj: unknown): obj is ServiceConfig {
   return (
     obj &&
     typeof obj.enabled === 'boolean' &&

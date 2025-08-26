@@ -1,6 +1,6 @@
 /**
  * Error Tracker Panel - Enhanced Error Reporting and Debugging
- * 
+ *
  * Tracks and displays:
  * - JavaScript errors and exceptions
  * - React error boundaries
@@ -53,8 +53,10 @@ export const ErrorTrackerPanel: React.FC = () => {
   const [selectedError, setSelectedError] = useState<ErrorEntry | null>(null);
   const [isTracking, setIsTracking] = useState(true);
   const [filterLevel, setFilterLevel] = useState<'all' | 'error' | 'warning'>('all');
-  const [filterType, setFilterType] = useState<'all' | 'javascript' | 'react' | 'network' | 'console'>('all');
-  
+  const [filterType, setFilterType] = useState<
+    'all' | 'javascript' | 'react' | 'network' | 'console'
+  >('all');
+
   const userActionsRef = useRef<UserAction[]>([]);
   const errorMapRef = useRef<Map<string, ErrorEntry>>(new Map());
 
@@ -75,8 +77,10 @@ export const ErrorTrackerPanel: React.FC = () => {
       const target = e.target as Element;
       trackUserAction({
         type: 'click',
-        target: target.tagName.toLowerCase() + (target.id ? `#${target.id}` : '') + 
-                (target.className ? `.${Array.from(target.classList).join('.')}` : ''),
+        target:
+          target.tagName.toLowerCase() +
+          (target.id ? `#${target.id}` : '') +
+          (target.className ? `.${Array.from(target.classList).join('.')}` : ''),
         timestamp: Date.now(),
         details: { x: e.clientX, y: e.clientY },
       });
@@ -106,7 +110,7 @@ export const ErrorTrackerPanel: React.FC = () => {
 
     const handleError = (event: ErrorEvent) => {
       const errorKey = `${event.message}-${event.filename}-${event.lineno}`;
-      
+
       let errorEntry = errorMapRef.current.get(errorKey);
       if (errorEntry) {
         errorEntry.count++;
@@ -138,7 +142,7 @@ export const ErrorTrackerPanel: React.FC = () => {
     // Track unhandled promise rejections
     const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
       const errorKey = `promise-rejection-${event.reason}`;
-      
+
       let errorEntry = errorMapRef.current.get(errorKey);
       if (errorEntry) {
         errorEntry.count++;
@@ -183,9 +187,11 @@ export const ErrorTrackerPanel: React.FC = () => {
     };
 
     console.error = (...args) => {
-      const message = args.map(arg => typeof arg === 'string' ? arg : JSON.stringify(arg)).join(' ');
+      const message = args
+        .map(arg => (typeof arg === 'string' ? arg : JSON.stringify(arg)))
+        .join(' ');
       const errorKey = `console-error-${message}`;
-      
+
       let errorEntry = errorMapRef.current.get(errorKey);
       if (errorEntry) {
         errorEntry.count++;
@@ -201,7 +207,7 @@ export const ErrorTrackerPanel: React.FC = () => {
           count: 1,
         };
         errorMapRef.current.set(errorKey, errorEntry);
-        
+
         setErrors(prev => {
           const filtered = prev.filter(e => e.id !== errorEntry!.id);
           return [errorEntry!, ...filtered].slice(0, 100);
@@ -212,9 +218,11 @@ export const ErrorTrackerPanel: React.FC = () => {
     };
 
     console.warn = (...args) => {
-      const message = args.map(arg => typeof arg === 'string' ? arg : JSON.stringify(arg)).join(' ');
+      const message = args
+        .map(arg => (typeof arg === 'string' ? arg : JSON.stringify(arg)))
+        .join(' ');
       const errorKey = `console-warn-${message}`;
-      
+
       let errorEntry = errorMapRef.current.get(errorKey);
       if (errorEntry) {
         errorEntry.count++;
@@ -230,7 +238,7 @@ export const ErrorTrackerPanel: React.FC = () => {
           count: 1,
         };
         errorMapRef.current.set(errorKey, errorEntry);
-        
+
         setErrors(prev => {
           const filtered = prev.filter(e => e.id !== errorEntry!.id);
           return [errorEntry!, ...filtered].slice(0, 100);
@@ -279,9 +287,11 @@ export const ErrorTrackerPanel: React.FC = () => {
       case 'network':
         return <Network className="w-4 h-4 text-purple-500" />;
       case 'console':
-        return error.level === 'error' 
-          ? <XCircle className="w-4 h-4 text-red-500" />
-          : <AlertTriangle className="w-4 h-4 text-yellow-500" />;
+        return error.level === 'error' ? (
+          <XCircle className="w-4 h-4 text-red-500" />
+        ) : (
+          <AlertTriangle className="w-4 h-4 text-yellow-500" />
+        );
       default:
         return <AlertCircle className="w-4 h-4 text-gray-500" />;
     }
@@ -306,26 +316,30 @@ export const ErrorTrackerPanel: React.FC = () => {
       <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <AlertTriangle className={`w-5 h-5 ${isTracking ? 'text-red-500' : 'text-gray-400'}`} />
+            <AlertTriangle
+              className={`w-5 h-5 ${isTracking ? 'text-red-500' : 'text-gray-400'}`}
+            />
             <span className="font-medium">Error Tracker</span>
-            <span className={`text-xs px-2 py-1 rounded ${isTracking ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-600'}`}>
+            <span
+              className={`text-xs px-2 py-1 rounded ${isTracking ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-600'}`}
+            >
               {isTracking ? 'ACTIVE' : 'PAUSED'}
             </span>
           </div>
-          
+
           <select
             value={filterLevel}
-            onChange={(e) => setFilterLevel(e.target.value as any)}
+            onChange={e => setFilterLevel(e.target.value as any)}
             className="px-2 py-1 border border-gray-300 rounded text-sm"
           >
             <option value="all">All Levels</option>
             <option value="error">Errors Only</option>
             <option value="warning">Warnings Only</option>
           </select>
-          
+
           <select
             value={filterType}
-            onChange={(e) => setFilterType(e.target.value as any)}
+            onChange={e => setFilterType(e.target.value as any)}
             className="px-2 py-1 border border-gray-300 rounded text-sm"
           >
             <option value="all">All Types</option>
@@ -335,7 +349,7 @@ export const ErrorTrackerPanel: React.FC = () => {
             <option value="console">Console</option>
           </select>
         </div>
-        
+
         <div className="flex items-center gap-2">
           <button
             onClick={() => setIsTracking(!isTracking)}
@@ -343,7 +357,7 @@ export const ErrorTrackerPanel: React.FC = () => {
           >
             <RefreshCw className="w-4 h-4" />
           </button>
-          
+
           <button
             onClick={() => {
               setErrors([]);
@@ -353,7 +367,7 @@ export const ErrorTrackerPanel: React.FC = () => {
           >
             <Trash2 className="w-4 h-4" />
           </button>
-          
+
           <button
             onClick={exportErrors}
             className="p-2 bg-blue-100 text-blue-600 rounded hover:bg-blue-200"
@@ -406,7 +420,9 @@ export const ErrorTrackerPanel: React.FC = () => {
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     {getErrorIcon(error)}
-                    <span className="text-xs bg-gray-100 px-2 py-1 rounded">{error.type}</span>
+                    <span className="text-xs bg-gray-100 px-2 py-1 rounded">
+                      {error.type}
+                    </span>
                     {error.count > 1 && (
                       <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded">
                         {error.count}x
@@ -417,11 +433,11 @@ export const ErrorTrackerPanel: React.FC = () => {
                     {new Date(error.timestamp).toLocaleTimeString()}
                   </span>
                 </div>
-                
+
                 <div className="text-sm font-mono text-gray-800 truncate">
                   {error.message}
                 </div>
-                
+
                 {error.url && (
                   <div className="text-xs text-gray-500 mt-1 truncate">
                     {error.url}:{error.line}:{error.column}
@@ -429,7 +445,7 @@ export const ErrorTrackerPanel: React.FC = () => {
                 )}
               </div>
             ))}
-            
+
             {filteredErrors.length === 0 && (
               <div className="p-8 text-center text-gray-500">
                 No errors match the current filters
@@ -449,15 +465,29 @@ export const ErrorTrackerPanel: React.FC = () => {
                 <div>
                   <h5 className="font-medium text-sm mb-2">Error Info</h5>
                   <div className="space-y-1 text-sm">
-                    <div><strong>Type:</strong> {selectedError.type}</div>
-                    <div><strong>Level:</strong> {selectedError.level}</div>
-                    <div><strong>Count:</strong> {selectedError.count}</div>
-                    <div><strong>Time:</strong> {new Date(selectedError.timestamp).toLocaleString()}</div>
+                    <div>
+                      <strong>Type:</strong> {selectedError.type}
+                    </div>
+                    <div>
+                      <strong>Level:</strong> {selectedError.level}
+                    </div>
+                    <div>
+                      <strong>Count:</strong> {selectedError.count}
+                    </div>
+                    <div>
+                      <strong>Time:</strong>{' '}
+                      {new Date(selectedError.timestamp).toLocaleString()}
+                    </div>
                     {selectedError.url && (
-                      <div><strong>File:</strong> {selectedError.url}</div>
+                      <div>
+                        <strong>File:</strong> {selectedError.url}
+                      </div>
                     )}
                     {selectedError.line && (
-                      <div><strong>Location:</strong> {selectedError.line}:{selectedError.column}</div>
+                      <div>
+                        <strong>Location:</strong> {selectedError.line}:
+                        {selectedError.column}
+                      </div>
                     )}
                   </div>
                 </div>
@@ -480,7 +510,9 @@ export const ErrorTrackerPanel: React.FC = () => {
 
                 {selectedError.userActions.length > 0 && (
                   <div>
-                    <h5 className="font-medium text-sm mb-2">User Actions Leading to Error</h5>
+                    <h5 className="font-medium text-sm mb-2">
+                      User Actions Leading to Error
+                    </h5>
                     <div className="space-y-1 max-h-32 overflow-auto">
                       {selectedError.userActions.map((action, index) => (
                         <div key={index} className="text-xs bg-blue-50 p-2 rounded">

@@ -35,7 +35,7 @@ interface SettingsPageProps {
   appState: AppState;
   setAppState: React.Dispatch<React.SetStateAction<AppState>>;
   onTestVoice?: (mood: VoiceMood) => Promise<void>;
-  onUpdateProfile?: (updates: any) => Promise<void>;
+  onUpdateProfile?: (updates: unknown) => Promise<void>;
   onSignOut?: () => void;
   isLoading?: boolean;
   _error?: string | null;

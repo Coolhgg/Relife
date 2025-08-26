@@ -243,7 +243,7 @@ export const AnimatedSelect: React.FC<AnimatedSelectProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<SelectOption | null>(
-    options.find((opt: any) => opt.value === value) || null
+    options.find((opt: unknown) => opt.value === value) || null
   );
 
   const handleSelect = (option: SelectOption) => {
@@ -495,11 +495,11 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
       const y = e.clientY - rect.top;
       const newRipple = { id: Date.now().toString(), x, y };
 
-      setRipples((prev: any) => [...prev, newRipple]);
+      setRipples((prev: unknown) => [...prev, newRipple]);
 
       // Remove ripple after animation
       setTimeout(() => {
-        setRipples((prev: any) => prev.filter((ripple: any) => ripple.id !== rippleId));
+        setRipples((prev: unknown) => prev.filter((ripple: unknown) => ripple.id !== rippleId));
       }, 600);
     }
 
@@ -541,7 +541,7 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
     >
       {/* Ripple effects */}
       <AnimatePresence>
-        {ripples.map((ripple: any) => (
+        {ripples.map((ripple: unknown) => (
           <motion.div
             key={ripple.id}
             className="absolute bg-white/30 rounded-full pointer-events-none"

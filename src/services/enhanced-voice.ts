@@ -38,10 +38,10 @@ export interface VoiceServiceConfig extends ServiceConfig {
 
 export interface VoiceServiceDependencies {
   analyticsService?: AnalyticsServiceInterface;
-  premiumVoiceService?: any;
-  subscriptionService?: any;
-  cloudTTSService?: any;
-  errorHandler?: any;
+  premiumVoiceService?: unknown;
+  subscriptionService?: unknown;
+  cloudTTSService?: unknown;
+  errorHandler?: unknown;
 }
 
 export interface VoiceSettings {
@@ -209,7 +209,7 @@ export class EnhancedVoiceService extends BaseService implements VoiceServiceInt
   // VoiceServiceInterface Implementation
   // ============================================================================
 
-  public async speak(text: string, options: any = {}): Promise<void> {
+  public async speak(text: string, options: unknown = {}): Promise<void> {
     const timerId = this.startTimer('speak');
 
     try {

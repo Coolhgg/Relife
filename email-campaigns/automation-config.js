@@ -565,7 +565,7 @@ const campaignHelpers = {
     const email = campaign.sequences[sequenceIndex];
     return new Date(Date.now() + email.delay_hours * 60 * 60 * 1000);
   },
-  shouldSendEmail: (persona, user, emailId) => {
+  shouldSendEmail: (_persona, _user, _emailId) => {
     // Add logic to check user eligibility, previous emails, etc.
     return true; // Simplified for this example
   },

@@ -56,7 +56,7 @@ export class SupabaseService {
   private static isAvailable = !!supabaseUrl && !!supabaseAnonKey;
   private static cache = new Map<
     string,
-    { data: any; timestamp: number; ttl: number }
+    { data: unknown; timestamp: number; ttl: number }
   >();
   private static performanceMonitor = PerformanceMonitor.getInstance();
   private static activeConnections = 0;
@@ -154,7 +154,7 @@ export class SupabaseService {
     return null;
   }
 
-  private static setCachedData(key: string, data: any, customTtl?: number): void {
+  private static setCachedData(key: string, data: unknown, customTtl?: number): void {
     // Clean up old entries if cache is full
     if (this.cache.size >= this.cacheConfig.maxSize) {
       const oldestKey = this.cache.keys().next().value;
@@ -586,7 +586,7 @@ export class SupabaseService {
           throw new Error(`Failed to load alarms: ${_error.message}`);
         }
 
-        const alarms: Alarm[] = (data || []).map((row: any) => ({
+        const alarms: Alarm[] = (data || []).map((row: unknown) => ({
           id: row.id,
           userId: row.user_id,
           time: row.time,
@@ -667,7 +667,7 @@ export class SupabaseService {
         return { events: [], error: _error.message };
       }
 
-      const events: AlarmEvent[] = (data || []).map((row: any) => ({
+      const events: AlarmEvent[] = (data || []).map((row: unknown) => ({
         id: row.id,
         alarmId: row.alarm_id,
         firedAt: new Date(row.fired_at),
@@ -732,7 +732,7 @@ export class SupabaseService {
           }
         }
       )
-      .subscribe((status: any) => {
+      .subscribe((status: unknown) => {
         if (status === 'SUBSCRIBED') {
           this.performanceMonitor.trackCustomMetric(
             'realtime_subscription_success',

@@ -654,7 +654,7 @@ export class AlarmBackupRedundancyService {
     try {
       const { keys } = await Preferences.keys();
       const backupKeys = keys
-        .filter((key: any) =>
+        .filter((key: unknown) =>
           key.startsWith(AlarmBackupRedundancyService.BACKUP_PREFIX)
         )
         .sort()
@@ -724,7 +724,7 @@ export class AlarmBackupRedundancyService {
   /**
    * Log backup events for monitoring
    */
-  private logBackupEvent(_event: string, details: any): void {
+  private logBackupEvent(_event: string, details: unknown): void {
     const logEntry = {
       event,
       details,
@@ -758,9 +758,9 @@ export class AlarmBackupRedundancyService {
     locationsTotal: number;
     canCreateBackup: boolean;
     canRecoverData: boolean;
-    testResults: any;
+    testResults: unknown;
   }> {
-    const testResults: any = {};
+    const testResults: unknown = {};
 
     try {
       // Test backup creation

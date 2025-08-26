@@ -12,17 +12,21 @@ interface IDBPDatabase extends IDBDatabase {
 }
 
 // Native IndexedDB helper function
-function openDB(name: string, version: number, options?: {
-  upgrade?(database: IDBDatabase, oldVersion: number, newVersion: number): void;
-}): Promise<IDBPDatabase> {
+function openDB(
+  name: string,
+  version: number,
+  options?: {
+    upgrade?(database: IDBDatabase, oldVersion: number, newVersion: number): void;
+  }
+): Promise<IDBPDatabase> {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(name, version);
-    
+
     request.onerror = () => reject(request.error);
     request.onsuccess = () => resolve(request.result as IDBPDatabase);
-    
+
     if (options?.upgrade) {
-      request.onupgradeneeded = (event) => {
+      request.onupgradeneeded = event => {
         const db = request.result;
         options.upgrade!(db, event.oldVersion, event.newVersion || 0);
       };

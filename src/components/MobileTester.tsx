@@ -118,13 +118,13 @@
 //     details?: string
 //
 // ) => {
-//     setTestResults((prev: any
+//     setTestResults((prev: unknown
 // ) => {
 //       // auto
-//       const existing = prev.find((r: any
+//       const existing = prev.find((r: unknown
 // ) => r.name === name);
 //       if (existing) {
-//         return prev.map((r: any
+//         return prev.map((r: unknown
 // ) =>
 //           r.name === name ? { ...r, status, message, details } : r
 //         );
@@ -380,7 +380,7 @@
 // ) => {
 //     // Test connection type
 //     if ('connection' in navigator) {
-//       const connection = (navigator as any).connection;
+//       const connection = (navigator as unknown).connection;
 //       updateTestResult(
 //         'Connection Info',
 //         'pass',
@@ -477,7 +477,7 @@
 // ) => {
 //     if ('getBattery' in navigator) {
 //       try {
-//         const battery = await (navigator as any).getBattery();
+//         const battery = await (navigator as unknown).getBattery();
 //         updateTestResult(
 //           'Battery API',
 //           'pass',
@@ -648,28 +648,28 @@
 //                 <div className="grid grid-cols-4 gap-4 text-center text-sm">
 //                   <div>
 //                     <div className="text-green-600 font-medium">
-//                       {testResults.filter((r: any
+//                       {testResults.filter((r: unknown
 // ) => r.status === 'pass').length}
 //                     </div>
 //                     <div className="text-gray-600">Passed</div>
 //                   </div>
 //                   <div>
 //                     <div className="text-red-600 font-medium">
-//                       {testResults.filter((r: any
+//                       {testResults.filter((r: unknown
 // ) => r.status === 'fail').length}
 //                     </div>
 //                     <div className="text-gray-600">Failed</div>
 //                   </div>
 //                   <div>
 //                     <div className="text-yellow-600 font-medium">
-//                       {testResults.filter((r: any
+//                       {testResults.filter((r: unknown
 // ) => r.status === 'warning').length}
 //                     </div>
 //                     <div className="text-gray-600">Warnings</div>
 //                   </div>
 //                   <div>
 //                     <div className="text-blue-600 font-medium">
-//                       {testResults.filter((r: any
+//                       {testResults.filter((r: unknown
 // ) => r.status === 'info').length}
 //                     </div>
 //                     <div className="text-gray-600">Info</div>

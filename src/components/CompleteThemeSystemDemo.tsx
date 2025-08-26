@@ -39,7 +39,7 @@ export const CustomThemeCreator: React.FC = () => {
       {
         category: 'gentle',
         tags: customTheme.tags,
-        timeOfDay: customTheme.timeOfDay as any,
+        timeOfDay: customTheme.timeOfDay as unknown,
         weatherSuitability: ['sunny', 'cloudy'],
         difficulty: 'moderate',
         mood: 'peaceful',
@@ -216,7 +216,7 @@ export const CustomThemeCreator: React.FC = () => {
                       ...customTheme,
                       tags: e.target.value
                         .split(',')
-                        .map((tag: any) => tag.trim())
+                        .map((tag: unknown) => tag.trim())
                         .filter(Boolean),
                     })
                   }
@@ -251,7 +251,7 @@ export const CustomThemeCreator: React.FC = () => {
                             setCustomTheme({
                               ...customTheme,
                               timeOfDay: customTheme.timeOfDay.filter(
-                                (t: any) => t !== time
+                                (t: unknown) => t !== time
                               ),
                             });
                           }
@@ -307,7 +307,7 @@ export const SmartThemesDemo: React.FC = () => {
     useState<ContextualThemeRecommendation | null>(null);
   const [testTime, setTestTime] = useState('07:00');
   const [testDate, setTestDate] = useState(new Date());
-  const [learningData, setLearningData] = useState<any[]>([]);
+  const [learningData, setLearningData] = useState<unknown[]>([]);
 
   useEffect(() => {
     loadRecommendation();
@@ -339,7 +339,7 @@ export const SmartThemesDemo: React.FC = () => {
       );
 
       // Update learning data display
-      setLearningData((prev: any) =>
+      setLearningData((prev: unknown) =>
         [
           ...prev,
           {
@@ -560,14 +560,14 @@ export const AudioSetupDemo: React.FC = () => {
 
   const testSingleSound = async (soundId: string) => {
     try {
-      const result = await soundEffectsService.testSound(soundId as any);
+      const result = await soundEffectsService.testSound(soundId as unknown);
 
-      setTestResults((prev: any) => ({ ...prev, [soundId]: result }));
+      setTestResults((prev: unknown) => ({ ...prev, [soundId]: result }));
       return result;
     } catch (_error) {
       console._error('Sound test failed:', _error);
 
-      setTestResults((prev: any) => ({ ...prev, [soundId]: false }));
+      setTestResults((prev: unknown) => ({ ...prev, [soundId]: false }));
       return false;
     }
   };
@@ -765,7 +765,7 @@ export const CompleteThemeSystemDemo: React.FC = () => {
   });
 
   const handleAlarmUpdate = (updates: Partial<Alarm>) => {
-    setMockAlarm((prev: any) => ({ ...prev, ...updates }));
+    setMockAlarm((prev: unknown) => ({ ...prev, ...updates }));
   };
 
   return (
@@ -780,7 +780,7 @@ export const CompleteThemeSystemDemo: React.FC = () => {
         ].map(tab => (
           <button
             key={tab.id}
-            onClick={() => setActiveDemo(tab.id as any)}
+            onClick={() => setActiveDemo(tab.id as unknown)}
             className={`flex-1 flex items-center justify-center space-x-2 px-4 py-3 rounded-md transition-colors
               ${
                 activeDemo === tab.id

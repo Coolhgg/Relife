@@ -83,7 +83,7 @@ class VoiceBiometricsService {
   private async initializeAudioContext(): Promise<void> {
     try {
       this.audioContext = new (window.AudioContext ||
-        (window as any).webkitAudioContext)();
+        (window as unknown).webkitAudioContext)();
 
       if (this.audioContext.state === 'suspended') {
         await this.audioContext.resume();
@@ -787,8 +787,8 @@ class VoiceBiometricsService {
   private classifyMood(
     energy: number,
     pitch: number[],
-    spectralFeatures: any,
-    prosody: any
+    spectralFeatures: unknown,
+    prosody: unknown
   ): VoiceMoodAnalysis['detectedMood'] {
     const avgPitch = this.calculateMean(pitch);
     const pitchVariation = prosody.pitchVariation;
@@ -805,7 +805,7 @@ class VoiceBiometricsService {
   private calculateMoodConfidence(
     energy: number,
     pitch: number[],
-    spectralFeatures: any
+    spectralFeatures: unknown
   ): number {
     // Simple confidence calculation based on feature clarity
     const pitchStability =
@@ -903,7 +903,7 @@ class VoiceBiometricsService {
     return Math.random() * 0.3 + 0.5; // Placeholder similarity
   }
 
-  private compareVoiceQuality(quality1: any, quality2: any): number {
+  private compareVoiceQuality(quality1: unknown, quality2: unknown): number {
     const jitterSim =
       1 -
       Math.abs(quality1.jitter - quality2.jitter) /

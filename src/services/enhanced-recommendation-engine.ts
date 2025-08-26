@@ -1102,7 +1102,7 @@ export class EnhancedRecommendationEngine {
   private createSleepQualityHybridRecommendation(
     userId: string,
     context: RecommendationContext,
-    healthData: any
+    healthData: unknown
   ): Recommendation {
     return this.createWellnessRecommendation(userId, context); // Placeholder
   }
@@ -1110,7 +1110,7 @@ export class EnhancedRecommendationEngine {
   private createEnergyCorrelationRecommendation(
     userId: string,
     context: RecommendationContext,
-    healthData: any
+    healthData: unknown
   ): Recommendation {
     return this.createProductivityRecommendation(userId, context); // Placeholder
   }
@@ -1118,7 +1118,7 @@ export class EnhancedRecommendationEngine {
   private createMeetingOptimizationRecommendation(
     userId: string,
     context: RecommendationContext,
-    calendarData: any
+    calendarData: unknown
   ): Recommendation {
     return this.createProductivityRecommendation(userId, context); // Placeholder
   }
@@ -1126,7 +1126,7 @@ export class EnhancedRecommendationEngine {
   private createWeatherAdaptationRecommendation(
     userId: string,
     context: RecommendationContext,
-    weatherData: any
+    weatherData: unknown
   ): Recommendation {
     return this.createWellnessRecommendation(userId, context); // Placeholder
   }

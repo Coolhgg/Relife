@@ -296,8 +296,8 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
           category: activeCategory,
         };
 
-        setTestResults((prev: any) => [
-          ...prev.filter((r: any) => r.testId !== test.id),
+        setTestResults((prev: unknown) => [
+          ...prev.filter((r: unknown) => r.testId !== test.id),
           result,
         ]);
         onTestComplete?.(test.id, true);
@@ -309,8 +309,8 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
           timestamp: new Date(),
           category: activeCategory,
         };
-        setTestResults((prev: any) => [
-          ...prev.filter((r: any) => r.testId !== test.id),
+        setTestResults((prev: unknown) => [
+          ...prev.filter((r: unknown) => r.testId !== test.id),
           result,
         ]);
         onTestComplete?.(test.id, false);
@@ -325,7 +325,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
 
     const timer = setTimeout(() => {
       if (currentTestIndex < currentTests.length - 1) {
-        setCurrentTestIndex((prev: any) => prev + 1);
+        setCurrentTestIndex((prev: unknown) => prev + 1);
       } else {
         setIsPlaying(false);
         setCurrentTestIndex(0);
@@ -361,7 +361,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
 
   const handleNext = () => {
     if (currentTestIndex < currentTests.length - 1) {
-      setCurrentTestIndex((prev: any) => prev + 1);
+      setCurrentTestIndex((prev: unknown) => prev + 1);
     }
   };
 
@@ -398,14 +398,14 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
 
   // Get test result status
   const getTestStatus = (testId: string) => {
-    const result = testResults.find((r: any) => r.testId === testId);
+    const result = testResults.find((r: unknown) => r.testId === testId);
     return result?.success ? 'success' : result ? '_error' : 'pending';
   };
 
   // Test results summary
   const testSummary = useMemo(() => {
     const total = testResults.length;
-    const successful = testResults.filter((r: any) => r.success).length;
+    const successful = testResults.filter((r: unknown) => r.success).length;
     const failed = total - successful;
 
     return { total, successful, failed };
@@ -570,7 +570,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
               type="checkbox"
               checked={preferences.autoAdvance}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setPreferences((prev: any) => ({
+                setPreferences((prev: unknown) => ({
                   ...prev,
                   autoAdvance: e.target.checked,
                 }))
@@ -585,7 +585,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
               type="checkbox"
               checked={preferences.simulatePremium}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setPreferences((prev: any) => ({
+                setPreferences((prev: unknown) => ({
                   ...prev,
                   simulatePremium: e.target.checked,
                 }))
@@ -598,7 +598,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
           <select
             value={preferences.delayBetweenTests}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setPreferences((prev: any) => ({
+              setPreferences((prev: unknown) => ({
                 ...prev,
                 delayBetweenTests: Number(e.target.value),
               }))
@@ -630,7 +630,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
                 </p>
               )}
               <div className="flex flex-wrap gap-1 mt-2">
-                {currentTest.tags.map((tag: any) => (
+                {currentTest.tags.map((tag: unknown) => (
                   <span
                     key={tag}
                     className="px-2 py-1 bg-indigo-100 dark:bg-indigo-800 text-indigo-800 dark:text-indigo-200 text-xs rounded"

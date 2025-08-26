@@ -278,7 +278,7 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => setActiveTab(tab.id as unknown)}
                 className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-colors
                   ${
                     activeTab === tab.id

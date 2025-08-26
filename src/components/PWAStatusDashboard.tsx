@@ -223,7 +223,7 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({
         ].map(({ id, label, icon: Icon }) => (
           <button
             key={id}
-            onClick={() => setActiveTab(id as any)}
+            onClick={() => setActiveTab(id as unknown)}
             className={`flex items-center space-x-2 px-4 py-3 border-b-2 font-medium text-sm transition-colors ${
               activeTab === id
                 ? 'border-primary-600 text-primary-600'

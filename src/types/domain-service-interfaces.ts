@@ -4,6 +4,10 @@
  * This file contains interfaces for specialized domain services
  * like gaming, rewards, themes, etc.
  */
+import {
+  MockDataRecord, MockDataStore, PointTransaction, RewardCondition, RewardData, UserReward
+} from '../../types/common-types';
+
 
 import { BaseService, ServiceConfig } from './service-architecture';
 import { User } from './index';
@@ -14,30 +18,22 @@ import { User } from './index';
 
 export interface IRewardService extends BaseService {
   // Reward Management
-  createReward(reward: {
-    type: 'badge' | 'points' | 'item' | 'unlock';
-    name: string;
-    description: string;
-    iconUrl?: string;
-    value: number;
-    rarity: 'common' | 'rare' | 'epic' | 'legendary';
-    conditions: any[]; // Reward unlock conditions
-  }): Promise<any>;
+  createReward(reward: Omit<RewardData, "id" | "created_at" | "updated_at">): Promise<RewardData>;
 
   // User Rewards
   grantReward(userId: string, rewardId: string, reason?: string): Promise<void>;
   revokeReward(userId: string, rewardId: string): Promise<void>;
-  getUserRewards(userId: string): Promise<any[]>;
+  getUserRewards(userId: string): Promise<UserReward[]>;
 
   // Achievement System
-  checkAchievements(userId: string, context: string, data: any): Promise<any[]>;
+  checkAchievements(userId: string, context: string, data: Record<string, unknown>): Promise<RewardData[]>;
   unlockAchievement(userId: string, achievementId: string): Promise<void>;
 
   // Point System
   addPoints(userId: string, points: number, source: string): Promise<void>;
   deductPoints(userId: string, points: number, reason: string): Promise<boolean>;
   getPointBalance(userId: string): Promise<number>;
-  getPointHistory(userId: string, limit?: number): Promise<any[]>;
+  getPointHistory(userId: string, limit?: number): Promise<PointTransaction[]>;
 }
 
 export interface IGamificationService extends BaseService {
@@ -58,9 +54,9 @@ export interface IGamificationService extends BaseService {
     type: 'daily' | 'weekly' | 'monthly' | 'custom';
     startDate: Date;
     endDate: Date;
-    rewards: any[];
-    requirements: any[];
-  }): Promise<any>;
+    rewards: MockDataRecord[];
+    requirements: MockDataRecord[];
+  }): Promise<unknown>;
 
   getUserChallenges(userId: string): Promise<any[]>;
   completeChallenge(userId: string, challengeId: string): Promise<void>;
@@ -80,7 +76,7 @@ export interface IGamificationService extends BaseService {
 export interface IThemeService extends BaseService {
   // Theme Management
   getAvailableThemes(): Promise<any[]>;
-  getCurrentTheme(userId: string): Promise<any>;
+  getCurrentTheme(userId: string): Promise<unknown>;
   setTheme(userId: string, themeId: string): Promise<void>;
 
   // Custom Themes
@@ -92,9 +88,9 @@ export interface IThemeService extends BaseService {
       fonts: Record<string, string>;
       sounds?: Record<string, string>;
     }
-  ): Promise<any>;
+  ): Promise<unknown>;
 
-  updateCustomTheme(userId: string, themeId: string, updates: any): Promise<any>;
+  updateCustomTheme(userId: string, themeId: string, updates: unknown): Promise<unknown>;
   deleteCustomTheme(userId: string, themeId: string): Promise<void>;
 
   // Theme Assets
@@ -147,7 +143,7 @@ export interface IEmotionalIntelligenceService extends BaseService {
     userId: string,
     timeframe: number
   ): Promise<{
-    patterns: any[];
+    patterns: MockDataRecord[];
     insights: string[];
     recommendations: string[];
   }>;
@@ -212,13 +208,13 @@ export interface ISleepTrackingService extends BaseService {
   ): Promise<void>;
 
   getSleepData(userId: string, startDate?: Date, endDate?: Date): Promise<any[]>;
-  getSleepSummary(userId: string, timeframe: 'week' | 'month' | 'year'): Promise<any>;
+  getSleepSummary(userId: string, timeframe: 'week' | 'month' | 'year'): Promise<unknown>;
 
   // Sleep Analysis
   analyzeSleepPatterns(userId: string): Promise<{
     averageSleepDuration: number;
     averageQuality: number;
-    trends: any[];
+    trends: MockDataRecord[];
     recommendations: string[];
   }>;
 
@@ -232,7 +228,7 @@ export interface ISleepTrackingService extends BaseService {
     }
   ): Promise<void>;
 
-  getSleepGoalProgress(userId: string): Promise<any>;
+  getSleepGoalProgress(userId: string): Promise<unknown>;
 }
 
 export interface IWellnessService extends BaseService {
@@ -251,17 +247,17 @@ export interface IWellnessService extends BaseService {
 
   // Wellness Goals
   setWellnessGoals(userId: string, goals: Record<string, number>): Promise<void>;
-  getWellnessProgress(userId: string): Promise<any>;
+  getWellnessProgress(userId: string): Promise<unknown>;
 
   // Insights and Reports
   generateWellnessReport(
     userId: string,
     timeframe: 'week' | 'month' | 'quarter'
   ): Promise<{
-    summary: any;
-    trends: any[];
+    summary: unknown;
+    trends: MockDataRecord[];
     recommendations: string[];
-    achievements: any[];
+    achievements: MockDataRecord[];
   }>;
 }
 
@@ -273,9 +269,7 @@ export interface ICalendarService extends BaseService {
   // Calendar Integration
   connectCalendar(
     userId: string,
-    provider: 'google' | 'outlook' | 'apple',
-    credentials: any
-  ): Promise<void>;
+    provider: 'google' | 'outlook' | 'apple', credentials: unknown): Promise<void>;
   disconnectCalendar(userId: string, provider: string): Promise<void>;
 
   // Event Management
@@ -289,7 +283,7 @@ export interface ICalendarService extends BaseService {
       description?: string;
       location?: string;
     }
-  ): Promise<any>;
+  ): Promise<unknown>;
 
   // Smart Scheduling
   findOptimalMeetingTimes(
@@ -304,7 +298,7 @@ export interface ICalendarService extends BaseService {
     userId: string,
     eventId: string,
     offsetMinutes: number
-  ): Promise<any>;
+  ): Promise<unknown>;
 }
 
 export interface IWeatherService extends BaseService {
@@ -331,7 +325,7 @@ export interface IWeatherService extends BaseService {
 
   // Weather-based Features
   getWeatherBasedRecommendations(userId: string): Promise<{
-    alarmAdjustments: any[];
+    alarmAdjustments: MockDataRecord[];
     clothingRecommendations: string[];
     activitySuggestions: string[];
   }>;
@@ -350,7 +344,7 @@ export interface ICloudSyncService extends BaseService {
   getSyncStatus(userId: string): Promise<{
     lastSync: Date;
     pendingChanges: number;
-    conflicts: any[];
+    conflicts: MockDataRecord[];
   }>;
 
   // Conflict Resolution
