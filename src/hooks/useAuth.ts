@@ -309,7 +309,7 @@ function useAuth(): AuthHook {
 
           const duration = performance.now() - startTime;
           analytics.current.trackFeatureUsage('user_sign_in_success', duration, {
-            userId: _user.id,
+            userId: user.id,
             method: 'email_password',
           });
         } else {
