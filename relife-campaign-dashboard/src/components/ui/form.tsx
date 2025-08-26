@@ -31,7 +31,7 @@ const FormFieldContext = React.createContext<FormFieldContextValue>(
 const FormField = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
->(_{
+>({
   ...props
 }: ControllerProps<TFieldValues, _TName>) => {
   return (
@@ -72,7 +72,7 @@ const useFormField = () => {
   };
 };
 
-function FormItem(_{ className, _...props }: React.ComponentProps<'div'>) {
+function FormItem({ className, ...props }: React.ComponentProps<'div'>) {
   const id = React.useId();
 
   return (
@@ -82,8 +82,8 @@ function FormItem(_{ className, _...props }: React.ComponentProps<'div'>) {
   );
 }
 
-function FormLabel(_{
-  className, _...props
+function FormLabel({
+  className, ...props
 }: React.ComponentProps<typeof LabelPrimitive.Root>) {
   const {_error, _formItemId} = useFormField();
 
@@ -98,7 +98,7 @@ function FormLabel(_{
   );
 }
 
-function FormControl(_{ ...props }: React.ComponentProps<typeof Slot>) {
+function FormControl({ ...props }: React.ComponentProps<typeof Slot>) {
   const {_error, _formItemId, _formDescriptionId, _formMessageId} = useFormField();
 
   return (
@@ -114,7 +114,7 @@ function FormControl(_{ ...props }: React.ComponentProps<typeof Slot>) {
   );
 }
 
-function FormDescription(_{ className, _...props }: React.ComponentProps<'p'>) {
+function FormDescription({ className, ...props }: React.ComponentProps<'p'>) {
   const {_formDescriptionId} = useFormField();
 
   return (
@@ -127,7 +127,7 @@ function FormDescription(_{ className, _...props }: React.ComponentProps<'p'>) {
   );
 }
 
-function FormMessage(_{ className, _...props }: React.ComponentProps<'p'>) {
+function FormMessage({ className, ...props }: React.ComponentProps<'p'>) {
   const {_error, _formMessageId} = useFormField();
   const body = error ? String(error?.message ?? '') : props.children;
 

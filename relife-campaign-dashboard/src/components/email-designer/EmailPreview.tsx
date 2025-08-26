@@ -74,7 +74,7 @@ interface PreviewTest {
   };
 }
 
-export function EmailPreview(_{ template, _onSendTest, _className }: EmailPreviewProps) {
+export function EmailPreview({ template, _onSendTest, _className }: EmailPreviewProps) {
   const [viewMode, setViewMode] = useState<'desktop' | 'mobile'>('desktop');
   const [testEmails, setTestEmails] = useState<string[]>(['']);
   const [testPersona, setTestPersona] = useState<string>('struggling_sam');
@@ -308,7 +308,7 @@ export function EmailPreview(_{ template, _onSendTest, _className }: EmailPrevie
     );
   };
 
-  return (_<div className={className}>
+  return (<div className={className}>
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -441,7 +441,7 @@ export function EmailPreview(_{ template, _onSendTest, _className }: EmailPrevie
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <h3 className="font-medium">Test Recipients</h3>
-                  {testEmails.map(_(email, _index) => (
+                  {testEmails.map((email, _index) => (
                     <div key={index} className="flex gap-2">
                       <Input
                         type="email"

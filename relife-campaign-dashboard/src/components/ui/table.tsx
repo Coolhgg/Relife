@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
-function Table(_{ className, _...props }: React.ComponentProps<'table'>) {
+function Table({ className, ...props }: React.ComponentProps<'table'>) {
   return (
     <div data-slot="table-container" className="relative w-full overflow-x-auto">
       <table
@@ -15,7 +15,7 @@ function Table(_{ className, _...props }: React.ComponentProps<'table'>) {
   );
 }
 
-function TableHeader(_{ className, _...props }: React.ComponentProps<'thead'>) {
+function TableHeader({ className, ...props }: React.ComponentProps<'thead'>) {
   return (
     <thead
       data-slot="table-header"
@@ -25,7 +25,7 @@ function TableHeader(_{ className, _...props }: React.ComponentProps<'thead'>) {
   );
 }
 
-function TableBody(_{ className, _...props }: React.ComponentProps<'tbody'>) {
+function TableBody({ className, ...props }: React.ComponentProps<'tbody'>) {
   return (
     <tbody
       data-slot="table-body"
@@ -35,7 +35,7 @@ function TableBody(_{ className, _...props }: React.ComponentProps<'tbody'>) {
   );
 }
 
-function TableFooter(_{ className, _...props }: React.ComponentProps<'tfoot'>) {
+function TableFooter({ className, ...props }: React.ComponentProps<'tfoot'>) {
   return (
     <tfoot
       data-slot="table-footer"
@@ -48,7 +48,7 @@ function TableFooter(_{ className, _...props }: React.ComponentProps<'tfoot'>) {
   );
 }
 
-function TableRow(_{ className, _...props }: React.ComponentProps<'tr'>) {
+function TableRow({ className, ...props }: React.ComponentProps<'tr'>) {
   return (
     <tr
       data-slot="table-row"
@@ -61,7 +61,7 @@ function TableRow(_{ className, _...props }: React.ComponentProps<'tr'>) {
   );
 }
 
-function TableHead(_{ className, _...props }: React.ComponentProps<'th'>) {
+function TableHead({ className, ...props }: React.ComponentProps<'th'>) {
   return (
     <th
       data-slot="table-head"
@@ -74,7 +74,7 @@ function TableHead(_{ className, _...props }: React.ComponentProps<'th'>) {
   );
 }
 
-function TableCell(_{ className, _...props }: React.ComponentProps<'td'>) {
+function TableCell({ className, ...props }: React.ComponentProps<'td'>) {
   return (
     <td
       data-slot="table-cell"
@@ -87,7 +87,7 @@ function TableCell(_{ className, _...props }: React.ComponentProps<'td'>) {
   );
 }
 
-function TableCaption(_{ className, _...props }: React.ComponentProps<'caption'>) {
+function TableCaption({ className, ...props }: React.ComponentProps<'caption'>) {
   return (
     <caption
       data-slot="table-caption"

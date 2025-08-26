@@ -1,11 +1,5 @@
 import React from 'react'; // auto: added missing React import
 import {
-import { value } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { metric } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { timeframe } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { context } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { className } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
-import { title } from 'src/utils/__auto_stubs'; // auto: restored by scout - verify
   Chart as ChartJS,
   CategoryScale,
   LinearScale,

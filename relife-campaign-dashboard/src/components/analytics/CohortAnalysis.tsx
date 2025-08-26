@@ -38,7 +38,7 @@ interface CohortAnalysisProps {
   className?: string;
 }
 
-export function CohortAnalysis(_{ className }: CohortAnalysisProps) {
+export function CohortAnalysis({ className }: CohortAnalysisProps) {
   const [metric, setMetric] = useState<'retention' | 'engagement' | 'conversion'>(
     'retention'
   );
@@ -153,7 +153,7 @@ export function CohortAnalysis(_{ className }: CohortAnalysisProps) {
     return sum / cohortData.length;
   });
 
-  return (_<Card className={className}>
+  return (<Card className={className}>
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
@@ -222,7 +222,7 @@ export function CohortAnalysis(_{ className }: CohortAnalysisProps) {
               <tr className="border-b">
                 <th className="text-left p-2 font-medium">Cohort</th>
                 <th className="text-center p-2 font-medium">Size</th>
-                {periods.map(_(period, _index) => (
+                {periods.map((period, _index) => (
                   <th key={period} className="text-center p-2 font-medium">
                     {period}
                   </th>
@@ -236,7 +236,7 @@ export function CohortAnalysis(_{ className }: CohortAnalysisProps) {
                   <td className="p-2 text-center">
                     <Badge variant="secondary">{cohort.size.toLocaleString()}</Badge>
                   </td>
-                  {periodKeys.map(_(key, _index) => (
+                  {periodKeys.map((key, _index) => (
                     <td key={key} className="p-2 text-center">
                       <TooltipProvider>
                         <Tooltip>
