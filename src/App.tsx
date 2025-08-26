@@ -207,7 +207,11 @@ function AppContent() {
       );
       updateServiceWorkerAlarms(appState.alarm.alarms);
     }
-  }, [appState.alarm.alarms, serviceWorkerState.isInitialized, updateServiceWorkerAlarms]);
+  }, [
+    appState.alarm.alarms,
+    serviceWorkerState.isInitialized,
+    updateServiceWorkerAlarms,
+  ]);
 
   // Emotional Intelligence Notifications Hook
   const [_emotionalState, emotionalActions] = useEmotionalNotifications({
@@ -218,9 +222,17 @@ function AppContent() {
   // Tab Protection Announcements Hook
   const tabProtectionSettings = useTabProtectionSettings();
   const { announceProtectionWarning } = useTabProtectionAnnouncements({
-    activeAlarm: appState.alarm.currentlyTriggering.length > 0 ? appState.alarm.alarms.find(a => appState.alarm.currentlyTriggering.includes(a.id)) || null : null,
+    activeAlarm:
+      appState.alarm.currentlyTriggering.length > 0
+        ? appState.alarm.alarms.find(a =>
+            appState.alarm.currentlyTriggering.includes(a.id)
+          ) || null
+        : null,
     // Performance optimization - useMemo to prevent re-renders
-    enabledAlarms: useMemo(() => appState.alarm.alarms.filter((alarm: Alarm) => alarm.enabled), [appState.alarm.alarms]),
+    enabledAlarms: useMemo(
+      () => appState.alarm.alarms.filter((alarm: Alarm) => alarm.enabled),
+      [appState.alarm.alarms]
+    ),
     settings: tabProtectionSettings.settings,
   });
 
@@ -245,14 +257,14 @@ function AppContent() {
         // Update user habits based on current alarms
         if (alarms.length > 0) {
           const habitData = {
-            habit_name: "daily_alarms",
+            habit_name: 'daily_alarms',
             current_count: alarms.filter(a => a.enabled).length,
             target_count: alarms.length,
-            last_activity: new Date().toISOString()
+            last_activity: new Date().toISOString(),
           };
-        if (auth.user?.id) {
-          await rewardService.updateUserHabits(auth.user.id, habitData);
-        }
+          if (auth.user?.id) {
+            await rewardService.updateUserHabits(auth.user.id, habitData);
+          }
         }
 
         // Check and unlock any new rewards
@@ -262,11 +274,21 @@ function AppContent() {
 
         // Get the comprehensive reward system data from database
         const _rewards = await rewardService.getRewards();
-        const userRewards = auth.user?.id ? await rewardService.getUserRewards(auth.user.id) : null;
-        const _insights = auth.user?.id ? await rewardService.getUserInsights(auth.user.id) : null;
-        const analytics = auth.user?.id ? await rewardService.getUserAnalytics(auth.user.id) : null;
-        const _habits = auth.user?.id ? await rewardService.getUserHabits(auth.user.id) : null;
-        const _nicheProfile = auth.user?.id ? await rewardService.getUserNicheProfile(auth.user.id) : null;
+        const userRewards = auth.user?.id
+          ? await rewardService.getUserRewards(auth.user.id)
+          : null;
+        const _insights = auth.user?.id
+          ? await rewardService.getUserInsights(auth.user.id)
+          : null;
+        const analytics = auth.user?.id
+          ? await rewardService.getUserAnalytics(auth.user.id)
+          : null;
+        const _habits = auth.user?.id
+          ? await rewardService.getUserHabits(auth.user.id)
+          : null;
+        const _nicheProfile = auth.user?.id
+          ? await rewardService.getUserNicheProfile(auth.user.id)
+          : null;
 
         // Build comprehensive reward system object
         const rewardSystem = {
@@ -274,7 +296,9 @@ function AppContent() {
           level: analytics?.current_level || 1,
           experience: analytics?.total_points || 0, // Using points as experience
           streakDays: analytics?.current_streak || 0,
-          unlockedRewards: (userRewards || []).map(r => r.reward_id || r.id || String(r)),
+          unlockedRewards: (userRewards || []).map(
+            r => r.reward_id || r.id || String(r)
+          ),
         };
 
         setAppState((prev: AppState) => ({
@@ -297,7 +321,14 @@ function AppContent() {
         );
       }
     },
-    [appState.alarm.alarms, setAppState, auth.user?.id, rewardService, appAnalytics, errorHandler]
+    [
+      appState.alarm.alarms,
+      setAppState,
+      auth.user?.id,
+      rewardService,
+      appAnalytics,
+      errorHandler,
+    ]
   );
 
   const loadUserAlarms = useCallback(async () => {
@@ -994,7 +1025,7 @@ function AppContent() {
         const performanceService = PerformanceMonitor.getInstance();
         const analyticsService = AnalyticsService.getInstance();
         const appAnalytics = AppAnalyticsService.getInstance();
-        
+
         await performanceService.initialize();
         await analyticsService.initialize();
 
@@ -1110,9 +1141,12 @@ function AppContent() {
   }, [handleServiceWorkerMessage]);
 
   // Extract complex expression for dependency array
-  const currentTriggeredAlarm = appState.alarm.currentlyTriggering.length > 0 
-    ? appState.alarm.alarms.find(a => appState.alarm.currentlyTriggering.includes(a.id)) || null 
-    : null;
+  const currentTriggeredAlarm =
+    appState.alarm.currentlyTriggering.length > 0
+      ? appState.alarm.alarms.find(a =>
+          appState.alarm.currentlyTriggering.includes(a.id)
+        ) || null
+      : null;
 
   // Prevent accidental tab closure when alarms are active
   useEffect(() => {
@@ -1142,7 +1176,9 @@ function AppContent() {
       // Check if there are enabled alarms that could ring soon
       if (tabProtectionSettings.settings.protectionTiming.upcomingAlarmWarning) {
         // Performance optimization - compute enabled alarms
-        const enabledAlarms = appState.alarm.alarms.filter((alarm: Alarm) => alarm.enabled);
+        const enabledAlarms = appState.alarm.alarms.filter(
+          (alarm: Alarm) => alarm.enabled
+        );
         if (enabledAlarms.length > 0) {
           // Check if any alarm is within the configured threshold
           const now = new Date();
@@ -1476,9 +1512,12 @@ function AppContent() {
         error: _error instanceof Error ? _error.message : String(_error),
         duration,
       });
-      analytics.trackError(_error instanceof Error ? _error : new Error(String(_error)), {
-        action: 'edit_alarm',
-      });
+      analytics.trackError(
+        _error instanceof Error ? _error : new Error(String(_error)),
+        {
+          action: 'edit_alarm',
+        }
+      );
 
       ErrorHandler.handleError(
         _error instanceof Error ? _error : new Error(String(_error)),
@@ -1552,9 +1591,12 @@ function AppContent() {
         error: _error instanceof Error ? _error.message : String(_error),
         duration,
       });
-      analytics.trackError(_error instanceof Error ? _error : new Error(String(_error)), {
-        action: 'delete_alarm',
-      });
+      analytics.trackError(
+        _error instanceof Error ? _error : new Error(String(_error)),
+        {
+          action: 'delete_alarm',
+        }
+      );
 
       ErrorHandler.handleError(
         _error instanceof Error ? _error : new Error(String(_error)),
@@ -1640,9 +1682,12 @@ function AppContent() {
         error: _error instanceof Error ? _error.message : String(_error),
         duration,
       });
-      analytics.trackError(_error instanceof Error ? _error : new Error(String(_error)), {
-        action: 'toggle_alarm',
-      });
+      analytics.trackError(
+        _error instanceof Error ? _error : new Error(String(_error)),
+        {
+          action: 'toggle_alarm',
+        }
+      );
 
       ErrorHandler.handleError(
         _error instanceof Error ? _error : new Error(String(_error)),
@@ -2274,7 +2319,9 @@ function AppContent() {
                   }}
                   role="tab"
                   aria-selected={appState.navigation.currentView === 'alarms'}
-                  aria-current={appState.navigation.currentView === 'alarms' ? 'page' : undefined}
+                  aria-current={
+                    appState.navigation.currentView === 'alarms' ? 'page' : undefined
+                  }
                   aria-label="Alarms - Manage your alarm list"
                   aria-controls="main-content"
                 >
@@ -2305,9 +2352,13 @@ function AppContent() {
                       : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
                   }`}
                   role="tab"
-                  aria-selected={appState.navigation.currentView === 'advanced-scheduling'}
+                  aria-selected={
+                    appState.navigation.currentView === 'advanced-scheduling'
+                  }
                   aria-current={
-                    appState.navigation.currentView === 'advanced-scheduling' ? 'page' : undefined
+                    appState.navigation.currentView === 'advanced-scheduling'
+                      ? 'page'
+                      : undefined
                   }
                   aria-label="Advanced Scheduling - Create smart alarms with AI optimization"
                   aria-controls="main-content"
@@ -2340,7 +2391,9 @@ function AppContent() {
                   }`}
                   role="tab"
                   aria-selected={appState.navigation.currentView === 'gaming'}
-                  aria-current={appState.navigation.currentView === 'gaming' ? 'page' : undefined}
+                  aria-current={
+                    appState.navigation.currentView === 'gaming' ? 'page' : undefined
+                  }
                   aria-label="Gaming - Rewards, battles, and community challenges"
                   aria-controls="main-content"
                 >
@@ -2429,7 +2482,9 @@ function AppContent() {
                   }`}
                   role="tab"
                   aria-selected={appState.navigation.currentView === 'pricing'}
-                  aria-current={appState.navigation.currentView === 'pricing' ? 'page' : undefined}
+                  aria-current={
+                    appState.navigation.currentView === 'pricing' ? 'page' : undefined
+                  }
                   aria-label="Premium - Subscription plans and premium features"
                   aria-controls="main-content"
                 >

@@ -5,9 +5,12 @@
  * behavior patterns and comprehensive testing scenarios.
  */
 import {
-  AlarmData, AnalyticsProperties, AnalyticsTraits, Battle, BattleConfig
+  AlarmData,
+  AnalyticsProperties,
+  AnalyticsTraits,
+  Battle,
+  BattleConfig,
 } from '../../types/common-types';
-
 
 import React, { ReactNode, createContext, useContext } from 'react';
 
@@ -20,7 +23,7 @@ export interface MockAlarmService {
   updateAlarm: jest.MockedFunction<(id: string, updates: unknown) => Promise<unknown>>;
   deleteAlarm: jest.MockedFunction<(id: string) => Promise<void>>;
   getAlarms: jest.MockedFunction<() => Promise<AlarmData[]>>;
-  getAlarm: jest.MockedFunction<(id: string) => Promise<AlarmData | null>>>;
+  getAlarm: jest.MockedFunction<(id: string) => Promise<AlarmData | null>>;
   scheduleAlarm: jest.MockedFunction<(alarm: unknown) => Promise<void>>;
   cancelAlarm: jest.MockedFunction<(id: string) => Promise<void>>;
   snoozeAlarm: jest.MockedFunction<(id: string, minutes?: number) => Promise<void>>;
@@ -33,9 +36,9 @@ export interface MockAlarmService {
 }
 
 export interface MockAnalyticsService {
-  track: jest.MockedFunction<(event: string, properties?: AnalyticsProperties) => void> => void>;
-  identify: jest.MockedFunction<(userId: string, traits?: AnalyticsTraits) => void> => void>;
-  page: jest.MockedFunction<(name: string, properties?: AnalyticsProperties) => void> => void>;
+  track: jest.MockedFunction<(event: string, properties?: AnalyticsProperties) => void>;
+  identify: jest.MockedFunction<(userId: string, traits?: AnalyticsTraits) => void>;
+  page: jest.MockedFunction<(name: string, properties?: AnalyticsProperties) => void>;
   group: jest.MockedFunction<(groupId: string, traits?: unknown) => void>;
   alias: jest.MockedFunction<(userId: string, previousId?: string) => void>;
   reset: jest.MockedFunction<() => void>;
@@ -50,8 +53,8 @@ export interface MockBattleService {
   createBattle: jest.MockedFunction<(_config: unknown) => Promise<unknown>>;
   joinBattle: jest.MockedFunction<(battleId: string) => Promise<void>>;
   leaveBattle: jest.MockedFunction<(battleId: string) => Promise<void>>;
-  getBattles: jest.MockedFunction<(status?: string) => Promise<Battle[]>>>;
-  getBattle: jest.MockedFunction<(id: string) => Promise<Battle | null>>>;
+  getBattles: jest.MockedFunction<(status?: string) => Promise<Battle[]>>;
+  getBattle: jest.MockedFunction<(id: string) => Promise<Battle | null>>;
   startBattle: jest.MockedFunction<(battleId: string) => Promise<void>>;
   endBattle: jest.MockedFunction<(battleId: string) => Promise<unknown>>;
   submitAnswer: jest.MockedFunction<
@@ -68,7 +71,9 @@ export interface MockBattleService {
 export interface MockSubscriptionService {
   getSubscription: jest.MockedFunction<() => Promise<any | null>>;
   getSubscriptions: jest.MockedFunction<() => Promise<unknown[]>>;
-  subscribe: jest.MockedFunction<(tier: string, paymentMethod?: unknown) => Promise<unknown>>;
+  subscribe: jest.MockedFunction<
+    (tier: string, paymentMethod?: unknown) => Promise<unknown>
+  >;
   cancelSubscription: jest.MockedFunction<(subscriptionId: string) => Promise<void>>;
   updateSubscription: jest.MockedFunction<
     (subscriptionId: string, updates: unknown) => Promise<unknown>
@@ -84,8 +89,12 @@ export interface MockSubscriptionService {
 }
 
 export interface MockVoiceService {
-  generateVoice: jest.MockedFunction<(text: string, options?: unknown) => Promise<unknown>>;
-  uploadVoice: jest.MockedFunction<(file: File, metadata?: unknown) => Promise<unknown>>;
+  generateVoice: jest.MockedFunction<
+    (text: string, options?: unknown) => Promise<unknown>
+  >;
+  uploadVoice: jest.MockedFunction<
+    (file: File, metadata?: unknown) => Promise<unknown>
+  >;
   deleteVoice: jest.MockedFunction<(voiceId: string) => Promise<void>>;
   getVoices: jest.MockedFunction<(userId?: string) => Promise<unknown[]>>;
   getVoice: jest.MockedFunction<(voiceId: string) => Promise<any | null>>;
@@ -137,14 +146,18 @@ export interface MockAudioService {
 }
 
 export interface MockStorageService {
-  set: jest.MockedFunction<(key: string, value: unknown, options?: unknown) => Promise<void>>;
+  set: jest.MockedFunction<
+    (key: string, value: unknown, options?: unknown) => Promise<void>
+  >;
   get: jest.MockedFunction<(key: string) => Promise<unknown>>;
   remove: jest.MockedFunction<(key: string) => Promise<void>>;
   clear: jest.MockedFunction<() => Promise<void>>;
   keys: jest.MockedFunction<() => Promise<string[]>>;
   size: jest.MockedFunction<() => Promise<number>>;
   has: jest.MockedFunction<(key: string) => Promise<boolean>>;
-  getMultiple: jest.MockedFunction<(keys: string[]) => Promise<Record<string, unknown>>>;
+  getMultiple: jest.MockedFunction<
+    (keys: string[]) => Promise<Record<string, unknown>>
+  >;
   setMultiple: jest.MockedFunction<(items: Record<string, unknown>) => Promise<void>>;
   removeMultiple: jest.MockedFunction<(keys: string[]) => Promise<void>>;
   sync: jest.MockedFunction<() => Promise<void>>;
@@ -154,7 +167,9 @@ export interface MockStorageService {
 
 export interface MockSecurityService {
   encrypt: jest.MockedFunction<(data: unknown, key?: string) => Promise<string>>;
-  decrypt: jest.MockedFunction<(encryptedData: string, key?: string) => Promise<unknown>>;
+  decrypt: jest.MockedFunction<
+    (encryptedData: string, key?: string) => Promise<unknown>
+  >;
   hash: jest.MockedFunction<(data: string, algorithm?: string) => Promise<string>>;
   verify: jest.MockedFunction<(data: string, hash: string) => Promise<boolean>>;
   generateToken: jest.MockedFunction<

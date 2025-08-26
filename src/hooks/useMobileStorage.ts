@@ -24,9 +24,9 @@ export function useMobileStorage() {
 
     // Cache operations
     clearCache: (tags?: string[]) => unifiedStorage.clearCache(tags),
-    setCache: <T,>(key: string, data: T, ttl?: number, tags?: string[]) =>
+    setCache: <T>(key: string, data: T, ttl?: number, tags?: string[]) =>
       unifiedStorage.setCache(key, data, ttl, tags),
-    getCache: <T,>(key: string) => unifiedStorage.getCache<T>(key),
+    getCache: <T>(key: string) => unifiedStorage.getCache<T>(key),
 
     // Native storage integration
     getCriticalAlarms: () => mobileStorage.getCriticalAlarmsFromNative(),
