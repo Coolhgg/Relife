@@ -628,6 +628,46 @@ interface OverageFee {
 // =============================================================================
 
 export interface AppState {
+  // Flattened alarm properties for component compatibility
+  alarms: Alarm[];
+  activeAlarm: Alarm | null;
+  permissions: {
+    notifications: boolean;
+    location: boolean;
+    camera: boolean;
+    microphone: boolean;
+  };
+  
+  // Navigation state
+  currentView:
+    | 'dashboard'
+    | 'alarms'
+    | 'settings'
+    | 'profile'
+    | 'subscription'
+    | 'gaming'
+    | 'advanced-scheduling'
+    | 'pricing'
+    | 'gift-shop';
+  
+  // Reward and gamification
+  rewardSystem: {
+    points: number;
+    level: number;
+    experience: number;
+    streakDays: number;
+    unlockedRewards: string[];
+  };
+  
+  activeBattles: Record<string, string>; // alarmId -> battleId mapping
+  
+  // Social features
+  friends: UserFriend[];
+  
+  // Onboarding state
+  isOnboarding: boolean;
+  
+  // Full nested state for advanced functionality
   alarm: AlarmState;
   user: UserState;
   subscription: SubscriptionState;
@@ -644,7 +684,7 @@ export interface AppState {
     criticalError: string | null;
   };
 
-  // Navigation and routing
+  // Navigation and routing (keeping for backward compatibility)
   navigation: {
     currentView:
       | 'dashboard'

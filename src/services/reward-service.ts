@@ -899,6 +899,28 @@ export class RewardService implements RewardSystem {
   }
 
   /**
+   * Get user habits for analysis and tracking
+   */
+  async getUserHabits(userId: string): Promise<UserHabit[]> {
+    try {
+      const { data, error } = await this.db.client
+        .from('user_habits')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        throw new Error(`Failed to fetch user habits: ${error.message}`);
+      }
+
+      return data || [];
+    } catch (error) {
+      this.handleError(error as Error, 'Failed to get user habits');
+      return [];
+    }
+  }
+
+  /**
    * Update user niche profile
    */
   async updateUserNicheProfile(
