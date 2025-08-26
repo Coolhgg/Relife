@@ -1,6 +1,6 @@
 /**
  * Common Type Definitions
- * 
+ *
  * This file contains common types that replace frequent 'any' usage patterns
  * throughout the codebase, particularly for testing, mocks, and generic operations.
  */

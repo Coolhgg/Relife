@@ -1,7 +1,5 @@
 /// <reference lib="dom" />
-import {
-  MockDataRecord, MockDataStore
-} from '../../types/common-types';
+import { MockDataRecord, MockDataStore } from '../../types/common-types';
 
 import { vi } from 'vitest';
 // After environment setup - runs after each test environment is created

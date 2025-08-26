@@ -745,7 +745,9 @@ export class SubscriptionAPIHandler {
       .upsert(subscriptionData, { onConflict: 'stripe_subscription_id' });
   }
 
-  private async updateSubscriptionInDatabase(stripeSubscription: unknown): Promise<void> {
+  private async updateSubscriptionInDatabase(
+    stripeSubscription: unknown
+  ): Promise<void> {
     const updateData = {
       status: stripeSubscription.status,
       billing_interval:

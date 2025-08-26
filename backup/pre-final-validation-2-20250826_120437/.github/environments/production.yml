@@ -1,0 +1,108 @@
+# Production Environment Configuration
+# This file documents the production environment setup for GitHub Environments
+
+name: production
+url: https://relife.yourdomain.com
+
+# Environment protection rules
+protection_rules:
+  required_reviewers: 2 # Require 2 reviewers for production
+  prevent_self_review: true
+  dismiss_stale_reviews: true
+  deployment_branch_policy:
+    protected_branches: true
+    custom_branches: ["main"]
+
+  # Wait timer before deployment (5 minutes)
+  wait_timer: 5
+
+# Environment variables for production
+environment_variables:
+  NODE_ENV: production
+  VITE_APP_ENV: production
+  VITE_APP_API_URL: https://api.relife.com
+  VITE_APP_VERSION: ${{ github.sha }}
+
+  # Feature flags for production (more conservative)
+  VITE_FEATURE_ADVANCED_BATTLE: "true"
+  VITE_FEATURE_PREMIUM_THEMES: "true"
+  VITE_FEATURE_ANALYTICS: "true"
+
+  # Production settings
+  VITE_DEBUG_MODE: "false"
+  VITE_LOG_LEVEL: "error"
+
+  # Performance optimization
+  VITE_ENABLE_PWA: "true"
+  VITE_ENABLE_SERVICE_WORKER: "true"
+
+# Secrets required for production (to be configured in GitHub)
+required_secrets:
+  - PRODUCTION_DEPLOY_KEY # SSH key or deployment token
+  - CODECOV_TOKEN # Code coverage reporting
+  - SENTRY_DSN_PRODUCTION # Error tracking for production
+  - FIREBASE_CONFIG_PRODUCTION # Firebase configuration
+  - AWS_ACCESS_KEY_ID # If using AWS for hosting
+  - AWS_SECRET_ACCESS_KEY # If using AWS for hosting
+  - SSL_CERTIFICATE # SSL certificate if needed
+  - CDN_INVALIDATION_KEY # For cache invalidation
+  - ANALYTICS_API_KEY # Analytics service key
+  - PAYMENT_API_KEY # Payment processing (if applicable)
+
+# Health check configuration
+health_check:
+  url: https://relife.yourdomain.com/api/health
+  expected_status: 200
+  timeout: 10s
+  retries: 5
+  interval: 30s
+
+# Deployment strategy
+deployment:
+  strategy: blue-green # Zero-downtime deployment
+  max_unavailable: 0
+  max_surge: 1
+  rollback_enabled: true
+  canary_deployment:
+    enabled: true
+    percentage: 10
+    duration: 10m
+
+# Monitoring and alerts
+monitoring:
+  enabled: true
+  performance_budget:
+    fcp: 1.5s # First Contentful Paint (stricter for prod)
+    lcp: 2.5s # Largest Contentful Paint
+    cls: 0.05 # Cumulative Layout Shift
+    fid: 50ms # First Input Delay
+
+  # Alerting thresholds
+  alerts:
+    error_rate_threshold: 1%
+    response_time_p95: 500ms
+    uptime_threshold: 99.9%
+
+# Backup and disaster recovery
+backup:
+  enabled: true
+  retention_days: 90
+  backup_frequency: daily
+
+# Auto-deployment settings
+auto_deployment:
+  enabled: true
+  branch: main
+  conditions:
+    - all_tests_pass: true
+    - security_scan_pass: true
+    - mobile_build_success: true
+    - performance_budget_met: true
+    - required_reviewers_approved: true
+
+# Compliance and security
+compliance:
+  data_retention_policy: 2_years
+  gdpr_compliant: true
+  security_headers: true
+  content_security_policy: strict

@@ -475,7 +475,10 @@ export class AdvancedTranslationValidator {
     return Math.round((transKeys.length / refKeys.length) * 100);
   }
 
-  private calculateConsistency(translations: unknown, language: SupportedLanguage): number {
+  private calculateConsistency(
+    translations: unknown,
+    language: SupportedLanguage
+  ): number {
     // Simplified consistency calculation based on terminology usage
     const termMap = this.terminologyMap.get(language) || new Map();
     let consistencyScore = 100;
@@ -517,7 +520,10 @@ export class AdvancedTranslationValidator {
     return Math.max(0, score);
   }
 
-  private calculateTechnicalAccuracy(translations: unknown, reference: unknown): number {
+  private calculateTechnicalAccuracy(
+    translations: unknown,
+    reference: unknown
+  ): number {
     // Check for interpolation variable preservation
     const score = 100;
     let errors = 0;
@@ -540,7 +546,10 @@ export class AdvancedTranslationValidator {
     return Math.max(0, score - errors * 5);
   }
 
-  private calculateReadability(translations: unknown, language: SupportedLanguage): number {
+  private calculateReadability(
+    translations: unknown,
+    language: SupportedLanguage
+  ): number {
     const texts: string[] = [];
     this.traverseTranslations(translations, (key, value) => {
       if (typeof value === 'string') texts.push(value);

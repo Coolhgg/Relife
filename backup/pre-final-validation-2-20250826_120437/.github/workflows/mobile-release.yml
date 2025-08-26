@@ -1,0 +1,571 @@
+# Mobile App Release Pipeline
+# Builds and distributes Android and iOS apps to app stores
+
+name: 📱 Mobile App Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: "Platform to build and release"
+        required: true
+        type: choice
+        options:
+          - android
+          - ios
+          - both
+      release_type:
+        description: "Type of release"
+        required: true
+        type: choice
+        options:
+          - internal
+          - alpha
+          - beta
+          - production
+      skip_tests:
+        description: "Skip tests (emergency release)"
+        required: false
+        default: false
+        type: boolean
+      version_bump:
+        description: "Version bump type"
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+          - none
+
+  push:
+    tags:
+      - "mobile-v*"
+
+env:
+  NODE_VERSION: "20"
+  JAVA_VERSION: "17"
+  CAPACITOR_VERSION: "7"
+
+jobs:
+  # Version management and preparation
+  prepare:
+    name: 🏗️ Prepare Release
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      build-number: ${{ steps.version.outputs.build-number }}
+      should-build-android: ${{ steps.platform.outputs.should-build-android }}
+      should-build-ios: ${{ steps.platform.outputs.should-build-ios }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --production=false
+
+      - name: Determine platforms to build
+        id: platform
+        run: |
+          PLATFORM="${{ github.event.inputs.platform || 'both' }}"
+
+          if [[ "$PLATFORM" == "android" || "$PLATFORM" == "both" ]]; then
+            echo "should-build-android=true" >> $GITHUB_OUTPUT
+          else
+            echo "should-build-android=false" >> $GITHUB_OUTPUT
+          fi
+
+          if [[ "$PLATFORM" == "ios" || "$PLATFORM" == "both" ]]; then
+            echo "should-build-ios=true" >> $GITHUB_OUTPUT
+          else
+            echo "should-build-ios=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generate version and build number
+        id: version
+        run: |
+          # Get current version from package.json
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+
+          # Determine new version based on input
+          BUMP_TYPE="${{ github.event.inputs.version_bump || 'patch' }}"
+
+          if [[ "$BUMP_TYPE" != "none" ]]; then
+            NEW_VERSION=$(npm version $BUMP_TYPE --no-git-tag-version --preid=rc)
+            NEW_VERSION=${NEW_VERSION#v}  # Remove 'v' prefix
+          else
+            NEW_VERSION="$CURRENT_VERSION"
+          fi
+
+          # Generate build number (timestamp-based)
+          BUILD_NUMBER=$(date +'%Y%m%d%H%M')
+
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "build-number=$BUILD_NUMBER" >> $GITHUB_OUTPUT
+
+          echo "📱 Mobile Release Version: $NEW_VERSION"
+          echo "🔢 Build Number: $BUILD_NUMBER"
+
+      - name: Build web application
+        run: |
+          npm run build
+        env:
+          VITE_APP_VERSION: ${{ steps.version.outputs.version }}
+          VITE_BUILD_TIME: ${{ github.event.head_commit.timestamp }}
+          VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          VITE_POSTHOG_KEY: ${{ secrets.POSTHOG_KEY }}
+          VITE_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+
+      - name: Upload web build
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: dist/
+          retention-days: 7
+
+  # Android build and release
+  android:
+    name: 🤖 Android Release
+    runs-on: ubuntu-latest
+    needs: prepare
+    if: ${{ needs.prepare.outputs.should-build-android == 'true' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install dependencies
+        run: npm ci --production=false
+
+      - name: Download web build
+        uses: actions/download-artifact@v3
+        with:
+          name: web-build
+          path: dist/
+
+      - name: Sync Capacitor Android
+        run: npx cap sync android
+
+      - name: Update Android version
+        run: |
+          VERSION="${{ needs.prepare.outputs.version }}"
+          BUILD_NUMBER="${{ needs.prepare.outputs.build-number }}"
+
+          # Update version in android/app/build.gradle
+          sed -i "s/versionName .*/versionName \"$VERSION\"/" android/app/build.gradle
+          sed -i "s/versionCode .*/versionCode $BUILD_NUMBER/" android/app/build.gradle
+
+          echo "Updated Android version to $VERSION ($BUILD_NUMBER)"
+
+      - name: Setup Android signing
+        run: |
+          # Create keystore from secrets
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > android/release.keystore
+
+          # Create keystore.properties
+          cat > android/keystore.properties << EOF
+          RELIFE_RELEASE_STORE_FILE=../release.keystore
+          RELIFE_RELEASE_STORE_PASSWORD=${{ secrets.ANDROID_STORE_PASSWORD }}
+          RELIFE_RELEASE_KEY_ALIAS=${{ secrets.ANDROID_KEY_ALIAS }}
+          RELIFE_RELEASE_KEY_PASSWORD=${{ secrets.ANDROID_KEY_PASSWORD }}
+          EOF
+
+      - name: Run Android tests
+        if: ${{ !inputs.skip_tests }}
+        run: |
+          cd android
+          ./gradlew test
+
+      - name: Build Android APK/AAB
+        run: |
+          cd android
+
+          # Build APK for direct distribution
+          ./gradlew assembleRelease
+
+          # Build AAB for Play Store
+          ./gradlew bundleRelease
+
+          echo "✅ Android build completed"
+
+      - name: Sign Android artifacts
+        run: |
+          cd android/app/build/outputs
+
+          # Verify APK is signed
+          $ANDROID_HOME/build-tools/$(ls $ANDROID_HOME/build-tools | tail -1)/aapt dump badging apk/release/app-release.apk | grep package
+
+          # Verify AAB is signed
+          if [ -f bundle/release/app-release.aab ]; then
+            echo "AAB bundle created successfully"
+          fi
+
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk-release
+          path: android/app/build/outputs/apk/release/app-release.apk
+
+      - name: Upload Android AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-aab-release
+          path: android/app/build/outputs/bundle/release/app-release.aab
+
+      - name: Deploy to Google Play (Internal)
+        if: ${{ github.event.inputs.release_type == 'internal' || github.event.inputs.release_type == 'alpha' }}
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.scrapybara.relife
+          releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
+          track: ${{ github.event.inputs.release_type == 'internal' && 'internal' || 'alpha' }}
+          status: completed
+          inAppUpdatePriority: 0
+
+      - name: Deploy to Google Play (Beta/Production)
+        if: ${{ github.event.inputs.release_type == 'beta' || github.event.inputs.release_type == 'production' }}
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.scrapybara.relife
+          releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
+          track: ${{ github.event.inputs.release_type }}
+          status: ${{ github.event.inputs.release_type == 'production' && 'completed' || 'draft' }}
+          inAppUpdatePriority: 2
+
+      - name: Create Android release notes
+        run: |
+          cat > android-release-notes.md << EOF
+          # Android Release ${{ needs.prepare.outputs.version }}
+
+          **Build Number:** ${{ needs.prepare.outputs.build-number }}
+          **Release Type:** ${{ github.event.inputs.release_type || 'internal' }}
+          **Platform:** Android
+
+          ## Changes
+          - Latest app improvements and bug fixes
+          - Enhanced performance and stability
+          - Updated security features
+
+          ## Technical Details
+          - Target SDK: 35 (Android 15)
+          - Min SDK: 23 (Android 6.0)
+          - Package: com.scrapybara.relife
+
+          ## Downloads
+          - APK: Available in workflow artifacts
+          - AAB: Uploaded to Google Play Console
+          EOF
+
+      - name: Upload Android release notes
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-release-notes
+          path: android-release-notes.md
+
+  # iOS build and release
+  ios:
+    name: 🍎 iOS Release
+    runs-on: macos-latest
+    needs: prepare
+    if: ${{ needs.prepare.outputs.should-build-ios == 'true' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --production=false
+
+      - name: Download web build
+        uses: actions/download-artifact@v3
+        with:
+          name: web-build
+          path: dist/
+
+      - name: Sync Capacitor iOS
+        run: npx cap sync ios
+
+      - name: Update iOS version
+        run: |
+          VERSION="${{ needs.prepare.outputs.version }}"
+          BUILD_NUMBER="${{ needs.prepare.outputs.build-number }}"
+
+          # Update version in iOS project
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $VERSION" ios/App/App/Info.plist
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" ios/App/App/Info.plist
+
+          echo "Updated iOS version to $VERSION ($BUILD_NUMBER)"
+
+      - name: Install iOS certificates
+        run: |
+          # Create keychain
+          security create-keychain -p "${{ secrets.IOS_KEYCHAIN_PASSWORD }}" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "${{ secrets.IOS_KEYCHAIN_PASSWORD }}" build.keychain
+          security set-keychain-settings -t 3600 -l ~/Library/Keychains/build.keychain
+
+          # Import certificates
+          echo "${{ secrets.IOS_DISTRIBUTION_CERTIFICATE }}" | base64 -d > ios_distribution.p12
+          security import ios_distribution.p12 -k ~/Library/Keychains/build.keychain -P "${{ secrets.IOS_CERTIFICATE_PASSWORD }}" -T /usr/bin/codesign
+
+          # Install provisioning profile
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "${{ secrets.IOS_PROVISIONING_PROFILE }}" | base64 -d > ~/Library/MobileDevice/Provisioning\ Profiles/relife_distribution.mobileprovision
+
+          # Allow codesign to access keychain
+          security set-key-partition-list -S apple-tool:,apple: -s -k "${{ secrets.IOS_KEYCHAIN_PASSWORD }}" ~/Library/Keychains/build.keychain
+
+      - name: Build iOS app
+        run: |
+          cd ios
+
+          # Build and archive
+          xcodebuild -workspace App/App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -destination generic/platform=iOS \
+            -archivePath App.xcarchive \
+            archive \
+            DEVELOPMENT_TEAM="${{ secrets.IOS_TEAM_ID }}" \
+            PROVISIONING_PROFILE_SPECIFIER="relife_distribution"
+
+          echo "✅ iOS build completed"
+
+      - name: Export IPA
+        run: |
+          cd ios
+
+          # Create export options
+          cat > ExportOptions.plist << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>method</key>
+              <string>app-store</string>
+              <key>teamID</key>
+              <string>${{ secrets.IOS_TEAM_ID }}</string>
+              <key>uploadBitcode</key>
+              <false/>
+              <key>uploadSymbols</key>
+              <true/>
+              <key>compileBitcode</key>
+              <false/>
+          </dict>
+          </plist>
+          EOF
+
+          # Export IPA
+          xcodebuild -exportArchive \
+            -archivePath App.xcarchive \
+            -exportPath export \
+            -exportOptionsPlist ExportOptions.plist
+
+          echo "✅ iOS export completed"
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-ipa-release
+          path: ios/export/*.ipa
+
+      - name: Deploy to App Store Connect
+        if: ${{ github.event.inputs.release_type == 'beta' || github.event.inputs.release_type == 'production' }}
+        run: |
+          cd ios/export
+
+          # Upload to App Store Connect
+          xcrun altool --upload-app \
+            --type ios \
+            --file *.ipa \
+            --username "${{ secrets.APPLE_ID_EMAIL }}" \
+            --password "${{ secrets.APPLE_ID_PASSWORD }}" \
+            --verbose
+
+      - name: Deploy to TestFlight
+        if: ${{ github.event.inputs.release_type == 'internal' || github.event.inputs.release_type == 'alpha' }}
+        run: |
+          cd ios/export
+
+          # Upload to TestFlight
+          xcrun altool --upload-app \
+            --type ios \
+            --file *.ipa \
+            --username "${{ secrets.APPLE_ID_EMAIL }}" \
+            --password "${{ secrets.APPLE_ID_PASSWORD }}" \
+            --verbose
+
+      - name: Create iOS release notes
+        run: |
+          cat > ios-release-notes.md << EOF
+          # iOS Release ${{ needs.prepare.outputs.version }}
+
+          **Build Number:** ${{ needs.prepare.outputs.build-number }}
+          **Release Type:** ${{ github.event.inputs.release_type || 'internal' }}
+          **Platform:** iOS
+
+          ## Changes
+          - Latest app improvements and bug fixes
+          - Enhanced performance and stability
+          - Updated security features
+
+          ## Technical Details
+          - iOS Deployment Target: 13.0+
+          - Bundle ID: com.scrapybara.relife
+          - Architectures: arm64
+
+          ## Distribution
+          - TestFlight: Available for beta testing
+          - App Store: Pending review (if production release)
+          EOF
+
+      - name: Upload iOS release notes
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-release-notes
+          path: ios-release-notes.md
+
+  # Release summary and notifications
+  release-summary:
+    name: 📊 Release Summary
+    runs-on: ubuntu-latest
+    needs: [prepare, android, ios]
+    if: always()
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Generate release summary
+        run: |
+          VERSION="${{ needs.prepare.outputs.version }}"
+          BUILD_NUMBER="${{ needs.prepare.outputs.build-number }}"
+          ANDROID_STATUS="${{ needs.android.result }}"
+          IOS_STATUS="${{ needs.ios.result }}"
+
+          cat > release-summary.md << EOF
+          # 📱 Mobile Release Summary
+
+          **Version:** $VERSION  
+          **Build Number:** $BUILD_NUMBER  
+          **Release Type:** ${{ github.event.inputs.release_type || 'internal' }}  
+          **Platforms:** ${{ github.event.inputs.platform || 'both' }}
+
+          ## Build Status
+
+          | Platform | Status | Artifacts |
+          |----------|--------|-----------|
+          | Android 🤖 | $ANDROID_STATUS | APK, AAB, Release Notes |
+          | iOS 🍎 | $IOS_STATUS | IPA, Release Notes |
+
+          ## Distribution
+
+          ### Android
+          - **Google Play Console:** ${{ github.event.inputs.release_type != 'internal' && 'Uploaded' || 'Internal testing' }}
+          - **Direct Install:** APK available in artifacts
+
+          ### iOS  
+          - **App Store Connect:** ${{ github.event.inputs.release_type == 'production' && 'Submitted for review' || 'TestFlight distribution' }}
+          - **TestFlight:** Available for beta testing
+
+          ## Next Steps
+
+          1. **Monitor app store reviews:** Check processing status
+          2. **Test installations:** Verify apps install correctly
+          3. **Monitor crash reports:** Watch for any issues
+          4. **Update documentation:** Reflect new version in docs
+
+          ## Files Generated
+
+          - Android APK: \`app-release.apk\`
+          - Android AAB: \`app-release.aab\`  
+          - iOS IPA: \`Relife Alarm.ipa\`
+          - Release notes for both platforms
+
+          ---
+
+          *Generated on $(date)*
+          EOF
+
+      - name: Upload release summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-summary
+          path: release-summary.md
+
+      - name: Create GitHub release
+        if: ${{ startsWith(github.ref, 'refs/tags/mobile-v') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create ${{ github.ref_name }} \
+            --title "Mobile Release ${{ needs.prepare.outputs.version }}" \
+            --notes-file release-summary.md \
+            ${{ github.event.inputs.release_type != 'production' && '--prerelease' || '' }}
+
+      - name: Notify Slack
+        uses: 8398a7/action-slack@v3
+        if: always()
+        with:
+          status: ${{ job.status }}
+          channel: "#mobile-releases"
+          text: |
+            📱 Mobile Release ${{ needs.prepare.outputs.version }} completed!
+
+            🤖 Android: ${{ needs.android.result }}
+            🍎 iOS: ${{ needs.ios.result }}
+            📦 Release Type: ${{ github.event.inputs.release_type || 'internal' }}
+
+            Check the workflow for detailed results and artifacts.
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Update monitoring
+        run: |
+          # Notify monitoring systems of mobile release
+          curl -X POST https://relife.app/api/analytics \
+            -H "Content-Type: application/json" \
+            -d '{
+              "event": "mobile_release_completed",
+              "version": "${{ needs.prepare.outputs.version }}",
+              "build_number": "${{ needs.prepare.outputs.build-number }}",
+              "platform": "${{ github.event.inputs.platform || 'both' }}",
+              "release_type": "${{ github.event.inputs.release_type || 'internal' }}",
+              "android_status": "${{ needs.android.result }}",
+              "ios_status": "${{ needs.ios.result }}",
+              "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"
+            }' || echo "Analytics notification failed (non-critical)"

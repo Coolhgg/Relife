@@ -626,7 +626,10 @@ class AlarmRealtimeFeaturesImpl implements AlarmRealtimeFeatures {
     // Implementation would sync alarm state across devices
   }
 
-  subscribeToAlarmChanges(userId: string, handler: (alarm: unknown) => void): () => void {
+  subscribeToAlarmChanges(
+    userId: string,
+    handler: (alarm: unknown) => void
+  ): () => void {
     // Implementation would subscribe to alarm database changes
     return () => {};
   }

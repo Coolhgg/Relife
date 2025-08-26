@@ -534,7 +534,10 @@ class StripeService {
   /**
    * Confirm payment
    */
-  public async confirmPayment(clientSecret: string, paymentMethod?: unknown): Promise<unknown> {
+  public async confirmPayment(
+    clientSecret: string,
+    paymentMethod?: unknown
+  ): Promise<unknown> {
     this.ensureInitialized();
 
     if (!this.stripe) {
@@ -781,7 +784,9 @@ class StripeService {
   }
 
   private async saveSubscriptionToDatabase(
-    userId: string, stripeSubscription: unknown): Promise<Subscription> {
+    userId: string,
+    stripeSubscription: unknown
+  ): Promise<Subscription> {
     const subscriptionData = {
       user_id: userId,
       stripe_subscription_id: stripeSubscription.id,
@@ -823,7 +828,9 @@ class StripeService {
     return this.mapDatabaseSubscription(data);
   }
 
-  private async updateSubscriptionInDatabase(stripeSubscription: unknown): Promise<Subscription> {
+  private async updateSubscriptionInDatabase(
+    stripeSubscription: unknown
+  ): Promise<Subscription> {
     const updateData = {
       status: stripeSubscription.status,
       tier: this.getTierFromPriceId(stripeSubscription.items.data[0].price.id),
@@ -857,7 +864,9 @@ class StripeService {
   }
 
   private async savePaymentMethodToDatabase(
-    userId: string, stripePaymentMethod: unknown): Promise<PaymentMethod> {
+    userId: string,
+    stripePaymentMethod: unknown
+  ): Promise<PaymentMethod> {
     const paymentMethodData = {
       user_id: userId,
       stripe_payment_method_id: stripePaymentMethod.id,
@@ -890,7 +899,9 @@ class StripeService {
 
   private async saveCancellationSurvey(
     userId: string,
-    subscriptionId: string, surveyData: unknown): Promise<void> {
+    subscriptionId: string,
+    surveyData: unknown
+  ): Promise<void> {
     await supabase.from('cancellation_surveys').insert({
       user_id: userId,
       subscription_id: subscriptionId,

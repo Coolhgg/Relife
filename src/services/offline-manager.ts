@@ -365,7 +365,9 @@ export class OfflineManager {
   // Sync queue management
   private static async addToSyncQueue(
     type: 'alarm' | 'sleep' | 'voice',
-    operation: 'create' | 'update' | 'delete', data: unknown): Promise<void> {
+    operation: 'create' | 'update' | 'delete',
+    data: unknown
+  ): Promise<void> {
     if (!this.db) return;
 
     const queueItem = {
@@ -559,8 +561,9 @@ export class OfflineManager {
   static async getStatus(): Promise<SyncStatus> {
     const pendingOperations = this.db ? await this.db.count('syncQueue') : 0;
     const failedOperations = this.db
-      ? (await this.db.getAll('syncQueue')).filter((item: unknown) => item.retryCount > 0)
-          .length
+      ? (await this.db.getAll('syncQueue')).filter(
+          (item: unknown) => item.retryCount > 0
+        ).length
       : 0;
 
     return {

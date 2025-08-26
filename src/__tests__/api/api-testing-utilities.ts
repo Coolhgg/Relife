@@ -33,7 +33,8 @@ export class ApiAssertions {
     expect(response).toHaveProperty('timestamp');
   }
 
-  static assertErrorResponse(response: unknown,
+  static assertErrorResponse(
+    response: unknown,
     expectedStatus?: number,
     expectedMessage?: string
   ) {
@@ -49,7 +50,10 @@ export class ApiAssertions {
     }
   }
 
-  static assertPaginatedResponse<T = any>(response: unknown, expectedItems?: Partial<T>[]) {
+  static assertPaginatedResponse<T = any>(
+    response: unknown,
+    expectedItems?: Partial<T>[]
+  ) {
     expect(response).toHaveProperty('success', true);
     expect(response).toHaveProperty('data');
     expect(response).toHaveProperty('meta');

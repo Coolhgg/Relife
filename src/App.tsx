@@ -1203,8 +1203,12 @@ function AppContent() {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, [
-    appState.activeAlarm,
-    appState.alarms,
+    appState.alarm.currentlyTriggering.length > 0
+      ? appState.alarm.alarms.find(a =>
+          appState.alarm.currentlyTriggering.includes(a.id)
+        ) || null
+      : null,
+    appState.alarm.alarms,
     announceProtectionWarning,
     tabProtectionSettings.settings,
   ]); // Re-run when activeAlarm, alarms, announcement function, or protection settings change

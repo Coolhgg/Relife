@@ -1,0 +1,116 @@
+version: 2
+
+updates:
+  # Main project dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "04:00"
+      timezone: "UTC"
+    reviewers:
+      - "Coolhgg"
+    assignees:
+      - "Coolhgg"
+    labels:
+      - "dependencies"
+      - "security"
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps-dev"
+      include: "scope"
+    groups:
+      security-updates:
+        applies-to: "security-updates"
+        patterns:
+          - "*"
+      react-ecosystem:
+        patterns:
+          - "react"
+          - "react-*"
+          - "@types/react*"
+      testing-tools:
+        patterns:
+          - "jest"
+          - "playwright"
+          - "vitest"
+          - "@testing-library/*"
+          - "msw"
+      build-tools:
+        patterns:
+          - "vite"
+          - "typescript"
+          - "eslint"
+          - "prettier"
+          - "@typescript-eslint/*"
+    open-pull-requests-limit: 10
+    allow:
+      - dependency-type: "direct"
+      - dependency-type: "indirect"
+        update-type: "security"
+
+  # Campaign dashboard dependencies
+  - package-ecosystem: "npm"
+    directory: "/relife-campaign-dashboard"
+    schedule:
+      interval: "daily"
+      time: "04:30"
+      timezone: "UTC"
+    reviewers:
+      - "Coolhgg"
+    assignees:
+      - "Coolhgg"
+    labels:
+      - "dependencies"
+      - "dashboard"
+    commit-message:
+      prefix: "deps(dashboard)"
+      include: "scope"
+    groups:
+      security-updates:
+        applies-to: "security-updates"
+        patterns:
+          - "*"
+      ui-components:
+        patterns:
+          - "@radix-ui/*"
+          - "lucide-react"
+          - "tailwindcss"
+          - "class-variance-authority"
+    open-pull-requests-limit: 5
+
+  # GitHub Actions dependencies
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:00"
+      timezone: "UTC"
+    reviewers:
+      - "Coolhgg"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    open-pull-requests-limit: 3
+
+  # Docker dependencies
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "04:00"
+      timezone: "UTC"
+    reviewers:
+      - "Coolhgg"
+    labels:
+      - "dependencies"
+      - "docker"
+    commit-message:
+      prefix: "docker"
+      include: "scope"
+    open-pull-requests-limit: 2

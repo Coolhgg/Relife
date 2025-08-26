@@ -5,9 +5,13 @@
  * like gaming, rewards, themes, etc.
  */
 import {
-  MockDataRecord, MockDataStore, PointTransaction, RewardCondition, RewardData, UserReward
+  MockDataRecord,
+  MockDataStore,
+  PointTransaction,
+  RewardCondition,
+  RewardData,
+  UserReward,
 } from '../../types/common-types';
-
 
 import { BaseService, ServiceConfig } from './service-architecture';
 import { User } from './index';
@@ -18,7 +22,9 @@ import { User } from './index';
 
 export interface IRewardService extends BaseService {
   // Reward Management
-  createReward(reward: Omit<RewardData, "id" | "created_at" | "updated_at">): Promise<RewardData>;
+  createReward(
+    reward: Omit<RewardData, 'id' | 'created_at' | 'updated_at'>
+  ): Promise<RewardData>;
 
   // User Rewards
   grantReward(userId: string, rewardId: string, reason?: string): Promise<void>;
@@ -26,7 +32,11 @@ export interface IRewardService extends BaseService {
   getUserRewards(userId: string): Promise<UserReward[]>;
 
   // Achievement System
-  checkAchievements(userId: string, context: string, data: Record<string, unknown>): Promise<RewardData[]>;
+  checkAchievements(
+    userId: string,
+    context: string,
+    data: Record<string, unknown>
+  ): Promise<RewardData[]>;
   unlockAchievement(userId: string, achievementId: string): Promise<void>;
 
   // Point System
@@ -90,7 +100,11 @@ export interface IThemeService extends BaseService {
     }
   ): Promise<unknown>;
 
-  updateCustomTheme(userId: string, themeId: string, updates: unknown): Promise<unknown>;
+  updateCustomTheme(
+    userId: string,
+    themeId: string,
+    updates: unknown
+  ): Promise<unknown>;
   deleteCustomTheme(userId: string, themeId: string): Promise<void>;
 
   // Theme Assets
@@ -208,7 +222,10 @@ export interface ISleepTrackingService extends BaseService {
   ): Promise<void>;
 
   getSleepData(userId: string, startDate?: Date, endDate?: Date): Promise<any[]>;
-  getSleepSummary(userId: string, timeframe: 'week' | 'month' | 'year'): Promise<unknown>;
+  getSleepSummary(
+    userId: string,
+    timeframe: 'week' | 'month' | 'year'
+  ): Promise<unknown>;
 
   // Sleep Analysis
   analyzeSleepPatterns(userId: string): Promise<{
@@ -269,7 +286,9 @@ export interface ICalendarService extends BaseService {
   // Calendar Integration
   connectCalendar(
     userId: string,
-    provider: 'google' | 'outlook' | 'apple', credentials: unknown): Promise<void>;
+    provider: 'google' | 'outlook' | 'apple',
+    credentials: unknown
+  ): Promise<void>;
   disconnectCalendar(userId: string, provider: string): Promise<void>;
 
   // Event Management

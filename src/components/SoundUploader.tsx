@@ -279,7 +279,9 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
     try {
       const success = await customSoundManager.deleteCustomSound(sound.id, userId);
       if (success) {
-        setUploadedSounds((prev: unknown) => prev.filter((s: unknown) => s.id !== sound.id));
+        setUploadedSounds((prev: unknown) =>
+          prev.filter((s: unknown) => s.id !== sound.id)
+        );
         onSoundDeleted?.(sound.id);
       }
     } catch (_error) {

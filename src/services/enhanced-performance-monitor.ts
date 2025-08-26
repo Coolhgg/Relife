@@ -586,7 +586,8 @@ export class EnhancedPerformanceMonitor
   public trackUserInteraction(
     type: UserInteraction['type'],
     target: string,
-    metadata?: unknown): void {
+    metadata?: unknown
+  ): void {
     const interaction: UserInteraction = {
       type,
       target,

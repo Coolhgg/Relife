@@ -333,9 +333,11 @@ const MockFeatureAccessProvider: React.FC<
         return 'ultimate';
       return null;
     }),
-    trackFeatureAttempt: jest.fn((featureId: string, context?: Record<string, unknown>) => {
-      testConsole.debug(`Mock feature attempt tracked: ${featureId}`, context);
-    }),
+    trackFeatureAttempt: jest.fn(
+      (featureId: string, context?: Record<string, unknown>) => {
+        testConsole.debug(`Mock feature attempt tracked: ${featureId}`, context);
+      }
+    ),
     refreshFeatureAccess: jest.fn(() => Promise.resolve()),
     grantTemporaryAccess: jest.fn(
       (featureId: string, durationMinutes: number, reason: string) => {

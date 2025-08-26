@@ -1,0 +1,434 @@
+# Consolidated Maintenance & Cleanup
+# Replaces: cleanup-automation.yml, code-cleanup-automation.yml
+name: 🧹 Maintenance & Cleanup
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main]
+  schedule:
+    # Monthly maintenance (reduced from weekly to save costs)
+    - cron: "0 4 1 * *" # First day of month at 4 AM UTC
+  workflow_dispatch:
+    inputs:
+      cleanup_mode:
+        description: "Cleanup operation mode"
+        required: true
+        default: "analysis"
+        type: choice
+        options:
+          - analysis
+          - dry-run
+          - full-cleanup
+      target_directory:
+        description: "Target directory (optional)"
+        required: false
+        default: ""
+        type: string
+      include_reports:
+        description: "Generate detailed reports"
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Code Analysis & Issue Detection
+  code-analysis:
+    name: 🔍 Code Analysis
+    runs-on: ubuntu-latest
+
+    outputs:
+      has_issues: ${{ steps.analysis.outputs.has_issues }}
+      total_issues: ${{ steps.analysis.outputs.total_issues }}
+      needs_cleanup: ${{ steps.analysis.outputs.needs_cleanup }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          python -m pip install --upgrade pip
+
+      - name: Create reports directory
+        run: mkdir -p reports maintenance-reports
+
+      - name: Run code analysis
+        id: analysis
+        run: |
+          echo "🔍 Starting comprehensive code analysis..."
+
+          # Dead code detection
+          echo "Detecting dead code..."
+          find src -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.jsx" | xargs grep -l "TODO\|FIXME\|XXX" > reports/todos.txt || touch reports/todos.txt
+
+          # Unused imports detection
+          echo "Checking for unused imports..."
+          npx ts-prune > reports/unused-exports.txt 2>/dev/null || echo "ts-prune not available" > reports/unused-exports.txt
+
+          # Large files detection
+          echo "Finding large files..."
+          find . -name "*.js" -o -name "*.ts" -o -name "*.tsx" -o -name "*.jsx" | xargs wc -l | sort -nr | head -20 > reports/large-files.txt
+
+          # Duplicate code detection (basic)
+          echo "Basic duplicate detection..."
+          find src -name "*.ts" -o -name "*.tsx" | xargs -I {} grep -l "console.log\|debugger" {} > reports/debug-statements.txt 2>/dev/null || touch reports/debug-statements.txt
+
+          # Count issues
+          TODO_COUNT=$(wc -l < reports/todos.txt)
+          DEBUG_COUNT=$(wc -l < reports/debug-statements.txt)
+          TOTAL_ISSUES=$((TODO_COUNT + DEBUG_COUNT))
+
+          echo "has_issues=$([ $TOTAL_ISSUES -gt 0 ] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+          echo "total_issues=$TOTAL_ISSUES" >> $GITHUB_OUTPUT
+          echo "needs_cleanup=$([ $TOTAL_ISSUES -gt 10 ] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+
+          # Generate summary
+          echo "## 📊 Code Analysis Summary" > maintenance-reports/analysis-summary.md
+          echo "**Date:** $(date -u)" >> maintenance-reports/analysis-summary.md
+          echo "**Total Issues Found:** $TOTAL_ISSUES" >> maintenance-reports/analysis-summary.md
+          echo "" >> maintenance-reports/analysis-summary.md
+          echo "### Issue Breakdown" >> maintenance-reports/analysis-summary.md
+          echo "- TODO/FIXME comments: $TODO_COUNT" >> maintenance-reports/analysis-summary.md
+          echo "- Debug statements: $DEBUG_COUNT" >> maintenance-reports/analysis-summary.md
+          echo "" >> maintenance-reports/analysis-summary.md
+
+          if [ $TOTAL_ISSUES -gt 0 ]; then
+            echo "### 🎯 Recommendations" >> maintenance-reports/analysis-summary.md
+            echo "- Review and address TODO/FIXME comments" >> maintenance-reports/analysis-summary.md
+            echo "- Remove debug statements from production code" >> maintenance-reports/analysis-summary.md
+            echo "- Consider refactoring large files" >> maintenance-reports/analysis-summary.md
+          else
+            echo "### ✅ Clean Code" >> maintenance-reports/analysis-summary.md
+            echo "No significant issues detected. Code quality looks good!" >> maintenance-reports/analysis-summary.md
+          fi
+
+      - name: Node.js dependency analysis
+        run: |
+          echo "📦 Analyzing Node.js dependencies..."
+
+          # Check for outdated packages
+          npm outdated --json > reports/outdated-packages.json 2>/dev/null || echo "{}" > reports/outdated-packages.json
+
+          # Check package sizes
+          npx package-size-analyzer > reports/package-sizes.txt 2>/dev/null || echo "Package analyzer not available" > reports/package-sizes.txt
+
+          # Security audit (non-blocking)
+          npm audit --json > reports/security-audit.json 2>/dev/null || echo "{}" > reports/security-audit.json
+
+      - name: Repository health check
+        run: |
+          echo "🏥 Repository health check..."
+
+          # Large files in repo
+          find . -type f -size +1M -not -path "./node_modules/*" -not -path "./.git/*" > reports/large-repo-files.txt || touch reports/large-repo-files.txt
+
+          # Git repository statistics
+          echo "## 📈 Repository Statistics" >> maintenance-reports/analysis-summary.md
+          echo "- Total commits: $(git rev-list --count HEAD)" >> maintenance-reports/analysis-summary.md
+          echo "- Active branches: $(git branch -r | wc -l)" >> maintenance-reports/analysis-summary.md
+          echo "- Repository size: $(du -sh .git | cut -f1)" >> maintenance-reports/analysis-summary.md
+          echo "- Large files (>1MB): $(wc -l < reports/large-repo-files.txt)" >> maintenance-reports/analysis-summary.md
+
+      - name: Upload analysis reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: maintenance-analysis-${{ github.run_number }}
+          path: |
+            reports/
+            maintenance-reports/
+          retention-days: 30
+
+  # Automated Cleanup (Dry Run)
+  dry-run-cleanup:
+    name: 🧪 Dry Run Cleanup
+    runs-on: ubuntu-latest
+    needs: code-analysis
+    if: needs.code-analysis.outputs.needs_cleanup == 'true' || github.event.inputs.cleanup_mode == 'dry-run'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Dry run cleanup simulation
+        run: |
+          echo "🧪 Simulating cleanup operations..."
+          mkdir -p maintenance-reports
+
+          echo "## 🧪 Dry Run Cleanup Report" > maintenance-reports/dry-run-report.md
+          echo "**Date:** $(date -u)" >> maintenance-reports/dry-run-report.md
+          echo "" >> maintenance-reports/dry-run-report.md
+
+          echo "### 🎯 Proposed Changes" >> maintenance-reports/dry-run-report.md
+
+          # Simulate removing debug statements
+          DEBUG_FILES=$(find src -name "*.ts" -o -name "*.tsx" | xargs grep -l "console.log\|debugger" 2>/dev/null || true)
+          if [ -n "$DEBUG_FILES" ]; then
+            echo "#### Debug Statement Removal" >> maintenance-reports/dry-run-report.md
+            echo "Files with debug statements that would be cleaned:" >> maintenance-reports/dry-run-report.md
+            echo "$DEBUG_FILES" | sed 's/^/- /' >> maintenance-reports/dry-run-report.md
+            echo "" >> maintenance-reports/dry-run-report.md
+          fi
+
+          # Simulate formatting fixes
+          echo "#### Code Formatting" >> maintenance-reports/dry-run-report.md
+          echo "- Run Prettier formatting on all files" >> maintenance-reports/dry-run-report.md
+          echo "- Fix ESLint auto-fixable issues" >> maintenance-reports/dry-run-report.md
+          echo "" >> maintenance-reports/dry-run-report.md
+
+          echo "### ⚠️ Manual Review Required" >> maintenance-reports/dry-run-report.md
+          echo "- TODO/FIXME comments require manual review" >> maintenance-reports/dry-run-report.md
+          echo "- Large files may need refactoring" >> maintenance-reports/dry-run-report.md
+          echo "- Unused exports need careful validation" >> maintenance-reports/dry-run-report.md
+
+      - name: Upload dry run report
+        uses: actions/upload-artifact@v4
+        with:
+          name: dry-run-cleanup-${{ github.run_number }}
+          path: maintenance-reports/dry-run-report.md
+          retention-days: 30
+
+  # Full Automated Cleanup (Manual trigger only)
+  full-cleanup:
+    name: 🧹 Full Cleanup
+    runs-on: ubuntu-latest
+    needs: [code-analysis, dry-run-cleanup]
+    if: github.event.inputs.cleanup_mode == 'full-cleanup'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run automated fixes
+        run: |
+          echo "🧹 Running automated cleanup..."
+
+          # Format code with Prettier
+          echo "Formatting code with Prettier..."
+          npx prettier --write . || echo "Prettier formatting completed with warnings"
+
+          # Fix ESLint issues
+          echo "Fixing ESLint auto-fixable issues..."
+          npx eslint . --ext .js,.jsx,.ts,.tsx --fix || echo "ESLint fixes completed with warnings"
+
+          # Remove simple debug statements (conservative approach)
+          echo "Removing obvious debug statements..."
+          find src -name "*.ts" -o -name "*.tsx" | xargs sed -i '/console\.log.*\/\/\s*DEBUG/d' || true
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "✅ Cleanup made changes to the codebase"
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "ℹ️ No changes made during cleanup"
+          fi
+
+      - name: Commit changes
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "chore: automated code cleanup
+
+          - Format code with Prettier
+          - Fix ESLint auto-fixable issues  
+          - Remove debug statements
+          - Automated by maintenance workflow"
+
+      - name: Create cleanup summary
+        if: always()
+        run: |
+          mkdir -p maintenance-reports
+          echo "## 🧹 Full Cleanup Report" > maintenance-reports/full-cleanup-report.md
+          echo "**Date:** $(date -u)" >> maintenance-reports/full-cleanup-report.md
+          echo "**Changes Made:** ${{ steps.changes.outputs.has_changes }}" >> maintenance-reports/full-cleanup-report.md
+          echo "" >> maintenance-reports/full-cleanup-report.md
+
+          if [ "${{ steps.changes.outputs.has_changes }}" == "true" ]; then
+            echo "### ✅ Automated Changes Applied" >> maintenance-reports/full-cleanup-report.md
+            echo "- Code formatted with Prettier" >> maintenance-reports/full-cleanup-report.md
+            echo "- ESLint auto-fixes applied" >> maintenance-reports/full-cleanup-report.md
+            echo "- Debug statements removed" >> maintenance-reports/full-cleanup-report.md
+          else
+            echo "### ℹ️ No Changes Required" >> maintenance-reports/full-cleanup-report.md
+            echo "Code was already clean and properly formatted." >> maintenance-reports/full-cleanup-report.md
+          fi
+
+      - name: Upload cleanup report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: full-cleanup-report-${{ github.run_number }}
+          path: maintenance-reports/full-cleanup-report.md
+          retention-days: 30
+
+  # Maintenance Summary & Notifications
+  maintenance-summary:
+    name: 📋 Maintenance Summary
+    runs-on: ubuntu-latest
+    needs: [code-analysis, dry-run-cleanup, full-cleanup]
+    if: always()
+
+    steps:
+      - name: Generate maintenance summary
+        run: |
+          echo "# 🧹 Maintenance Workflow Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 📊 Results" >> $GITHUB_STEP_SUMMARY
+          echo "- **Code Analysis**: ${{ needs.code-analysis.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Issues Found**: ${{ needs.code-analysis.outputs.total_issues || '0' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Needs Cleanup**: ${{ needs.code-analysis.outputs.needs_cleanup || 'false' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Dry Run**: ${{ needs.dry-run-cleanup.result || 'skipped' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Full Cleanup**: ${{ needs.full-cleanup.result || 'skipped' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.code-analysis.outputs.total_issues }}" -gt "0" ]; then
+            echo "## 🎯 Action Items" >> $GITHUB_STEP_SUMMARY
+            echo "- Review analysis reports for specific issues" >> $GITHUB_STEP_SUMMARY
+            echo "- Consider running dry-run cleanup to see proposed fixes" >> $GITHUB_STEP_SUMMARY
+            echo "- Manual review required for TODO/FIXME comments" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "## ✅ Code Quality" >> $GITHUB_STEP_SUMMARY
+            echo "No significant maintenance issues detected." >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Cleanup Mode**: ${{ github.event.inputs.cleanup_mode || 'analysis' }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Run ID**: ${{ github.run_id }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Comment on PR (if applicable)
+        if: github.event_name == 'pull_request' && needs.code-analysis.outputs.total_issues > 0
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const totalIssues = ${{ needs.code-analysis.outputs.total_issues }};
+            const needsCleanup = ${{ needs.code-analysis.outputs.needs_cleanup }};
+
+            let comment = '## 🧹 Maintenance Analysis Results\n\n';
+            comment += `**Issues Detected**: ${totalIssues}\n`;
+            comment += `**Cleanup Recommended**: ${needsCleanup ? 'Yes' : 'No'}\n\n`;
+
+            if (totalIssues > 0) {
+              comment += '### 📋 Found Issues\n';
+              comment += '- TODO/FIXME comments\n';
+              comment += '- Debug statements\n';
+              comment += '- Code quality improvements available\n\n';
+              
+              comment += '### 🎯 Next Steps\n';
+              comment += '1. Review the maintenance analysis report\n';
+              comment += '2. Address high-priority issues\n';
+              comment += '3. Consider running automated cleanup\n\n';
+            } else {
+              comment += '### ✅ Clean Code\n';
+              comment += 'No significant maintenance issues detected.\n\n';
+            }
+
+            comment += '**Artifacts**: Check the workflow run for detailed reports.\n\n';
+            comment += '---\n*Generated by Maintenance & Cleanup workflow*';
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: Create maintenance issue (if needed)
+        if: needs.code-analysis.outputs.needs_cleanup == 'true' && github.event_name == 'schedule'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = '🧹 Scheduled Maintenance Required';
+            const body = `
+            ## 🧹 Maintenance Alert
+
+            The scheduled maintenance check has detected issues that require attention.
+
+            **Issues Summary:**
+            - Total Issues: ${{ needs.code-analysis.outputs.total_issues }}
+            - Cleanup Needed: Yes
+            - Detection Date: ${new Date().toISOString()}
+
+            **Recommended Actions:**
+            1. Review the maintenance analysis report
+            2. Run dry-run cleanup to see proposed changes
+            3. Address TODO/FIXME comments manually
+            4. Consider running full automated cleanup
+
+            **Workflow Run:** https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            ---
+
+            This issue was automatically created by the Maintenance workflow.
+            `;
+
+            // Check for existing maintenance issues
+            const existingIssues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'maintenance',
+              state: 'open'
+            });
+
+            const hasExistingMaintenance = existingIssues.data.some(issue => 
+              issue.title.includes('Maintenance Required')
+            );
+
+            if (!hasExistingMaintenance) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: ['maintenance', 'enhancement', 'good first issue']
+              });
+            }

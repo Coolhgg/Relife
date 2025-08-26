@@ -306,8 +306,8 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
               <span className="text-sm font-medium">Sound Theme</span>
             </div>
             <Badge variant="outline">
-              {allThemes.find((theme: unknown) => theme.id === settings.soundTheme)?.name ||
-                'Default'}
+              {allThemes.find((theme: unknown) => theme.id === settings.soundTheme)
+                ?.name || 'Default'}
             </Badge>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
@@ -495,7 +495,9 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
                   </div>
                   <Slider
                     value={[settings.alarmVolume * 100]}
-                    onValueChange={(value: unknown) => handleVolumeChange('alarm', value)}
+                    onValueChange={(value: unknown) =>
+                      handleVolumeChange('alarm', value)
+                    }
                     max={100}
                     step={5}
                     disabled={!settings.alarmSoundsEnabled}
@@ -532,7 +534,9 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
                   </div>
                   <Slider
                     value={[settings.ambientVolume * 100]}
-                    onValueChange={(value: unknown) => handleVolumeChange('ambient', value)}
+                    onValueChange={(value: unknown) =>
+                      handleVolumeChange('ambient', value)
+                    }
                     max={100}
                     step={5}
                     disabled={!settings.ambientSoundsEnabled}
