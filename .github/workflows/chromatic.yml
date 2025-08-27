@@ -55,7 +55,7 @@ jobs:
 
           # Optional: Ignore last build on this branch if it's the first build
           ignoreLastBuildOnBranch: true
-
+          
           # Optional: Custom directory for Storybook build output
           storybookBuildDir: storybook-static
 

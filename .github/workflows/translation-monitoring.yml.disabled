@@ -1,0 +1,564 @@
+# Translation Quality Monitoring
+# Automated daily monitoring of translation quality with trend analysis and notifications
+
+name: 📊 Translation Quality Monitoring
+
+on:
+  schedule:
+    # Run daily at 6 AM UTC (adjust for your timezone)
+    - cron: '0 6 * * *'
+    # Run weekly comprehensive analysis on Sundays at 8 AM UTC
+    - cron: '0 8 * * 0'
+  workflow_dispatch:
+    inputs:
+      monitoring_type:
+        description: 'Type of monitoring to run'
+        required: false
+        default: 'daily'
+        type: choice
+        options:
+          - 'daily'
+          - 'weekly'
+          - 'comprehensive'
+      notify_team:
+        description: 'Send notifications to team'
+        required: false
+        default: true
+        type: boolean
+      quality_threshold:
+        description: 'Quality threshold for alerts (0-100)'
+        required: false
+        default: '75'
+        type: string
+
+env:
+  NODE_VERSION: '20'
+  QUALITY_THRESHOLD: ${{ github.event.inputs.quality_threshold || '75' }}
+  MONITORING_TYPE: ${{ github.event.inputs.monitoring_type || (github.event.schedule == '0 8 * * 0' && 'weekly' || 'daily') }}
+
+jobs:
+  # Quality monitoring and analysis
+  monitor-quality:
+    name: 📊 Monitor Translation Quality
+    runs-on: ubuntu-latest
+    
+    outputs:
+      quality-status: ${{ steps.analysis.outputs.status }}
+      average-quality: ${{ steps.analysis.outputs.average-quality }}
+      languages-below-threshold: ${{ steps.analysis.outputs.languages-below-threshold }}
+      trend-direction: ${{ steps.analysis.outputs.trend-direction }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # Fetch more history for trend analysis
+          fetch-depth: 30
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm ci --production=false
+          npm install chalk yargs date-fns
+
+      - name: Create monitoring directories
+        run: |
+          mkdir -p .github/translation-reports/history
+          mkdir -p .github/translation-reports/trends
+
+      - name: Run quality analysis
+        id: analysis
+        run: |
+          echo "🔍 Running ${{ env.MONITORING_TYPE }} translation quality monitoring..."
+          
+          TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
+          REPORT_FILE=".github/translation-reports/monitoring-$TIMESTAMP.json"
+          
+          # Run comprehensive analysis
+          node scripts/advanced-translation-manager.mjs analyze \
+            --format=json \
+            --output="$REPORT_FILE" \
+            --monitoring-mode
+          
+          # Analyze results and set outputs
+          node -e "
+            const fs = require('fs');
+            const path = require('path');
+            
+            try {
+              const report = JSON.parse(fs.readFileSync('$REPORT_FILE', 'utf8'));
+              const threshold = parseInt('${{ env.QUALITY_THRESHOLD }}');
+              
+              console.log('📊 Quality Analysis Results:');
+              console.log('================================');
+              
+              const languages = Object.entries(report.languages || {});
+              const averageQuality = Math.round(
+                languages.reduce((sum, [_, lang]) => sum + (lang.qualityScore?.overall || 0), 0) / languages.length
+              );
+              
+              const belowThreshold = languages.filter(([_, lang]) => 
+                Math.round(lang.qualityScore?.overall || 0) < threshold
+              ).map(([code]) => code);
+              
+              console.log(\`Average Quality: \${averageQuality}%\`);
+              console.log(\`Languages Below Threshold (\${threshold}%): \${belowThreshold.length}\`);
+              
+              // Set GitHub outputs
+              process.stdout.write('average-quality=' + averageQuality + '\n');
+              process.stdout.write('languages-below-threshold=' + JSON.stringify(belowThreshold) + '\n');
+              
+              if (averageQuality >= threshold && belowThreshold.length === 0) {
+                process.stdout.write('status=excellent' + '\n');
+                console.log('✅ All languages meet quality standards');
+              } else if (averageQuality >= threshold - 10) {
+                process.stdout.write('status=good' + '\n');
+                console.log('🟡 Quality is good but some languages need attention');
+              } else {
+                process.stdout.write('status=needs-attention' + '\n');
+                console.log('❌ Quality needs immediate attention');
+              }
+              
+              // Store report for trend analysis
+              const historyFile = '.github/translation-reports/history/quality-history.json';
+              let history = [];
+              
+              if (fs.existsSync(historyFile)) {
+                history = JSON.parse(fs.readFileSync(historyFile, 'utf8'));
+              }
+              
+              history.push({
+                timestamp: new Date().toISOString(),
+                averageQuality,
+                belowThreshold: belowThreshold.length,
+                totalLanguages: languages.length,
+                monitoringType: '${{ env.MONITORING_TYPE }}'
+              });
+              
+              // Keep last 30 records for trend analysis
+              if (history.length > 30) {
+                history = history.slice(-30);
+              }
+              
+              fs.writeFileSync(historyFile, JSON.stringify(history, null, 2));
+              
+              // Calculate trend
+              if (history.length >= 2) {
+                const recent = history.slice(-3);
+                const avgRecent = recent.reduce((sum, r) => sum + r.averageQuality, 0) / recent.length;
+                const earlier = history.slice(-6, -3);
+                
+                if (earlier.length > 0) {
+                  const avgEarlier = earlier.reduce((sum, r) => sum + r.averageQuality, 0) / earlier.length;
+                  
+                  if (avgRecent > avgEarlier + 2) {
+                    process.stdout.write('trend-direction=improving' + '\n');
+                    console.log('📈 Quality trend: Improving');
+                  } else if (avgRecent < avgEarlier - 2) {
+                    process.stdout.write('trend-direction=declining' + '\n');
+                    console.log('📉 Quality trend: Declining');
+                  } else {
+                    process.stdout.write('trend-direction=stable' + '\n');
+                    console.log('➡️ Quality trend: Stable');
+                  }
+                } else {
+                  process.stdout.write('trend-direction=stable' + '\n');
+                }
+              } else {
+                process.stdout.write('trend-direction=unknown' + '\n');
+              }
+              
+            } catch (error) {
+              console.error('Error analyzing quality:', error.message);
+              process.stdout.write('status=error' + '\n');
+              process.stdout.write('average-quality=0' + '\n');
+              process.stdout.write('languages-below-threshold=[]' + '\n');
+              process.stdout.write('trend-direction=unknown' + '\n');
+              process.exit(1);
+            }
+          " >> $GITHUB_OUTPUT
+
+      - name: Generate trend analysis
+        if: env.MONITORING_TYPE == 'weekly' || env.MONITORING_TYPE == 'comprehensive'
+        run: |
+          echo "📈 Generating trend analysis..."
+          
+          node -e "
+            const fs = require('fs');
+            
+            try {
+              const historyFile = '.github/translation-reports/history/quality-history.json';
+              if (!fs.existsSync(historyFile)) {
+                console.log('No historical data available for trend analysis');
+                return;
+              }
+              
+              const history = JSON.parse(fs.readFileSync(historyFile, 'utf8'));
+              const trendsFile = '.github/translation-reports/trends/quality-trends.json';
+              
+              // Calculate trends over different time periods
+              const now = new Date();
+              const week = 7 * 24 * 60 * 60 * 1000;
+              const month = 30 * 24 * 60 * 60 * 1000;
+              
+              const weekAgo = new Date(now - week);
+              const monthAgo = new Date(now - month);
+              
+              const recentWeek = history.filter(h => new Date(h.timestamp) >= weekAgo);
+              const recentMonth = history.filter(h => new Date(h.timestamp) >= monthAgo);
+              
+              const trends = {
+                lastUpdated: now.toISOString(),
+                weeklyTrend: {
+                  dataPoints: recentWeek.length,
+                  averageQuality: recentWeek.length > 0 ? 
+                    Math.round(recentWeek.reduce((sum, h) => sum + h.averageQuality, 0) / recentWeek.length) : 0,
+                  qualityChange: recentWeek.length >= 2 ? 
+                    recentWeek[recentWeek.length - 1].averageQuality - recentWeek[0].averageQuality : 0
+                },
+                monthlyTrend: {
+                  dataPoints: recentMonth.length,
+                  averageQuality: recentMonth.length > 0 ? 
+                    Math.round(recentMonth.reduce((sum, h) => sum + h.averageQuality, 0) / recentMonth.length) : 0,
+                  qualityChange: recentMonth.length >= 2 ? 
+                    recentMonth[recentMonth.length - 1].averageQuality - recentMonth[0].averageQuality : 0
+                },
+                recommendations: []
+              };
+              
+              // Generate recommendations based on trends
+              if (trends.weeklyTrend.qualityChange < -5) {
+                trends.recommendations.push('Quality has declined significantly this week - immediate review needed');
+              } else if (trends.monthlyTrend.qualityChange < -3) {
+                trends.recommendations.push('Gradual quality decline over the month - consider translation review');
+              } else if (trends.weeklyTrend.qualityChange > 5) {
+                trends.recommendations.push('Great improvement this week - current practices are working well');
+              }
+              
+              if (trends.weeklyTrend.averageQuality < 70) {
+                trends.recommendations.push('Average quality below 70% - prioritize translation improvements');
+              }
+              
+              fs.writeFileSync(trendsFile, JSON.stringify(trends, null, 2));
+              
+              console.log('📊 Trend Analysis Summary:');
+              console.log(\`Weekly average: \${trends.weeklyTrend.averageQuality}% (change: \${trends.weeklyTrend.qualityChange >= 0 ? '+' : ''}\${trends.weeklyTrend.qualityChange}%)\`);
+              console.log(\`Monthly average: \${trends.monthlyTrend.averageQuality}% (change: \${trends.monthlyTrend.qualityChange >= 0 ? '+' : ''}\${trends.monthlyTrend.qualityChange}%)\`);
+              
+              if (trends.recommendations.length > 0) {
+                console.log('Recommendations:');
+                trends.recommendations.forEach(rec => console.log(\`- \${rec}\`));
+              }
+              
+            } catch (error) {
+              console.error('Error generating trends:', error.message);
+            }
+          "
+
+      - name: Upload monitoring reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: translation-monitoring-${{ env.MONITORING_TYPE }}-${{ github.run_number }}
+          path: |
+            .github/translation-reports/monitoring-*.json
+            .github/translation-reports/history/
+            .github/translation-reports/trends/
+          retention-days: 90
+
+      - name: Commit quality history
+        if: env.MONITORING_TYPE == 'daily' || env.MONITORING_TYPE == 'weekly'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          # Add quality history files
+          git add .github/translation-reports/history/ .github/translation-reports/trends/ || true
+          
+          # Commit if there are changes
+          if ! git diff --cached --quiet; then
+            git commit -m "📊 Update translation quality monitoring data
+            
+            - Monitoring type: ${{ env.MONITORING_TYPE }}
+            - Average quality: ${{ steps.analysis.outputs.average-quality }}%
+            - Status: ${{ steps.analysis.outputs.quality-status }}
+            - Trend: ${{ steps.analysis.outputs.trend-direction }}
+            
+            [skip ci]"
+            
+            git push
+            echo "✅ Committed quality monitoring data"
+          else
+            echo "ℹ️ No changes to commit"
+          fi
+
+  # Language-specific monitoring
+  monitor-languages:
+    name: 🌍 Monitor Individual Languages
+    runs-on: ubuntu-latest
+    needs: monitor-quality
+    if: needs.monitor-quality.outputs.quality-status != 'excellent'
+    
+    strategy:
+      matrix:
+        # Focus on languages that need attention
+        language: ['es', 'fr', 'de', 'zh', 'ja', 'pt', 'it', 'ru', 'ar', 'hi']
+        
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --production=false
+
+      - name: Analyze specific language
+        run: |
+          echo "🔍 Analyzing ${{ matrix.language }} translation quality..."
+          
+          # Run focused analysis on specific language
+          node scripts/advanced-translation-manager.mjs analyze \
+            --language="${{ matrix.language }}" \
+            --format=json \
+            --output="language-${{ matrix.language }}-analysis.json"
+          
+          # Check if this language has issues
+          node -e "
+            const fs = require('fs');
+            
+            try {
+              const report = JSON.parse(fs.readFileSync('language-${{ matrix.language }}-analysis.json', 'utf8'));
+              const langData = report.languages?.['${{ matrix.language }}'];
+              
+              if (!langData) {
+                console.log('Language ${{ matrix.language }} not found in analysis');
+                return;
+              }
+              
+              const quality = Math.round(langData.qualityScore?.overall || 0);
+              const cultural = Math.round(langData.qualityScore?.culturalAdaptation || 0);
+              const consistency = Math.round(langData.qualityScore?.consistency || 0);
+              
+              console.log('${{ matrix.language }} Analysis:');
+              console.log(\`Overall Quality: \${quality}%\`);
+              console.log(\`Cultural Adaptation: \${cultural}%\`);
+              console.log(\`Consistency: \${consistency}%\`);
+              
+              const culturalIssues = langData.culturalIssues?.length || 0;
+              const consistencyIssues = langData.consistencyIssues?.length || 0;
+              
+              if (culturalIssues > 0) {
+                console.log(\`Cultural Issues: \${culturalIssues}\`);
+              }
+              
+              if (consistencyIssues > 0) {
+                console.log(\`Consistency Issues: \${consistencyIssues}\`);
+              }
+              
+              // Create issue if quality is poor
+              if (quality < 70) {
+                console.log('⚠️ Language ${{ matrix.language }} needs attention');
+                process.exit(1);
+              }
+              
+            } catch (error) {
+              console.error('Error analyzing language ${{ matrix.language }}:', error.message);
+            }
+          " || echo "Language ${{ matrix.language }} needs review"
+
+      - name: Upload language analysis
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: language-analysis-${{ matrix.language }}
+          path: language-${{ matrix.language }}-analysis.json
+          retention-days: 30
+
+  # Generate monitoring notifications
+  generate-notifications:
+    name: 📢 Generate Notifications
+    runs-on: ubuntu-latest
+    needs: [monitor-quality, monitor-languages]
+    if: always() && (needs.monitor-quality.outputs.quality-status == 'needs-attention' || github.event.inputs.notify_team == 'true')
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate notification content
+        id: notification
+        run: |
+          QUALITY_STATUS="${{ needs.monitor-quality.outputs.quality-status }}"
+          AVERAGE_QUALITY="${{ needs.monitor-quality.outputs.average-quality }}"
+          TREND="${{ needs.monitor-quality.outputs.trend-direction }}"
+          LANGUAGES_BELOW='${{ needs.monitor-quality.outputs.languages-below-threshold }}'
+          
+          echo "Generating notification for status: $QUALITY_STATUS"
+          
+          # Create notification content
+          cat > notification-content.md << 'EOF'
+# 🌐 Translation Quality Monitoring Alert
+          
+## 📊 Current Status
+Quality Status: $QUALITY_STATUS  
+Average Quality: $AVERAGE_QUALITY%  
+Trend: $TREND  
+Monitoring Type: ${{ env.MONITORING_TYPE }}
+          
+## 📈 Summary
+The automated translation quality monitoring has detected the following:
+
+EOF
+          
+          # Add status-specific content
+          case "$QUALITY_STATUS" in
+            "needs-attention")
+              cat >> notification-content.md << 'EOF'
+⚠️ **Immediate attention required**: Translation quality has fallen below acceptable thresholds.
+
+### Action Items:
+- Review translations in languages scoring below 75%
+- Check for cultural sensitivity issues
+- Verify terminology consistency
+- Consider translator training or tooling improvements
+
+EOF
+              ;;
+            "good")
+              cat >> notification-content.md << 'EOF'
+🟡 **Minor issues detected**: Overall quality is good but some improvements are needed.
+
+### Recommendations:
+- Review flagged translations during next maintenance window
+- Address consistency issues when convenient
+- Continue current translation practices
+
+EOF
+              ;;
+          esac
+          
+          # Add trend information
+          case "$TREND" in
+            "declining")
+              echo "📉 **Trend Alert**: Quality has been declining recently. Consider investigating root causes." >> notification-content.md
+              ;;
+            "improving")
+              echo "📈 **Positive Trend**: Quality is improving! Current practices are effective." >> notification-content.md
+              ;;
+          esac
+          
+          echo "" >> notification-content.md
+          echo "## 🔗 Resources" >> notification-content.md
+          echo "- [View Detailed Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> notification-content.md
+          echo "- [Translation Dashboard](https://github.com/${{ github.repository }}/blob/main/src/components/TranslationDashboard.tsx)" >> notification-content.md
+          echo "- [Translation Guidelines](https://github.com/${{ github.repository }}/blob/main/TRANSLATION_GUIDELINES.md)" >> notification-content.md
+          
+          echo "" >> notification-content.md
+          echo "*This is an automated notification from the translation quality monitoring system.*" >> notification-content.md
+
+      - name: Create GitHub issue for critical problems
+        if: needs.monitor-quality.outputs.quality-status == 'needs-attention'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const content = fs.readFileSync('notification-content.md', 'utf8');
+            
+            // Check if there's already an open issue for translation quality
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'translation-quality,monitoring'
+            });
+            
+            const existingIssue = issues.find(issue => 
+              issue.title.includes('Translation Quality Alert')
+            );
+            
+            if (existingIssue) {
+              // Update existing issue
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existingIssue.number,
+                body: '## 📊 Updated Quality Monitoring Report\n\n' + content
+              });
+              console.log('Updated existing translation quality issue #' + existingIssue.number);
+            } else {
+              // Create new issue
+              const { data: newIssue } = await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: '🚨 Translation Quality Alert - Immediate Attention Required',
+                body: content,
+                labels: ['translation-quality', 'monitoring', 'priority-high']
+              });
+              console.log('Created new translation quality issue #' + newIssue.number);
+            }
+
+      - name: Upload notification content
+        uses: actions/upload-artifact@v3
+        with:
+          name: monitoring-notification-${{ github.run_number }}
+          path: notification-content.md
+          retention-days: 30
+
+  # Clean up old monitoring data
+  cleanup-old-data:
+    name: 🧹 Cleanup Old Data
+    runs-on: ubuntu-latest
+    needs: monitor-quality
+    if: env.MONITORING_TYPE == 'weekly'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Clean up old monitoring reports
+        run: |
+          echo "🧹 Cleaning up old monitoring data..."
+          
+          # Remove monitoring reports older than 30 days
+          find .github/translation-reports/ -name "monitoring-*.json" -type f -mtime +30 -delete || true
+          
+          # Keep only last 100 quality history entries
+          node -e "
+            const fs = require('fs');
+            const historyFile = '.github/translation-reports/history/quality-history.json';
+            
+            if (fs.existsSync(historyFile)) {
+              const history = JSON.parse(fs.readFileSync(historyFile, 'utf8'));
+              if (history.length > 100) {
+                const trimmed = history.slice(-100);
+                fs.writeFileSync(historyFile, JSON.stringify(trimmed, null, 2));
+                console.log(\`Trimmed quality history from \${history.length} to \${trimmed.length} entries\`);
+              }
+            }
+          "
+          
+          echo "✅ Cleanup completed"
+
+      - name: Commit cleanup changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          git add .github/translation-reports/ || true
+          
+          if ! git diff --cached --quiet; then
+            git commit -m "🧹 Clean up old translation monitoring data [skip ci]"
+            git push
+            echo "✅ Committed cleanup changes"
+          else
+            echo "ℹ️ No cleanup changes to commit"
+          fi
