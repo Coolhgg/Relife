@@ -38,9 +38,12 @@ import { type EnhancedSmartAlarm } from '../services/enhanced-smart-alarm-schedu
 
 interface AlarmManagementProps {
   alarms: Alarm[];
-  onUpdateAlarm: (id: string, updates: Partial<Alarm>) => void;
-  onDeleteAlarm: (id: string) => void;
-  onCreateAlarm: (alarm: Omit<Alarm, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  onUpdateAlarm: (id: string, updates: Partial<Alarm>
+) => void;
+  onDeleteAlarm: (id: string
+) => void;
+  onCreateAlarm: (alarm: Omit<Alarm, 'id' | 'createdAt' | 'updatedAt'>
+) => void;
   userId: string;
 }
 
@@ -106,8 +109,10 @@ export function AlarmManagement({
   const [hasNuclearMode, setHasNuclearMode] = useState(false);
 
   // Check premium access on component mount
-  useEffect(() => {
-    const checkAccess = async () => {
+  useEffect((
+) => {
+    const checkAccess = async (
+) => {
       const access = await SubscriptionService.hasFeatureAccess(userId, 'nuclearMode');
       setHasNuclearMode(access);
     };
@@ -131,14 +136,16 @@ export function AlarmManagement({
     difficulty: 'medium' as AlarmDifficulty,
   });
 
-  const formatTime = (time: string) => {
+  const formatTime = (time: string
+) => {
     const [hours, minutes] = time.split(':');
     const hour12 = parseInt(hours) > 12 ? parseInt(hours) - 12 : parseInt(hours);
     const ampm = parseInt(hours) >= 12 ? 'PM' : 'AM';
     return `${hour12}:${minutes} ${ampm}`;
   };
 
-  const getNextAlarmTime = (alarm: Alarm) => {
+  const getNextAlarmTime = (alarm: Alarm
+) => {
     const now = new Date();
     const _currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
     const dayMap = {
@@ -180,7 +187,8 @@ export function AlarmManagement({
     return 'Not scheduled';
   };
 
-  const startEditing = (alarm: Alarm) => {
+  const startEditing = (alarm: Alarm
+) => {
     setEditingAlarm(alarm.id);
     setFormData({
       time: alarm.time,
@@ -193,7 +201,8 @@ export function AlarmManagement({
     });
   };
 
-  const handleSave = () => {
+  const handleSave = (
+) => {
     if (editingAlarm) {
       onUpdateAlarm(editingAlarm, formData);
       setEditingAlarm(null);
@@ -204,7 +213,9 @@ export function AlarmManagement({
         enabled: true,
         voiceMood: 'motivational' as VoiceMood,
         snoozeCount: 0,
-        dayNames: formData.days.map((dayNum: any) => { // auto
+        dayNames: formData.days.map((dayNum: any
+) => {
+          // auto: implicit any
           const dayNames = [
             'sunday',
             'monday',
@@ -232,21 +243,26 @@ export function AlarmManagement({
     }
   };
 
-  const handleCancel = () => {
+  const handleCancel = (
+) => {
     setEditingAlarm(null);
     setShowCreateForm(false);
   };
 
-  const toggleDay = (dayNumber: number) => {
-    setFormData((prev: any) => ({ // auto: implicit any
-      ...prev,
+  const toggleDay = (dayNumber: number
+) => {
+    setFormData((prev: any
+) => ({
+       ...prev,
       days: prev.days.includes(dayNumber)
-        ? prev.days.filter((d: any) => d // auto: implicit any !== dayNumber)
+        ? prev.days.filter((d: any
+) => d !== dayNumber)
         : [...prev.days, dayNumber].sort(),
     }));
   };
 
-  const getDaysSummary = (days: number[]) => {
+  const getDaysSummary = (days: number[]
+) => {
     if (days.length === 7) return 'Every day';
     if (days.length === 5 && !days.includes(6) && !days.includes(0)) return 'Weekdays';
     if (days.length === 2 && days.includes(6) && days.includes(0)) return 'Weekends';
@@ -263,7 +279,8 @@ export function AlarmManagement({
             {alarms.length} alarm{alarms.length !== 1 ? 's' : ''} set
           </p>
         </div>
-        <Button onClick={() => setShowCreateForm(true)} className="gap-2">
+        <Button onClick={(
+) => setShowCreateForm(true)} className="gap-2">
           <Plus size={16} />
           New Alarm
         </Button>
@@ -302,8 +319,13 @@ export function AlarmManagement({
                         id="edit-time"
                         type="time"
                         value={formData.time}
-                        onChange={(e: any) => // auto: implicit any
-                          setFormData((prev: any) => ({ // auto: implicit any ...prev, time: e.target.value }))
+                        onChange={(e: React.ChangeEvent<HTMLInputElement> 
+) =>
+                          setFormData((prev: any
+) => ({
+                             ...prev,
+                            time: e.target.value,
+                          }))
                         }
                         className="text-sm"
                       />
@@ -315,8 +337,13 @@ export function AlarmManagement({
                       <Input
                         id="edit-label"
                         value={formData.label}
-                        onChange={(e: any) => // auto: implicit any
-                          setFormData((prev: any) => ({ // auto: implicit any ...prev, label: e.target.value }))
+                        onChange={(e: React.ChangeEvent<HTMLInputElement> 
+) =>
+                          setFormData((prev: any
+) => ({
+                             ...prev,
+                            label: e.target.value,
+                          }))
                         }
                         className="text-sm"
                       />
@@ -334,7 +361,8 @@ export function AlarmManagement({
                             formData.days.includes(day.number) ? 'default' : 'secondary'
                           }
                           className="cursor-pointer text-xs"
-                          onClick={() => toggleDay(day.number)}
+                          onClick={(
+) => toggleDay(day.number)}
                         >
                           {day.short}
                         </Badge>
@@ -350,8 +378,13 @@ export function AlarmManagement({
                       </Label>
                       <Select
                         value={formData.sound}
-                        onValueChange={(value: any) => // auto: implicit any
-                          setFormData((prev: any) => ({ // auto: implicit any ...prev, sound: value }))
+                        onValueChange={(value: any 
+) =>
+                          setFormData((prev: any
+) => ({
+                             ...prev,
+                            sound: value,
+                          }))
                         }
                       >
                         <SelectTrigger className="text-sm">
@@ -372,9 +405,11 @@ export function AlarmManagement({
                       </Label>
                       <Select
                         value={formData.difficulty}
-                        onValueChange={(value: any) => // auto: implicit any
-                          setFormData((prev: any) => ({ // auto: implicit any
-                            ...prev,
+                        onValueChange={(value: any 
+) =>
+                          setFormData((prev: any
+) => ({
+                             ...prev,
                             difficulty: value as AlarmDifficulty,
                           }))
                         }
@@ -419,7 +454,8 @@ export function AlarmManagement({
                     <div className="flex items-center gap-2">
                       <Switch
                         checked={alarm.isActive}
-                        onCheckedChange={(checked: any) => // auto: implicit any
+                        onCheckedChange={(checked: any 
+) =>
                           onUpdateAlarm(alarm.id, { isActive: checked })
                         }
                       />
@@ -458,7 +494,8 @@ export function AlarmManagement({
                       <Button
                         size="sm"
                         variant="ghost"
-                        onClick={() => {
+                        onClick={(
+) => {
                           setSelectedAlarmForSmart(alarm);
                           setShowSmartSettings(true);
                         }}
@@ -469,14 +506,16 @@ export function AlarmManagement({
                       <Button
                         size="sm"
                         variant="ghost"
-                        onClick={() => startEditing(alarm)}
+                        onClick={(
+) => startEditing(alarm)}
                       >
                         <Edit size={16} />
                       </Button>
                       <Button
                         size="sm"
                         variant="ghost"
-                        onClick={() => onDeleteAlarm(alarm.id)}
+                        onClick={(
+) => onDeleteAlarm(alarm.id)}
                       >
                         <Trash2 size={16} />
                       </Button>
@@ -496,7 +535,8 @@ export function AlarmManagement({
               <p className="text-sm text-muted-foreground mb-4">
                 Create your first alarm to start waking up on time!
               </p>
-              <Button onClick={() => setShowCreateForm(true)}>
+              <Button onClick={(
+) => setShowCreateForm(true)}>
                 <Plus size={16} className="mr-2" />
                 Create First Alarm
               </Button>
@@ -520,8 +560,13 @@ export function AlarmManagement({
                   id="new-time"
                   type="time"
                   value={formData.time}
-                  onChange={(e: any) => // auto: implicit any
-                    setFormData((prev: any) => ({ // auto: implicit any ...prev, time: e.target.value }))
+                  onChange={(e: React.ChangeEvent<HTMLInputElement> 
+) =>
+                    setFormData((prev: any
+) => ({
+                       ...prev,
+                      time: e.target.value,
+                    }))
                   }
                 />
               </div>
@@ -530,8 +575,13 @@ export function AlarmManagement({
                 <Input
                   id="new-label"
                   value={formData.label}
-                  onChange={(e: any) => // auto: implicit any
-                    setFormData((prev: any) => ({ // auto: implicit any ...prev, label: e.target.value }))
+                  onChange={(e: React.ChangeEvent<HTMLInputElement> 
+) =>
+                    setFormData((prev: any
+) => ({
+                       ...prev,
+                      label: e.target.value,
+                    }))
                   }
                 />
               </div>
@@ -547,7 +597,8 @@ export function AlarmManagement({
                       formData.days.includes(day.number) ? 'default' : 'secondary'
                     }
                     className="cursor-pointer"
-                    onClick={() => toggleDay(day.number)}
+                    onClick={(
+) => toggleDay(day.number)}
                   >
                     {day.short}
                   </Badge>
@@ -559,8 +610,13 @@ export function AlarmManagement({
               <Label htmlFor="new-sound">Sound</Label>
               <Select
                 value={formData.sound}
-                onValueChange={(value: any) => // auto: implicit any
-                  setFormData((prev: any) => ({ // auto: implicit any ...prev, sound: value }))
+                onValueChange={(value: any 
+) =>
+                  setFormData((prev: any
+) => ({
+                     ...prev,
+                    sound: value,
+                  }))
                 }
               >
                 <SelectTrigger>
@@ -580,9 +636,11 @@ export function AlarmManagement({
               <Label htmlFor="new-difficulty">Difficulty</Label>
               <Select
                 value={formData.difficulty}
-                onValueChange={(value: any) => // auto: implicit any
-                  setFormData((prev: any) => ({ // auto: implicit any
-                    ...prev,
+                onValueChange={(value: any 
+) =>
+                  setFormData((prev: any
+) => ({
+                     ...prev,
                     difficulty: value as AlarmDifficulty,
                   }))
                 }
@@ -650,8 +708,13 @@ export function AlarmManagement({
                 <Switch
                   id="new-snooze"
                   checked={formData.snoozeEnabled}
-                  onCheckedChange={(checked: any) => // auto: implicit any
-                    setFormData((prev: any) => ({ // auto: implicit any ...prev, snoozeEnabled: checked }))
+                  onCheckedChange={(checked: any 
+) =>
+                    setFormData((prev: any
+) => ({
+                       ...prev,
+                      snoozeEnabled: checked,
+                    }))
                   }
                 />
               </div>
@@ -661,9 +724,11 @@ export function AlarmManagement({
                   <Label htmlFor="snooze-interval">Snooze Interval (minutes)</Label>
                   <Select
                     value={formData.snoozeInterval.toString()}
-                    onValueChange={(value: any) => // auto: implicit any
-                      setFormData((prev: any) => ({ // auto: implicit any
-                        ...prev,
+                    onValueChange={(value: any 
+) =>
+                      setFormData((prev: any
+) => ({
+                         ...prev,
                         snoozeInterval: parseInt(value),
                       }))
                     }
@@ -698,12 +763,14 @@ export function AlarmManagement({
       {/* Enhanced Smart Alarm Settings Modal */}
       <EnhancedSmartAlarmSettings
         isOpen={showSmartSettings}
-        onClose={() => {
+        onClose={(
+) => {
           setShowSmartSettings(false);
           setSelectedAlarmForSmart(null);
         }}
         alarm={selectedAlarmForSmart as EnhancedSmartAlarm | undefined}
-        onSave={async (alarmData: Partial<EnhancedSmartAlarm>) => {
+        onSave={async (alarmData: Partial<EnhancedSmartAlarm>
+) => {
           if (selectedAlarmForSmart) {
             // Update the alarm with enhanced settings
             onUpdateAlarm(selectedAlarmForSmart.id, alarmData);
