@@ -3,11 +3,7 @@
  * Extends the basic performance helpers with app-specific testing capabilities
  */
 
-import {
-  performanceCore,
-  memoryTesting,
-  PerformanceBenchmark,
-} from '../utils/performance-helpers';
+import { performanceCore, memoryTesting, PerformanceBenchmark } from '../utils/performance-helpers';
 
 // Enhanced performance interfaces for Relife
 export interface AlarmPerformanceMetrics {
@@ -52,7 +48,7 @@ export interface MobilePerformanceProfile {
 // Performance monitoring mock service
 export class MockPerformanceMonitor {
   private static instance: MockPerformanceMonitor;
-  private metrics: Map<string, unknown[]> = new Map();
+  private metrics: Map<string, any[]> = new Map();
   private alerts: Array<{ type: string; message: string; timestamp: number }> = [];
   private thresholds: Map<string, number> = new Map([
     ['api_response_time', 1000], // 1s
@@ -70,16 +66,16 @@ export class MockPerformanceMonitor {
   }
 
   // Record performance metric
-  recordMetric(category: string, metric: unknown): void {
+  recordMetric(category: string, metric: any): void {
     if (!this.metrics.has(category)) {
       this.metrics.set(category, []);
     }
-
+    
     const timestampedMetric = {
       ...metric,
       timestamp: Date.now(),
     };
-
+    
     this.metrics.get(category)!.push(timestampedMetric);
 
     // Check for threshold violations
@@ -92,7 +88,7 @@ export class MockPerformanceMonitor {
   }
 
   // Check metric thresholds and generate alerts
-  private checkThresholds(category: string, metric: unknown): void {
+  private checkThresholds(category: string, metric: any): void {
     const threshold = this.thresholds.get(category);
     if (!threshold) return;
 
@@ -107,7 +103,7 @@ export class MockPerformanceMonitor {
   }
 
   // Extract comparable value from metric
-  private extractMetricValue(category: string, metric: unknown): number | null {
+  private extractMetricValue(category: string, metric: any): number | null {
     switch (category) {
       case 'api_response_time':
         return metric.requestDuration;
@@ -131,14 +127,14 @@ export class MockPerformanceMonitor {
       return this.calculateSummary(categoryMetrics);
     }
 
-    const summary: Record<string, unknown> = {};
+    const summary: Record<string, any> = {};
     for (const [cat, metrics] of this.metrics.entries()) {
       summary[cat] = this.calculateSummary(metrics);
     }
     return summary;
   }
 
-  private calculateSummary(metrics: unknown[]): any {
+  private calculateSummary(metrics: any[]): any {
     if (metrics.length === 0) return null;
 
     const recent = metrics.slice(-100); // Last 100 metrics
@@ -154,8 +150,8 @@ export class MockPerformanceMonitor {
   }
 
   // Get performance alerts
-  getAlerts(since?: number): unknown[] {
-    const cutoff = since || Date.now() - 24 * 60 * 60 * 1000; // 24 hours
+  getAlerts(since?: number): any[] {
+    const cutoff = since || (Date.now() - 24 * 60 * 60 * 1000); // 24 hours
     return this.alerts.filter(alert => alert.timestamp > cutoff);
   }
 
@@ -180,7 +176,7 @@ export class MockPerformanceMonitor {
   }
 
   // Get call history for testing
-  getCallHistory(): { metrics: Map<string, unknown[]>; alerts: unknown[] } {
+  getCallHistory(): { metrics: Map<string, any[]>; alerts: any[] } {
     return {
       metrics: new Map(this.metrics),
       alerts: [...this.alerts],
@@ -193,7 +189,7 @@ export class AlarmPerformanceTester {
   private monitor = MockPerformanceMonitor.getInstance();
 
   async testAlarmTriggerLatency(
-    alarmConfig: unknown,
+    alarmConfig: any,
     options: { iterations?: number; acceptableLatency?: number } = {}
   ): Promise<{
     passed: boolean;
@@ -208,7 +204,7 @@ export class AlarmPerformanceTester {
       const metrics = await this.measureAlarmTrigger(alarmConfig);
       results.push(metrics);
       this.monitor.recordMetric('alarm_trigger_latency', metrics);
-
+      
       // Small delay between tests to avoid overwhelming the system
       await new Promise(resolve => setTimeout(resolve, 50));
     }
@@ -218,19 +214,16 @@ export class AlarmPerformanceTester {
     const maxLatency = Math.max(...latencies);
 
     return {
-      passed:
-        averageLatency <= acceptableLatency && maxLatency <= acceptableLatency * 1.5,
+      passed: averageLatency <= acceptableLatency && maxLatency <= acceptableLatency * 1.5,
       averageLatency,
       maxLatency,
       results,
     };
   }
 
-  private async measureAlarmTrigger(
-    alarmConfig: unknown
-  ): Promise<AlarmPerformanceMetrics> {
+  private async measureAlarmTrigger(alarmConfig: any): Promise<AlarmPerformanceMetrics> {
     const startTime = performance.now();
-
+    
     // Simulate alarm checking
     const alarmCheckStart = performance.now();
     await this.simulateAlarmCheck(alarmConfig);
@@ -256,9 +249,9 @@ export class AlarmPerformanceTester {
     };
   }
 
-  private async simulateAlarmCheck(_config: unknown): Promise<void> {
+  private async simulateAlarmCheck(config: any): Promise<void> {
     // Simulate various alarm check scenarios
-    const complexity = _config?.multiple_alarms ? 50 : 20;
+    const complexity = config?.multiple_alarms ? 50 : 20;
     await new Promise(resolve => setTimeout(resolve, Math.random() * complexity + 10));
   }
 
@@ -272,14 +265,16 @@ export class AlarmPerformanceTester {
     await new Promise(resolve => setTimeout(resolve, Math.random() * 100 + 50));
   }
 
-  async testBackgroundPerformance(duration: number = 10000): Promise<{
+  async testBackgroundPerformance(
+    duration: number = 10000
+  ): Promise<{
     averageCpuUsage: number;
     peakMemoryUsage: number;
     batteryDrainRate: number;
     backgroundTaskCount: number;
   }> {
     const startTime = Date.now();
-    const memorySnapshots: unknown[] = [];
+    const memorySnapshots: any[] = [];
     let backgroundTaskCount = 0;
 
     // Simulate background alarm monitoring
@@ -291,8 +286,10 @@ export class AlarmPerformanceTester {
     await new Promise(resolve => setTimeout(resolve, duration));
     clearInterval(interval);
 
-    const peakMemoryUsage = Math.max(...memorySnapshots.map(s => s.usedJSHeapSize));
-
+    const peakMemoryUsage = Math.max(
+      ...memorySnapshots.map(s => s.usedJSHeapSize)
+    );
+    
     const averageCpuUsage = Math.random() * 5 + 2; // 2-7%
     const batteryDrainRate = Math.random() * 2 + 1; // 1-3% per hour
 
@@ -349,7 +346,7 @@ export class ApiPerformanceTester {
 
       const batchResults = await Promise.all(batchPromises);
       results.push(...batchResults);
-
+      
       // Small delay between batches
       await new Promise(resolve => setTimeout(resolve, 100));
     }
@@ -361,18 +358,13 @@ export class ApiPerformanceTester {
 
     // Calculate statistics
     const responseTimes = results.map(r => r.requestDuration);
-    const averageResponseTime =
-      responseTimes.reduce((sum, t) => sum + t, 0) / responseTimes.length;
+    const averageResponseTime = responseTimes.reduce((sum, t) => sum + t, 0) / responseTimes.length;
     const sortedTimes = responseTimes.sort((a, b) => a - b);
     const p95ResponseTime = sortedTimes[Math.floor(sortedTimes.length * 0.95)];
-    const successRate =
-      results.filter(r => r.requestDuration < acceptableResponseTime * 2).length /
-      results.length;
+    const successRate = results.filter(r => r.requestDuration < acceptableResponseTime * 2).length / results.length;
 
     return {
-      passed:
-        averageResponseTime <= acceptableResponseTime &&
-        p95ResponseTime <= acceptableResponseTime * 1.5,
+      passed: averageResponseTime <= acceptableResponseTime && p95ResponseTime <= acceptableResponseTime * 1.5,
       averageResponseTime,
       p95ResponseTime,
       successRate,
@@ -380,12 +372,9 @@ export class ApiPerformanceTester {
     };
   }
 
-  private async measureApiCall(
-    endpoint: string,
-    method: string
-  ): Promise<ApiPerformanceMetrics> {
+  private async measureApiCall(endpoint: string, method: string): Promise<ApiPerformanceMetrics> {
     const startTime = performance.now();
-
+    
     // Simulate realistic API call timings
     const dnsLookupTime = Math.random() * 20 + 5; // 5-25ms
     const connectionTime = Math.random() * 50 + 20; // 20-70ms
@@ -393,11 +382,8 @@ export class ApiPerformanceTester {
     const firstByteTime = Math.random() * 200 + 100; // 100-300ms
     const transferTime = Math.random() * 100 + 50; // 50-150ms
 
-    await new Promise(resolve =>
-      setTimeout(
-        resolve,
-        dnsLookupTime + connectionTime + sslTime + firstByteTime + transferTime
-      )
+    await new Promise(resolve => 
+      setTimeout(resolve, dnsLookupTime + connectionTime + sslTime + firstByteTime + transferTime)
     );
 
     const requestDuration = performance.now() - startTime;
@@ -419,15 +405,16 @@ export class ApiPerformanceTester {
   async benchmarkCriticalPaths(
     paths: Array<{ name: string; endpoint: string; method?: string }>,
     options: { acceptableResponseTime?: number } = {}
-  ): Promise<Record<string, unknown>> {
+  ): Promise<Record<string, any>> {
     const { acceptableResponseTime = 500 } = options;
-    const results: Record<string, unknown> = {};
+    const results: Record<string, any> = {};
 
     for (const path of paths) {
-      const result = await this.testEndpointPerformance(path.endpoint, path.method, {
-        iterations: 50,
-        acceptableResponseTime,
-      });
+      const result = await this.testEndpointPerformance(
+        path.endpoint,
+        path.method,
+        { iterations: 50, acceptableResponseTime }
+      );
       results[path.name] = result;
     }
 
@@ -462,14 +449,14 @@ export class RealTimePerformanceTester {
     const startTime = Date.now();
     const interval = setInterval(async () => {
       const messageStart = performance.now();
-
+      
       // Simulate message send and receive
       await this.simulateMessageRoundTrip();
-
+      
       const latency = performance.now() - messageStart;
       latencies.push(latency);
       messagesSent++;
-
+      
       if (latency < acceptableLatency * 3) {
         messagesReceived++;
       } else {
@@ -483,6 +470,7 @@ export class RealTimePerformanceTester {
         droppedMessages,
         bandwidthUsage: Math.random() * 1000 + 500, // bytes
       });
+
     }, 1000 / messageRate);
 
     await new Promise(resolve => setTimeout(resolve, duration));
@@ -505,11 +493,15 @@ export class RealTimePerformanceTester {
     // Simulate realistic WebSocket message timing
     const networkLatency = Math.random() * 100 + 50; // 50-150ms
     const processingTime = Math.random() * 20 + 5; // 5-25ms
-
-    await new Promise(resolve => setTimeout(resolve, networkLatency + processingTime));
+    
+    await new Promise(resolve => 
+      setTimeout(resolve, networkLatency + processingTime)
+    );
   }
 
-  async testBattleRealTimeSync(battleDuration: number = 30000): Promise<{
+  async testBattleRealTimeSync(
+    battleDuration: number = 30000
+  ): Promise<{
     syncAccuracy: number;
     averageLatency: number;
     desyncEvents: number;
@@ -520,35 +512,33 @@ export class RealTimePerformanceTester {
     let desyncEvents = 0;
 
     const startTime = Date.now();
-
+    
     // Simulate battle sync events
     const interval = setInterval(() => {
       const syncStart = performance.now();
-
+      
       // Simulate sync with multiple participants
-      const participantLatencies = Array.from(
-        { length: participants },
-        () => Math.random() * 150 + 50 // 50-200ms per participant
+      const participantLatencies = Array.from({ length: participants }, () => 
+        Math.random() * 150 + 50 // 50-200ms per participant
       );
-
+      
       const maxLatency = Math.max(...participantLatencies);
       const syncLatency = maxLatency + Math.random() * 50; // Additional processing
-
+      
       syncEvents.push(syncLatency);
-
+      
       // Check for desync (when participants are too far apart)
       const latencySpread = maxLatency - Math.min(...participantLatencies);
-      if (latencySpread > 500) {
-        // 500ms threshold
+      if (latencySpread > 500) { // 500ms threshold
         desyncEvents++;
       }
+
     }, 2000); // Sync every 2 seconds
 
     await new Promise(resolve => setTimeout(resolve, battleDuration));
     clearInterval(interval);
 
-    const averageLatency =
-      syncEvents.reduce((sum, l) => sum + l, 0) / syncEvents.length;
+    const averageLatency = syncEvents.reduce((sum, l) => sum + l, 0) / syncEvents.length;
     const syncAccuracy = (1 - desyncEvents / syncEvents.length) * 100;
 
     this.monitor.recordMetric('battle_sync', {
@@ -585,7 +575,7 @@ export class MobilePerformanceTester {
     // Apply device-specific throttling
     const cpuMultiplier = this.getCpuMultiplier(profile);
     const memoryPressure = this.getMemoryPressure(profile);
-
+    
     const startTime = Date.now();
     let frameDrops = 0;
     const memorySnapshots: number[] = [];
@@ -593,30 +583,29 @@ export class MobilePerformanceTester {
     const interval = setInterval(async () => {
       // Simulate frame rendering with device limitations
       const frameStart = performance.now();
-
+      
       // Simulate work with CPU throttling
       const workDuration = (Math.random() * 16 + 8) * cpuMultiplier; // Target 60fps with throttling
       await new Promise(resolve => setTimeout(resolve, workDuration));
-
+      
       const frameTime = performance.now() - frameStart;
-      if (frameTime > 16.67) {
-        // Missed 60fps target
+      if (frameTime > 16.67) { // Missed 60fps target
         frameDrops++;
       }
 
       // Track memory with device pressure
       const memoryUsage = (Math.random() * 20 + 10) * memoryPressure; // MB
       memorySnapshots.push(memoryUsage);
+
     }, 16.67); // 60fps target
 
     await new Promise(resolve => setTimeout(resolve, testDuration));
     clearInterval(interval);
 
-    const averageMemory =
-      memorySnapshots.reduce((sum, m) => sum + m, 0) / memorySnapshots.length;
+    const averageMemory = memorySnapshots.reduce((sum, m) => sum + m, 0) / memorySnapshots.length;
     const batteryDrain = this.calculateBatteryDrain(profile, testDuration);
     const thermalThrottling = profile.device === 'low-end' && batteryDrain > 2;
-
+    
     const performanceScore = this.calculatePerformanceScore({
       frameDrops,
       memoryUsage: averageMemory,
@@ -645,41 +634,28 @@ export class MobilePerformanceTester {
 
   private getCpuMultiplier(profile: MobilePerformanceProfile): number {
     switch (profile.device) {
-      case 'high-end':
-        return 1.0;
-      case 'mid-range':
-        return 1.5;
-      case 'low-end':
-        return 2.5;
-      default:
-        return 1.0;
+      case 'high-end': return 1.0;
+      case 'mid-range': return 1.5;
+      case 'low-end': return 2.5;
+      default: return 1.0;
     }
   }
 
   private getMemoryPressure(profile: MobilePerformanceProfile): number {
     switch (profile.device) {
-      case 'high-end':
-        return 1.0;
-      case 'mid-range':
-        return 1.3;
-      case 'low-end':
-        return 2.0;
-      default:
-        return 1.0;
+      case 'high-end': return 1.0;
+      case 'mid-range': return 1.3;
+      case 'low-end': return 2.0;
+      default: return 1.0;
     }
   }
 
-  private calculateBatteryDrain(
-    profile: MobilePerformanceProfile,
-    duration: number
-  ): number {
+  private calculateBatteryDrain(profile: MobilePerformanceProfile, duration: number): number {
     const baseRate = profile.batteryOptimization ? 0.5 : 1.0; // %/hour
     const deviceMultiplier = profile.device === 'low-end' ? 1.5 : 1.0;
     const networkMultiplier = profile.networkCondition === 'wifi' ? 0.8 : 1.2;
-
-    return (
-      (baseRate * deviceMultiplier * networkMultiplier * duration) / (60 * 60 * 1000)
-    );
+    
+    return (baseRate * deviceMultiplier * networkMultiplier * duration) / (60 * 60 * 1000);
   }
 
   private calculatePerformanceScore(metrics: {
@@ -690,33 +666,32 @@ export class MobilePerformanceTester {
     profile: MobilePerformanceProfile;
   }): number {
     let score = 100;
-
+    
     // Deduct for frame drops
     score -= Math.min(metrics.frameDrops * 2, 40);
-
+    
     // Deduct for high memory usage
     if (metrics.memoryUsage > metrics.profile.memoryLimitation) {
       score -= 20;
     }
-
+    
     // Deduct for battery drain
-    if (metrics.batteryDrain > 5) {
-      // More than 5% per hour
+    if (metrics.batteryDrain > 5) { // More than 5% per hour
       score -= 15;
     }
-
+    
     // Deduct for thermal throttling
     if (metrics.thermalThrottling) {
       score -= 25;
     }
-
+    
     return Math.max(score, 0);
   }
 
   async benchmarkAcrossDevices(
     testFunction: () => Promise<void>,
     duration: number = 10000
-  ): Promise<Record<string, unknown>> {
+  ): Promise<Record<string, any>> {
     const profiles: MobilePerformanceProfile[] = [
       {
         device: 'high-end',
@@ -744,7 +719,7 @@ export class MobilePerformanceTester {
       },
     ];
 
-    const results: Record<string, unknown> = {};
+    const results: Record<string, any> = {};
 
     for (const profile of profiles) {
       const key = `${profile.device}-${profile.platform}`;
@@ -773,7 +748,7 @@ export class PerformanceTestSuite {
     } = {}
   ): Promise<{
     passed: boolean;
-    summary: Record<string, unknown>;
+    summary: Record<string, any>;
     violations: string[];
     recommendations: string[];
   }> {
@@ -785,7 +760,7 @@ export class PerformanceTestSuite {
       duration = 30000,
     } = options;
 
-    const results: Record<string, unknown> = {};
+    const results: Record<string, any> = {};
     const violations: string[] = [];
     const recommendations: string[] = [];
 
@@ -793,7 +768,7 @@ export class PerformanceTestSuite {
     if (includeAlarms) {
       const alarmResults = await this.alarmTester.testAlarmTriggerLatency({});
       results.alarms = alarmResults;
-
+      
       if (!alarmResults.passed) {
         violations.push(`Alarm trigger latency exceeded acceptable threshold`);
         recommendations.push(`Optimize alarm checking logic to reduce latency`);
@@ -821,20 +796,19 @@ export class PerformanceTestSuite {
     if (includeRealTime) {
       const realTimeResults = await this.realTimeTester.testBattleRealTimeSync();
       results.realTime = realTimeResults;
-
+      
       if (realTimeResults.syncAccuracy < 95) {
         violations.push(`Real-time sync accuracy below 95%`);
-        recommendations.push(
-          `Implement better network _error handling and retry logic`
-        );
+        recommendations.push(`Implement better network error handling and retry logic`);
       }
     }
 
     // Run mobile performance tests
     if (includeMobile) {
-      const mobileResults = await this.mobileTester.benchmarkAcrossDevices(async () => {
-        /* Test function */
-      }, duration);
+      const mobileResults = await this.mobileTester.benchmarkAcrossDevices(
+        async () => { /* Test function */ },
+        duration
+      );
       results.mobile = mobileResults;
 
       Object.entries(mobileResults).forEach(([device, result]: [string, any]) => {
@@ -858,16 +832,16 @@ export class PerformanceTestSuite {
   // Generate performance report
   generateReport(): {
     overallHealth: 'excellent' | 'good' | 'fair' | 'poor';
-    metrics: Record<string, unknown>;
+    metrics: Record<string, any>;
     trends: Record<string, 'improving' | 'stable' | 'degrading'>;
-    alerts: unknown[];
+    alerts: any[];
   } {
     const summary = this.monitor.getPerformanceSummary();
     const alerts = this.monitor.getAlerts();
 
     // Calculate overall health based on recent metrics and alerts
     const overallHealth = this.calculateOverallHealth(summary, alerts);
-
+    
     // Analyze trends (simplified - in real implementation would use historical data)
     const trends: Record<string, 'improving' | 'stable' | 'degrading'> = {};
     Object.keys(summary).forEach(key => {
@@ -883,11 +857,11 @@ export class PerformanceTestSuite {
   }
 
   private calculateOverallHealth(
-    summary: Record<string, unknown>,
-    alerts: unknown[]
+    summary: Record<string, any>,
+    alerts: any[]
   ): 'excellent' | 'good' | 'fair' | 'poor' {
     const recentAlerts = alerts.filter(a => a.timestamp > Date.now() - 60 * 60 * 1000);
-
+    
     if (recentAlerts.length === 0) return 'excellent';
     if (recentAlerts.length <= 2) return 'good';
     if (recentAlerts.length <= 5) return 'fair';

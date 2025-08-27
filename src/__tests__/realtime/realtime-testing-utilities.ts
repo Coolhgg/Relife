@@ -5,24 +5,18 @@
  */
 
 import { MockSupabaseRealtimeChannel } from '../mocks/platform-service-mocks';
-import { AnyFn } from 'src/types/utility-types';
 
 // WebSocket Mock Implementation
 export class MockWebSocket {
   static instances: MockWebSocket[] = [];
-  static events: Array<{
-    type: string;
-    data: any;
-    timestamp: number;
-    socketId: string;
-  }> = [];
+  static events: Array<{ type: string; data: any; timestamp: number; socketId: string }> = [];
 
   public url: string;
   public readyState: number;
   public binaryType: string = 'blob';
   public id: string;
-
-  private eventListeners: Map<string, AnyFn[]> = new Map();
+  
+  private eventListeners: Map<string, Function[]> = new Map();
   private messageQueue: any[] = [];
 
   static readonly CONNECTING = 0;
@@ -41,7 +35,7 @@ export class MockWebSocket {
     setTimeout(() => {
       this.readyState = MockWebSocket.OPEN;
       this.trigger('open', { type: 'open' });
-
+      
       // Process queued messages
       this.messageQueue.forEach(message => {
         this.triggerMessage(message);
@@ -50,19 +44,19 @@ export class MockWebSocket {
     }, 100);
   }
 
-  addEventListener(type: string, listener: AnyFn) {
+  addEventListener(type: string, listener: Function) {
     if (!this.eventListeners.has(type)) {
       this.eventListeners.set(type, []);
     }
     this.eventListeners.get(type)!.push(listener);
   }
 
-  removeEventListener(type: string, listener: AnyFn) {
+  removeEventListener(type: string, listener: Function) {
     const listeners = this.eventListeners.get(type);
     if (listeners) {
-      const _index = listeners.indexOf(listener);
-      if (_index > -1) {
-        listeners.splice(_index, 1);
+      const index = listeners.indexOf(listener);
+      if (index > -1) {
+        listeners.splice(index, 1);
       }
     }
   }
@@ -103,7 +97,7 @@ export class MockWebSocket {
               new_rank: 2,
             });
           }
-        } catch (_e) {
+        } catch (e) {
           // Invalid JSON, just echo back
           this.triggerMessage(data);
         }
@@ -117,28 +111,24 @@ export class MockWebSocket {
     this.readyState = MockWebSocket.CLOSING;
     setTimeout(() => {
       this.readyState = MockWebSocket.CLOSED;
-      this.trigger('close', {
-        type: 'close',
-        code: code || 1000,
-        reason: reason || '',
-      });
+      this.trigger('close', { type: 'close', code: code || 1000, reason: reason || '' });
     }, 50);
   }
 
   // Test utilities
-  private trigger(type: string, _event: any) {
+  private trigger(type: string, event: any) {
     const listeners = this.eventListeners.get(type) || [];
     listeners.forEach(listener => {
       try {
-        listener(_event);
-      } catch (_error) {
-        console._error('Error in WebSocket _event listener:', _error);
+        listener(event);
+      } catch (error) {
+        console.error('Error in WebSocket event listener:', error);
       }
     });
 
     MockWebSocket.events.push({
       type: `event_${type}`,
-      data: _event,
+      data: event,
       timestamp: Date.now(),
       socketId: this.id,
     });
@@ -159,7 +149,7 @@ export class MockWebSocket {
       ports: [],
     };
 
-    this.trigger('message', _event);
+    this.trigger('message', event);
   }
 
   // Utility method for testing - simulate receiving a message
@@ -168,11 +158,8 @@ export class MockWebSocket {
   }
 
   // Utility method for testing - simulate connection error
-  simulateError(_error?: any) {
-    this.trigger('error', {
-      type: 'error',
-      error: _error || new Error('Mock WebSocket _error'),
-    });
+  simulateError(error?: any) {
+    this.trigger('error', { type: 'error', error: error || new Error('Mock WebSocket error') });
   }
 
   // Utility method for testing - simulate connection close
@@ -239,7 +226,7 @@ export class RealTimeTestUtils {
   // Battle Real-time Testing
   static async testBattleRealTime(battleId: string, participants: string[]) {
     const battleChannel = new MockSupabaseRealtimeChannel(`battle:${battleId}`);
-
+    
     // Set up battle subscriptions
     const battleEvents: any[] = [];
     battleChannel.on('broadcast', (payload: any) => {
@@ -282,19 +269,16 @@ export class RealTimeTestUtils {
       {
         type: 'leaderboard_updated',
         data: {
-          leaderboard: participants.map((userId, _index) => ({
+          leaderboard: participants.map((userId, index) => ({
             user_id: userId,
-            score: 100 - _index * 10,
-            rank: _index + 1,
+            score: 100 - (index * 10),
+            rank: index + 1,
           })),
         },
       },
       {
         type: 'battle_phase_changed',
-        data: {
-          phase: 'active',
-          next_phase_at: new Date(Date.now() + 3600000).toISOString(),
-        },
+        data: { phase: 'active', next_phase_at: new Date(Date.now() + 3600000).toISOString() },
       },
     ];
 
@@ -302,7 +286,7 @@ export class RealTimeTestUtils {
     for (const scenario of battleScenarios) {
       await new Promise(resolve => setTimeout(resolve, 200));
       battleChannel.trigger('broadcast', {
-        _event: scenario.type,
+        event: scenario.type,
         payload: scenario.data,
         timestamp: Date.now(),
       });
@@ -316,11 +300,9 @@ export class RealTimeTestUtils {
   }
 
   // Presence Testing
-  static async testPresenceSystem(
-    users: Array<{ id: string; status: 'online' | 'offline' }>
-  ) {
+  static async testPresenceSystem(users: Array<{ id: string; status: 'online' | 'offline' }>) {
     const presenceChannel = new MockSupabaseRealtimeChannel('presence');
-
+    
     const presenceEvents: any[] = [];
     presenceChannel.on('presence', (payload: any) => {
       presenceEvents.push(payload);
@@ -333,20 +315,21 @@ export class RealTimeTestUtils {
     });
 
     // Simulate presence changes
-    for (const _user of users) {
+    for (const user of users) {
       await new Promise(resolve => setTimeout(resolve, 100));
-
-      const presenceData =
-        user.status === 'online' ? { online_at: new Date().toISOString() } : {};
+      
+      const presenceData = user.status === 'online' 
+        ? { online_at: new Date().toISOString() }
+        : {};
 
       presenceChannel.trigger('presence', {
-        _event: user.status === 'online' ? 'join' : 'leave',
-        payload: { [_user.id]: presenceData },
+        event: user.status === 'online' ? 'join' : 'leave',
+        payload: { [user.id]: presenceData },
       });
 
       this.presenceUpdates.push({
         userId: user.id,
-        status: _user.status,
+        status: user.status,
         timestamp: Date.now(),
       });
     }
@@ -364,45 +347,41 @@ export class RealTimeTestUtils {
     const ws = new MockWebSocket(wsUrl);
 
     const messages: any[] = [];
-    ws.addEventListener('message', (_event: any) => {
+    ws.addEventListener('message', (event: any) => {
       try {
-        const data = JSON.parse(_event.data);
+        const data = JSON.parse(event.data);
         messages.push(data);
-      } catch (_e) {
-        messages.push(_event.data);
+      } catch (e) {
+        messages.push(event.data);
       }
     });
 
     // Wait for connection
     await new Promise((resolve, reject) => {
       ws.addEventListener('open', resolve);
-      ws.addEventListener('_error', reject);
+      ws.addEventListener('error', reject);
       setTimeout(reject, 1000); // Timeout after 1 second
     });
 
     // Join battle
-    ws.send(
-      JSON.stringify({
-        type: 'join_battle',
-        battle_id: battleId,
-        user_id: participants[0],
-      })
-    );
+    ws.send(JSON.stringify({
+      type: 'join_battle',
+      battle_id: battleId,
+      user_id: participants[0],
+    }));
 
     // Submit wake proof
     await new Promise(resolve => setTimeout(resolve, 200));
-    ws.send(
-      JSON.stringify({
-        type: 'wake_proof',
-        battle_id: battleId,
-        user_id: participants[0],
-        proof_data: {
-          type: 'photo',
-          timestamp: new Date().toISOString(),
-          location: { lat: 40.7128, lng: -74.006 },
-        },
-      })
-    );
+    ws.send(JSON.stringify({
+      type: 'wake_proof',
+      battle_id: battleId,
+      user_id: participants[0],
+      proof_data: {
+        type: 'photo',
+        timestamp: new Date().toISOString(),
+        location: { lat: 40.7128, lng: -74.0060 },
+      },
+    }));
 
     // Send ping
     await new Promise(resolve => setTimeout(resolve, 200));
@@ -422,7 +401,7 @@ export class RealTimeTestUtils {
   static async testConnectionResilience() {
     const wsUrl = 'wss://localhost:3001/realtime';
     let reconnectionAttempts = 0;
-    const connectionStates: string[] = [];
+    let connectionStates: string[] = [];
 
     const createConnection = () => {
       const ws = new MockWebSocket(wsUrl);
@@ -434,22 +413,19 @@ export class RealTimeTestUtils {
 
       ws.addEventListener('close', () => {
         connectionStates.push('disconnected');
-
+        
         // Simulate reconnection logic
         if (reconnectionAttempts < 3) {
           reconnectionAttempts++;
-          setTimeout(
-            () => {
-              connectionStates.push(`reconnect_attempt_${reconnectionAttempts}`);
-              createConnection();
-            },
-            1000 * Math.pow(2, reconnectionAttempts)
-          ); // Exponential backoff
+          setTimeout(() => {
+            connectionStates.push(`reconnect_attempt_${reconnectionAttempts}`);
+            createConnection();
+          }, 1000 * Math.pow(2, reconnectionAttempts)); // Exponential backoff
         }
       });
 
-      ws.addEventListener('_error', () => {
-        connectionStates.push('_error');
+      ws.addEventListener('error', () => {
+        connectionStates.push('error');
       });
 
       // Simulate connection drops
@@ -491,10 +467,10 @@ export class RealTimeTestUtils {
 
     let receivedMessages = 0;
 
-    ws.addEventListener('message', (_event: any) => {
-      const data = JSON.parse(_event.data);
+    ws.addEventListener('message', (event: any) => {
+      const data = JSON.parse(event.data);
       const receivedTime = Date.now();
-
+      
       if (data.messageId !== undefined) {
         const timing = messageTimings.find(t => t.messageId === data.messageId);
         if (timing) {
@@ -502,7 +478,7 @@ export class RealTimeTestUtils {
           timing.roundTrip = receivedTime - timing.sent;
         }
       }
-
+      
       receivedMessages++;
     });
 
@@ -513,7 +489,7 @@ export class RealTimeTestUtils {
 
     // Send messages rapidly
     const startTime = Date.now();
-
+    
     for (let i = 0; i < messageCount; i++) {
       const sentTime = Date.now();
       messageTimings.push({
@@ -523,13 +499,11 @@ export class RealTimeTestUtils {
         messageId: i,
       });
 
-      ws.send(
-        JSON.stringify({
-          type: 'performance_test',
-          messageId: i,
-          timestamp: sentTime,
-        })
-      );
+      ws.send(JSON.stringify({
+        type: 'performance_test',
+        messageId: i,
+        timestamp: sentTime,
+      }));
 
       // Small delay to prevent overwhelming
       if (i % 10 === 0) {
@@ -540,16 +514,14 @@ export class RealTimeTestUtils {
     // Wait for all responses
     const timeout = 5000;
     const endTime = startTime + timeout;
-
+    
     while (receivedMessages < messageCount && Date.now() < endTime) {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
 
     const totalTime = Date.now() - startTime;
     const completedTimings = messageTimings.filter(t => t.received > 0);
-    const averageRoundTrip =
-      completedTimings.reduce((sum, t) => sum + t.roundTrip, 0) /
-      completedTimings.length;
+    const averageRoundTrip = completedTimings.reduce((sum, t) => sum + t.roundTrip, 0) / completedTimings.length;
     const messagesPerSecond = (receivedMessages / totalTime) * 1000;
 
     return {
@@ -565,7 +537,7 @@ export class RealTimeTestUtils {
 
   // Getters for test data
   static getBattleUpdates(battleId?: string) {
-    return battleId
+    return battleId 
       ? this.battleUpdates.filter(u => u.battleId === battleId)
       : [...this.battleUpdates];
   }
@@ -580,16 +552,14 @@ export class RealTimeTestUtils {
 // WebSocket Event Matchers for Jest
 export const webSocketMatchers = {
   toHaveReceivedMessage: (ws: MockWebSocket, expectedMessage: any) => {
-    const events = MockWebSocket.getEvents().filter(
-      event => event.socketId === ws.id && _event.type === 'event_message'
-    );
-
+    const events = MockWebSocket.getEvents()
+      .filter(event => event.socketId === ws.id && event.type === 'event_message');
+    
     const messageReceived = events.some(event => {
       try {
-        const data =
-          typeof event.data.data === 'string'
-            ? JSON.parse(_event.data.data)
-            : event.data.data;
+        const data = typeof event.data.data === 'string' 
+          ? JSON.parse(event.data.data) 
+          : event.data.data;
         return JSON.stringify(data) === JSON.stringify(expectedMessage);
       } catch {
         return event.data.data === expectedMessage;
@@ -598,28 +568,24 @@ export const webSocketMatchers = {
 
     return {
       pass: messageReceived,
-      message: () =>
-        `Expected WebSocket to ${messageReceived ? 'not ' : ''}have received message: ${JSON.stringify(expectedMessage)}`,
+      message: () => `Expected WebSocket to ${messageReceived ? 'not ' : ''}have received message: ${JSON.stringify(expectedMessage)}`,
     };
   },
 
   toHaveState: (ws: MockWebSocket, expectedState: number) => {
     return {
       pass: ws.readyState === expectedState,
-      message: () =>
-        `Expected WebSocket readyState to be ${expectedState}, but was ${ws.readyState}`,
+      message: () => `Expected WebSocket readyState to be ${expectedState}, but was ${ws.readyState}`,
     };
   },
 
   toHaveReconnected: (timesExpected: number) => {
-    const reconnectEvents = MockWebSocket.getEvents().filter(event =>
-      _event.type.includes('reconnect')
-    );
-
+    const reconnectEvents = MockWebSocket.getEvents()
+      .filter(event => event.type.includes('reconnect'));
+    
     return {
       pass: reconnectEvents.length === timesExpected,
-      message: () =>
-        `Expected ${timesExpected} reconnection attempts, but found ${reconnectEvents.length}`,
+      message: () => `Expected ${timesExpected} reconnection attempts, but found ${reconnectEvents.length}`,
     };
   },
 };
@@ -628,7 +594,7 @@ export const webSocketMatchers = {
 export const setupRealTimeTesting = () => {
   // Replace global WebSocket with mock
   const originalWebSocket = global.WebSocket;
-
+  
   beforeAll(() => {
     global.WebSocket = MockWebSocket as any;
   });
@@ -647,7 +613,10 @@ export const setupRealTimeTesting = () => {
   }
 };
 
-export { MockWebSocket, MockSupabaseRealtimeChannel };
+export {
+  MockWebSocket,
+  MockSupabaseRealtimeChannel,
+};
 
 export default {
   MockWebSocket,
