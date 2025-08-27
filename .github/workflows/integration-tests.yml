@@ -95,9 +95,9 @@ jobs:
 
           if [ -f "$TEST_FILE" ]; then
             if [ "${{ github.event.inputs.verbose }}" = "true" ]; then
-              bun run vitest run --config vitest.integration.config.ts --reporter=verbose "$TEST_FILE"
+              vitest run --config vitest.integration.config.ts --reporter=verbose "$TEST_FILE"
             else
-              bun run vitest run --config vitest.integration.config.ts --reporter=default "$TEST_FILE"
+              vitest run --config vitest.integration.config.ts --reporter=default "$TEST_FILE"
             fi
           else
             echo "⚠️ Test file $TEST_FILE not found, skipping..."

@@ -181,7 +181,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci --production=false
+        run: bun install --production=false
 
       - name: Run comprehensive validation
         id: validate
@@ -320,7 +320,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci --production=false
+        run: bun install --production=false
 
       - name: Build translations
         id: build

@@ -133,9 +133,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm ci
+          bun install
           # Install translation validation tools
-          npm install -g jsonlint i18n-unused
+          bun install -g jsonlint i18n-unused
 
       - name: Validate JSON syntax
         run: |
@@ -258,8 +258,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm ci
-          npm install -g i18n-unused
+          bun install
+          bun install -g i18n-unused
 
       - name: Generate translation health report
         run: |

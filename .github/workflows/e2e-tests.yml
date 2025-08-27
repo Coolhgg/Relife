@@ -23,6 +23,10 @@ on:
   schedule:
     - cron: "0 2 * * 0" # Run at 2 AM every Sunday
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   # Test environment variables
   NODE_ENV: test

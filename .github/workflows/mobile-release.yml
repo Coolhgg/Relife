@@ -42,6 +42,10 @@ on:
     tags:
       - "mobile-v*"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   NODE_VERSION: "20"
   JAVA_VERSION: "17"
@@ -72,7 +76,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci --production=false
+        run: bun install --production=false
 
       - name: Determine platforms to build
         id: platform
@@ -118,7 +122,7 @@ jobs:
 
       - name: Build web application
         run: |
-          npm run build
+          bun run build
         env:
           VITE_APP_VERSION: ${{ steps.version.outputs.version }}
           VITE_BUILD_TIME: ${{ github.event.head_commit.timestamp }}
@@ -161,7 +165,7 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Install dependencies
-        run: npm ci --production=false
+        run: bun install --production=false
 
       - name: Download web build
         uses: actions/download-artifact@v3
@@ -308,7 +312,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci --production=false
+        run: bun install --production=false
 
       - name: Download web build
         uses: actions/download-artifact@v3

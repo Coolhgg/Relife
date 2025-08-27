@@ -48,8 +48,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm ci
-          cd relife-campaign-dashboard && npm ci
+          bun install
+          cd relife-campaign-dashboard && bun install
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
@@ -71,7 +71,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install
 
       - name: Run npm audit (main project)
         id: npm_audit_main
@@ -91,7 +91,7 @@ jobs:
       - name: Install dashboard dependencies
         run: |
           cd relife-campaign-dashboard
-          npm ci
+          bun install
 
       - name: Run npm audit (dashboard)
         id: npm_audit_dashboard
@@ -156,10 +156,10 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install
 
       - name: Install license-checker
-        run: npm install -g license-checker
+        run: bun install -g license-checker
 
       - name: Check licenses (main project)
         run: |
@@ -169,7 +169,7 @@ jobs:
       - name: Check licenses (dashboard)
         run: |
           cd relife-campaign-dashboard
-          npm ci
+          bun install
           license-checker --production --json --out ../license-report-dashboard.json
           license-checker --production --summary > ../license-summary-dashboard.txt
 
