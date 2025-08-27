@@ -10,12 +10,12 @@ function Slider(_{
   className, _defaultValue, _value, _min = 0, max = 100, _...props
 }: React.ComponentProps<typeof SliderPrimitive.Root>) {
   const _values = React.useMemo(() =>
-      Array.isArray(value)
-        ? value
-        : Array.isArray(defaultValue)
-          ? defaultValue
-          : [min, max],
-    [value, defaultValue, min, max]
+      Array.isArray(_value)
+        ? _value
+        : Array.isArray(_defaultValue)
+          ? _defaultValue
+          : [_min, max],
+    [_value, _defaultValue, _min, max]
   );
 
   return (

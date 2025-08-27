@@ -108,22 +108,22 @@ function ChartTooltipContent(_{
   const {_config} = useChart();
 
   const tooltipLabel = React.useMemo(() => {
-    if (hideLabel || !payload?.length) {
+    if (_hideLabel || !payload?.length) {
       return null;
     }
 
     const [item] = payload;
-    const key = `${labelKey || item?.dataKey || item?.name || 'value'}`;
-    const itemConfig = getPayloadConfigFromPayload(config, item, key);
+    const key = `${_labelKey || item?.dataKey || item?.name || 'value'}`;
+    const itemConfig = getPayloadConfigFromPayload(_config, item, key);
     const value =
-      !labelKey && typeof label === 'string'
-        ? config[label as keyof typeof config]?.label || label
+      !_labelKey && typeof _label === 'string'
+        ? _config[_label as keyof typeof _config]?.label || _label
         : itemConfig?.label;
 
-    if (labelFormatter) {
+    if (_labelFormatter) {
       return (
-        <div className={cn('font-medium', labelClassName)}>
-          {labelFormatter(value, payload)}
+        <div className={cn('font-medium', _labelClassName)}>
+          {_labelFormatter(value, payload)}
         </div>
       );
     }
@@ -132,8 +132,8 @@ function ChartTooltipContent(_{
       return null;
     }
 
-    return <div className={cn('font-medium', labelClassName)}>{value}</div>;
-  }, [label, labelFormatter, payload, hideLabel, labelClassName, config, labelKey]);
+    return <div className={cn('font-medium', _labelClassName)}>{value}</div>;
+  }, [_hideLabel, payload, _labelKey, _label, _config, _labelFormatter, _labelClassName]);
 
   if (!active || !payload?.length) {
     return null;
