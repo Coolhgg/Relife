@@ -1877,7 +1877,9 @@ async function processOfflineQueues() {
   }
 }
 
-async function notifyClients(_type, data) {
+
+
+async function notifyClients(type, data) {
   const clients = await self.clients.matchAll();
   clients.forEach(client => {
     client.postMessage({ type, data });
@@ -1885,9 +1887,7 @@ async function notifyClients(_type, data) {
 }
 
 // Stub implementations for additional features
-async function storeScheduledAlarm(alarm, _nextTime) {
-  /* Implementation */
-}
+async function storeScheduledAlarm(alarm, nextTime) { /* Implementation */ }
 async function performCompleteSync() {
   await Promise.all([
     syncAlarms(),
@@ -2007,8 +2007,7 @@ async function optimizeAllCaches() {
   }
 }
 
-console.log(
-  `🎉 Unified Service Worker v${APP_VERSION} loaded and ready with comprehensive offline support!`
-);
+
+console.log(`🎉 Unified Service Worker v${APP_VERSION} loaded and ready with comprehensive offline support!`);
 console.log('📊 Cache statistics:', cacheStats);
 console.log('🎯 Cache limits:', CACHE_LIMITS);

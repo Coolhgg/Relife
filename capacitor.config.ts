@@ -124,7 +124,7 @@ const config: CapacitorConfig = {
     // Security and privacy
     allowsLinkPreview: false,
     // Performance
-    limitsNavigationsToAppBoundDomains: true,
+    limitsNavigationsToAppBoundDomains: true
   },
 
   // Development server configuration

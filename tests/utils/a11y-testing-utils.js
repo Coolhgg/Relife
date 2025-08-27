@@ -1,4 +1,4 @@
-/*
+/* 
  * Accessibility Testing Utilities
  * Provides jest-axe integration with component providers
  */
@@ -17,14 +17,33 @@ export { axe };
  * Enhanced render function that includes accessibility testing
  * Automatically wraps components with necessary providers
  */
-export async function axeRender(ui, options = {}) {
+export async function axeRender(
+  ui: React.ReactElement,
+  options?: RenderOptions & {
+    /**
+     * Axe configuration options
+     */
+    axeOptions?: {
+      rules?: Record<string, any>;
+      tags?: string[];
+      exclude?: string[];
+      include?: string[];
+    };
+    /**
+     * Skip automatic axe test (useful when you want to run axe manually)
+     */
+    skipAxeTest?: boolean;
+  }
+): Promise<RenderResult & { axeResults?: AxeResults }> {
   // Import providers dynamically to avoid circular dependencies
-  const { TestProviders } = await import(
-    '../../src/__tests__/providers/test-providers'
-  );
-
+  const { TestProviders } = await import('../../src/__tests__/providers/test-providers');
+  
   // Wrap component with test providers
-  const WrappedComponent = () => <TestProviders>{ui}</TestProviders>;
+  const WrappedComponent = () => (
+    <TestProviders>
+      {ui}
+    </TestProviders>
+  );
 
   const renderResult = render(<WrappedComponent />, options);
 
@@ -32,10 +51,10 @@ export async function axeRender(ui, options = {}) {
   if (!options?.skipAxeTest) {
     const axeResults = await axe(renderResult.container, options?.axeOptions);
     expect(axeResults).toHaveNoViolations();
-
+    
     return {
       ...renderResult,
-      axeResults,
+      axeResults
     };
   }
 
@@ -45,7 +64,15 @@ export async function axeRender(ui, options = {}) {
 /**
  * Run axe tests on an already rendered component
  */
-export async function runAxeTest(container, axeOptions = {}) {
+export async function runAxeTest(
+  container: Element,
+  axeOptions?: {
+    rules?: Record<string, any>;
+    tags?: string[];
+    exclude?: string[];
+    include?: string[];
+  }
+): Promise<AxeResults> {
   const results = await axe(container, axeOptions);
   expect(results).toHaveNoViolations();
   return results;
@@ -61,9 +88,9 @@ export const axeRulesets = {
   critical: {
     rules: {
       'color-contrast': { enabled: true },
-      keyboard: { enabled: true },
+      'keyboard': { enabled: true },
       'focus-order-semantics': { enabled: true },
-      label: { enabled: true },
+      'label': { enabled: true },
       'aria-required-attr': { enabled: true },
       'aria-required-children': { enabled: true },
       'aria-required-parent': { enabled: true },
@@ -86,7 +113,7 @@ export const axeRulesets = {
    */
   forms: {
     rules: {
-      label: { enabled: true },
+      'label': { enabled: true },
       'aria-required-attr': { enabled: true },
       'form-field-multiple-labels': { enabled: true },
       'duplicate-id-aria': { enabled: true },
@@ -101,7 +128,7 @@ export const axeRulesets = {
     rules: {
       'focus-order-semantics': { enabled: true },
       'aria-dialog-name': { enabled: true },
-      keyboard: { enabled: true },
+      'keyboard': { enabled: true },
       'aria-required-attr': { enabled: true },
     },
   },
@@ -114,7 +141,7 @@ export const axeRulesets = {
       'button-name': { enabled: true },
       'link-name': { enabled: true },
       'image-alt': { enabled: true },
-      label: { enabled: true },
+      'label': { enabled: true },
       'color-contrast': { enabled: true },
       'aria-required-attr': { enabled: true },
     },
@@ -128,7 +155,7 @@ export const accessibilityPatterns = {
   /**
    * Test that an element is properly focusable
    */
-  async testFocusable(element) {
+  async testFocusable(element: HTMLElement): Promise<void> {
     element.focus();
     expect(document.activeElement).toBe(element);
   },
@@ -137,11 +164,11 @@ export const accessibilityPatterns = {
    * Test keyboard navigation within a container
    */
   async testKeyboardNavigation(
-    container,
-    expectedFocusOrder // CSS selectors in expected order
-  ) {
-    const focusableElements = expectedFocusOrder.map(selector =>
-      container.querySelector(selector)
+    container: HTMLElement,
+    expectedFocusOrder: string[] // CSS selectors in expected order
+  ): Promise<void> {
+    const focusableElements = expectedFocusOrder.map(selector => 
+      container.querySelector(selector) as HTMLElement
     );
 
     // Test forward navigation
@@ -156,11 +183,16 @@ export const accessibilityPatterns = {
   /**
    * Test ARIA labels and descriptions
    */
-  testAriaLabeling(element) {
+  testAriaLabeling(element: HTMLElement): {
+    hasAccessibleName: boolean;
+    hasDescription: boolean;
+    accessibleName: string;
+    description: string;
+  } {
     const ariaLabel = element.getAttribute('aria-label');
     const ariaLabelledBy = element.getAttribute('aria-labelledby');
     const ariaDescribedBy = element.getAttribute('aria-describedby');
-
+    
     let accessibleName = '';
     let description = '';
 
@@ -192,7 +224,19 @@ export const accessibilityReporter = {
   /**
    * Generate a comprehensive accessibility report
    */
-  generateReport(testName, axeResults, additionalInfo = {}) {
+  generateReport(
+    testName: string,
+    axeResults: AxeResults,
+    additionalInfo?: Record<string, any>
+  ): {
+    testName: string;
+    timestamp: string;
+    passed: boolean;
+    violations: number;
+    incomplete: number;
+    details: any;
+    additionalInfo?: Record<string, any>;
+  } {
     return {
       testName,
       timestamp: new Date().toISOString(),
@@ -212,18 +256,16 @@ export const accessibilityReporter = {
   /**
    * Save accessibility report to artifacts
    */
-  async saveReport(report, filename) {
+  async saveReport(
+    report: any,
+    filename?: string
+  ): Promise<string> {
     const fs = await import('fs/promises');
     const path = await import('path');
-
+    
     const reportFilename = filename || `a11y-report-${Date.now()}.json`;
-    const reportPath = path.join(
-      process.cwd(),
-      'artifacts',
-      'a11y-reports',
-      reportFilename
-    );
-
+    const reportPath = path.join(process.cwd(), 'artifacts', 'a11y-reports', reportFilename);
+    
     await fs.writeFile(reportPath, JSON.stringify(report, null, 2));
     return reportPath;
   },
@@ -236,7 +278,7 @@ export const commonA11yTests = {
   /**
    * Standard button accessibility test
    */
-  async testButton(button) {
+  async testButton(button: HTMLElement): Promise<AxeResults> {
     const container = button.parentElement || document.body;
     return await runAxeTest(container, axeRulesets.components);
   },
@@ -244,7 +286,7 @@ export const commonA11yTests = {
   /**
    * Standard form field accessibility test
    */
-  async testFormField(field) {
+  async testFormField(field: HTMLElement): Promise<AxeResults> {
     const container = field.closest('form') || field.parentElement || document.body;
     return await runAxeTest(container, axeRulesets.forms);
   },
@@ -252,7 +294,7 @@ export const commonA11yTests = {
   /**
    * Standard modal/dialog accessibility test
    */
-  async testModal(modal) {
+  async testModal(modal: HTMLElement): Promise<AxeResults> {
     return await runAxeTest(modal, axeRulesets.modals);
   },
 };
