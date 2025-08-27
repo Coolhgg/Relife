@@ -353,7 +353,7 @@ export const _createTestTournamentParticipant = (): TournamentParticipant => ({
 });
 
 export const _createTestTournamentRounds = (
-  type: 'single-elimination' | 'round-robin' | 'swiss',
+  type: "single-elimination" | "round-robin" | "swiss",
   participantCount: number,
   status: string
 ): TournamentRound[] => {
@@ -646,20 +646,16 @@ export const _createTestLeaderboard = (entryCount = 100): Leaderboard => {
   } as unknown;
 };
 
-export const _createTestLeaderboardEntry = (rank: number): LeaderboardEntry =>
-  ({
-    rank,
-    userId: generateId('_user'),
-    user: createTestUser(),
-    score: faker.number.int({
-      min: Math.max(1000 - rank * 10, 100),
-      max: 10000 - rank * 50,
-    }),
-    change: faker.number.int({ min: -5, max: 5 }), // rank change from last period
-    streak: faker.number.int({ min: 0, max: 30 }),
-    achievements: faker.number.int({ min: 0, max: 50 }),
-    lastActive: generateTimestamp({ past: 7 }),
-  }) as unknown; // Battle-related factory functions to append to gaming-factories.ts
+export const _createTestLeaderboardEntry = (rank: number): LeaderboardEntry => ({
+  rank,
+  userId: generateId('user'),
+  user: createTestUser(),
+  score: faker.number.int({ min: Math.max(1000 - rank * 10, 100), max: 10000 - rank * 50 }),
+  change: faker.number.int({ min: -5, max: 5 }), // rank change from last period
+  streak: faker.number.int({ min: 0, max: 30 }),
+  achievements: faker.number.int({ min: 0, max: 50 }),
+  lastActive: generateTimestamp({ past: 7 })
+} as any);// Battle-related factory functions to append to gaming-factories.ts
 
 /**
  * Battle Factories
@@ -792,7 +788,7 @@ export const _createTestRewardSystem = (
     },
   },
   achievements: overrides.achievements || [],
-  lastUpdated: overrides.lastUpdated || generateTimestamp({ past: 1 }),
+  lastUpdated: overrides.lastUpdated || generateTimestamp({ past: 1 })
 });
 
 // ===============================

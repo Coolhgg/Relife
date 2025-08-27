@@ -154,6 +154,7 @@ export const _createTestSubscription = (
 export const _createTestPremiumFeature = (
   options: {
     category?: PremiumFeatureCategory;
+    tier?: SubscriptionTier;
   } = {}
 ): PremiumFeature => {
   const {
@@ -631,3 +632,20 @@ const createTestAnalyticsExportOptions = () => [
     description: 'Machine-readable format for integrations',
   },
 ];
+
+// ===============================
+// PUBLIC EXPORTS
+// ===============================
+
+// Subscription exports
+export const createTestSubscription = _createTestSubscription;
+export const createTestPremiumFeature = _createTestPremiumFeature;
+
+// Voice exports
+export const createTestVoice = _createTestVoice;
+
+// Custom Sound exports
+export const createTestCustomSound = _createTestCustomSound;
+
+// Analytics exports
+export const createTestAnalytics = _createTestAnalytics;
