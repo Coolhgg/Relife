@@ -10,30 +10,18 @@ import { setupServer } from 'msw/node';
 import { handlers } from '../../src/__tests__/mocks/msw-handlers';
 
 // Import enhanced browser API mocks
-import {
-  setupEnhancedBrowserAPIMocks,
-  createIntegrationTestHelpers,
-} from './enhanced-browser-api-mocks';
+import { setupEnhancedBrowserAPIMocks, createIntegrationTestHelpers } from './enhanced-browser-api-mocks';
 
-// Import additional mocks for new features (if available)
-try {
-  import { __cjs as _test_mocks } from 'src/shims/test-mocks';
-  const {
-    setupAllMocks,
-    mockWebSocket,
-    mockMediaRecorder,
-    mockFileAPI,
-    mockBiometricAPIs,
-    mockSleepAPIs,
-  } = _test_mocks; // auto: converted require to shim
+// Import additional mocks for new features
+import { 
+  setupAllMocks,
+  mockWebSocket,
+  mockMediaRecorder,
+  mockFileAPI,
+  mockBiometricAPIs,
+  mockSleepAPIs
+} from './test-mocks';
 
-  // Setup all additional mocks for new features if available
-  if (setupAllMocks) {
-    setupAllMocks();
-  }
-} catch (error) {
-  // test-mocks not available, continue without enhanced mocks
-}
 // Setup MSW server for integration tests
 const server = setupServer(...handlers);
 
@@ -58,6 +46,9 @@ afterAll(() => {
 
 // Setup enhanced browser API mocks globally
 const integrationTestHelpers = createIntegrationTestHelpers();
+
+// Setup all additional mocks for new features
+setupAllMocks();
 
 // Reset enhanced mocks after each test
 afterEach(() => {
@@ -428,7 +419,7 @@ export const mockApiSuccess = (endpoint: string, data: any) => {
   );
 };
 
-// New API mock helpers for advanced features (if enhanced mocks available)
+// New API mock helpers for advanced features
 export const mockWebSocketServer = (url: string, responses: any[] = []) => {
   try {
     import { __cjs as _test_mocks } from 'src/shims/test-mocks';
@@ -518,18 +509,21 @@ export const {
   simulateScreenWakeLock,
   verifyNotificationShown,
   verifyServiceWorkerActive,
-  verifyPushSubscriptionActive,
+  verifyPushSubscriptionActive
 } = integrationTestHelpers;
 
-// Additional helper exports for new features (if available)
-try {
-  import { __cjs as enhancedMocks } from 'src/shims/test-mocks'; // auto: converted require to shim
-
-  // Export enhanced mocks if available
-  module.exports = {
-    ...module.exports,
-    ...enhancedMocks,
-  };
-} catch (error) {
-  // Enhanced mocks not available, continue with basic functionality
-}
+// Additional helper exports for new features
+export {
+  mockWebSocket,
+  mockMediaRecorder,
+  mockFileAPI,
+  mockBiometricAPIs,
+  mockSleepAPIs,
+  simulateWebSocketMessage,
+  simulateWebSocketConnection,
+  simulateWebSocketDisconnection,
+  simulateVoiceRecording,
+  generateLargeSleepDataset,
+  simulateBattleProgress,
+  generateMockAudioBlob
+} from './test-mocks';

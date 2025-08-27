@@ -189,7 +189,7 @@ export function renderHookWithProviders<TResult, TProps>(
 /**
  * Wait for hook to finish async operations
  */
-export const waitForHook = async (callback: () => void, _timeout: number = 1000) => {
+export const waitForHook = async (callback: () => void, timeout: number = 1000) => {
   await act(async () => {
     callback();
     // Allow time for async operations
@@ -346,8 +346,7 @@ export const setupGlobalMocks = () => {
 
   // Setup matchMedia mock
   Object.defineProperty(window, 'matchMedia', {
-    value: vi.fn().mockImplementation((query: any) => ({
-      // auto: implicit any{
+    value: vi.fn().mockImplementation(query => ({
       matches: false,
       media: query,
       onchange: null,

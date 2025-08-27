@@ -66,7 +66,7 @@ export const handlers = [
   http.post(`${SUPABASE_URL}/rest/v1/users`, () => {
     return HttpResponse.json(
       {
-        id: 'test-_user-123',
+        id: 'test-user-123',
         email: 'test@example.com',
         name: 'Test User',
         created_at: new Date().toISOString(),
@@ -108,7 +108,7 @@ export const handlers = [
     return HttpResponse.json(
       {
         id: 'test-alarm-456',
-        user_id: 'test-_user-123',
+        user_id: 'test-user-123',
         time: '08:00',
         label: 'New Test Alarm',
         is_active: true,
@@ -292,16 +292,16 @@ export const handlers = [
   }),
 
   // Error scenarios for testing error handling
-  http.get('/api/_error/500', () => {
-    return HttpResponse.json({ _error: 'Internal Server Error' }, { status: 500 });
+  http.get('/api/error/500', () => {
+    return HttpResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }),
 
-  http.get('/api/_error/401', () => {
-    return HttpResponse.json({ _error: 'Unauthorized' }, { status: 401 });
+  http.get('/api/error/401', () => {
+    return HttpResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }),
 
-  http.get('/api/_error/429', () => {
-    return HttpResponse.json({ _error: 'Rate Limited' }, { status: 429 });
+  http.get('/api/error/429', () => {
+    return HttpResponse.json({ error: 'Rate Limited' }, { status: 429 });
   }),
 
   // Network timeout simulation
@@ -315,14 +315,11 @@ export const handlers = [
 export const errorHandlers = [
   // Override successful handlers with error responses for error testing
   http.post(`${SUPABASE_URL}/auth/v1/token`, () => {
-    return HttpResponse.json({ _error: 'Invalid credentials' }, { status: 401 });
+    return HttpResponse.json({ error: 'Invalid credentials' }, { status: 401 });
   }),
 
   http.post(`${STRIPE_URL}/v1/subscriptions`, () => {
-    return HttpResponse.json(
-      { _error: { message: 'Payment failed' } },
-      { status: 402 }
-    );
+    return HttpResponse.json({ error: { message: 'Payment failed' } }, { status: 402 });
   }),
 ];
 

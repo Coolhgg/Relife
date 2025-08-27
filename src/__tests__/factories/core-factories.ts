@@ -79,9 +79,7 @@ const createTestSubscription = (
   };
 };
 
-const createTestPremiumFeatureAccess = (
-  tier: Subscription['tier'] = 'premium'
-): PremiumFeatureAccess => ({
+const createTestPremiumFeatureAccess = (): PremiumFeatureAccess => ({
   // Voice Features
   elevenlabsVoices: tier !== 'free',
   customVoiceMessages: tier !== 'free',
