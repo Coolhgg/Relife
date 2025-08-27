@@ -4,7 +4,6 @@
 // Handles registration, updates, and emotional intelligence integration
 
 // Interface for emotional events
-import AnalyticsService from './analytics';
 interface EmotionalEvent {
   id: number;
   eventType: string;
@@ -136,10 +135,8 @@ class ServiceWorkerManager {
       this.registration.waiting.postMessage({ type: 'SKIP_WAITING' });
 
       // Wait for the new service worker to take control
-      await new Promise<void>(resolve => {
-        navigator.serviceWorker.addEventListener('controllerchange', () => resolve(), {
-          once: true,
-        });
+      await new Promise<void>((resolve) => {
+        navigator.serviceWorker.addEventListener('controllerchange', () => resolve(), { once: true });
       });
 
       console.log('✅ Service Worker update applied');
@@ -176,7 +173,7 @@ class ServiceWorkerManager {
   }
 
   // Handle messages from service worker
-  handleServiceWorkerMessage(_event: MessageEvent<ServiceWorkerMessage>): void {
+  handleServiceWorkerMessage(event: MessageEvent<ServiceWorkerMessage>): void {
     const { type, data } = event.data;
 
     console.log('💬 Message from SW:', type, data);
@@ -312,11 +309,7 @@ class ServiceWorkerManager {
   }
 
   // Handle emotional notification actions
-  handleEmotionalNotificationAction(data: {
-    action: string;
-    emotion_type: string;
-    notification_id: string;
-  }): void {
+  handleEmotionalNotificationAction(data: { action: string; emotion_type: string; notification_id: string }): void {
     const { action, emotion_type, notification_id } = data;
 
     console.log('🧠 Handling emotional notification action:', action);
