@@ -53,10 +53,10 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install
 
       - name: Build application
-        run: npm run build
+        run: bun run build
 
       - name: Setup Docker for k6
         run: docker pull grafana/k6
@@ -65,15 +65,15 @@ jobs:
         run: mkdir -p performance/reports
 
       - name: Run k6 validation test
-        run: npm run test:perf:validation
+        run: bun run test:perf:validation
         continue-on-error: true
 
       - name: Run k6 baseline test
-        run: npm run test:perf:baseline:ci
+        run: bun run test:perf:baseline:ci
         continue-on-error: true
 
       - name: Start preview server
-        run: npm run preview &
+        run: bun run preview &
         env:
           CI: true
 
@@ -81,11 +81,11 @@ jobs:
         run: npx wait-on http://localhost:4173 --timeout 30000
 
       - name: Run Lighthouse CI
-        run: npm run test:perf:lighthouse:full
+        run: bun run test:perf:lighthouse:full
         continue-on-error: true
 
       - name: Generate performance report
-        run: npm run test:perf:report
+        run: bun run test:perf:report
         continue-on-error: true
 
       - name: Upload performance artifacts
@@ -137,10 +137,10 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install
 
       - name: Build application
-        run: npm run build
+        run: bun run build
 
       - name: Setup Docker for k6
         run: docker pull grafana/k6
@@ -149,7 +149,7 @@ jobs:
         run: mkdir -p performance/reports
 
       - name: Start preview server
-        run: npm run preview &
+        run: bun run preview &
         env:
           CI: true
 
@@ -157,7 +157,7 @@ jobs:
         run: npx wait-on http://localhost:4173 --timeout 30000
 
       - name: Run k6 load tests
-        run: npm run test:perf:load
+        run: bun run test:perf:load
         env:
           BASE_URL: http://localhost:4173
           API_URL: http://localhost:4173/api
@@ -187,10 +187,10 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install
 
       - name: Build application
-        run: npm run build
+        run: bun run build
 
       - name: Setup Docker for k6
         run: docker pull grafana/k6
@@ -199,7 +199,7 @@ jobs:
         run: mkdir -p performance/reports
 
       - name: Start preview server
-        run: npm run preview &
+        run: bun run preview &
         env:
           CI: true
 
@@ -207,7 +207,7 @@ jobs:
         run: npx wait-on http://localhost:4173 --timeout 30000
 
       - name: Run k6 stress tests
-        run: npm run test:perf:stress
+        run: bun run test:perf:stress
         env:
           BASE_URL: http://localhost:4173
           API_URL: http://localhost:4173/api
@@ -250,10 +250,10 @@ jobs:
           git checkout origin/${{ github.base_ref }}
 
       - name: Install dependencies (base)
-        run: npm ci
+        run: bun install
 
       - name: Build application (base)
-        run: npm run build
+        run: bun run build
 
       - name: Setup Docker for k6
         run: docker pull grafana/k6
@@ -263,8 +263,8 @@ jobs:
 
       - name: Run baseline tests (base branch)
         run: |
-          npm run test:perf:baseline:ci
-          npm run test:perf:report
+          bun run test:perf:baseline:ci
+          bun run test:perf:report
         continue-on-error: true
 
       - name: Compare performance results
@@ -376,10 +376,10 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install
 
       - name: Build application
-        run: npm run build
+        run: bun run build
 
       - name: Setup Docker for k6
         run: docker pull grafana/k6
@@ -388,7 +388,7 @@ jobs:
         run: mkdir -p performance/reports
 
       - name: Start preview server
-        run: npm run preview &
+        run: bun run preview &
         env:
           CI: true
 
@@ -396,7 +396,7 @@ jobs:
         run: npx wait-on http://localhost:4173 --timeout 30000
 
       - name: Run comprehensive performance suite
-        run: npm run test:perf:ci
+        run: bun run test:perf:ci
         env:
           BASE_URL: http://localhost:4173
           API_URL: http://localhost:4173/api

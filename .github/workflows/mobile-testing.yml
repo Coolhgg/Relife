@@ -71,7 +71,7 @@ permissions:
 
 # Concurrency control for mobile testing resources
 concurrency:
-  group: mobile-tests-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 # Global environment variables for mobile testing
@@ -159,7 +159,7 @@ jobs:
 
           # Run tests with platform simulation
           if [ "${{ github.event.inputs.verbose }}" = "true" ]; then
-            VERBOSE_TESTS=true bun run vitest run \
+            VERBOSE_TESTS=true vitest run \
               --config vitest.config.ts \
               --reporter=verbose \
               --coverage.enabled=true \
@@ -167,7 +167,7 @@ jobs:
               --coverage.reportsDirectory=test-results/coverage/${{ matrix.platform }}-${{ matrix.test-suite }} \
               "$TEST_PATTERN"
           else
-            bun run vitest run \
+            vitest run \
               --config vitest.config.ts \
               --reporter=default \
               --coverage.enabled=true \
@@ -317,7 +317,7 @@ jobs:
             echo "🧪 Running mobile integration tests on emulator..."
             CAPACITOR_MOCK_MODE=false \
             ANDROID_EMULATOR=true \
-            bun run test:mobile:emulator
+            bun run test:mobile:mock
 
       - name: 📤 Upload Android test results
         uses: actions/upload-artifact@v4
@@ -407,7 +407,7 @@ jobs:
             CAPACITOR_MOCK_MODE=false \
             IOS_SIMULATOR=true \
             IOS_DEVICE_ID="$DEVICE_ID" \
-            bun run test:mobile:simulator
+            bun run test:mobile:mock
             
             # Clean up
             xcrun simctl delete "$DEVICE_ID"
@@ -458,7 +458,7 @@ jobs:
             
             MOCK_PLATFORM="$platform" \
             PERFORMANCE_MODE=true \
-            bun run test:mobile:performance
+            bun run test:mobile:coverage
           done
         env:
           NODE_ENV: test

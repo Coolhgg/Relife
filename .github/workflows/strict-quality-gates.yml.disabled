@@ -238,7 +238,7 @@ jobs:
 
           # Check if bundlesize is configured
           if command -v bundlesize &> /dev/null; then
-            bun run bundlesize
+            npx bundlesize
             if [ $? -ne 0 ]; then
               echo "❌ Bundle size exceeds limits - optimize before merge"
               exit 1

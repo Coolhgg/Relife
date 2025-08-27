@@ -70,8 +70,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm ci --production=false
-          npm install chalk yargs date-fns marked
+          bun install --production=false
+          bun install chalk yargs date-fns marked
 
       - name: Create reports directory
         run: |
@@ -147,8 +147,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm ci --production=false
-          npm install marked chart.js chartjs-node-canvas
+          bun install --production=false
+          bun install marked chart.js chartjs-node-canvas
 
       - name: Download generated data
         uses: actions/download-artifact@v4
@@ -197,7 +197,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci --production=false
+        run: bun install --production=false
 
       - name: Download generated data
         uses: actions/download-artifact@v4
@@ -293,8 +293,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm ci --production=false
-          npm install puppeteer csv-writer
+          bun install --production=false
+          bun install puppeteer csv-writer
 
       - name: Download all reports
         uses: actions/download-artifact@v4

@@ -99,12 +99,12 @@ jobs:
         if: steps.cache-dependencies.outputs.cache-hit != 'true'
         run: |
           echo "🔧 Installing dependencies..."
-          npm ci --audit=false
+          bun install --audit=false
           bun install --frozen-lockfile
 
           # Dashboard dependencies
           cd relife-campaign-dashboard
-          npm ci --audit=false
+          bun install --audit=false
 
       - name: Install Python dependencies
         if: steps.check-python.outputs.has-python == 'true'
@@ -289,7 +289,7 @@ jobs:
         if: matrix.project == 'main'
         run: |
           echo "🔨 Building main project..."
-          npm run build 2>&1 | tee build.log || echo "Build completed with warnings"
+          bun run build 2>&1 | tee build.log || echo "Build completed with warnings"
 
           # Check build output
           if [ -d "dist" ] || [ -d "build" ]; then
@@ -303,7 +303,7 @@ jobs:
         run: |
           echo "🔨 Building dashboard project..."
           cd relife-campaign-dashboard
-          npm run build 2>&1 | tee ../dashboard-build.log || echo "Dashboard build completed with warnings"
+          bun run build 2>&1 | tee ../dashboard-build.log || echo "Dashboard build completed with warnings"
 
           # Check build output
           if [ -d "dist" ] || [ -d "build" ]; then
@@ -356,8 +356,8 @@ jobs:
       - name: Run JavaScript/TypeScript tests
         run: |
           echo "🧪 Running JS/TS tests..."
-          if [ -f "package.json" ] && npm run test --if-present 2>/dev/null; then
-            npm run test
+          if [ -f "package.json" ] && bun run test --if-present 2>/dev/null; then
+            bun run test
           else
             echo "ℹ️ No JS/TS tests configured"
           fi
@@ -392,7 +392,7 @@ jobs:
           node-version: "20"
 
       - name: Install commitlint
-        run: npm install @commitlint/cli @commitlint/config-conventional
+        run: bun install @commitlint/cli @commitlint/config-conventional
 
       - name: Validate commit messages
         run: |

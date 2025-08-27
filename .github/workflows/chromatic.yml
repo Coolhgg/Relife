@@ -9,6 +9,10 @@ on:
     branches: [main]
 
 # List of jobs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   chromatic-deployment:
     # Operating System

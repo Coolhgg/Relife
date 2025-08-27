@@ -122,9 +122,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm ci --production=false
+          bun install --production=false
           # Install additional validation dependencies
-          npm install chalk yargs
+          bun install chalk yargs
 
       - name: Compile TypeScript validator
         run: |
@@ -294,7 +294,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci --production=false
+        run: bun install --production=false
 
       - name: Check for missing translations
         run: |
@@ -362,7 +362,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci --production=false
+        run: bun install --production=false
 
       - name: Download all validation results
         uses: actions/download-artifact@v3
