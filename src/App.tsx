@@ -1467,7 +1467,7 @@ function AppContent() {
         await OfflineStorage.saveAlarm(updatedAlarm);
       }
 
-      const updatedAlarms = appState.alarms.map((alarm: any) =>
+      const updatedAlarms = appState.alarms.map((alarm: unknown) =>
         alarm.id === alarmId ? updatedAlarm : alarm
       );
 
@@ -1548,8 +1548,7 @@ function AppContent() {
         await OfflineStorage.deleteAlarm(alarmId);
       }
 
-      const alarmToDelete = appState.alarms.find((a: any) => a.id === alarmId);
-
+      const alarmToDelete = appState.alarms.find((a: unknown) => a.id === alarmId);
       const updatedAlarms = appState.alarms.filter(
         (alarm: any) => alarm.id !== alarmId
       );
@@ -1638,7 +1637,7 @@ function AppContent() {
         await OfflineStorage.saveAlarm(updatedAlarm);
       }
 
-      const updatedAlarms = appState.alarms.map((alarm: any) =>
+      const updatedAlarms = appState.alarms.map((alarm: unknown) =>
         alarm.id === alarmId ? updatedAlarm : alarm
       );
 
@@ -2073,7 +2072,7 @@ function AppContent() {
           <ErrorBoundary context="PricingPage">
             <PricingPage
               user={auth.user as User}
-              onUpgrade={(plan: any) => {
+              onUpgrade={(plan: unknown) => {
                 appAnalytics.trackFeatureUsage('subscription', 'upgraded', {
                   plan: plan.id,
                   price: plan.price,
@@ -2173,22 +2172,41 @@ function AppContent() {
                     aria-label="Add new alarm"
                     aria-describedby="add-alarm-desc"
                   >
-                    <Plus className="w-5 h-5" aria-hidden="true" />
-                    <span id="add-alarm-desc" className="sr-only">
-                      Opens the new alarm creation form
-                    </span>
-                  </button>
-                  <button
-                    onClick={auth.signOut}
-                    className="p-2 rounded-full text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2"
-                    aria-label="Sign out"
-                    aria-describedby="sign-out-desc"
-                  >
-                    <LogOut className="w-5 h-5" aria-hidden="true" />
-                    <span id="sign-out-desc" className="sr-only">
-                      Sign out of your account
-                    </span>
-                  </button>
+                    <OfflineIndicator />
+                    {tabProtectionSettings.settings.enabled &&
+                      tabProtectionSettings.settings.visualSettings
+                        .showVisualWarning && (
+                        <TabProtectionWarning
+                          activeAlarm={appState.activeAlarm}
+                          enabledAlarms={appState.alarms.filter(
+                            (alarm: unknown) => alarm.enabled
+                          )}
+                          settings={tabProtectionSettings.settings}
+                        />
+                      )}
+                    <button
+                      onClick={createClickHandler(() => setShowAlarmForm(true))}
+                      className="alarm-button alarm-button-primary p-2 rounded-full"
+                      aria-label="Add new alarm"
+                      aria-describedby="add-alarm-desc"
+                    >
+                      <Plus className="w-5 h-5" aria-hidden="true" />
+                      <span id="add-alarm-desc" className="sr-only">
+                        Opens the new alarm creation form
+                      </span>
+                    </button>
+                    <button
+                      onClick={auth.signOut}
+                      className="p-2 rounded-full text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2"
+                      aria-label="Sign out"
+                      aria-describedby="sign-out-desc"
+                    >
+                      <LogOut className="w-5 h-5" aria-hidden="true" />
+                      <span id="sign-out-desc" className="sr-only">
+                        Sign out of your account
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
