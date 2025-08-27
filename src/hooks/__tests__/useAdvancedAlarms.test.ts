@@ -58,11 +58,11 @@ describe('useAdvancedAlarms Tests', () => {
       AlarmService.updateAlarm.mockResolvedValue(mockBasicAlarm);
       AlarmService.deleteAlarm.mockResolvedValue(true);
 
-      mockGeolocation.getCurrentPosition.mockImplementation(success =>
+      mockGeolocation.getCurrentPosition.mockImplementation((success) =>
         success({
           coords: {
             latitude: 40.7128,
-            longitude: -74.006,
+            longitude: -74.0060,
             accuracy: 10,
           },
           timestamp: Date.now(),
@@ -191,4 +191,5 @@ describe('useAdvancedAlarms Tests', () => {
     // TODO: Implement refresh tests
     it.todo('should refresh alarms manually');
   });
+})
 });
