@@ -10,8 +10,8 @@ import type {
   ScheduleExport,
   ScheduleImport,
 } from '../types/index';
-import { getService } from './ServiceBootstrap';
-import { IAlarmService } from '../types/service-interfaces';
+// import { AlarmService } from './alarm'; // Temporarily commented out due to parsing errors in alarm.ts
+import { AlarmService } from './alarm-stub';
 import { AlarmParser } from './alarm-parser';
 import { AlarmExecutor } from './alarm-executor';
 import { Preferences } from '@capacitor/preferences';
