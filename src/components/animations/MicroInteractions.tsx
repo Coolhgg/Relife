@@ -132,7 +132,7 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
           type={type}
           placeholder={isFocused ? placeholder : ''}
           value={value}
-          onChange={(e: any) => o // auto: implicit anynChange(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
           onFocus={handleFocus}
           onBlur={handleBlur}
           disabled={disabled}
@@ -172,7 +172,11 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
             <motion.span
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              transition={{ delay: 0.1, type: 'spring' as const, stiffness: 300 }}
+              transition={{
+                delay: 0.1,
+                type: 'spring' as const,
+                stiffness: 300,
+              }}
             >
               ⚠️
             </motion.span>
@@ -189,7 +193,11 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            transition={{ type: 'spring' as const, stiffness: 300, damping: 20 }}
+            transition={{
+              type: 'spring' as const,
+              stiffness: 300,
+              damping: 20,
+            }}
           >
             ✓
           </motion.div>
@@ -232,7 +240,7 @@ export const AnimatedSelect: React.FC<AnimatedSelectProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<SelectOption | null>(
-    options.find((opt: any) => o // auto: implicit anypt.value === value) || null
+    options.find((opt: any) => opt.value === value) || null
   );
 
   const handleSelect = (option: SelectOption) => {
@@ -488,7 +496,7 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
 
       // Remove ripple after animation
       setTimeout(() => {
-        setRipples((prev: any) => p // auto: implicit anyrev.filter((ripple: any) => r // auto: implicit anyipple.id !== newRipple.id));
+        setRipples((prev: any) => prev.filter((ripple: any) => r
       }, 600);
     }
 
@@ -511,7 +519,11 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
           ? {
               scale: 1.02,
               y: -1,
-              transition: { type: 'spring' as const, stiffness: 300, damping: 20 },
+              transition: {
+                type: 'spring' as const,
+                stiffness: 300,
+                damping: 20,
+              },
             }
           : {}
       }
@@ -526,10 +538,7 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
     >
       {/* Ripple effects */}
       <AnimatePresence>
-        {ripples.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+        {ripples.map((ripple: any) => (
           <motion.div
             key={ripple.id}
             className="absolute bg-white/30 rounded-full pointer-events-none"
@@ -776,7 +785,11 @@ export const AnimatedProgress: React.FC<AnimatedProgressProps> = ({
               key={percentage}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ type: 'spring' as const, stiffness: 300, damping: 20 }}
+              transition={{
+                type: 'spring' as const,
+                stiffness: 300,
+                damping: 20,
+              }}
             >
               {Math.round(percentage)}%
             </motion.span>

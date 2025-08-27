@@ -111,7 +111,10 @@ class PerformanceAlertManager {
         cooldownPeriod: 3,
         autoResolve: true,
         actions: [
-          { type: 'notification', config: { title: 'Input Responsiveness Issue' } },
+          {
+            type: 'notification',
+            config: { title: 'Input Responsiveness Issue' },
+          },
           { type: 'console', config: { level: 'warn' } },
         ],
       },
@@ -158,7 +161,10 @@ class PerformanceAlertManager {
         cooldownPeriod: 5,
         autoResolve: false,
         actions: [
-          { type: 'notification', config: { title: 'Network Issues Detected' } },
+          {
+            type: 'notification',
+            config: { title: 'Network Issues Detected' },
+          },
         ],
       },
       {
@@ -173,7 +179,10 @@ class PerformanceAlertManager {
         cooldownPeriod: 2,
         autoResolve: false,
         actions: [
-          { type: 'notification', config: { title: 'Critical Error Frequency' } },
+          {
+            type: 'notification',
+            config: { title: 'Critical Error Frequency' },
+          },
           { type: 'storage', config: { key: 'critical_errors' } },
         ],
       },
@@ -905,7 +914,7 @@ export const PerformanceAlertDisplay: React.FC<PerformanceAlertDisplayProps> = (
   const { alerts, suggestions, resolveAlert } = usePerformanceAlerts();
 
   const displayAlerts = alerts.slice(0, maxAlerts);
-  const criticalAlerts = alerts.filter((alert: any) => a // auto: implicit anylert.severity >= 4);
+  const criticalAlerts = alerts.filter((alert: any) => a.lert.severity >= 4);
 
   if (displayAlerts.length === 0 && (!showSuggestions || suggestions.length === 0)) {
     return null;
@@ -926,10 +935,7 @@ export const PerformanceAlertDisplay: React.FC<PerformanceAlertDisplayProps> = (
         <div className="active-alerts mb-4">
           <h4 className="font-semibold text-gray-800 mb-2">Performance Alerts</h4>
           <div className="space-y-2">
-            {displayAlerts.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+            {displayAlerts.map((alert: any) => (
               <div
                 key={alert.id}
                 className={`alert-item p-3 rounded border-l-4 ${
@@ -968,10 +974,7 @@ export const PerformanceAlertDisplay: React.FC<PerformanceAlertDisplayProps> = (
         <div className="optimization-suggestions">
           <h4 className="font-semibold text-gray-800 mb-2">Optimization Suggestions</h4>
           <div className="space-y-2">
-            {suggestions.slice(0, 3).map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+            {suggestions.slice(0, 3).map((suggestion: any) => (
               <div
                 key={suggestion.id}
                 className={`suggestion-item p-3 rounded border ${

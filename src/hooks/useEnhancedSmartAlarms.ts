@@ -108,11 +108,8 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
         )) as EnhancedSmartAlarm;
 
         if (updatedAlarm) {
-          setAlarms((prev: any) => // auto: implicit any
-            prev.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+          setAlarms((prev: any) =>
+            prev.map((alarm: any) => (alarm.id === id ? updatedAlarm : alarm))
           );
 
           // Update monitoring status
@@ -144,7 +141,7 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
       RealTimeSmartAdapter.stopMonitoringAlarm(id);
 
       // Remove from state (actual deletion would happen in the service)
-      setAlarms((prev: any) => p // auto: implicit anyrev.filter((alarm: any) => alarm.id !== id));
+      setAlarms((prev: any) => prev.filter((alarm: any) => a.larm.id !== id));
 
       return true;
     } catch (err) {
@@ -166,11 +163,8 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
           alarmId
         )) as EnhancedSmartAlarm;
         if (updatedAlarm) {
-          setAlarms((prev: any) => // auto: implicit any
-            prev.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+          setAlarms((prev: any) =>
+            prev.map((alarm: any) => (alarm.id === alarmId ? updatedAlarm : alarm))
           );
         }
 

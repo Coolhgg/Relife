@@ -95,7 +95,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
 
       // Start timer
       recordingTimerRef.current = setInterval(() => {
-        setRecordingTime((prev: any) => p // auto: implicit anyrev + 1);
+        setRecordingTime((prev: any) => prev + 1);
       }, 1000);
     } catch (error) {
       console.error('Error starting recording:', error);
@@ -177,7 +177,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
   };
 
   const removeSample = (sampleId: string) => {
-    setSamples((prev: any) => p // auto: implicit anyrev.filter((s: any) => s.id !== sampleId));
+    setSamples((prev: any) => prev.filter((s: any) => s
 
     // Clean up audio and URL
     const audio = audioRefs.current.get(sampleId);
@@ -204,7 +204,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
 
     try {
       setIsProcessing(true);
-      const audioBlobs = samples.map((sample: any) => s // auto: implicit anyample.blob);
+      const audioBlobs = samples.map((sample: any) => sample.blob);
       const request = await PremiumVoiceService.createVoiceClone(user.id, audioBlobs);
       setCloneRequest(request);
     } catch (error) {
@@ -414,10 +414,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
                 Voice Samples
               </h3>
               <div className="space-y-3">
-                {samples.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+                {samples.map((sample: any) => (
                   <div
                     key={sample.id}
                     className="bg-gray-50 rounded-lg p-4 flex items-center gap-3"
@@ -469,7 +466,11 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
                 </span>
               </div>
               <div
-                className={`flex items-center gap-2 ${samples.some((s: any) => s.duration >= 10) ? 'text-green-600' : 'text-gray-400'}`}
+                className={`flex items-center gap-2 ${
+                  samples.some((s: any) => s.duration >= 10)
+                    ? 'text-green-600'
+                    : 'text-gray-400'
+                }`}
               >
                 <CheckCircle className="h-4 w-4" />
                 <span className="text-sm">Samples should be 10+ seconds each</span>

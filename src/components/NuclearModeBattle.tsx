@@ -104,7 +104,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
     'green' | 'yellow' | 'red' | 'critical'
   >('green');
 
-  const timerRef = useRef<TimeoutHandle | undefined>(undefined); // auto: changed from number | null to TimeoutHandle
+  const timerRef = useRef<TimeoutHandle | undefined>(undefined);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const requiredChallenges = 3; // Must complete 3 nuclear challenges to dismiss
@@ -146,7 +146,8 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
     }
 
     timerRef.current = setInterval(() => {
-      setTimeRemaining((prev: any) => { // auto
+      setTimeRemaining((prev: any) => {
+        // auto
         if (prev <= 1) {
           handleChallengeTimeout();
           return 0;
@@ -183,8 +184,8 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
       }
 
       if (success) {
-        setTotalScore((prev: any) => p // auto: implicit anyrev + score);
-        setChallengesCompleted((prev: any) => p // auto: implicit anyrev + 1);
+        setTotalScore((prev: any) => prev + score);
+        setChallengesCompleted((prev: any) => prev + 1);
 
         // Check if all challenges completed
         if (challengesCompleted + 1 >= requiredChallenges) {
@@ -215,7 +216,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
 
     // Award bonus points for nuclear completion
     const bonusScore = totalScore * 0.5;
-    setTotalScore((prev: any) => p // auto: implicit anyrev + bonusScore);
+    setTotalScore((prev: any) => prev + bonusScore);
 
     // Dismiss alarm with nuclear success
     setTimeout(() => {

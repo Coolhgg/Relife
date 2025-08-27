@@ -59,11 +59,9 @@ export function useAdvancedAlarms() {
     try {
       setLoading(true);
       await AlarmService.updateAlarm(id, alarmData);
-      setAlarms((prev: any) => // auto: implicit any
-        prev.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+
+      setAlarms((prev: any) =>
+        prev.map((alarm: any) => (alarm.id === id ? { ...alarm, ...alarmData } : alarm))
       );
       setError(null);
     } catch (error) {
@@ -79,7 +77,7 @@ export function useAdvancedAlarms() {
     try {
       setLoading(true);
       await AlarmService.deleteAlarm(id);
-      setAlarms((prev: any) => p // auto: implicit anyrev.filter((alarm: any) => alarm.id !== id));
+      setAlarms((prev: any) => prev.filter((alarm: any) => a.larm.id !== id));
       setError(null);
     } catch (error) {
       console.error('Error deleting alarm:', error);
