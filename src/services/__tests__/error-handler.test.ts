@@ -1,3 +1,5 @@
+/* global describe,it,expect */
+/* global describe,it,expect */
 import { expect, test, jest } from '@jest/globals';
 import { ErrorHandler } from '../error-handler';
 import { testUtils } from '../../test-setup';
