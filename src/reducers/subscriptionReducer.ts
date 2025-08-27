@@ -29,7 +29,7 @@ export const subscriptionReducer = (
 
     case 'SUBSCRIPTION_LOAD_SUCCESS': {
       const subscription = action.payload;
-
+      
       return {
         ...state,
         currentSubscription: subscription,
@@ -82,7 +82,7 @@ export const subscriptionReducer = (
 
     case 'SUBSCRIPTION_UPGRADE_SUCCESS': {
       const subscription = action.payload;
-
+      
       return {
         ...state,
         currentSubscription: subscription,
@@ -136,7 +136,7 @@ export const subscriptionReducer = (
 
     case 'SUBSCRIPTION_CANCEL_SUCCESS': {
       const subscription = action.payload;
-
+      
       return {
         ...state,
         currentSubscription: subscription,
@@ -194,17 +194,16 @@ export const subscriptionReducer = (
     case 'PAYMENT_METHOD_ADD': {
       const paymentMethod = action.payload;
       const updatedPaymentMethods = [...state.billing.paymentMethods, paymentMethod];
-
+      
       return {
         ...state,
         billing: {
           ...state.billing,
           paymentMethods: updatedPaymentMethods,
           // Set as default if it's the first payment method
-          defaultPaymentMethod:
-            state.billing.paymentMethods.length === 0
-              ? paymentMethod
-              : state.billing.defaultPaymentMethod,
+          defaultPaymentMethod: state.billing.paymentMethods.length === 0
+            ? paymentMethod
+            : state.billing.defaultPaymentMethod,
         },
       };
     }
@@ -214,17 +213,16 @@ export const subscriptionReducer = (
       const updatedPaymentMethods = state.billing.paymentMethods.filter(
         pm => pm.id !== paymentMethodId
       );
-
+      
       return {
         ...state,
         billing: {
           ...state.billing,
           paymentMethods: updatedPaymentMethods,
           // Clear default if it was the removed payment method
-          defaultPaymentMethod:
-            state.billing.defaultPaymentMethod?.id === paymentMethodId
-              ? updatedPaymentMethods[0] || null
-              : state.billing.defaultPaymentMethod,
+          defaultPaymentMethod: state.billing.defaultPaymentMethod?.id === paymentMethodId
+            ? updatedPaymentMethods[0] || null
+            : state.billing.defaultPaymentMethod,
         },
       };
     }
@@ -270,7 +268,9 @@ export const subscriptionReducer = (
         changes: {
           ...state.changes,
           upgradePrompts: state.changes.upgradePrompts.map(prompt =>
-            prompt.id === promptId ? { ...prompt, dismissedAt: new Date() } : prompt
+            prompt.id === promptId
+              ? { ...prompt, dismissedAt: new Date() }
+              : prompt
           ),
         },
         ui: {

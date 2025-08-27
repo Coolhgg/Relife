@@ -1,5 +1,6 @@
 /// <reference lib="dom" />
-import { useState, useEffect, useCallback } from 'react';
+import React from 'react';
+import { useState, useEffect, useCallback, useReducer } from 'react';
 import {
   Plus,
   Clock,
@@ -11,7 +12,8 @@ import {
   Crown,
 } from 'lucide-react';
 import type { Alarm, AppState, VoiceMood, User, Battle, DayOfWeek } from './types';
-import { INITIAL_APP_STATE } from './constants/initialState';
+import { INITIAL_DOMAIN_APP_STATE } from './constants/initialDomainState';
+import { rootReducer } from './reducers/rootReducer';
 
 // i18n imports
 import { LanguageProvider } from './contexts/LanguageContext';
@@ -211,7 +213,19 @@ function AppContent() {
     createErrorHandler,
   } = useUISound();
 
-  const [appState, setAppState] = useState<AppState>(INITIAL_APP_STATE);
+  const [appState, dispatch] = useReducer(rootReducer, INITIAL_DOMAIN_APP_STATE);
+
+  // Helper function to simulate old setState behavior for gradual migration
+  const setAppState = (updater: (prev: AppState) => AppState | AppState) => {
+    if (typeof updater === 'function') {
+      const newState = updater(appState);
+      // For now, we'll use a generic APP_UPDATE action
+      // TODO: Convert to specific domain actions
+      dispatch({ type: 'APP_UPDATE' as any, payload: newState });
+    } else {
+      dispatch({ type: 'APP_UPDATE' as any, payload: updater });
+    }
+  };
 
   const [showAlarmForm, setShowAlarmForm] = useState(false);
   const [editingAlarm, setEditingAlarm] = useState<Alarm | null>(null);

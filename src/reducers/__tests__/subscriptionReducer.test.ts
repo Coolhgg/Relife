@@ -34,12 +34,12 @@ describe('SubscriptionReducer Integration Tests', () => {
         paymentMethodId: 'pm-123',
         metadata: {},
         createdAt: new Date('2024-01-01T00:00:00Z'),
-        updatedAt: new Date('2024-01-01T00:00:00Z'),
+        updatedAt: new Date('2024-01-01T00:00:00Z')
       };
 
       const action: SubscriptionAction = {
         type: 'SUBSCRIPTION_LOAD_SUCCESS',
-        payload: { subscription: mockSubscription },
+        payload: { subscription: mockSubscription }
       };
 
       const newState = subscriptionReducer(initialState, action);
@@ -70,14 +70,14 @@ describe('SubscriptionReducer Integration Tests', () => {
         paymentMethodId: null,
         metadata: {},
         createdAt: new Date('2024-01-01T00:00:00Z'),
-        updatedAt: new Date('2024-01-01T00:00:00Z'),
+        updatedAt: new Date('2024-01-01T00:00:00Z')
       };
 
       const stateWithSubscription: SubscriptionState = {
         ...initialState,
         current: currentSubscription,
         isActive: true,
-        tier: 'free',
+        tier: 'free'
       };
 
       const upgradedSubscription: Subscription = {
@@ -85,12 +85,12 @@ describe('SubscriptionReducer Integration Tests', () => {
         tier: 'premium',
         amount: 9.99,
         paymentMethodId: 'pm-123',
-        updatedAt: new Date(),
+        updatedAt: new Date()
       };
 
       const action: SubscriptionAction = {
         type: 'SUBSCRIPTION_UPGRADE_SUCCESS',
-        payload: { subscription: upgradedSubscription },
+        payload: { subscription: upgradedSubscription }
       };
 
       const newState = subscriptionReducer(stateWithSubscription, action);
@@ -120,7 +120,7 @@ describe('SubscriptionReducer Integration Tests', () => {
         paymentMethodId: 'pm-123',
         metadata: {},
         createdAt: new Date('2024-01-01T00:00:00Z'),
-        updatedAt: new Date('2024-01-01T00:00:00Z'),
+        updatedAt: new Date('2024-01-01T00:00:00Z')
       };
 
       const stateWithActiveSubscription: SubscriptionState = {
@@ -128,7 +128,7 @@ describe('SubscriptionReducer Integration Tests', () => {
         current: activeSubscription,
         isActive: true,
         isPremium: true,
-        tier: 'premium',
+        tier: 'premium'
       };
 
       const canceledSubscription: Subscription = {
@@ -136,12 +136,12 @@ describe('SubscriptionReducer Integration Tests', () => {
         status: 'canceled',
         canceledAt: new Date(),
         cancelAtPeriodEnd: true,
-        updatedAt: new Date(),
+        updatedAt: new Date()
       };
 
       const action: SubscriptionAction = {
         type: 'SUBSCRIPTION_CANCEL_SUCCESS',
-        payload: { subscription: canceledSubscription },
+        payload: { subscription: canceledSubscription }
       };
 
       const newState = subscriptionReducer(stateWithActiveSubscription, action);
@@ -161,12 +161,12 @@ describe('SubscriptionReducer Integration Tests', () => {
         customSounds: true,
         battlesAndGaming: true,
         prioritySupport: false,
-        advancedAnalytics: false,
+        advancedAnalytics: false
       };
 
       const action: SubscriptionAction = {
         type: 'FEATURE_ACCESS_UPDATE',
-        payload: { featureAccess },
+        payload: { featureAccess }
       };
 
       const newState = subscriptionReducer(initialState, action);
@@ -184,12 +184,12 @@ describe('SubscriptionReducer Integration Tests', () => {
         apiCallsUsed: 100,
         apiCallsLimit: 1000,
         storageUsed: 50,
-        storageLimit: 100,
+        storageLimit: 100
       };
 
       const action: SubscriptionAction = {
         type: 'FEATURE_USAGE_UPDATE',
-        payload: { usage },
+        payload: { usage }
       };
 
       const newState = subscriptionReducer(initialState, action);
@@ -209,12 +209,12 @@ describe('SubscriptionReducer Integration Tests', () => {
         expiryYear: 2025,
         isDefault: true,
         createdAt: new Date(),
-        updatedAt: new Date(),
+        updatedAt: new Date()
       };
 
       const action: SubscriptionAction = {
         type: 'PAYMENT_METHOD_ADD',
-        payload: { paymentMethod: newPaymentMethod },
+        payload: { paymentMethod: newPaymentMethod }
       };
 
       const newState = subscriptionReducer(initialState, action);
@@ -234,7 +234,7 @@ describe('SubscriptionReducer Integration Tests', () => {
         expiryYear: 2025,
         isDefault: true,
         createdAt: new Date(),
-        updatedAt: new Date(),
+        updatedAt: new Date()
       };
 
       const paymentMethod2: PaymentMethod = {
@@ -246,18 +246,18 @@ describe('SubscriptionReducer Integration Tests', () => {
         expiryYear: 2026,
         isDefault: false,
         createdAt: new Date(),
-        updatedAt: new Date(),
+        updatedAt: new Date()
       };
 
       const stateWithPaymentMethods: SubscriptionState = {
         ...initialState,
         paymentMethods: [paymentMethod1, paymentMethod2],
-        defaultPaymentMethod: paymentMethod1,
+        defaultPaymentMethod: paymentMethod1
       };
 
       const action: SubscriptionAction = {
         type: 'PAYMENT_METHOD_REMOVE',
-        payload: { paymentMethodId: 'pm-123' },
+        payload: { paymentMethodId: 'pm-123' }
       };
 
       const newState = subscriptionReducer(stateWithPaymentMethods, action);
@@ -272,7 +272,7 @@ describe('SubscriptionReducer Integration Tests', () => {
     it('should handle SUBSCRIPTION_UPGRADE_ERROR with typed error payload', () => {
       const action: SubscriptionAction = {
         type: 'SUBSCRIPTION_UPGRADE_ERROR',
-        payload: { error: 'Payment method declined' },
+        payload: { error: 'Payment method declined' }
       };
 
       const newState = subscriptionReducer(initialState, action);
@@ -284,7 +284,7 @@ describe('SubscriptionReducer Integration Tests', () => {
     it('should handle SUBSCRIPTION_LOAD_ERROR with typed error payload', () => {
       const action: SubscriptionAction = {
         type: 'SUBSCRIPTION_LOAD_ERROR',
-        payload: { error: 'Failed to load subscription' },
+        payload: { error: 'Failed to load subscription' }
       };
 
       const newState = subscriptionReducer(initialState, action);
@@ -298,10 +298,10 @@ describe('SubscriptionReducer Integration Tests', () => {
     it('should handle UPGRADE_PROMPT_SHOW correctly', () => {
       const action: SubscriptionAction = {
         type: 'UPGRADE_PROMPT_SHOW',
-        payload: {
+        payload: { 
           feature: 'premiumAlarms',
-          context: 'alarm_limit_reached',
-        },
+          context: 'alarm_limit_reached'
+        }
       };
 
       const newState = subscriptionReducer(initialState, action);
@@ -309,7 +309,7 @@ describe('SubscriptionReducer Integration Tests', () => {
       expect(newState.ui.showUpgradeModal).toBe(true);
       expect(newState.ui.upgradePrompt).toEqual({
         feature: 'premiumAlarms',
-        context: 'alarm_limit_reached',
+        context: 'alarm_limit_reached'
       });
     });
 
@@ -320,16 +320,16 @@ describe('SubscriptionReducer Integration Tests', () => {
           showUpgradeModal: true,
           upgradePrompt: {
             feature: 'premiumAlarms',
-            context: 'alarm_limit_reached',
+            context: 'alarm_limit_reached'
           },
           isProcessingPayment: false,
-          showPaymentModal: false,
-        },
+          showPaymentModal: false
+        }
       };
 
       const action: SubscriptionAction = {
         type: 'UPGRADE_PROMPT_DISMISS',
-        payload: {},
+        payload: {}
       };
 
       const newState = subscriptionReducer(stateWithUpgradeModal, action);
