@@ -187,8 +187,8 @@ class SoundEffectsService {
 
       this.isInitialized = true;
       console.log('SoundEffectsService initialized successfully');
-    } catch (_error) {
-      console._error('Error initializing SoundEffectsService:', _error);
+    } catch (error) {
+      console.error('Error initializing SoundEffectsService:', error);
     }
   }
 
@@ -237,9 +237,9 @@ class SoundEffectsService {
     });
 
     this.soundEffects.set('ui.error', {
-      id: 'ui._error',
+      id: 'ui.error',
       name: 'Error Sound',
-      url: this.getSoundUrl('ui', '_error.wav'),
+      url: this.getSoundUrl('ui', 'error.wav'),
       volume: 0.5,
       category: 'ui',
       preload: true,
@@ -849,7 +849,7 @@ class SoundEffectsService {
       click: 'click',
       hover: 'hover',
       success: 'success',
-      error: '_error',
+      error: 'error',
       toggle: 'toggle',
       popup: 'popup',
       slide: 'slide',
@@ -901,7 +901,7 @@ class SoundEffectsService {
       }
 
       // TODO: Load from Supabase for synced themes
-      // const { data, _error  } = await supabase
+      // const { data, error } = await supabase
       //   .from('custom_sound_themes')
       //   .select('*');
       // if (data) {
@@ -909,8 +909,8 @@ class SoundEffectsService {
       //     this.customThemes.set(theme.id, theme);
       //   });
       // }
-    } catch (_error) {
-      console.warn('Error loading custom themes:', _error);
+    } catch (error) {
+      console.warn('Error loading custom themes:', error);
     }
   }
 
@@ -918,8 +918,8 @@ class SoundEffectsService {
     try {
       const themes = Array.from(this.customThemes.values());
       await OfflineStorage.set('customSoundThemes', themes);
-    } catch (_error) {
-      console._error('Error saving custom themes:', _error);
+    } catch (error) {
+      console.error('Error saving custom themes:', error);
     }
   }
 
@@ -955,13 +955,13 @@ class SoundEffectsService {
         downloads: 0,
         popularity: 0,
         sounds: {
-          ui: {} as unknown,
-          notifications: {} as unknown,
-          alarms: {} as unknown,
+          ui: {} as any,
+          notifications: {} as any,
+          alarms: {} as any,
         },
         metadata: {} as CustomSoundThemeMetadata,
-        preview: {} as unknown,
-        permissions: {} as unknown,
+        preview: {} as any,
+        permissions: {} as any,
         isPremium: false,
         requiresSubscription: false,
       },
@@ -1035,8 +1035,8 @@ class SoundEffectsService {
         `creationSession_${this.activeCreationSession.id}`,
         this.activeCreationSession
       );
-    } catch (_error) {
-      console._error('Error saving creation session:', _error);
+    } catch (error) {
+      console.error('Error saving creation session:', error);
     }
   }
 
@@ -1046,14 +1046,14 @@ class SoundEffectsService {
   async validateCustomTheme(
     theme: Partial<CustomSoundTheme>
   ): Promise<ValidationResult> {
-    const issues: unknown[] = [];
-    const suggestions: unknown[] = [];
+    const issues: any[] = [];
+    const suggestions: any[] = [];
     let completeness = 0;
 
     // Basic validation
     if (!theme.name || theme.name.trim().length === 0) {
       issues.push({
-        type: '_error',
+        type: 'error',
         field: 'name',
         message: 'Theme name is required',
         severity: 'critical',
@@ -1075,7 +1075,7 @@ class SoundEffectsService {
 
     // Validate sound assignments
     if (theme.sounds) {
-      const requiredUISounds = ['click', 'hover', 'success', '_error'];
+      const requiredUISounds = ['click', 'hover', 'success', 'error'];
       const requiredNotificationSounds = ['default', 'alarm', 'beep'];
       const requiredAlarmSounds = ['primary', 'secondary'];
 
@@ -1122,7 +1122,7 @@ class SoundEffectsService {
       );
       if (missingAlarmSounds.length > 0) {
         issues.push({
-          type: '_error',
+          type: 'error',
           field: 'alarm_sounds',
           message: `Missing alarm sounds: ${missingAlarmSounds.join(', ')}`,
           severity: 'critical',
@@ -1134,7 +1134,7 @@ class SoundEffectsService {
       }
     } else {
       issues.push({
-        type: '_error',
+        type: 'error',
         field: 'sounds',
         message: 'Sound assignments are required',
         severity: 'critical',
@@ -1142,7 +1142,7 @@ class SoundEffectsService {
       });
     }
 
-    const isValid = issues.filter(issue => issue.type === '_error').length === 0;
+    const isValid = issues.filter(issue => issue.type === 'error').length === 0;
 
     return {
       isValid,
@@ -1168,15 +1168,15 @@ class SoundEffectsService {
       await this.saveCustomThemes();
 
       // TODO: Save to Supabase for syncing
-      // const { _error  } = await supabase
+      // const { error } = await supabase
       //   .from('custom_sound_themes')
       //   .upsert([theme]);
-      // if (_error) throw error;
+      // if (error) throw error;
 
       console.log(`Custom theme "${theme.name}" saved successfully`);
       return true;
-    } catch (_error) {
-      console._error('Error saving custom theme:', _error);
+    } catch (error) {
+      console.error('Error saving custom theme:', error);
       return false;
     }
   }
@@ -1200,16 +1200,16 @@ class SoundEffectsService {
       await this.saveCustomThemes();
 
       // TODO: Delete from Supabase
-      // const { _error  } = await supabase
+      // const { error } = await supabase
       //   .from('custom_sound_themes')
       //   .delete()
       //   .eq('id', themeId);
-      // if (_error) throw error;
+      // if (error) throw error;
 
       console.log(`Custom theme "${theme.name}" deleted successfully`);
       return true;
-    } catch (_error) {
-      console._error('Error deleting custom theme:', _error);
+    } catch (error) {
+      console.error('Error deleting custom theme:', error);
       return false;
     }
   }
@@ -1240,8 +1240,8 @@ class SoundEffectsService {
   // ========== ORIGINAL METHODS (UPDATED FOR CUSTOM THEME SUPPORT) ==========
 
   private refreshSoundUrls(): void {
-    this.soundEffects.forEach((_config, key) => {
-      const pathParts = _config.url.split('/');
+    this.soundEffects.forEach((config, key) => {
+      const pathParts = config.url.split('/');
       const filename = pathParts[pathParts.length - 1];
       let category = pathParts[pathParts.length - 2];
 
@@ -1260,16 +1260,16 @@ class SoundEffectsService {
       if (savedSettings) {
         this.settings = { ...this.getDefaultSettings(), ...savedSettings };
       }
-    } catch (_error) {
-      console.warn('Error loading sound settings:', _error);
+    } catch (error) {
+      console.warn('Error loading sound settings:', error);
     }
   }
 
   private async saveSettings(): Promise<void> {
     try {
       await OfflineStorage.set('soundEffectSettings', this.settings);
-    } catch (_error) {
-      console._error('Error saving sound settings:', _error);
+    } catch (error) {
+      console.error('Error saving sound settings:', error);
     }
   }
 
@@ -1285,7 +1285,7 @@ class SoundEffectsService {
           cacheKey: sound.id,
         })
         .catch(error => {
-          console.warn(`Failed to preload sound ${sound.id}:`, _error);
+          console.warn(`Failed to preload sound ${sound.id}:`, error);
         })
     );
 
@@ -1332,15 +1332,15 @@ class SoundEffectsService {
       }
 
       return audioSource;
-    } catch (_error) {
-      console._error(`Error playing sound ${soundId}:`, _error);
+    } catch (error) {
+      console.error(`Error playing sound ${soundId}:`, error);
       return null;
     }
   }
 
   // Convenience methods for different sound categories
   async playUISound(
-    soundId: 'click' | 'hover' | 'success' | '_error',
+    soundId: 'click' | 'hover' | 'success' | 'error',
     options: { volume?: number } = {}
   ): Promise<void> {
     await this.playSound(`ui.${soundId}` as SoundEffectId, options);
@@ -1379,7 +1379,7 @@ class SoundEffectsService {
       try {
         audioSource.stop();
         this.loadedSounds.delete(soundId);
-      } catch (_error) {
+      } catch (error) {
         // Sound might already be stopped
       }
     }
@@ -1390,7 +1390,7 @@ class SoundEffectsService {
       if (source) {
         try {
           source.stop();
-        } catch (_error) {
+        } catch (error) {
           // Sound might already be stopped
         }
       }
@@ -1399,8 +1399,8 @@ class SoundEffectsService {
   }
 
   stopSoundsByCategory(category: SoundEffectConfig['category']): void {
-    this.soundEffects.forEach((_config, soundId) => {
-      if (_config.category === category) {
+    this.soundEffects.forEach((config, soundId) => {
+      if (config.category === category) {
         this.stopSound(soundId as SoundEffectId);
       }
     });
@@ -1741,8 +1741,8 @@ class SoundEffectsService {
     try {
       const result = await this.playSound(soundId, { force: true });
       return result !== null;
-    } catch (_error) {
-      console._error(`Test failed for sound ${soundId}:`, _error);
+    } catch (error) {
+      console.error(`Test failed for sound ${soundId}:`, error);
       return false;
     }
   }
@@ -1791,7 +1791,7 @@ class SoundEffectsService {
   }
 
   // UI integration helpers
-  createSoundHandler(soundType: 'click' | 'hover' | 'success' | '_error') {
+  createSoundHandler(soundType: 'click' | 'hover' | 'success' | 'error') {
     return () => this.playUISound(soundType);
   }
 
@@ -1801,28 +1801,29 @@ class SoundEffectsService {
       onClick: this.createSoundHandler('click'),
       onHover: this.createSoundHandler('hover'),
       onSuccess: this.createSoundHandler('success'),
-      onError: this.createSoundHandler('_error'),
+      onError: this.createSoundHandler('error'),
     };
   }
 
-  getCommunityThemes(): Promise<unknown> {
+  // auto: added missing community theme methods
+  getCommunityThemes(): Promise<any> {
     // Placeholder implementation
-    return Promise.resolve([]);
+    return Promise.resolve([]); // auto: placeholder
   }
 
-  shareThemeWithCommunity(theme: unknown): Promise<unknown> {
+  shareThemeWithCommunity(theme: any): Promise<any> {
     // Placeholder implementation
-    return Promise.resolve({});
+    return Promise.resolve({}); // auto: placeholder
   }
 
-  rateTheme(themeId: string, rating: number): Promise<unknown> {
+  rateTheme(themeId: string, rating: number): Promise<any> {
     // Placeholder implementation
-    return Promise.resolve({});
+    return Promise.resolve({}); // auto: placeholder
   }
 
-  incrementThemeDownloads(themeId: string): Promise<unknown> {
+  incrementThemeDownloads(themeId: string): Promise<any> {
     // Placeholder implementation
-    return Promise.resolve({});
+    return Promise.resolve({}); // auto: placeholder
   }
 }
 

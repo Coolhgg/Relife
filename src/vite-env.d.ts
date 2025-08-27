@@ -16,18 +16,18 @@ declare global {
   }
 
   interface ImportMeta {
-    env: Record<string, any>;
+    env: Record<string, any>; // auto: added to satisfy Vite environment variable usage
   }
 }
 
 // React Component property extensions for ErrorBoundary classes
 declare module 'react' {
   interface Component<P = {}, S = {}, SS = any> {
-    state: S;
-    props: P;
+    state: S; // auto: added to satisfy ErrorBoundary usage
+    props: P; // auto: added to satisfy ErrorBoundary usage
     setState: (
       partialState: Partial<S> | ((prevState: S, props: P) => Partial<S>)
-    ) => void;
+    ) => void; // auto: added to satisfy ErrorBoundary usage
   }
 }
 
