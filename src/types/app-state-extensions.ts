@@ -16,16 +16,7 @@ declare module './app-state' {
       camera: { granted: boolean };
       microphone: { granted: boolean };
     };
-    currentView:
-      | 'dashboard'
-      | 'alarms'
-      | 'settings'
-      | 'profile'
-      | 'subscription'
-      | 'gaming'
-      | 'advanced-scheduling'
-      | 'pricing'
-      | 'gift-shop';
+    currentView: 'dashboard' | 'alarms' | 'settings' | 'profile' | 'subscription' | 'gaming' | 'advanced-scheduling' | 'pricing' | 'gift-shop';
     rewardSystem: {
       points: number;
       level: number;

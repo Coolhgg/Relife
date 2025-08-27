@@ -231,25 +231,27 @@ function AppContent() {
 
   // Sync alarms with enhanced service worker when they change
   useEffect(() => {
-    if (serviceWorkerState.isInitialized && appState.alarms) {
+    if (serviceWorkerState.isInitialized && appState.alarm.alarms) {
       console.log(
-        `App: Syncing ${appState.alarms.length} alarms with enhanced service worker`
+        `App: Syncing ${appState.alarm.alarms.length} alarms with enhanced service worker`
       );
-      updateServiceWorkerAlarms(appState.alarms);
+      updateServiceWorkerAlarms(appState.alarm.alarms);
     }
-  }, [appState.alarms, serviceWorkerState.isInitialized, updateServiceWorkerAlarms]);
+  }, [appState.alarm.alarms, serviceWorkerState.isInitialized, updateServiceWorkerAlarms]);
 
   // Emotional Intelligence Notifications Hook
   const [_emotionalState, emotionalActions] = useEmotionalNotifications({
     userId: auth.user?.id || '',
-    enabled: !!auth.user && appState.permissions.notifications.granted,
+    enabled: !!auth.user && appState.alarm.settings?.vibrationEnabled,
   });
 
   // Tab Protection Announcements Hook
   const tabProtectionSettings = useTabProtectionSettings();
   const { announceProtectionWarning } = useTabProtectionAnnouncements({
-    activeAlarm: appState.activeAlarm,
-    enabledAlarms: appState.alarms.filter((alarm: any) => alarm.enabled),
+    activeAlarm: appState.alarm.currentlyTriggering.length > 0 ? appState.alarm.alarms.find(a => appState.alarm.currentlyTriggering.includes(a.id)) || null : null,
+    // TODO: Performance optimization - Move to useMemo to prevent re-renders
+    // const enabledAlarms = useMemo(() => appState.alarms.filter(alarm => alarm.enabled), [appState.alarms]);
+    enabledAlarms: appState.alarms.filter((alarm: unknown) => alarm.enabled),
     settings: tabProtectionSettings.settings,
   });
 
@@ -264,8 +266,9 @@ function AppContent() {
   };
 
   const refreshRewardsSystem = useCallback(
-    async (alarms: Alarm[] = appState.alarms) => {
+    async (alarms: Alarm[] = appState.alarm.alarms) => {
       try {
+        // Update user habits based on current alarms
         // Update user habits based on current alarms
         if (alarms.length > 0) {
           const habitData = {
@@ -274,23 +277,19 @@ function AppContent() {
             target_count: alarms.length,
             last_activity: new Date().toISOString()
           };
-        if (auth.user?.id) {
-          await rewardService.updateUserHabits(auth.user.id, habitData);
-        }
+          await rewardService.updateUserHabits(auth.user?.id!, habitData);
         }
 
         // Check and unlock any new rewards
-        if (auth.user?.id) {
-          await rewardService.checkAndUnlockRewards(auth.user.id);
-        }
+        await rewardService.checkAndUnlockRewards(auth.user?.id!);
 
         // Get the comprehensive reward system data from database
-        const _rewards = await rewardService.getRewards();
-        const userRewards = auth.user?.id ? await rewardService.getUserRewards(auth.user.id) : null;
-        const _insights = auth.user?.id ? await rewardService.getUserInsights(auth.user.id) : null;
-        const analytics = auth.user?.id ? await rewardService.getUserAnalytics(auth.user.id) : null;
-        const _habits = auth.user?.id ? await rewardService.getUserHabits(auth.user.id) : null;
-        const _nicheProfile = auth.user?.id ? await rewardService.getUserNicheProfile(auth.user.id) : null;
+        const rewards = await rewardService.getRewards();
+        const userRewards = await rewardService.getUserRewards(auth.user?.id!);
+        const insights = await rewardService.getUserInsights(auth.user?.id!);
+        const analytics = await rewardService.getUserAnalytics(auth.user?.id!);
+        const habits = await rewardService.getUserHabits(auth.user?.id!);
+        const nicheProfile = await rewardService.getUserNicheProfile(auth.user?.id!);
 
         // Build comprehensive reward system object
         const rewardSystem = {
@@ -321,7 +320,7 @@ function AppContent() {
         );
       }
     },
-    [appState.alarms, setAppState]
+    [appState.alarm.alarms, setAppState, auth.user?.id]
   );
 
   const loadUserAlarms = useCallback(async () => {
@@ -366,7 +365,7 @@ function AppContent() {
           await refreshRewardsSystem(savedAlarms);
         } catch (error) {
           ErrorHandler.handleError(
-            error instanceof Error ? error : new Error(String(error)),
+            _error instanceof Error ? _error : new Error(String(_error)),
             'Remote alarm loading failed, using offline alarms',
             { context: 'load_remote_alarms', metadata: { userId: auth.user.id } }
           );
@@ -389,7 +388,7 @@ function AppContent() {
       }
     } catch (error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        _error instanceof Error ? _error : new Error(String(_error)),
         'Failed to load user alarms',
         { context: 'load_user_alarms', metadata: { userId: auth.user.id } }
       );
@@ -422,7 +421,7 @@ function AppContent() {
         const duration = performance.now() - startTime;
         analytics.trackAlarmAction('snooze', alarmId, {
           success: false,
-          error: error instanceof Error ? error.message : String(error),
+          error: _error instanceof Error ? _error.message : String(_error),
           duration,
         });
         analytics.trackError(
@@ -602,9 +601,9 @@ function AppContent() {
         const readyRegistration = await navigator.serviceWorker.ready;
 
         // Send alarms to service worker
-        if (readyRegistration.active && appState.alarms.length > 0) {
+        if (readyRegistration.active && appState.alarm.alarms.length > 0) {
           console.log(
-            `App: Sending ${appState.alarms.length} alarms to service worker`
+            `App: Sending ${appState.alarm.alarms.length} alarms to service worker`
           );
 
           // Use MessageChannel for reliable communication
@@ -622,7 +621,7 @@ function AppContent() {
           readyRegistration.active.postMessage(
             {
               type: 'UPDATE_ALARMS',
-              data: { alarms: appState.alarms },
+              data: { alarms: appState.alarm.alarms },
             },
             [messageChannel.port2]
           );
@@ -696,7 +695,7 @@ function AppContent() {
       } catch (error) {
         console.error('App: Service worker registration failed:', error);
         ErrorHandler.handleError(
-          error instanceof Error ? error : new Error(String(error)),
+          _error instanceof Error ? _error : new Error(String(_error)),
           'Enhanced service worker registration failed',
           { context: 'service_worker_registration' }
         );
@@ -704,7 +703,7 @@ function AppContent() {
     } else {
       console.warn('App: Service workers not supported in this browser');
     }
-  }, [appState.alarms, handleServiceWorkerAlarmTrigger]);
+  }, [appState.alarm.alarms, handleServiceWorkerAlarmTrigger]);
 
   const syncOfflineChanges = useCallback(async () => {
     if (!auth.user) return;
@@ -737,7 +736,7 @@ function AppContent() {
             }
           } catch (error) {
             ErrorHandler.handleError(
-              error instanceof Error ? error : new Error(String(error)),
+              _error instanceof Error ? _error : new Error(String(_error)),
               'Failed to sync offline change',
               {
                 context: 'sync_offline_change',
@@ -763,12 +762,12 @@ function AppContent() {
       }
     } catch (error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        _error instanceof Error ? _error : new Error(String(_error)),
         'Failed to sync offline changes'
       );
       setSyncStatus('error');
     }
-  }, [auth.user, setSyncStatus, setAppState]);
+  }, [auth.user, setSyncStatus]);
 
   // Refresh rewards system based on current alarms and analytics
   // Handle quick alarm setup with preset configurations
@@ -837,7 +836,7 @@ function AppContent() {
       });
     } catch (error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        _error instanceof Error ? _error : new Error(String(_error)),
         'Failed to initialize accessibility services',
         { context: 'accessibility_initialization' }
       );
@@ -898,7 +897,7 @@ function AppContent() {
           );
 
           // Add user to appropriate email campaign
-          await emailService.addUserToCampaign(auth.user, personaResult.persona);
+          await emailService.addUserToCampaign(auth.user, personaResult._persona);
 
           // Track persona detection for analytics
           track('PERSONA_DETECTED', {
@@ -921,7 +920,7 @@ function AppContent() {
         timestamp: new Date().toISOString(),
       });
     }
-  }, [auth.user, identify, track, reset, trackDailyActive, setAppState]);
+  }, [auth.user, identify, track, reset, trackDailyActive]);
 
   // Network status monitoring
   useEffect(() => {
@@ -1073,7 +1072,7 @@ function AppContent() {
         setIsInitialized(true);
       } catch (error) {
         ErrorHandler.handleError(
-          error instanceof Error ? error : new Error(String(error)),
+          _error instanceof Error ? _error : new Error(String(_error)),
           'Failed to initialize app',
           {
             context: 'app_initialization',
@@ -1224,8 +1223,7 @@ function AppContent() {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, [
-    appState.activeAlarm,
-    currentTriggeredAlarm,
+    appState.alarm.currentlyTriggering.length > 0 ? appState.alarm.alarms.find(a => appState.alarm.currentlyTriggering.includes(a.id)) || null : null,
     appState.alarm.alarms,
     announceProtectionWarning,
     tabProtectionSettings.settings,
@@ -1343,11 +1341,8 @@ function AppContent() {
         await OfflineStorage.saveAlarm(newAlarm);
       }
 
-      const updatedAlarms = [...appState.alarms, newAlarm];
-      setAppState((prev: AppState
-) => ({
-        
-
+      const updatedAlarms = [...appState.alarm.alarms, newAlarm];
+      setAppState((prev: AppState) => ({
         ...prev,
         alarms: updatedAlarms,
       }));
@@ -1380,7 +1375,7 @@ function AppContent() {
       appAnalytics.trackAlarmAction('create', newAlarm.id, { success: true, duration });
 
       // Update service worker
-      updateServiceWorkerAlarms([...appState.alarms, newAlarm]);
+      updateServiceWorkerAlarms([...appState.alarm.alarms, newAlarm]);
 
       // Schedule push notification for new alarm
       try {
@@ -1392,12 +1387,12 @@ function AppContent() {
       // Track error and performance
       const duration = appAnalytics.endPerformanceMarker('alarm_creation', {
         success: false,
-        error: error instanceof Error ? error.message : String(error),
+        error: _error instanceof Error ? _error.message : String(_error),
       });
 
       appAnalytics.trackAlarmAction('create', 'unknown', {
         success: false,
-        error: error instanceof Error ? error.message : String(error),
+        error: _error instanceof Error ? _error.message : String(_error),
         duration,
       });
       appAnalytics.trackError(
@@ -1466,6 +1461,7 @@ function AppContent() {
         await OfflineStorage.saveAlarm(updatedAlarm);
       }
 
+      const updatedAlarms = appState.alarm.alarms.map((alarm: any) =>
       const updatedAlarms = appState.alarms.map((alarm: unknown) =>
         alarm.id === alarmId ? updatedAlarm : alarm
       );
@@ -1503,7 +1499,7 @@ function AppContent() {
       const duration = performance.now() - startTime;
       analytics.trackAlarmAction('edit', editingAlarm?.id || 'unknown', {
         success: false,
-        error: error instanceof Error ? error.message : String(error),
+        error: _error instanceof Error ? _error.message : String(_error),
         duration,
       });
       analytics.trackError(error instanceof Error ? error : new Error(String(error)), {
@@ -1547,6 +1543,8 @@ function AppContent() {
         await OfflineStorage.deleteAlarm(alarmId);
       }
 
+      const updatedAlarms = appState.alarm.alarms.filter(
+        (alarm: any) => alarm.id !== alarmId
       const alarmToDelete = appState.alarms.find((a: unknown) => a.id === alarmId);
       const updatedAlarms = appState.alarms.filter(
         (alarm: any) => alarm.id !== alarmId
@@ -1582,7 +1580,7 @@ function AppContent() {
       const duration = performance.now() - startTime;
       analytics.trackAlarmAction('delete', alarmId, {
         success: false,
-        error: error instanceof Error ? error.message : String(error),
+        error: _error instanceof Error ? _error.message : String(_error),
         duration,
       });
       analytics.trackError(error instanceof Error ? error : new Error(String(error)), {
@@ -1636,6 +1634,7 @@ function AppContent() {
         await OfflineStorage.saveAlarm(updatedAlarm);
       }
 
+      const updatedAlarms = appState.alarm.alarms.map((alarm: any) =>
       const updatedAlarms = appState.alarms.map((alarm: unknown) =>
         alarm.id === alarmId ? updatedAlarm : alarm
       );
@@ -1674,7 +1673,7 @@ function AppContent() {
       analytics.trackAlarmAction('toggle', alarmId, {
         success: false,
         enabled,
-        error: error instanceof Error ? error.message : String(error),
+        error: _error instanceof Error ? _error.message : String(_error),
         duration,
       });
       analytics.trackError(error instanceof Error ? error : new Error(String(error)), {
@@ -1745,7 +1744,7 @@ function AppContent() {
         analytics.trackAlarmAction('dismiss', alarmId, {
           success: false,
           method,
-          error: error instanceof Error ? error.message : String(error),
+          error: _error instanceof Error ? _error.message : String(_error),
           duration,
         });
         analytics.trackError(
@@ -1891,9 +1890,11 @@ function AppContent() {
   const renderContent = () => {
     const appAnalytics = AppAnalyticsService.getInstance();
 
-    switch (appState.currentView) {
+    switch (appState.navigation.currentView) {
       case 'dashboard':
         appAnalytics.trackPageView('dashboard', {
+          totalAlarms: appState.alarm.alarms.length,
+          activeAlarms: appState.alarm.alarms.filter((a: any) => a.enabled).length,
           totalAlarms: appState.alarms.length,
 
           activeAlarms: appState.alarms.filter((a: any) => a.enabled).length,
@@ -1901,7 +1902,7 @@ function AppContent() {
         return (
           <ErrorBoundary context="Dashboard">
             <Dashboard
-              alarms={appState.alarms}
+              alarms={appState.alarm.alarms}
               onAddAlarm={() => {
                 appAnalytics.trackFeatureUsage('add_alarm', 'button_clicked');
                 setShowAlarmForm(true);
@@ -1922,12 +1923,12 @@ function AppContent() {
         );
       case 'alarms':
         appAnalytics.trackPageView('alarms', {
-          totalAlarms: appState.alarms.length,
+          totalAlarms: appState.alarm.alarms.length,
         });
         return (
           <ErrorBoundary context="AlarmList">
             <AlarmList
-              alarms={appState.alarms}
+              alarms={appState.alarm.alarms}
               onToggleAlarm={handleToggleAlarm}
               onEditAlarm={(alarm: any) => {
                 appAnalytics.trackFeatureUsage('edit_alarm', 'button_clicked', {
@@ -2052,7 +2053,7 @@ function AppContent() {
         return (
           <ErrorBoundary context="GiftShop">
             <GiftShop
-              userId={auth.user?.id || ''}
+              userId={auth.user?.id!}
               onGiftPurchased={() => {
                 // Refresh reward system to update user points
                 refreshRewardsSystem();
@@ -2071,6 +2072,8 @@ function AppContent() {
           <ErrorBoundary context="PricingPage">
             <PricingPage
               user={auth.user as User}
+              onUpgrade={(plan: any) => {
+              user={auth._user as User}
               onUpgrade={(plan: unknown) => {
                 appAnalytics.trackFeatureUsage('subscription', 'upgraded', {
                   plan: plan.id,
@@ -2177,6 +2180,8 @@ function AppContent() {
                         .showVisualWarning && (
                         <TabProtectionWarning
                           activeAlarm={appState.activeAlarm}
+                          enabledAlarms={appState.alarm.alarms.filter(
+                            (alarm: any) => alarm.enabled
                           enabledAlarms={appState.alarms.filter(
                             (alarm: unknown) => alarm.enabled
                           )}
@@ -2231,92 +2236,281 @@ function AppContent() {
               role="tablist"
               aria-label="App sections"
             >
-              <button
-                onClick={createClickHandler(() => {
-                  const appAnalytics = AppAnalyticsService.getInstance();
-                  appAnalytics.trackFeatureUsage('navigation', 'dashboard_clicked');
-                  setAppState((prev: AppState) => ({ // type-safe replacement
-                     ...prev,
-                    currentView: 'dashboard',
-                  }));
-                  AccessibilityUtils.announcePageChange('Dashboard');
-                })}
-                className="flex flex-col items-center py-2 rounded-lg transition-colors border-2"
-                style={
-                  appState.currentView === 'dashboard'
-                    ? {
-                        color: 'var(--theme-primary-800)',
-                        backgroundColor: 'var(--theme-primary-100)',
-                        borderColor: 'var(--theme-primary-300)',
-                      }
-                    : {
-                        color: 'var(--theme-text-secondary)',
-                        backgroundColor: 'transparent',
-                        borderColor: 'transparent',
-                      }
-                }
-                onMouseEnter={(e: any) => {
-                  if (appState.currentView !== 'dashboard') {
-                    e.currentTarget.style.backgroundColor =
-                      'var(--theme-surface-hover)';
-                    e.currentTarget.style.color = 'var(--theme-text-primary)';
-                  }
-                }}
-                onMouseLeave={(e: any) => {
-                  if (appState.currentView !== 'dashboard') {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.color = 'var(--theme-text-secondary)';
-                  }
-                }}
-                role="tab"
-                aria-selected={appState.currentView === 'dashboard'}
-                aria-current={appState.currentView === 'dashboard' ? 'page' : undefined}
-                aria-label="Dashboard - Overview of your alarms"
-                aria-controls="main-content"
+              <div
+                className="grid grid-cols-6 px-1 py-2"
+                role="tablist"
+                aria-label="App sections"
               >
-                <Clock className="w-5 h-5 mb-1" aria-hidden="true" />
-                <span className="text-xs font-medium">
-                  {getNavigationLabels().dashboard}
-                </span>
-              </button>
-
-              <button
-                onClick={createClickHandler(() => {
-                  const appAnalytics = AppAnalyticsService.getInstance();
-                  appAnalytics.trackFeatureUsage('navigation', 'alarms_clicked', {
-                    totalAlarms: appState.alarms.length,
-                  });
-                  setAppState((prev: AppState) => ({ // type-safe replacement
-                     ...prev,
-                    currentView: 'alarms',
-                  }));
-                  AccessibilityUtils.announcePageChange('Alarms');
-                })}
-                className="flex flex-col items-center py-2 rounded-lg transition-colors border-2"
-                style={
-                  appState.currentView === 'alarms'
-                    ? {
-                        color: 'var(--theme-primary-800)',
-                        backgroundColor: 'var(--theme-primary-100)',
-                        borderColor: 'var(--theme-primary-300)',
-                      }
-                    : {
-                        color: 'var(--theme-text-secondary)',
-                        backgroundColor: 'transparent',
-                        borderColor: 'transparent',
-                      }
-                }
-                onMouseEnter={(e: any) => {
-                  if (appState.currentView !== 'alarms') {
-                    e.currentTarget.style.backgroundColor =
-                      'var(--theme-surface-hover)';
-                    e.currentTarget.style.color = 'var(--theme-text-primary)';
+                <button
+                  onClick={createClickHandler(() => {
+                    const appAnalytics = AppAnalyticsService.getInstance();
+                    appAnalytics.trackFeatureUsage('navigation', 'dashboard_clicked');
+                    setAppState((prev: AppState) => ({
+                      // type-safe replacement
+                      ...prev,
+                      currentView: 'dashboard',
+                    }));
+                    AccessibilityUtils.announcePageChange('Dashboard');
+                  })}
+                  className="flex flex-col items-center py-2 rounded-lg transition-colors border-2"
+                  style={
+                    appState.navigation.currentView === 'dashboard'
+                      ? {
+                          color: 'var(--theme-primary-800)',
+                          backgroundColor: 'var(--theme-primary-100)',
+                          borderColor: 'var(--theme-primary-300)',
+                        }
+                      : {
+                          color: 'var(--theme-text-secondary)',
+                          backgroundColor: 'transparent',
+                          borderColor: 'transparent',
+                        }
                   }
-                }}
-                onMouseLeave={(e: any) => {
-                  if (appState.currentView !== 'alarms') {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.color = 'var(--theme-text-secondary)';
+                  onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    if (appState.navigation.currentView !== 'dashboard') {
+                      e.currentTarget.style.backgroundColor =
+                        'var(--theme-surface-hover)';
+                      e.currentTarget.style.color = 'var(--theme-text-primary)';
+                    }
+                  }}
+                  onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    if (appState.navigation.currentView !== 'dashboard') {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                      e.currentTarget.style.color = 'var(--theme-text-secondary)';
+                    }
+                  }}
+                  role="tab"
+                  aria-selected={appState.navigation.currentView === 'dashboard'}
+                  aria-current={
+                    appState.navigation.currentView === 'dashboard' ? 'page' : undefined
+                  }
+                  aria-label="Dashboard - Overview of your alarms"
+                  aria-controls="main-content"
+                >
+                  <Clock className="w-5 h-5 mb-1" aria-hidden="true" />
+                  <span className="text-xs font-medium">
+                    {getNavigationLabels().dashboard}
+                  </span>
+                </button>
+
+                <button
+                  onClick={createClickHandler(() => {
+                    const appAnalytics = AppAnalyticsService.getInstance();
+                    appAnalytics.trackFeatureUsage('navigation', 'alarms_clicked', {
+                      totalAlarms: appState.alarm.alarms.length,
+                    });
+                    setAppState((prev: AppState) => ({
+                      // type-safe replacement
+                      ...prev,
+                      currentView: 'alarms',
+                    }));
+                    AccessibilityUtils.announcePageChange('Alarms');
+                  })}
+                  className="flex flex-col items-center py-2 rounded-lg transition-colors border-2"
+                  style={
+                    appState.navigation.currentView === 'alarms'
+                      ? {
+                          color: 'var(--theme-primary-800)',
+                          backgroundColor: 'var(--theme-primary-100)',
+                          borderColor: 'var(--theme-primary-300)',
+                        }
+                      : {
+                          color: 'var(--theme-text-secondary)',
+                          backgroundColor: 'transparent',
+                          borderColor: 'transparent',
+                        }
+                  }
+                  onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    if (appState.navigation.currentView !== 'alarms') {
+                      e.currentTarget.style.backgroundColor =
+                        'var(--theme-surface-hover)';
+                      e.currentTarget.style.color = 'var(--theme-text-primary)';
+                    }
+                  }}
+                  onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    if (appState.navigation.currentView !== 'alarms') {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                      e.currentTarget.style.color = 'var(--theme-text-secondary)';
+                    }
+                  }}
+                  role="tab"
+                  aria-selected={appState.navigation.currentView === 'alarms'}
+                  aria-current={appState.navigation.currentView === 'alarms' ? 'page' : undefined}
+                  aria-label="Alarms - Manage your alarm list"
+                  aria-controls="main-content"
+                >
+                  <Bell className="w-5 h-5 mb-1" aria-hidden="true" />
+                  <span className="text-xs font-medium">
+                    {getNavigationLabels().alarms}
+                  </span>
+                </button>
+
+                <button
+                  onClick={createClickHandler(() => {
+                    const appAnalytics = AppAnalyticsService.getInstance();
+                    appAnalytics.trackFeatureUsage(
+                      'navigation',
+                      'advanced_scheduling_clicked'
+                    );
+                    setAppState((prev: AppState) => ({
+                      // type-safe replacement
+
+                      ...prev,
+                      currentView: 'advanced-scheduling',
+                    }));
+                    AccessibilityUtils.announcePageChange('Advanced Scheduling');
+                  })}
+                  className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
+                    appState.navigation.currentView === 'advanced-scheduling'
+                      ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                      : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
+                  }`}
+                  role="tab"
+                  aria-selected={appState.navigation.currentView === 'advanced-scheduling'}
+                  aria-current={
+                    appState.navigation.currentView === 'advanced-scheduling' ? 'page' : undefined
+                  }
+                  aria-label="Advanced Scheduling - Create smart alarms with AI optimization"
+                  aria-controls="main-content"
+                >
+                  <Brain className="w-5 h-5 mb-1" aria-hidden="true" />
+                  <span className="text-xs font-medium">
+                    {getNavigationLabels().advanced}
+                  </span>
+                </button>
+
+                <button
+                  onClick={createClickHandler(() => {
+                    const appAnalytics = AppAnalyticsService.getInstance();
+                    appAnalytics.trackFeatureUsage('navigation', 'gaming_clicked', {
+                      currentLevel: appState.rewardSystem?.level,
+                      hasRewards: !!appState.rewardSystem?.unlockedRewards.length,
+                      activeBattles: appState.activeBattles?.length,
+                    });
+                    setAppState((prev: AppState) => ({
+                      // type-safe replacement
+                      ...prev,
+                      currentView: 'gaming',
+                    }));
+                    AccessibilityUtils.announcePageChange('Gaming Hub');
+                  })}
+                  className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
+                    appState.navigation.currentView === 'gaming'
+                      ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                      : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
+                  }`}
+                  role="tab"
+                  aria-selected={appState.navigation.currentView === 'gaming'}
+                  aria-current={appState.navigation.currentView === 'gaming' ? 'page' : undefined}
+                  aria-label="Gaming - Rewards, battles, and community challenges"
+                  aria-controls="main-content"
+                >
+                  <Gamepad2 className="w-5 h-5 mb-1" aria-hidden="true" />
+                  <span className="text-xs font-medium">
+                    {getNavigationLabels().gaming}
+                  </span>
+                </button>
+
+                <button
+                  onClick={createClickHandler(() => {
+                    const appAnalytics = AppAnalyticsService.getInstance();
+                    appAnalytics.trackFeatureUsage('navigation', 'gift_shop_clicked', {
+                      currentLevel: appState.rewardSystem?.level,
+                      totalPoints: appState.rewardSystem?.totalPoints,
+                    });
+                    setAppState((prev: AppState) => ({
+                      // type-safe replacement
+                      ...prev,
+                      currentView: 'gift-shop',
+                    }));
+                    AccessibilityUtils.announcePageChange('Gift Shop');
+                  })}
+                  className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
+                    appState.navigation.currentView === 'gift-shop'
+                      ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                      : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
+                  }`}
+                  role="tab"
+                  aria-selected={appState.navigation.currentView === 'gift-shop'}
+                  aria-current={
+                    appState.navigation.currentView === 'gift-shop' ? 'page' : undefined
+                  }
+                  aria-label="Gift Shop - Browse and purchase gifts with your points"
+                  aria-controls="main-content"
+                >
+                  <Gift className="w-5 h-5 mb-1" aria-hidden="true" />
+                  <span className="text-xs font-medium">Shop</span>
+                </button>
+
+                <button
+                  onClick={createClickHandler(() => {
+                    const appAnalytics = AppAnalyticsService.getInstance();
+                    appAnalytics.trackFeatureUsage('navigation', 'settings_clicked');
+                    setAppState((prev: AppState) => ({
+                      // type-safe replacement
+                      ...prev,
+                      currentView: 'settings',
+                    }));
+                    AccessibilityUtils.announcePageChange('Settings');
+                  })}
+                  className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
+                    appState.navigation.currentView === 'settings'
+                      ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                      : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
+                  }`}
+                  role="tab"
+                  aria-selected={appState.navigation.currentView === 'settings'}
+                  aria-current={
+                    appState.navigation.currentView === 'settings' ? 'page' : undefined
+                  }
+                  aria-label="Settings - App preferences, analytics, and accessibility"
+                  aria-controls="main-content"
+                >
+                  <Settings className="w-5 h-5 mb-1" aria-hidden="true" />
+                  <span className="text-xs font-medium">
+                    {getNavigationLabels().settings}
+                  </span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    const appAnalytics = AppAnalyticsService.getInstance();
+                    appAnalytics.trackFeatureUsage('navigation', 'pricing_clicked');
+                    setAppState((prev: AppState) => ({
+                      // type-safe replacement
+                      ...prev,
+                      currentView: 'pricing',
+                    }));
+                    AccessibilityUtils.announcePageChange('Premium Plans');
+                  }}
+                  className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
+                    appState.navigation.currentView === 'pricing'
+                      ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                      : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
+                  }`}
+                  role="tab"
+                  aria-selected={appState.navigation.currentView === 'pricing'}
+                  aria-current={appState.navigation.currentView === 'pricing' ? 'page' : undefined}
+                  aria-label="Premium - Subscription plans and premium features"
+                  aria-controls="main-content"
+                >
+                  <Crown className="w-5 h-5 mb-1" aria-hidden="true" />
+                  <span className="text-xs font-medium">
+                    {getNavigationLabels().premium}
+                  </span>
+                </button>
+              </div>
+            </nav>
+
+            {/* Alarm Form Modal */}
+            {showAlarmForm && (
+              <ErrorBoundary context="AlarmForm">
+                <AlarmForm
+                  alarm={editingAlarm}
+                  onSave={
+                    editingAlarm
+                      ? data => handleEditAlarm(editingAlarm.id, data)
+                      : handleAddAlarm
                   }
                 }}
                 role="tab"

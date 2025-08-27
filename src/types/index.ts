@@ -1,8 +1,95 @@
-// Import premium types
-export * from './premium';
+/**
+ * Centralized exports for all TypeScript interfaces
+ * This file provides a single entry point for all types used in the Relife application
+ */
 
-// Import browser API types
-export * from './browser-apis';
+// Core domain types
+export * from './domain';
+
+// App state management
+export * from './app-state';
+export * from './app-state-extensions';
+
+// User types
+export * from './user';
+
+// Email campaign and persona types
+export * from './email-campaigns';
+
+// Core API interfaces
+export * from './api';
+
+// HTTP client interfaces
+export * from './http-client';
+
+// Service-specific interfaces
+export * from './services/stripe-api';
+export * from './services/convertkit-api';
+export * from './services/webhook-api';
+
+// Alarm scheduling interfaces
+export * from './alarm-scheduling';
+
+// Reward system interfaces
+export * from './reward-system';
+
+// API response interfaces
+export * from './api-responses';
+
+// Configuration interfaces
+export * from './configuration-interfaces';
+
+// Service Interface Exports
+export * from './service-interfaces';
+export * from './domain-service-interfaces';
+
+// Additional commonly used type definitions
+export type DayOfWeek = 
+  | 'sunday'
+  | 'monday' 
+  | 'tuesday'
+  | 'wednesday'
+  | 'thursday'
+  | 'friday'
+  | 'saturday';
+
+// Re-export commonly used interfaces with descriptive names
+export type {
+  ApiResponse as StandardApiResponse,
+  ApiError as StandardApiError,
+  PaginationParams as StandardPaginationParams,
+  PaginatedResponse as StandardPaginatedResponse,
+  HttpClient as StandardHttpClient,
+  HttpRequestConfig as StandardHttpRequestConfig,
+  HttpResponse as StandardHttpResponse,
+} from './api';
+
+export type {
+  StripeSubscription as StripeSubscriptionData,
+  StripeCustomer as StripeCustomerData,
+  StripePaymentMethod as StripePaymentMethodData,
+  StripeInvoice as StripeInvoiceData,
+} from './services/stripe-api';
+
+export type {
+  ConvertKitSubscriber as ConvertKitSubscriberData,
+  ConvertKitTag as ConvertKitTagData,
+  ConvertKitBroadcast as ConvertKitBroadcastData,
+  UserPersona as EmailMarketingPersona,
+} from './services/convertkit-api';
+
+export type {
+  WebhookPayload as StandardWebhookPayload,
+  AllWebhookPayloads as AnyWebhookPayload,
+  WebhookHandler as StandardWebhookHandler,
+  WebhookConfig as StandardWebhookConfig,
+} from './services/webhook-api';
+
+// Type utilities for enhanced development experience
+export type ApiEndpoint<TRequest = unknown, TResponse = unknown> = {
+  request: TRequest;
+  response: ApiResponse<TResponse>;
+};
 
 // Email Campaign Types
 export type PersonaType =
