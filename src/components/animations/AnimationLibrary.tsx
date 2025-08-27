@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 // Advanced Animation Library for Relife Smart Alarm
 // Comprehensive collection of smooth micro-interactions and delightful animations
 
@@ -611,7 +610,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
 // ================================================================
 
 interface NotificationProps {
-  type: 'success' | '_error' | 'warning' | 'info';
+  type: 'success' | 'error' | 'warning' | 'info';
   title: string;
   message?: string;
   duration?: number;
@@ -629,7 +628,8 @@ export const AnimatedNotification: React.FC<NotificationProps> = ({
 
   useEffect(() => {
     const timer = setTimeout(onClose, duration);
-    const interval = setInterval(() => {
+    const interval = setInterval((
+) => {
       setProgress((prev: number) => Math.max(0, prev - 100 / (duration / 100)));
     }, 100);
 

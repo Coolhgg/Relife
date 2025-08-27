@@ -3,8 +3,6 @@
 // Handles premium subscription, payments, and Stripe integration
 
 import Stripe from 'stripe';
-import { ErrorHandler } from '../services/error-handler';
-import AnalyticsService from '../services/analytics';
 import type {
   CreateSubscriptionRequest,
   UpdateSubscriptionRequest,
@@ -58,17 +56,17 @@ function errorResponse(
   status: number = 400,
   origin: string = '*'
 ): Response {
-  return Response.json({ _error: message }, { status, headers: corsHeaders(origin) });
+  return Response.json({ error: message }, { status, headers: corsHeaders(origin) });
 }
 
 // Success response helper
-function successResponse(data: unknown, origin: string = '*'): Response {
+function successResponse(data: any, origin: string = '*'): Response {
   return Response.json(data, { headers: corsHeaders(origin) });
 }
 
 export class SubscriptionAPIHandler {
   private stripe: Stripe;
-  private supabase: unknown;
+  private supabase: any;
 
   constructor(private env: StripeEnv) {
     this.stripe = getStripe(env);
@@ -173,10 +171,10 @@ export class SubscriptionAPIHandler {
       }
 
       return errorResponse('Not Found', 404, origin);
-    } catch (_error) {
-      console.error('Subscription API Error:', _error);
+    } catch (error) {
+      console.error('Subscription API Error:', error);
       return errorResponse(
-        _error instanceof Error ? _error.message : 'Internal Server Error',
+        error instanceof Error ? error.message : 'Internal Server Error',
         500,
         origin
       );
@@ -185,13 +183,13 @@ export class SubscriptionAPIHandler {
 
   // Subscription Plans
   private async getSubscriptionPlans(origin: string): Promise<Response> {
-    const { data: plans, _error } = await this.supabase
+    const { data: plans, error } = await this.supabase
       .from('subscription_plans')
       .select('*')
       .eq('is_active', true)
       .order('sort_order');
 
-    if (_error) {
+    if (error) {
       return errorResponse('Failed to fetch subscription plans', 500, origin);
     }
 
@@ -223,8 +221,8 @@ export class SubscriptionAPIHandler {
         .eq('id', userId);
 
       return successResponse({ customerId: customer.id }, origin);
-    } catch (_error) {
-      console._error('Failed to create customer:', _error);
+    } catch (error) {
+      console.error('Failed to create customer:', error);
       return errorResponse('Failed to create customer', 500, origin);
     }
   }
@@ -242,7 +240,7 @@ export class SubscriptionAPIHandler {
     }
 
     try {
-      const subscriptionData: unknown = {
+      const subscriptionData: any = {
         customer: customerId,
         items: [{ price: priceId }],
         payment_behavior: 'default_incomplete',
@@ -281,22 +279,22 @@ export class SubscriptionAPIHandler {
         },
         origin
       );
-    } catch (_error: unknown) {
-      console.error('Failed to create subscription:', _error);
+    } catch (error: unknown) {
+      console.error('Failed to create subscription:', error);
 
       let errorMessage = 'Failed to create subscription';
       let errorCode = 'subscription_creation_failed';
 
-      if (_error instanceof Stripe.errors.StripeError) {
+      if (error instanceof Stripe.errors.StripeError) {
         errorMessage = error.message;
-        errorCode = _error.code || errorCode;
-      } else if (_error instanceof Error) {
-        errorMessage = _error.message;
+        errorCode = error.code || errorCode;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
       }
 
       return Response.json(
         {
-          _error: {
+          error: {
             code: errorCode,
             message: errorMessage,
             retryable: false,
@@ -322,7 +320,7 @@ export class SubscriptionAPIHandler {
       await request.json();
 
     try {
-      const updateData: unknown = {};
+      const updateData: any = {};
 
       if (planId) {
         // Get price ID for new plan
@@ -370,8 +368,8 @@ export class SubscriptionAPIHandler {
         },
         origin
       );
-    } catch (_error) {
-      console._error('Failed to update subscription:', _error);
+    } catch (error) {
+      console.error('Failed to update subscription:', error);
       return errorResponse('Failed to update subscription', 500, origin);
     }
   }
@@ -425,8 +423,8 @@ export class SubscriptionAPIHandler {
         },
         origin
       );
-    } catch (_error) {
-      console._error('Failed to cancel subscription:', _error);
+    } catch (error) {
+      console.error('Failed to cancel subscription:', error);
       return errorResponse('Failed to cancel subscription', 500, origin);
     }
   }
@@ -454,8 +452,8 @@ export class SubscriptionAPIHandler {
       }
 
       return successResponse({ paymentMethod }, origin);
-    } catch (_error) {
-      console._error('Failed to add payment method:', _error);
+    } catch (error) {
+      console.error('Failed to add payment method:', error);
       return errorResponse('Failed to add payment method', 500, origin);
     }
   }
@@ -468,8 +466,8 @@ export class SubscriptionAPIHandler {
     try {
       await this.stripe.paymentMethods.detach(paymentMethodId);
       return successResponse({ success: true }, origin);
-    } catch (_error) {
-      console._error('Failed to remove payment method:', _error);
+    } catch (error) {
+      console.error('Failed to remove payment method:', error);
       return errorResponse('Failed to remove payment method', 500, origin);
     }
   }
@@ -502,8 +500,8 @@ export class SubscriptionAPIHandler {
         },
         origin
       );
-    } catch (_error) {
-      console._error('Failed to create payment intent:', _error);
+    } catch (error) {
+      console.error('Failed to create payment intent:', error);
       return errorResponse('Failed to create payment intent', 500, origin);
     }
   }
@@ -519,8 +517,8 @@ export class SubscriptionAPIHandler {
       });
 
       return successResponse({ invoice }, origin);
-    } catch (_error) {
-      console._error('Failed to get upcoming invoice:', _error);
+    } catch (error) {
+      console.error('Failed to get upcoming invoice:', error);
       return errorResponse('Failed to get upcoming invoice', 500, origin);
     }
   }
@@ -569,8 +567,8 @@ export class SubscriptionAPIHandler {
       } catch {
         return successResponse({ valid: false }, origin);
       }
-    } catch (_error) {
-      console._error('Failed to validate discount code:', _error);
+    } catch (error) {
+      console.error('Failed to validate discount code:', error);
       return successResponse({ valid: false }, origin);
     }
   }
@@ -587,18 +585,18 @@ export class SubscriptionAPIHandler {
     }
 
     try {
-      const { data, _error } = await this.supabase.rpc('check_feature_access', {
+      const { data, error } = await this.supabase.rpc('check_feature_access', {
         user_uuid: userId,
         feature_id: featureId,
       });
 
-      if (_error) {
-        throw _error;
+      if (error) {
+        throw error;
       }
 
       return successResponse({ hasAccess: data }, origin);
-    } catch (_error) {
-      console._error('Failed to check feature access:', _error);
+    } catch (error) {
+      console.error('Failed to check feature access:', error);
       return errorResponse('Failed to check feature access', 500, origin);
     }
   }
@@ -623,8 +621,8 @@ export class SubscriptionAPIHandler {
       });
 
       return successResponse({ success: true }, origin);
-    } catch (_error) {
-      console._error('Failed to track feature usage:', _error);
+    } catch (error) {
+      console.error('Failed to track feature usage:', error);
       return errorResponse('Failed to track feature usage', 500, origin);
     }
   }
@@ -673,8 +671,8 @@ export class SubscriptionAPIHandler {
         },
         origin
       );
-    } catch (_error) {
-      console._error('Failed to get subscription dashboard:', _error);
+    } catch (error) {
+      console.error('Failed to get subscription dashboard:', error);
       return errorResponse('Failed to get subscription dashboard', 500, origin);
     }
   }
@@ -698,23 +696,23 @@ export class SubscriptionAPIHandler {
       // Log webhook event
       await this.supabase.from('webhook_events').insert({
         stripe_event_id: event.id,
-        event_type: _event.type,
+        event_type: event.type,
         processed: false,
       });
 
       // Process webhook
-      await this.processWebhookEvent(_event);
+      await this.processWebhookEvent(event);
 
       return successResponse({ received: true }, origin);
-    } catch (_error) {
-      console._error('Webhook processing failed:', _error);
+    } catch (error) {
+      console.error('Webhook processing failed:', error);
       return errorResponse('Webhook processing failed', 400, origin);
     }
   }
 
   // Helper Methods
 
-  private async saveSubscriptionToDatabase(stripeSubscription: unknown): Promise<void> {
+  private async saveSubscriptionToDatabase(stripeSubscription: any): Promise<void> {
     const subscriptionData = {
       stripe_subscription_id: stripeSubscription.id,
       stripe_customer_id: stripeSubscription.customer,
@@ -745,9 +743,7 @@ export class SubscriptionAPIHandler {
       .upsert(subscriptionData, { onConflict: 'stripe_subscription_id' });
   }
 
-  private async updateSubscriptionInDatabase(
-    stripeSubscription: unknown
-  ): Promise<void> {
+  private async updateSubscriptionInDatabase(stripeSubscription: any): Promise<void> {
     const updateData = {
       status: stripeSubscription.status,
       billing_interval:
@@ -771,9 +767,7 @@ export class SubscriptionAPIHandler {
       .eq('stripe_subscription_id', stripeSubscription.id);
   }
 
-  private async generateRetentionOffer(
-    subscriptionId: string
-  ): Promise<RetentionOffer> {
+  private async generateRetentionOffer(subscriptionId: string): Promise<RetentionOffer> {
     // Logic to generate retention offers based on user behavior
     // This could include discounts, free months, etc.
     return {
@@ -783,40 +777,40 @@ export class SubscriptionAPIHandler {
     };
   }
 
-  private async processWebhookEvent(_event: unknown): Promise<void> {
-    switch (_event.type) {
+  private async processWebhookEvent(event: any): Promise<void> {
+    switch (event.type) {
       case 'customer.subscription.updated':
       case 'customer.subscription.deleted':
       case 'customer.subscription.created':
-        await this.updateSubscriptionInDatabase(_event.data.object);
+        await this.updateSubscriptionInDatabase(event.data.object);
         break;
 
       case 'invoice.payment_succeeded':
       case 'invoice.payment_failed':
-        await this.handleInvoiceEvent(_event.data.object);
+        await this.handleInvoiceEvent(event.data.object);
         break;
 
       case 'customer.subscription.trial_will_end':
-        await this.handleTrialWillEnd(_event.data.object);
+        await this.handleTrialWillEnd(event.data.object);
         break;
 
       default:
-        console.log(`Unhandled event type: ${_event.type}`);
+        console.log(`Unhandled event type: ${event.type}`);
     }
 
     // Mark event as processed
     await this.supabase
       .from('webhook_events')
       .update({ processed: true, processed_at: new Date() })
-      .eq('stripe_event_id', _event.id);
+      .eq('stripe_event_id', event.id);
   }
 
-  private async handleInvoiceEvent(invoice: unknown): Promise<void> {
+  private async handleInvoiceEvent(invoice: any): Promise<void> {
     // Handle invoice events - save to database, send notifications, etc.
     // Implementation depends on specific business logic
   }
 
-  private async handleTrialWillEnd(subscription: unknown): Promise<void> {
+  private async handleTrialWillEnd(subscription: any): Promise<void> {
     // Handle trial ending - send reminder emails, etc.
     // Implementation depends on specific business logic
   }

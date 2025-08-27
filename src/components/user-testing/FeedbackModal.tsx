@@ -1,7 +1,5 @@
 /// <reference lib="dom" />
 import React, { useState, useRef } from 'react';
-import path from 'path';
-import { Textarea } from '../ui/textarea';
 import {
   Dialog,
   DialogContent,
@@ -11,7 +9,7 @@ import {
 } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { Progress } from '../ui/progress';
+import { Textarea } from '../ui/textarea';
 import { Label } from '../ui/label';
 import { Badge } from '../ui/badge';
 import { Card, CardContent } from '../ui/card';
@@ -86,8 +84,8 @@ export function FeedbackModal({
 
         stream.getTracks().forEach(track => track.stop());
       });
-    } catch (_error) {
-      console._error('Failed to take screenshot:', _error);
+    } catch (error) {
+      console.error('Failed to take screenshot:', error);
     }
   };
 
@@ -119,8 +117,8 @@ export function FeedbackModal({
         resetForm();
         onClose();
       }, 2000);
-    } catch (_error) {
-      console._error('Failed to submit feedback:', _error);
+    } catch (error) {
+      console.error('Failed to submit feedback:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -273,9 +271,7 @@ export function FeedbackModal({
                 <Input
                   id="title"
                   value={title}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                    setTitle(e.target.value)
-                  }
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setTitle(e.target.value)}
                   placeholder="Brief summary of your feedback"
                   className="mt-1"
                   required
@@ -287,9 +283,7 @@ export function FeedbackModal({
                 <Textarea
                   id="description"
                   value={description}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                    setDescription(e.target.value)
-                  }
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
                   placeholder="Provide more details about your feedback..."
                   className="mt-1 min-h-[100px]"
                   rows={4}

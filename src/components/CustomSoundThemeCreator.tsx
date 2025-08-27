@@ -676,9 +676,7 @@ const InfoStep: React.FC<{
         </SelectTrigger>
         <SelectContent>
           {THEME_CATEGORIES.map(category => (
-            <SelectItem key={category.value} value={category.value}>
-              {category.label} - {category.description}
-            </SelectItem>
+            <SelectItem key={category.value} value={category.value}>{{category.label} - {category.description}</SelectItem>
           ))}
         </SelectContent>
       </Select>

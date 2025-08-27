@@ -91,9 +91,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({
             type="checkbox"
             className="sr-only"
             checked={settings.enabled}
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-              updateSettings({ enabled: e.target.checked })
-            }
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateSettings({ enabled: e.target.checked })}
           />
           <div
             className={`w-11 h-6 bg-gray-200 dark:bg-gray-700 rounded-full peer peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full`}
@@ -127,7 +125,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({
                     <input
                       type="checkbox"
                       checked={settings.protectionTiming.activeAlarmWarning}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      onChange={(e: any) =>
                         updateProtectionTiming({ activeAlarmWarning: e.target.checked })
                       }
                       className="rounded"
@@ -141,7 +139,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({
                     <input
                       type="checkbox"
                       checked={settings.protectionTiming.upcomingAlarmWarning}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      onChange={(e: any) =>
                         updateProtectionTiming({
                           upcomingAlarmWarning: e.target.checked,
                         })
@@ -165,7 +163,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({
                         max="1440"
                         step="5"
                         value={settings.protectionTiming.upcomingAlarmThreshold}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        onChange={(e: any) =>
                           updateProtectionTiming({
                             upcomingAlarmThreshold: parseInt(e.target.value),
                           })
@@ -179,7 +177,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({
                     <input
                       type="checkbox"
                       checked={settings.protectionTiming.enabledAlarmWarning}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      onChange={(e: any) =>
                         updateProtectionTiming({
                           enabledAlarmWarning: e.target.checked,
                         })
@@ -216,7 +214,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({
                   <input
                     type="checkbox"
                     checked={settings.visualSettings.showVisualWarning}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    onChange={(e: any) =>
                       updateVisualSettings({ showVisualWarning: e.target.checked })
                     }
                     className="rounded"
@@ -232,7 +230,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({
                       </label>
                       <select
                         value={settings.visualSettings.position}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        onChange={(e: any) =>
                           updateVisualSettings({ position: e.target.value as any })
                         }
                         className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700"
@@ -259,7 +257,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({
                         max="60"
                         step="5"
                         value={settings.visualSettings.autoHideDelay}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        onChange={(e: any) =>
                           updateVisualSettings({
                             autoHideDelay: parseInt(e.target.value),
                           })
@@ -278,7 +276,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({
                         max="10"
                         step="1"
                         value={settings.visualSettings.maxAlarmsShown}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        onChange={(e: any) =>
                           updateVisualSettings({
                             maxAlarmsShown: parseInt(e.target.value),
                           })
@@ -291,7 +289,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({
                       <input
                         type="checkbox"
                         checked={settings.visualSettings.showAlarmDetails}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        onChange={(e: any) =>
                           updateVisualSettings({ showAlarmDetails: e.target.checked })
                         }
                         className="rounded"
@@ -339,9 +337,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({
             <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
               <textarea
                 value={importText}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                  setImportText(e.target.value)
-                }
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setImportText(e.target.value)}
                 placeholder="Paste your exported settings JSON here..."
                 className="w-full h-32 p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-sm"
               />

@@ -90,11 +90,13 @@ export function BetaTestingProgram() {
 
   const userTestingService = UserTestingService.getInstance();
 
-  useEffect(() => {
+  useEffect((
+) => {
     loadBetaData();
   }, []);
 
-  const loadBetaData = () => {
+  const loadBetaData = (
+) => {
     // Mock data - in real app, load from backend
     const mockPrograms: BetaProgram[] = [
       {
@@ -193,7 +195,8 @@ export function BetaTestingProgram() {
     setFeedback(mockFeedback);
   };
 
-  const handleCreateProgram = () => {
+  const handleCreateProgram = (
+) => {
     if (!newProgram.name.trim()) return;
 
     const program: BetaProgram = {
@@ -205,9 +208,12 @@ export function BetaTestingProgram() {
       status: 'draft',
       targetParticipants: newProgram.targetParticipants,
       currentParticipants: 0,
-      features: newProgram.features.filter((f: any) => f.trim()),
-      requirements: newProgram.requirements.filter((r: any) => r.trim()),
-      rewards: newProgram.rewards.filter((r: any) => r.trim()),
+      features: newProgram.features.filter((f: any
+) => f.trim()),
+      requirements: newProgram.requirements.filter((r: any
+) => r.trim()),
+      rewards: newProgram.rewards.filter((r: any
+) => r.trim()),
     };
 
     setPrograms([...programs, program]);
@@ -215,13 +221,16 @@ export function BetaTestingProgram() {
     resetNewProgram();
   };
 
-  const handleInviteTesters = () => {
+  const handleInviteTesters = (
+) => {
     if (!selectedProgram || !inviteEmails.trim()) return;
 
     const emails = inviteEmails
       .split('\n')
-      .map((email: any) => e // auto: implicit anymail.trim())
-      .filter((email: any) => e // auto: implicit anymail);
+      .map((email: any
+) => email.trim())
+      .filter((email: any
+) => email);
 
     // Mock sending invites
     console.log(
@@ -233,7 +242,8 @@ export function BetaTestingProgram() {
     setSelectedProgram(null);
   };
 
-  const resetNewProgram = () => {
+  const resetNewProgram = (
+) => {
     setNewProgram({
       name: '',
       description: '',
@@ -246,16 +256,17 @@ export function BetaTestingProgram() {
     });
   };
 
-  const updateProgramStatus = (programId: string, newStatus: BetaProgram['status']) => {
+  const updateProgramStatus = (programId: string, newStatus: BetaProgram['status']
+) => {
     setPrograms(
-      programs.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+      programs
+      .map((p: any
+) => (p.id === programId ? { ...p, status: newStatus } : p))
     );
   };
 
-  const addArrayField = (field: 'features' | 'requirements' | 'rewards') => {
+  const addArrayField = (field: 'features' | 'requirements' | 'rewards'
+) => {
     setNewProgram({
       ...newProgram,
       [field]: [...newProgram[field], ''],
@@ -266,7 +277,8 @@ export function BetaTestingProgram() {
     field: 'features' | 'requirements' | 'rewards',
     index: number,
     value: string
-  ) => {
+  
+) => {
     const newArray = [...newProgram[field]];
     newArray[index] = value;
     setNewProgram({
@@ -278,9 +290,11 @@ export function BetaTestingProgram() {
   const removeArrayField = (
     field: 'features' | 'requirements' | 'rewards',
     index: number
-  ) => {
+  
+) => {
     if (newProgram[field].length > 1) {
-      const newArray = newProgram[field].filter((_, i) => i !== index);
+      const newArray = newProgram[field].filter((_, i
+) => i !== index);
       setNewProgram({
         ...newProgram,
         [field]: newArray,
@@ -288,7 +302,8 @@ export function BetaTestingProgram() {
     }
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string
+) => {
     switch (status) {
       case 'active':
         return 'bg-green-100 text-green-800';
@@ -305,7 +320,8 @@ export function BetaTestingProgram() {
     }
   };
 
-  const getStatusIcon = (status: string) => {
+  const getStatusIcon = (status: string
+) => {
     switch (status) {
       case 'active':
         return <CheckCircle className="w-4 h-4" />;
@@ -332,7 +348,8 @@ export function BetaTestingProgram() {
           </p>
         </div>
         <Button
-          onClick={() => setShowCreateProgram(true)}
+          onClick={(
+) => setShowCreateProgram(true)}
           className="flex items-center gap-2"
         >
           <Plus className="w-4 h-4" />
@@ -393,19 +410,16 @@ export function BetaTestingProgram() {
 
         <TabsContent value="programs" className="space-y-4">
           <div className="grid gap-4">
-            {programs.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+            {programs
+      .map((program: any
+) => (
               <Card key={program.id}>
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div>
                       <CardTitle className="flex items-center gap-2">
                         {program.name}
-                        <Badge className={getStatusColor(program.status)}>
-                          {getStatusIcon(program.status)}
-                          <span className="ml-1">{program.status}</span>
+                        <Badge className={getStatusColor(program.status)}>getStatusIcon(program.status)<span className="ml-1">{program.status}</span>
                         </Badge>
                       </CardTitle>
                       <p className="text-gray-600 mt-1">{program.description}</p>
@@ -415,7 +429,8 @@ export function BetaTestingProgram() {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => {
+                          onClick={(
+) => {
                             setSelectedProgram(program.id);
                             setShowInviteModal(true);
                           }}
@@ -427,7 +442,8 @@ export function BetaTestingProgram() {
                       {program.status === 'draft' && (
                         <Button
                           size="sm"
-                          onClick={() => updateProgramStatus(program.id, 'recruiting')}
+                          onClick={(
+) => updateProgramStatus(program.id, 'recruiting')}
                         >
                           Start Recruiting
                         </Button>
@@ -457,7 +473,8 @@ export function BetaTestingProgram() {
                       <div>
                         <h4 className="font-medium mb-2">Features</h4>
                         <ul className="space-y-1">
-                          {program.features.map((feature, index) => (
+                          {program.features.map((feature, index
+) => (
                             <li key={index} className="text-gray-600">
                               • {feature}
                             </li>
@@ -467,7 +484,8 @@ export function BetaTestingProgram() {
                       <div>
                         <h4 className="font-medium mb-2">Requirements</h4>
                         <ul className="space-y-1">
-                          {program.requirements.map((req, index) => (
+                          {program.requirements.map((req, index
+) => (
                             <li key={index} className="text-gray-600">
                               • {req}
                             </li>
@@ -477,7 +495,8 @@ export function BetaTestingProgram() {
                       <div>
                         <h4 className="font-medium mb-2">Rewards</h4>
                         <ul className="space-y-1">
-                          {program.rewards.map((reward, index) => (
+                          {program.rewards.map((reward, index
+) => (
                             <li key={index} className="text-gray-600">
                               • {reward}
                             </li>
@@ -499,10 +518,9 @@ export function BetaTestingProgram() {
 
         <TabsContent value="testers" className="space-y-4">
           <div className="grid gap-4">
-            {testers.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+            {testers
+      .map((tester: any
+) => (
               <Card key={tester.id}>
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between">
@@ -511,7 +529,8 @@ export function BetaTestingProgram() {
                         <span className="font-medium text-gray-600">
                           {tester.name
                             .split(' ')
-                            .map((n: any) => n // auto: implicit any[0])
+                            .map((n: any
+) => n[0])
                             .join('')}
                         </span>
                       </div>
@@ -523,9 +542,7 @@ export function BetaTestingProgram() {
                         </p>
                       </div>
                     </div>
-                    <Badge className={getStatusColor(tester.status)}>
-                      {tester.status}
-                    </Badge>
+                    <Badge className={getStatusColor(tester.status)}>tester.status</Badge>
                   </div>
 
                   <div className="grid grid-cols-4 gap-4 mt-4 pt-4 border-t">
@@ -562,10 +579,9 @@ export function BetaTestingProgram() {
 
         <TabsContent value="feedback" className="space-y-4">
           <div className="grid gap-4">
-            {feedback.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+            {feedback
+      .map((item: any
+) => (
               <Card key={item.id}>
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between mb-3">
@@ -575,9 +591,7 @@ export function BetaTestingProgram() {
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge variant="outline">{item.type}</Badge>
-                      <Badge className={getStatusColor(item.status)}>
-                        {item.status}
-                      </Badge>
+                      <Badge className={getStatusColor(item.status)}>item.status</Badge>
                       {item.rating && (
                         <div className="flex items-center gap-1">
                           <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
@@ -591,7 +605,8 @@ export function BetaTestingProgram() {
 
                   <div className="flex items-center justify-between text-xs text-gray-500">
                     <span>
-                      Program: {programs.find((p: any) => p.id === item.programId)?.name}
+                      Program: {programs.find((p: any
+) => p.id === item.programId)?.name}
                     </span>
                     <span>{item.timestamp.toLocaleString()}</span>
                   </div>
@@ -616,7 +631,7 @@ export function BetaTestingProgram() {
                 <Input
                   id="name"
                   value={newProgram.name}
-                  onChange={(e: any) => s // auto: implicit anyetNewProgram({ ...newProgram, name: e.target.value })}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNewProgram({ ...newProgram, name: e.target.value })}
                   className="mt-1"
                 />
               </div>
@@ -626,7 +641,7 @@ export function BetaTestingProgram() {
                   id="participants"
                   type="number"
                   value={newProgram.targetParticipants}
-                  onChange={(e: any) => // auto: implicit any
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => 
                     setNewProgram({
                       ...newProgram,
                       targetParticipants: Number(e.target.value),
@@ -642,7 +657,7 @@ export function BetaTestingProgram() {
               <Textarea
                 id="description"
                 value={newProgram.description}
-                onChange={(e: any) => // auto: implicit any
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => 
                   setNewProgram({ ...newProgram, description: e.target.value })
                 }
                 className="mt-1"
@@ -657,7 +672,7 @@ export function BetaTestingProgram() {
                   id="startDate"
                   type="date"
                   value={newProgram.startDate}
-                  onChange={(e: any) => // auto: implicit any
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => 
                     setNewProgram({ ...newProgram, startDate: e.target.value })
                   }
                   className="mt-1"
@@ -669,7 +684,7 @@ export function BetaTestingProgram() {
                   id="endDate"
                   type="date"
                   value={newProgram.endDate}
-                  onChange={(e: any) => // auto: implicit any
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => 
                     setNewProgram({ ...newProgram, endDate: e.target.value })
                   }
                   className="mt-1"
@@ -685,17 +700,19 @@ export function BetaTestingProgram() {
                     type="button"
                     variant="outline"
                     size="sm"
-                    onClick={() => addArrayField(field)}
+                    onClick={(
+) => addArrayField(field)}
                   >
                     <Plus className="w-4 h-4" />
                   </Button>
                 </div>
                 <div className="space-y-2">
-                  {newProgram[field].map((item, index) => (
+                  {newProgram[field].map((item, index
+) => (
                     <div key={index} className="flex items-center gap-2">
                       <Input
                         value={item}
-                        onChange={(e: any) => u // auto: implicit anypdateArrayField(field, index, e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateArrayField(field, index, e.target.value)}
                         placeholder={`Add ${field.slice(0, -1)}...`}
                         className="flex-1"
                       />
@@ -704,7 +721,8 @@ export function BetaTestingProgram() {
                           type="button"
                           variant="ghost"
                           size="sm"
-                          onClick={() => removeArrayField(field, index)}
+                          onClick={(
+) => removeArrayField(field, index)}
                         >
                           <XCircle className="w-4 h-4" />
                         </Button>
@@ -716,7 +734,8 @@ export function BetaTestingProgram() {
             ))}
 
             <div className="flex justify-end gap-3 pt-4 border-t">
-              <Button variant="outline" onClick={() => setShowCreateProgram(false)}>
+              <Button variant="outline" onClick={(
+) => setShowCreateProgram(false)}>
                 Cancel
               </Button>
               <Button onClick={handleCreateProgram} disabled={!newProgram.name.trim()}>
@@ -740,7 +759,7 @@ export function BetaTestingProgram() {
               <Textarea
                 id="emails"
                 value={inviteEmails}
-                onChange={(e: any) => s // auto: implicit anyetInviteEmails(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setInviteEmails(e.target.value)}
                 placeholder="Enter email addresses, one per line..."
                 className="mt-1"
                 rows={6}
@@ -751,7 +770,8 @@ export function BetaTestingProgram() {
             </div>
 
             <div className="flex justify-end gap-3 pt-4 border-t">
-              <Button variant="outline" onClick={() => setShowInviteModal(false)}>
+              <Button variant="outline" onClick={(
+) => setShowInviteModal(false)}>
                 Cancel
               </Button>
               <Button

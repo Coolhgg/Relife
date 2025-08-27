@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 import React, { useEffect, useState, ReactNode } from 'react';
 import UserTestingService from '../../services/user-testing';
 import type { Metadata } from '../../types/utility-types';
@@ -20,8 +19,9 @@ interface ABTestWrapperProps {
 
 interface ABTestContextType {
   variant: string | null;
-  trackConversion: (metric: string, value?: number) => void;
-  trackEvent: (_event: string, metadata?: Metadata) => void;
+  trackConversion: (metric: string, value?: number
+) => void;
+  trackEvent: (event: string, metadata?: Metadata) => void;
 }
 
 export const ABTestContext = React.createContext<ABTestContextType>({
@@ -65,7 +65,7 @@ export function ABTestWrapper({
         metadata: {
           testId,
           variant: assignedVariant || defaultVariant,
-          _event: trackingEvents.onView,
+          event: trackingEvents.onView,
           type: 'ab_test_view',
         },
       });
@@ -78,14 +78,14 @@ export function ABTestWrapper({
     }
   };
 
-  const trackEvent = (_event: string, metadata: Metadata = {}) => {
+  const trackEvent = (event: string, metadata: Metadata = {}) => {
     if (variant) {
       userTestingService.trackEvent({
         type: 'custom',
         metadata: {
           testId,
           variant,
-          _event,
+          event,
           ...metadata,
           type: 'ab_test_event',
         },

@@ -49,10 +49,8 @@ import {
 
 interface AlarmThemeBrowserProps {
   selectedTheme?: string;
-  onThemeSelect: (combination: ThemeCombination
-) => void;
-  onPreview: (combination: ThemeCombination
-) => void;
+  onThemeSelect: (combination: ThemeCombination) => void;
+  onPreview: (combination: ThemeCombination) => void;
   className?: string;
 }
 
@@ -60,8 +58,7 @@ type ViewMode = 'grid' | 'list' | 'collections';
 type SortMode = 'popularity' | 'recent' | 'alphabetical' | 'rating' | 'category';
 
 // Helper function for weather icons (used by both main component and ThemeCard)
-const getWeatherIcon = (weather: WeatherCondition
-) => {
+const getWeatherIcon = (weather: WeatherCondition) => {
   switch (weather) {
     case 'sunny':
       return <Sun className="w-4 h-4" />;
@@ -83,8 +80,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
   onThemeSelect,
   onPreview,
   className = '',
-}
-) => {
+}) => {
   // State management
   const [viewMode, setViewMode] = useState<ViewMode>('collections');
   const [sortMode, setSortMode] = useState<SortMode>('popularity');
@@ -110,10 +106,8 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
   >([]);
 
   // Load data
-  useEffect((
-) => {
-    const loadData = async (
-) => {
+  useEffect(() => {
+    const loadData = async () => {
       setAllCombinations(themeCombinations.getAllCombinations());
       setCollections(themeCombinations.getAllCollections());
 
@@ -143,8 +137,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
   }, []);
 
   // Filtered and sorted combinations
-  const filteredCombinations = useMemo((
-) => {
+  const filteredCombinations = useMemo(() => {
     let filtered = allCombinations;
 
     // Apply search
@@ -153,8 +146,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
     }
 
     // Apply filters
-    filtered = filtered.filter((combo: any
-) => { // auto: implicit any
+    filtered = filtered.filter((combo: any) => {
       if (selectedCategory !== 'all' && combo.category !== selectedCategory)
         return false;
       if (selectedIntensity !== 'all' && combo.difficulty !== selectedIntensity)
@@ -171,26 +163,21 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
     // Apply sorting
     switch (sortMode) {
       case 'popularity':
-        filtered.sort((a, b
-) => b.popularity - a.popularity);
+        filtered.sort((a, b) => b.popularity - a.popularity);
         break;
       case 'recent':
         filtered.sort(
-          (a, b
-) => (b.lastUsed?.getTime() || 0) - (a.lastUsed?.getTime() || 0)
+          (a, b) => (b.lastUsed?.getTime() || 0) - (a.lastUsed?.getTime() || 0)
         );
         break;
       case 'alphabetical':
-        filtered.sort((a, b
-) => a.name.localeCompare(b.name));
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
         break;
       case 'rating':
-        filtered.sort((a, b
-) => (b.rating || 0) - (a.rating || 0));
+        filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
         break;
       case 'category':
-        filtered.sort((a, b
-) => a.category.localeCompare(b.category));
+        filtered.sort((a, b) => a.category.localeCompare(b.category));
         break;
     }
 
@@ -208,26 +195,22 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
   ]);
 
   // Event handlers
-  const handleThemeSelect = (combination: ThemeCombination
-) => {
+  const handleThemeSelect = (combination: ThemeCombination) => {
     themeCombinations.recordUsage(combination.id);
     onThemeSelect(combination);
   };
 
-  const handlePreview = (combination: ThemeCombination
-) => {
+  const handlePreview = (combination: ThemeCombination) => {
     setPreviewingTheme(combination.id);
     onPreview(combination);
 
     // Auto-hide preview after 3 seconds
-    setTimeout((
-) => {
+    setTimeout(() => {
       setPreviewingTheme(null);
     }, 3000);
   };
 
-  const toggleFavorite = (combinationId: string
-) => {
+  const toggleFavorite = (combinationId: string) => {
     if (themeCombinations.isFavorite(combinationId)) {
       themeCombinations.removeFromFavorites(combinationId);
     } else {
@@ -237,8 +220,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
     setAllCombinations([...themeCombinations.getAllCombinations()]);
   };
 
-  const clearFilters = (
-) => {
+  const clearFilters = () => {
     setSearchQuery('');
     setSelectedCategory('all');
     setSelectedIntensity('all');
@@ -250,8 +232,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
 
   // Helper functions
 
-  const _getIntensityColor = (intensity: AlarmIntensity
-) => {
+  const _getIntensityColor = (intensity: AlarmIntensity) => {
     switch (intensity) {
       case 'gentle':
         return 'text-green-600 bg-green-100';
@@ -264,8 +245,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
     }
   };
 
-  const _getMoodEmoji = (mood: ThemeMood
-) => {
+  const _getMoodEmoji = (mood: ThemeMood) => {
     switch (mood) {
       case 'peaceful':
         return '😌';
@@ -304,12 +284,10 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                 { mode: 'collections', icon: Grid, label: 'Collections' },
                 { mode: 'grid', icon: Grid, label: 'Grid' },
                 { mode: 'list', icon: List, label: 'List' },
-              ].map(({ mode, icon: Icon, label }
-) => (
+              ].map(({ mode, icon: Icon, label }) => (
                 <button
                   key={mode}
-                  onClick={(
-) => setViewMode(mode as ViewMode)}
+                  onClick={() => setViewMode(mode as ViewMode)}
                   className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm transition-colors
                     ${
                       viewMode === mode
@@ -343,8 +321,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                 type="text"
                 placeholder="Search themes, moods, or categories..."
                 value={searchQuery}
-                onChange={(e: any
-) => setSearchQuery(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl
                            focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-lg"
               />
@@ -353,8 +330,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
             {/* Sort */}
             <select
               value={sortMode}
-              onChange={(e: any
-) => setSortMode(e.target.value as SortMode)} // type-safe replacement
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSortMode(e.target.value as SortMode)} // type-safe replacement
               className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl
                          focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 min-w-[150px]"
             >
@@ -367,8 +343,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
 
             {/* Filter Toggle */}
             <button
-              onClick={(
-) => setShowFilters(!showFilters)}
+              onClick={() => setShowFilters(!showFilters)}
               className={`flex items-center space-x-2 px-4 py-3 border rounded-xl transition-colors
                 ${
                   showFilters
@@ -400,8 +375,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                   </label>
                   <select
                     value={selectedCategory}
-                    onChange={(e: any
-) => 
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
                       setSelectedCategory(e.target.value as ThemeCategory | 'all')
                     }
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
@@ -428,8 +402,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                   </label>
                   <select
                     value={selectedIntensity}
-                    onChange={(e: any
-) => 
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
                       setSelectedIntensity(e.target.value as AlarmIntensity | 'all')
                     }
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
@@ -450,8 +423,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                   </label>
                   <select
                     value={selectedTimeOfDay}
-                    onChange={(e: any
-) => 
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
                       setSelectedTimeOfDay(e.target.value as TimeOfDay | 'all')
                     }
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
@@ -474,8 +446,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                     <input
                       type="checkbox"
                       checked={showPremiumOnly}
-                      onChange={(e: any
-) => setShowPremiumOnly(e.target.checked)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setShowPremiumOnly(e.target.checked)}
                       className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700 dark:text-gray-300">
@@ -487,8 +458,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                     <input
                       type="checkbox"
                       checked={showFavoritesOnly}
-                      onChange={(e: any
-) => setShowFavoritesOnly(e.target.checked)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setShowFavoritesOnly(e.target.checked)}
                       className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700 dark:text-gray-300">
@@ -531,20 +501,15 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
               <span>Recommended for You</span>
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {contextualRecommendations
-      .map((combo: any
-) => (
+              {contextualRecommendations.map((combo: any) => (
                 <ThemeCard
                   key={combo.id}
                   combination={combo}
                   isSelected={selectedTheme === combo.id}
                   isPreviewing={previewingTheme === combo.id}
-                  onSelect={(
-) => handleThemeSelect(combo)}
-                  onPreview={(
-) => handlePreview(combo)}
-                  onToggleFavorite={(
-) => toggleFavorite(combo.id)}
+                  onSelect={() => handleThemeSelect(combo)}
+                  onPreview={() => handlePreview(combo)}
+                  onToggleFavorite={() => toggleFavorite(combo.id)}
                   isFavorite={themeCombinations.isFavorite(combo.id)}
                   compact={true}
                 />
@@ -563,9 +528,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
               exit={{ opacity: 0, y: -20 }}
               className="space-y-8"
             >
-              {collections
-      .map((collection: any
-) => (
+              {collections.map((collection: any) => (
                 <CollectionView
                   key={collection.id}
                   collection={collection}
@@ -590,20 +553,15 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
               exit={{ opacity: 0, y: -20 }}
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
             >
-              {filteredCombinations
-      .map((combo: any
-) => (
+              {filteredCombinations.map((combo: any) => (
                 <ThemeCard
                   key={combo.id}
                   combination={combo}
                   isSelected={selectedTheme === combo.id}
                   isPreviewing={previewingTheme === combo.id}
-                  onSelect={(
-) => handleThemeSelect(combo)}
-                  onPreview={(
-) => handlePreview(combo)}
-                  onToggleFavorite={(
-) => toggleFavorite(combo.id)}
+                  onSelect={() => handleThemeSelect(combo)}
+                  onPreview={() => handlePreview(combo)}
+                  onToggleFavorite={() => toggleFavorite(combo.id)}
                   isFavorite={themeCombinations.isFavorite(combo.id)}
                 />
               ))}
@@ -618,20 +576,15 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
               exit={{ opacity: 0, y: -20 }}
               className="space-y-4"
             >
-              {filteredCombinations
-      .map((combo: any
-) => (
+              {filteredCombinations.map((combo: any) => (
                 <ThemeListItem
                   key={combo.id}
                   combination={combo}
                   isSelected={selectedTheme === combo.id}
                   isPreviewing={previewingTheme === combo.id}
-                  onSelect={(
-) => handleThemeSelect(combo)}
-                  onPreview={(
-) => handlePreview(combo)}
-                  onToggleFavorite={(
-) => toggleFavorite(combo.id)}
+                  onSelect={() => handleThemeSelect(combo)}
+                  onPreview={() => handlePreview(combo)}
+                  onToggleFavorite={() => toggleFavorite(combo.id)}
                   isFavorite={themeCombinations.isFavorite(combo.id)}
                 />
               ))}
@@ -648,12 +601,9 @@ interface ThemeCardProps {
   combination: ThemeCombination;
   isSelected: boolean;
   isPreviewing: boolean;
-  onSelect: (
-) => void;
-  onPreview: (
-) => void;
-  onToggleFavorite: (
-) => void;
+  onSelect: () => void;
+  onPreview: () => void;
+  onToggleFavorite: () => void;
   isFavorite: boolean;
   compact?: boolean;
 }
@@ -667,8 +617,7 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
   onToggleFavorite,
   isFavorite,
   compact = false,
-}
-) => {
+}) => {
   const theme = visualAlarmThemes.getTheme(combination.visual);
 
   return (
@@ -695,8 +644,7 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
 
       {/* Favorite Button */}
       <button
-        onClick={(e: any
-) => { // auto: implicit any
+        onClick={(e: any) => {
           e.stopPropagation();
           onToggleFavorite();
         }}
@@ -774,8 +722,7 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
       {/* Actions */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-1">
-          {combination.weatherSuitability.slice(0, 3).map((weather, index
-) => (
+          {combination.weatherSuitability.slice(0, 3).map((weather, index) => (
             <span key={index} className="text-gray-400" title={weather}>
               {getWeatherIcon(weather)}
             </span>
@@ -783,8 +730,8 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
         </div>
 
         <button
-          onClick={(e: any
-) => { // auto: implicit any
+          onClick={(e: any) => {
+            // auto: implicit any
             e.stopPropagation();
             onPreview();
           }}
@@ -809,12 +756,9 @@ interface CollectionViewProps {
   combinations: ThemeCombination[];
   selectedTheme?: string;
   previewingTheme: string | null;
-  onSelect: (combination: ThemeCombination
-) => void;
-  onPreview: (combination: ThemeCombination
-) => void;
-  onToggleFavorite: (id: string
-) => void;
+  onSelect: (combination: ThemeCombination) => void;
+  onPreview: (combination: ThemeCombination) => void;
+  onToggleFavorite: (id: string) => void;
 }
 
 const CollectionView: React.FC<CollectionViewProps> = ({
@@ -825,8 +769,7 @@ const CollectionView: React.FC<CollectionViewProps> = ({
   onSelect,
   onPreview,
   onToggleFavorite,
-}
-) => (
+}) => (
   <div className="collection-view">
     <div className="flex items-center justify-between mb-4">
       <div>
@@ -849,20 +792,15 @@ const CollectionView: React.FC<CollectionViewProps> = ({
     </div>
 
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-      {combinations
-      .map((combo: any
-) => (
+      {combinations.map((combo: any) => (
         <ThemeCard
           key={combo.id}
           combination={combo}
           isSelected={selectedTheme === combo.id}
           isPreviewing={previewingTheme === combo.id}
-          onSelect={(
-) => onSelect(combo)}
-          onPreview={(
-) => onPreview(combo)}
-          onToggleFavorite={(
-) => onToggleFavorite(combo.id)}
+          onSelect={() => onSelect(combo)}
+          onPreview={() => onPreview(combo)}
+          onToggleFavorite={() => onToggleFavorite(combo.id)}
           isFavorite={themeCombinations.isFavorite(combo.id)}
           compact={true}
         />
@@ -876,12 +814,9 @@ interface ThemeListItemProps {
   combination: ThemeCombination;
   isSelected: boolean;
   isPreviewing: boolean;
-  onSelect: (
-) => void;
-  onPreview: (
-) => void;
-  onToggleFavorite: (
-) => void;
+  onSelect: () => void;
+  onPreview: () => void;
+  onToggleFavorite: () => void;
   isFavorite: boolean;
 }
 
@@ -893,8 +828,7 @@ const ThemeListItem: React.FC<ThemeListItemProps> = ({
   onPreview,
   onToggleFavorite,
   isFavorite,
-}
-) => {
+}) => {
   const theme = visualAlarmThemes.getTheme(combination.visual);
 
   return (
@@ -958,8 +892,8 @@ const ThemeListItem: React.FC<ThemeListItemProps> = ({
       {/* Actions */}
       <div className="flex items-center space-x-2 ml-4">
         <button
-          onClick={(e: any
-) => { // auto: implicit any
+          onClick={(e: any) => {
+            // auto: implicit any
             e.stopPropagation();
             onToggleFavorite();
           }}
@@ -971,8 +905,8 @@ const ThemeListItem: React.FC<ThemeListItemProps> = ({
         </button>
 
         <button
-          onClick={(e: any
-) => { // auto: implicit any
+          onClick={(e: any) => {
+            // auto: implicit any
             e.stopPropagation();
             onPreview();
           }}
@@ -997,8 +931,7 @@ const ThemeListItem: React.FC<ThemeListItemProps> = ({
 };
 
 // Helper functions (moved from inline)
-const getIntensityColor = (intensity: AlarmIntensity
-) => {
+const getIntensityColor = (intensity: AlarmIntensity) => {
   switch (intensity) {
     case 'gentle':
       return 'text-green-600 bg-green-100 dark:bg-green-900/30 dark:text-green-300';
@@ -1011,8 +944,7 @@ const getIntensityColor = (intensity: AlarmIntensity
   }
 };
 
-const getMoodEmoji = (mood: ThemeMood
-) => {
+const getMoodEmoji = (mood: ThemeMood) => {
   switch (mood) {
     case 'peaceful':
       return '😌';

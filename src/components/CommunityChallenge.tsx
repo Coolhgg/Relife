@@ -387,7 +387,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                 <select
                   className="text-sm bg-background border rounded px-2 py-1"
                   value={selectedType}
-                  onChange={(e: any) => // auto: implicit any
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
                     setSelectedType(e.target.value as SocialChallengeType | 'all')
                   }
                 >
@@ -403,7 +403,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                 <select
                   className="text-sm bg-background border rounded px-2 py-1"
                   value={selectedDifficulty}
-                  onChange={(e: any) => // auto: implicit any
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
                     setSelectedDifficulty(
                       e.target.value as 'all' | 'easy' | 'medium' | 'hard'
                     )
@@ -419,10 +419,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
               {/* Challenge Grid */}
               <div className="grid md:grid-cols-2 gap-4">
                 <AnimatePresence>
-                  {filteredChallenges.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+                  {filteredChallenges.map((challenge: any) => (
                     <motion.div
                       key={challenge.id}
                       layout
@@ -456,10 +453,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
           {activeTab === 'joined' && (
             <>
               <div className="grid md:grid-cols-2 gap-4">
-                {userChallenges.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+                {userChallenges.map((challenge: any) => (
                   <ChallengeCard
                     key={challenge.id}
                     challenge={challenge}

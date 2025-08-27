@@ -195,7 +195,8 @@ const PremiumThemeShowcase: React.FC = () => {
               type="text"
               placeholder="Search themes..."
               value={searchTerm}
-              onChange={(e: any) => setSearchTerm(e.target.value)}
+              
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
               className="search-input"
             />
             <span className="search-icon">🔍</span>
