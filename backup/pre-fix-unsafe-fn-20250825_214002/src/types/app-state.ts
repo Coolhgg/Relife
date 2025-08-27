@@ -646,16 +646,7 @@ export interface AppState {
 
   // Navigation and routing
   navigation: {
-    currentView:
-      | 'dashboard'
-      | 'alarms'
-      | 'settings'
-      | 'profile'
-      | 'subscription'
-      | 'gaming'
-      | 'advanced-scheduling'
-      | 'pricing'
-      | 'gift-shop';
+    currentView: 'dashboard' | 'alarms' | 'settings' | 'profile' | 'subscription' | 'gaming' | 'advanced-scheduling' | 'pricing' | 'gift-shop';
     previousView: string | null;
     navigationHistory: string[];
     modalStack: string[];

@@ -4,17 +4,17 @@
  */
 
 import React, { useState, useEffect, useMemo } from 'react';
-import {
-  Activity,
-  Brain,
-  Mic,
-  Trophy,
-  Settings,
-  AlertTriangle,
-  CheckCircle,
-  Clock,
-  TrendingUp,
-  TrendingDown,
+import { 
+  Activity, 
+  Brain, 
+  Mic, 
+  Trophy, 
+  Settings, 
+  AlertTriangle, 
+  CheckCircle, 
+  Clock, 
+  TrendingUp, 
+  TrendingDown, 
   Users,
   Target,
   Zap,
@@ -25,7 +25,7 @@ import {
   RefreshCw,
   Calendar,
   ChevronRight,
-  Info,
+  Info
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
@@ -48,7 +48,7 @@ import {
   Area,
   Line,
   Bar,
-  Pie,
+  Pie
 } from 'recharts';
 
 // Types
@@ -170,80 +170,20 @@ const generateMockData = () => {
   ];
 
   const deploymentStatus: DeploymentStatus[] = [
-    {
-      phase: 1,
-      status: 'completed',
-      progress: 100,
-      name: 'Core Services',
-      completionTime: new Date(),
-    },
-    {
-      phase: 2,
-      status: 'completed',
-      progress: 100,
-      name: 'Cross-Platform Integration',
-      completionTime: new Date(),
-    },
-    {
-      phase: 3,
-      status: 'completed',
-      progress: 100,
-      name: 'Recommendation Engine',
-      completionTime: new Date(),
-    },
-    {
-      phase: 4,
-      status: 'in_progress',
-      progress: 85,
-      name: 'Dashboard & UI',
-      startTime: new Date(),
-    },
+    { phase: 1, status: 'completed', progress: 100, name: 'Core Services', completionTime: new Date() },
+    { phase: 2, status: 'completed', progress: 100, name: 'Cross-Platform Integration', completionTime: new Date() },
+    { phase: 3, status: 'completed', progress: 100, name: 'Recommendation Engine', completionTime: new Date() },
+    { phase: 4, status: 'in_progress', progress: 85, name: 'Dashboard & UI', startTime: new Date() },
     { phase: 5, status: 'pending', progress: 0, name: 'Optimization & Scaling' },
   ];
 
   const voiceAnalytics: VoiceAnalytics[] = [
-    {
-      mood: 'motivational',
-      successRate: 87,
-      avgResponseTime: 45,
-      userPreference: 92,
-      totalUsage: 1450,
-    },
-    {
-      mood: 'drill-sergeant',
-      successRate: 95,
-      avgResponseTime: 32,
-      userPreference: 78,
-      totalUsage: 890,
-    },
-    {
-      mood: 'sweet-angel',
-      successRate: 82,
-      avgResponseTime: 58,
-      userPreference: 95,
-      totalUsage: 1200,
-    },
-    {
-      mood: 'gentle',
-      successRate: 79,
-      avgResponseTime: 62,
-      userPreference: 88,
-      totalUsage: 980,
-    },
-    {
-      mood: 'anime-hero',
-      successRate: 91,
-      avgResponseTime: 38,
-      userPreference: 85,
-      totalUsage: 750,
-    },
-    {
-      mood: 'savage-roast',
-      successRate: 88,
-      avgResponseTime: 41,
-      userPreference: 73,
-      totalUsage: 650,
-    },
+    { mood: 'motivational', successRate: 87, avgResponseTime: 45, userPreference: 92, totalUsage: 1450 },
+    { mood: 'drill-sergeant', successRate: 95, avgResponseTime: 32, userPreference: 78, totalUsage: 890 },
+    { mood: 'sweet-angel', successRate: 82, avgResponseTime: 58, userPreference: 95, totalUsage: 1200 },
+    { mood: 'gentle', successRate: 79, avgResponseTime: 62, userPreference: 88, totalUsage: 980 },
+    { mood: 'anime-hero', successRate: 91, avgResponseTime: 38, userPreference: 85, totalUsage: 750 },
+    { mood: 'savage-roast', successRate: 88, avgResponseTime: 41, userPreference: 73, totalUsage: 650 },
   ];
 
   const rewardMetrics: RewardMetrics[] = [
@@ -255,36 +195,11 @@ const generateMockData = () => {
   ];
 
   const behavioralInsights: BehavioralInsight[] = [
-    {
-      type: 'pattern_discovery',
-      count: 342,
-      averageConfidence: 0.89,
-      actionabilityRate: 0.73,
-    },
-    {
-      type: 'anomaly_detection',
-      count: 89,
-      averageConfidence: 0.95,
-      actionabilityRate: 0.91,
-    },
-    {
-      type: 'optimization',
-      count: 156,
-      averageConfidence: 0.82,
-      actionabilityRate: 0.67,
-    },
-    {
-      type: 'prediction',
-      count: 201,
-      averageConfidence: 0.86,
-      actionabilityRate: 0.58,
-    },
-    {
-      type: 'intervention',
-      count: 67,
-      averageConfidence: 0.93,
-      actionabilityRate: 0.89,
-    },
+    { type: 'pattern_discovery', count: 342, averageConfidence: 0.89, actionabilityRate: 0.73 },
+    { type: 'anomaly_detection', count: 89, averageConfidence: 0.95, actionabilityRate: 0.91 },
+    { type: 'optimization', count: 156, averageConfidence: 0.82, actionabilityRate: 0.67 },
+    { type: 'prediction', count: 201, averageConfidence: 0.86, actionabilityRate: 0.58 },
+    { type: 'intervention', count: 67, averageConfidence: 0.93, actionabilityRate: 0.89 },
   ];
 
   const aiMetrics: AIMetrics = {
@@ -320,14 +235,7 @@ const COLORS = {
   pink: '#ec4899',
 };
 
-const chartColors = [
-  COLORS.primary,
-  COLORS.secondary,
-  COLORS.warning,
-  COLORS.danger,
-  COLORS.success,
-  COLORS.info,
-];
+const chartColors = [COLORS.primary, COLORS.secondary, COLORS.warning, COLORS.danger, COLORS.success, COLORS.info];
 
 export default function AIPerformanceDashboard() {
   const [data, setData] = useState(generateMockData());
@@ -356,43 +264,33 @@ export default function AIPerformanceDashboard() {
 
   const healthyServices = data.serviceHealth.filter(s => s.status === 'healthy').length;
   const totalServices = data.serviceHealth.length;
-  const completedPhases = data.deploymentStatus.filter(
-    p => p.status === 'completed'
-  ).length;
+  const completedPhases = data.deploymentStatus.filter(p => p.status === 'completed').length;
   const totalPhases = data.deploymentStatus.length;
 
   const overallHealthScore = useMemo(() => {
     const serviceHealthScore = (healthyServices / totalServices) * 100;
     const deploymentScore = (completedPhases / totalPhases) * 100;
-    const metricsScore =
-      (data.aiMetrics.patternRecognitionAccuracy +
-        data.aiMetrics.userSatisfactionScore +
-        data.aiMetrics.voiceEffectivenessScore) /
-      3;
-
+    const metricsScore = (
+      data.aiMetrics.patternRecognitionAccuracy +
+      data.aiMetrics.userSatisfactionScore +
+      data.aiMetrics.voiceEffectivenessScore
+    ) / 3;
+    
     return Math.round((serviceHealthScore + deploymentScore + metricsScore) / 3);
   }, [healthyServices, totalServices, completedPhases, totalPhases, data.aiMetrics]);
 
   const StatusIcon = ({ status }: { status: 'healthy' | 'degraded' | 'unhealthy' }) => {
     if (status === 'healthy') return <CheckCircle className="w-4 h-4 text-green-500" />;
-    if (status === 'degraded')
-      return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
+    if (status === 'degraded') return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
     return <AlertTriangle className="w-4 h-4 text-red-500" />;
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'healthy':
-      case 'completed':
-        return 'success';
-      case 'degraded':
-      case 'in_progress':
-        return 'warning';
-      case 'unhealthy':
-      case 'failed':
-        return 'destructive';
-      default:
-        return 'secondary';
+      case 'healthy': case 'completed': return 'success';
+      case 'degraded': case 'in_progress': return 'warning';
+      case 'unhealthy': case 'failed': return 'destructive';
+      default: return 'secondary';
     }
   };
 
@@ -412,20 +310,16 @@ export default function AIPerformanceDashboard() {
             size="sm"
             onClick={() => setAutoRefresh(!autoRefresh)}
           >
-            <Activity
-              className={`w-4 h-4 mr-2 ${autoRefresh ? 'text-green-500' : 'text-gray-500'}`}
-            />
+            <Activity className={`w-4 h-4 mr-2 ${autoRefresh ? 'text-green-500' : 'text-gray-500'}`} />
             Auto-refresh {autoRefresh ? 'ON' : 'OFF'}
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
+          <Button 
+            variant="outline" 
+            size="sm" 
             onClick={refreshData}
             disabled={isRefreshing}
           >
-            <RefreshCw
-              className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`}
-            />
+            <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
             Refresh
           </Button>
         </div>
@@ -442,27 +336,20 @@ export default function AIPerformanceDashboard() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="space-y-2">
-              <div className="text-3xl font-bold text-blue-600">
-                {overallHealthScore}%
-              </div>
+              <div className="text-3xl font-bold text-blue-600">{overallHealthScore}%</div>
               <div className="text-sm text-muted-foreground">System Health Score</div>
               <Progress value={overallHealthScore} className="h-2" />
             </div>
             <div className="space-y-2">
-              <div className="text-2xl font-semibold">
-                {healthyServices}/{totalServices}
-              </div>
+              <div className="text-2xl font-semibold">{healthyServices}/{totalServices}</div>
               <div className="text-sm text-muted-foreground">Services Healthy</div>
               <div className="flex gap-1">
                 {data.serviceHealth.map((service, i) => (
                   <div
                     key={i}
                     className={`w-3 h-3 rounded-full ${
-                      service.status === 'healthy'
-                        ? 'bg-green-500'
-                        : service.status === 'degraded'
-                          ? 'bg-yellow-500'
-                          : 'bg-red-500'
+                      service.status === 'healthy' ? 'bg-green-500' :
+                      service.status === 'degraded' ? 'bg-yellow-500' : 'bg-red-500'
                     }`}
                     title={service.serviceName}
                   />
@@ -470,22 +357,16 @@ export default function AIPerformanceDashboard() {
               </div>
             </div>
             <div className="space-y-2">
-              <div className="text-2xl font-semibold">
-                {completedPhases}/{totalPhases}
-              </div>
+              <div className="text-2xl font-semibold">{completedPhases}/{totalPhases}</div>
               <div className="text-sm text-muted-foreground">Deployment Phases</div>
               <div className="flex gap-1">
                 {data.deploymentStatus.map((phase, i) => (
                   <div
                     key={i}
                     className={`w-3 h-3 rounded-full ${
-                      phase.status === 'completed'
-                        ? 'bg-green-500'
-                        : phase.status === 'in_progress'
-                          ? 'bg-blue-500'
-                          : phase.status === 'failed'
-                            ? 'bg-red-500'
-                            : 'bg-gray-300'
+                      phase.status === 'completed' ? 'bg-green-500' :
+                      phase.status === 'in_progress' ? 'bg-blue-500' :
+                      phase.status === 'failed' ? 'bg-red-500' : 'bg-gray-300'
                     }`}
                     title={`Phase ${phase.phase}: ${phase.name}`}
                   />
@@ -493,9 +374,7 @@ export default function AIPerformanceDashboard() {
               </div>
             </div>
             <div className="space-y-2">
-              <div className="text-2xl font-semibold">
-                {data.aiMetrics.activeUsers.toLocaleString()}
-              </div>
+              <div className="text-2xl font-semibold">{data.aiMetrics.activeUsers.toLocaleString()}</div>
               <div className="text-sm text-muted-foreground">Active Users</div>
               <div className="flex items-center gap-1 text-green-600">
                 <TrendingUp className="w-4 h-4" />
@@ -516,14 +395,9 @@ export default function AIPerformanceDashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {data.aiMetrics.patternRecognitionAccuracy}%
-            </div>
+            <div className="text-2xl font-bold">{data.aiMetrics.patternRecognitionAccuracy}%</div>
             <div className="text-xs text-muted-foreground">Accuracy Rate</div>
-            <Progress
-              value={data.aiMetrics.patternRecognitionAccuracy}
-              className="h-1 mt-2"
-            />
+            <Progress value={data.aiMetrics.patternRecognitionAccuracy} className="h-1 mt-2" />
           </CardContent>
         </Card>
 
@@ -535,14 +409,9 @@ export default function AIPerformanceDashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {data.aiMetrics.voiceEffectivenessScore}%
-            </div>
+            <div className="text-2xl font-bold">{data.aiMetrics.voiceEffectivenessScore}%</div>
             <div className="text-xs text-muted-foreground">User Success Rate</div>
-            <Progress
-              value={data.aiMetrics.voiceEffectivenessScore}
-              className="h-1 mt-2"
-            />
+            <Progress value={data.aiMetrics.voiceEffectivenessScore} className="h-1 mt-2" />
           </CardContent>
         </Card>
 
@@ -554,14 +423,9 @@ export default function AIPerformanceDashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {data.aiMetrics.rewardsEngagementRate}%
-            </div>
+            <div className="text-2xl font-bold">{data.aiMetrics.rewardsEngagementRate}%</div>
             <div className="text-xs text-muted-foreground">User Engagement</div>
-            <Progress
-              value={data.aiMetrics.rewardsEngagementRate}
-              className="h-1 mt-2"
-            />
+            <Progress value={data.aiMetrics.rewardsEngagementRate} className="h-1 mt-2" />
           </CardContent>
         </Card>
 
@@ -573,9 +437,7 @@ export default function AIPerformanceDashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {data.aiMetrics.averageResponseTime}ms
-            </div>
+            <div className="text-2xl font-bold">{data.aiMetrics.averageResponseTime}ms</div>
             <div className="text-xs text-muted-foreground">Average Response</div>
             <div className="flex items-center gap-1 text-green-600 mt-1">
               <TrendingDown className="w-3 h-3" />
@@ -611,47 +473,22 @@ export default function AIPerformanceDashboard() {
                 <ResponsiveContainer width="100%" height={300}>
                   <RechartsLineChart data={data.last24Hours}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis
-                      dataKey="timestamp"
-                      tickFormatter={value =>
-                        new Date(value).toLocaleTimeString([], {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })
-                      }
+                    <XAxis 
+                      dataKey="timestamp" 
+                      tickFormatter={(value) => new Date(value).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     />
                     <YAxis />
-                    <Tooltip
-                      labelFormatter={value => new Date(value).toLocaleString()}
+                    <Tooltip 
+                      labelFormatter={(value) => new Date(value).toLocaleString()}
                       formatter={(value: number, name: string) => [
                         `${Math.round(value)}${name.includes('Time') ? 'ms' : '%'}`,
-                        name
-                          .replace(/([A-Z])/g, ' $1')
-                          .replace(/^./, str => str.toUpperCase()),
+                        name.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())
                       ]}
                     />
                     <Legend />
-                    <Line
-                      type="monotone"
-                      dataKey="accuracy"
-                      stroke={COLORS.primary}
-                      strokeWidth={2}
-                      name="Accuracy"
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="engagement"
-                      stroke={COLORS.secondary}
-                      strokeWidth={2}
-                      name="Engagement"
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="satisfaction"
-                      stroke={COLORS.warning}
-                      strokeWidth={2}
-                      name="Satisfaction"
-                    />
+                    <Line type="monotone" dataKey="accuracy" stroke={COLORS.primary} strokeWidth={2} name="Accuracy" />
+                    <Line type="monotone" dataKey="engagement" stroke={COLORS.secondary} strokeWidth={2} name="Engagement" />
+                    <Line type="monotone" dataKey="satisfaction" stroke={COLORS.warning} strokeWidth={2} name="Satisfaction" />
                   </RechartsLineChart>
                 </ResponsiveContainer>
               </CardContent>
@@ -675,15 +512,10 @@ export default function AIPerformanceDashboard() {
                       outerRadius={100}
                       fill="#8884d8"
                       dataKey="count"
-                      label={({ name, value }) =>
-                        `${name.replace(/_/g, ' ')}: ${value}`
-                      }
+                      label={({ name, value }) => `${name.replace(/_/g, ' ')}: ${value}`}
                     >
                       {data.behavioralInsights.map((_, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={chartColors[index % chartColors.length]}
-                        />
+                        <Cell key={`cell-${index}`} fill={chartColors[index % chartColors.length]} />
                       ))}
                     </Pie>
                     <Tooltip />
@@ -714,8 +546,7 @@ export default function AIPerformanceDashboard() {
                   <Info className="h-4 w-4 text-blue-600" />
                   <AlertTitle>Deployment In Progress</AlertTitle>
                   <AlertDescription>
-                    Phase 4 (Dashboard & UI) is 85% complete - estimated completion in
-                    15 minutes
+                    Phase 4 (Dashboard & UI) is 85% complete - estimated completion in 15 minutes
                   </AlertDescription>
                 </Alert>
               </div>
@@ -726,7 +557,7 @@ export default function AIPerformanceDashboard() {
         {/* Services Health Tab */}
         <TabsContent value="services" className="space-y-6">
           <div className="grid gap-4">
-            {data.serviceHealth.map(service => (
+            {data.serviceHealth.map((service) => (
               <Card key={service.serviceName}>
                 <CardContent className="pt-6">
                   <div className="flex items-center justify-between">
@@ -746,9 +577,7 @@ export default function AIPerformanceDashboard() {
                   <div className="grid grid-cols-3 gap-4 mt-4">
                     <div>
                       <div className="text-sm text-muted-foreground">Response Time</div>
-                      <div className="text-lg font-semibold">
-                        {service.responseTime}ms
-                      </div>
+                      <div className="text-lg font-semibold">{service.responseTime}ms</div>
                     </div>
                     <div>
                       <div className="text-sm text-muted-foreground">Error Rate</div>
@@ -776,20 +605,18 @@ export default function AIPerformanceDashboard() {
                 <ResponsiveContainer width="100%" height={300}>
                   <RechartsBarChart data={data.behavioralInsights}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis
-                      dataKey="type"
+                    <XAxis 
+                      dataKey="type" 
                       tick={{ fontSize: 12 }}
                       angle={-45}
                       textAnchor="end"
                       height={80}
                     />
                     <YAxis />
-                    <Tooltip
+                    <Tooltip 
                       formatter={(value: number, name: string) => [
-                        name === 'averageConfidence'
-                          ? `${Math.round(value * 100)}%`
-                          : value,
-                        name === 'averageConfidence' ? 'Avg Confidence' : 'Count',
+                        name === 'averageConfidence' ? `${Math.round(value * 100)}%` : value,
+                        name === 'averageConfidence' ? 'Avg Confidence' : 'Count'
                       ]}
                     />
                     <Legend />
@@ -806,18 +633,13 @@ export default function AIPerformanceDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {data.behavioralInsights.map(insight => (
+                  {data.behavioralInsights.map((insight) => (
                     <div key={insight.type} className="space-y-2">
                       <div className="flex justify-between text-sm">
-                        <span className="capitalize">
-                          {insight.type.replace(/_/g, ' ')}
-                        </span>
+                        <span className="capitalize">{insight.type.replace(/_/g, ' ')}</span>
                         <span>{Math.round(insight.actionabilityRate * 100)}%</span>
                       </div>
-                      <Progress
-                        value={insight.actionabilityRate * 100}
-                        className="h-2"
-                      />
+                      <Progress value={insight.actionabilityRate * 100} className="h-2" />
                     </div>
                   ))}
                 </div>
@@ -832,22 +654,16 @@ export default function AIPerformanceDashboard() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="p-4 bg-blue-50 rounded-lg">
-                  <div className="text-2xl font-bold text-blue-600">
-                    {data.aiMetrics.totalInsightsGenerated}
-                  </div>
+                  <div className="text-2xl font-bold text-blue-600">{data.aiMetrics.totalInsightsGenerated}</div>
                   <div className="text-sm text-blue-800">Total Insights Generated</div>
                 </div>
                 <div className="p-4 bg-green-50 rounded-lg">
                   <div className="text-2xl font-bold text-green-600">73%</div>
-                  <div className="text-sm text-green-800">
-                    Average Actionability Rate
-                  </div>
+                  <div className="text-sm text-green-800">Average Actionability Rate</div>
                 </div>
                 <div className="p-4 bg-purple-50 rounded-lg">
                   <div className="text-2xl font-bold text-purple-600">89%</div>
-                  <div className="text-sm text-purple-800">
-                    Average Confidence Score
-                  </div>
+                  <div className="text-sm text-purple-800">Average Confidence Score</div>
                 </div>
               </div>
             </CardContent>
@@ -869,16 +685,8 @@ export default function AIPerformanceDashboard() {
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Bar
-                      dataKey="successRate"
-                      fill={COLORS.primary}
-                      name="Success Rate %"
-                    />
-                    <Bar
-                      dataKey="userPreference"
-                      fill={COLORS.secondary}
-                      name="User Preference %"
-                    />
+                    <Bar dataKey="successRate" fill={COLORS.primary} name="Success Rate %" />
+                    <Bar dataKey="userPreference" fill={COLORS.secondary} name="User Preference %" />
                   </RechartsBarChart>
                 </ResponsiveContainer>
               </CardContent>
@@ -901,10 +709,7 @@ export default function AIPerformanceDashboard() {
                       label={({ mood, value }) => `${mood}: ${value}`}
                     >
                       {data.voiceAnalytics.map((_, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={chartColors[index % chartColors.length]}
-                        />
+                        <Cell key={`cell-${index}`} fill={chartColors[index % chartColors.length]} />
                       ))}
                     </Pie>
                     <Tooltip />
@@ -931,23 +736,17 @@ export default function AIPerformanceDashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.voiceAnalytics.map(voice => (
+                    {data.voiceAnalytics.map((voice) => (
                       <tr key={voice.mood} className="border-b">
-                        <td className="py-3 font-medium capitalize">
-                          {voice.mood.replace('-', ' ')}
-                        </td>
+                        <td className="py-3 font-medium capitalize">{voice.mood.replace('-', ' ')}</td>
                         <td className="text-center">
-                          <Badge
-                            variant={voice.successRate > 85 ? 'default' : 'secondary'}
-                          >
+                          <Badge variant={voice.successRate > 85 ? 'default' : 'secondary'}>
                             {voice.successRate}%
                           </Badge>
                         </td>
                         <td className="text-center">{voice.avgResponseTime}s</td>
                         <td className="text-center">{voice.userPreference}%</td>
-                        <td className="text-center">
-                          {voice.totalUsage.toLocaleString()}
-                        </td>
+                        <td className="text-center">{voice.totalUsage.toLocaleString()}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -972,16 +771,8 @@ export default function AIPerformanceDashboard() {
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Bar
-                      dataKey="engagement"
-                      fill={COLORS.primary}
-                      name="Engagement %"
-                    />
-                    <Bar
-                      dataKey="satisfaction"
-                      fill={COLORS.secondary}
-                      name="Satisfaction %"
-                    />
+                    <Bar dataKey="engagement" fill={COLORS.primary} name="Engagement %" />
+                    <Bar dataKey="satisfaction" fill={COLORS.secondary} name="Satisfaction %" />
                   </RechartsBarChart>
                 </ResponsiveContainer>
               </CardContent>
@@ -1004,10 +795,7 @@ export default function AIPerformanceDashboard() {
                       label={({ category, unlocked }) => `${category}: ${unlocked}`}
                     >
                       {data.rewardMetrics.map((_, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={chartColors[index % chartColors.length]}
-                        />
+                        <Cell key={`cell-${index}`} fill={chartColors[index % chartColors.length]} />
                       ))}
                     </Pie>
                     <Tooltip />
@@ -1031,21 +819,13 @@ export default function AIPerformanceDashboard() {
                 </div>
                 <div className="p-4 bg-blue-50 rounded-lg">
                   <div className="text-2xl font-bold text-blue-600">
-                    {Math.round(
-                      data.rewardMetrics.reduce((sum, r) => sum + r.engagement, 0) /
-                        data.rewardMetrics.length
-                    )}
-                    %
+                    {Math.round(data.rewardMetrics.reduce((sum, r) => sum + r.engagement, 0) / data.rewardMetrics.length)}%
                   </div>
                   <div className="text-sm text-blue-800">Avg Engagement Rate</div>
                 </div>
                 <div className="p-4 bg-green-50 rounded-lg">
                   <div className="text-2xl font-bold text-green-600">
-                    {Math.round(
-                      data.rewardMetrics.reduce((sum, r) => sum + r.satisfaction, 0) /
-                        data.rewardMetrics.length
-                    )}
-                    %
+                    {Math.round(data.rewardMetrics.reduce((sum, r) => sum + r.satisfaction, 0) / data.rewardMetrics.length)}%
                   </div>
                   <div className="text-sm text-green-800">Avg Satisfaction</div>
                 </div>
@@ -1067,22 +847,19 @@ export default function AIPerformanceDashboard() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {data.deploymentStatus.map(phase => (
-                  <div
-                    key={phase.phase}
-                    className="flex items-center justify-between p-4 border rounded-lg"
-                  >
+                {data.deploymentStatus.map((phase) => (
+                  <div key={phase.phase} className="flex items-center justify-between p-4 border rounded-lg">
                     <div className="flex items-center gap-3">
                       <div className="text-lg font-semibold">Phase {phase.phase}</div>
                       <div>
                         <div className="font-medium">{phase.name}</div>
                         <div className="text-sm text-muted-foreground">
-                          {phase.status === 'completed' &&
-                            phase.completionTime &&
-                            `Completed at ${phase.completionTime.toLocaleTimeString()}`}
-                          {phase.status === 'in_progress' &&
-                            phase.startTime &&
-                            `Started at ${phase.startTime.toLocaleTimeString()}`}
+                          {phase.status === 'completed' && phase.completionTime &&
+                            `Completed at ${phase.completionTime.toLocaleTimeString()}`
+                          }
+                          {phase.status === 'in_progress' && phase.startTime &&
+                            `Started at ${phase.startTime.toLocaleTimeString()}`
+                          }
                           {phase.status === 'pending' && 'Waiting for dependencies'}
                         </div>
                       </div>
@@ -1111,13 +888,7 @@ export default function AIPerformanceDashboard() {
                 <ResponsiveContainer width="100%" height={200}>
                   <RechartsBarChart data={data.deploymentStatus}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis
-                      dataKey="name"
-                      tick={{ fontSize: 10 }}
-                      angle={-45}
-                      textAnchor="end"
-                      height={80}
-                    />
+                    <XAxis dataKey="name" tick={{ fontSize: 10 }} angle={-45} textAnchor="end" height={80} />
                     <YAxis />
                     <Tooltip />
                     <Bar dataKey="progress" fill={COLORS.primary} />
@@ -1134,35 +905,24 @@ export default function AIPerformanceDashboard() {
                 <div className="space-y-4">
                   <div className="flex justify-between">
                     <span>Completed Phases:</span>
-                    <span className="font-semibold">
-                      {completedPhases} / {totalPhases}
-                    </span>
+                    <span className="font-semibold">{completedPhases} / {totalPhases}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Overall Progress:</span>
                     <span className="font-semibold">
-                      {Math.round(
-                        data.deploymentStatus.reduce((sum, p) => sum + p.progress, 0) /
-                          totalPhases
-                      )}
-                      %
+                      {Math.round(data.deploymentStatus.reduce((sum, p) => sum + p.progress, 0) / totalPhases)}%
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Active Phase:</span>
                     <span className="font-semibold">
-                      {data.deploymentStatus.find(p => p.status === 'in_progress')
-                        ?.name || 'None'}
+                      {data.deploymentStatus.find(p => p.status === 'in_progress')?.name || 'None'}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span>System Status:</span>
-                    <Badge
-                      variant={completedPhases === totalPhases ? 'default' : 'warning'}
-                    >
-                      {completedPhases === totalPhases
-                        ? 'Fully Deployed'
-                        : 'In Progress'}
+                    <Badge variant={completedPhases === totalPhases ? 'default' : 'warning'}>
+                      {completedPhases === totalPhases ? 'Fully Deployed' : 'In Progress'}
                     </Badge>
                   </div>
                 </div>

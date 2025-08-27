@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import {
+import { 
   Activity,
   BarChart3,
   Brain,
@@ -15,7 +15,7 @@ import {
   Lightbulb,
   Monitor,
   Settings,
-  Zap,
+  Zap
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
@@ -30,45 +30,39 @@ export default function AIPerformanceDashboardDemo() {
   const features = [
     {
       icon: <Activity className="w-6 h-6 text-blue-600" />,
-      title: 'Real-time Monitoring',
-      description:
-        'Live monitoring of all AI services with automatic health checks every 30 seconds',
+      title: "Real-time Monitoring",
+      description: "Live monitoring of all AI services with automatic health checks every 30 seconds"
     },
     {
       icon: <Brain className="w-6 h-6 text-purple-600" />,
-      title: 'Behavioral Intelligence Analytics',
-      description:
-        'Deep insights into user behavioral patterns, anomaly detection, and predictive analysis',
+      title: "Behavioral Intelligence Analytics",
+      description: "Deep insights into user behavioral patterns, anomaly detection, and predictive analysis"
     },
     {
       icon: <BarChart3 className="w-6 h-6 text-green-600" />,
-      title: 'Performance Metrics',
-      description:
-        'Comprehensive performance tracking with historical trends and forecasting',
+      title: "Performance Metrics",
+      description: "Comprehensive performance tracking with historical trends and forecasting"
     },
     {
       icon: <Zap className="w-6 h-6 text-yellow-600" />,
-      title: 'Voice AI Analytics',
-      description:
-        'Voice mood effectiveness tracking, user preference analysis, and response time optimization',
+      title: "Voice AI Analytics",
+      description: "Voice mood effectiveness tracking, user preference analysis, and response time optimization"
     },
     {
       icon: <Database className="w-6 h-6 text-indigo-600" />,
-      title: 'Rewards System Insights',
-      description:
-        'User engagement metrics, achievement unlock rates, and satisfaction scoring',
+      title: "Rewards System Insights",
+      description: "User engagement metrics, achievement unlock rates, and satisfaction scoring"
     },
     {
       icon: <Monitor className="w-6 h-6 text-red-600" />,
-      title: 'Deployment Orchestration',
-      description:
-        '5-phase deployment tracking with rollback capabilities and service health monitoring',
-    },
+      title: "Deployment Orchestration",
+      description: "5-phase deployment tracking with rollback capabilities and service health monitoring"
+    }
   ];
 
   const integrationExamples = [
     {
-      title: 'Service Health Integration',
+      title: "Service Health Integration",
       code: `// Real-time service health monitoring
 const serviceHealth = await AIDeploymentOrchestrator
   .getInstance()
@@ -79,10 +73,10 @@ serviceHealth.forEach(service => {
   if (service.status !== 'healthy') {
     AlertSystem.notify(\`\${service.name} is \${service.status}\`);
   }
-});`,
+});`
     },
     {
-      title: 'Behavioral Analytics Integration',
+      title: "Behavioral Analytics Integration",
       code: `// Generate comprehensive behavioral insights
 const insights = await AdvancedBehavioralIntelligence
   .getInstance()
@@ -93,10 +87,10 @@ insights.insights.forEach(insight => {
   if (insight.actionability === 'immediate') {
     Dashboard.showRecommendation(insight);
   }
-});`,
+});`
     },
     {
-      title: 'Voice AI Performance Tracking',
+      title: "Voice AI Performance Tracking",
       code: `// Track voice AI effectiveness
 const voiceMetrics = await VoiceAIEnhancedService
   .getInstance()
@@ -105,10 +99,10 @@ const voiceMetrics = await VoiceAIEnhancedService
 // Optimize voice mood selection
 const optimalMood = voiceMetrics.find(m => 
   m.successRate > 85 && m.userPreference > 80
-);`,
+);`
     },
     {
-      title: 'Rewards Analytics Integration',
+      title: "Rewards Analytics Integration",
       code: `// Analyze reward system performance
 const rewardSystem = await AIRewardsService
   .getInstance()
@@ -118,87 +112,50 @@ const rewardSystem = await AIRewardsService
 Dashboard.updateMetrics({
   engagementRate: rewardSystem.engagementRate,
   satisfactionScore: rewardSystem.satisfactionScore
-});`,
-    },
+});`
+    }
   ];
 
   const apiEndpoints = [
-    {
-      method: 'GET',
-      endpoint: '/api/ai/health',
-      description: 'Get overall AI system health status',
-    },
-    {
-      method: 'GET',
-      endpoint: '/api/ai/metrics',
-      description: 'Retrieve current AI performance metrics',
-    },
-    {
-      method: 'GET',
-      endpoint: '/api/ai/insights',
-      description: 'Get behavioral intelligence insights',
-    },
-    {
-      method: 'GET',
-      endpoint: '/api/ai/voice-analytics',
-      description: 'Voice AI performance and usage analytics',
-    },
-    {
-      method: 'GET',
-      endpoint: '/api/ai/rewards-metrics',
-      description: 'Rewards system engagement metrics',
-    },
-    {
-      method: 'GET',
-      endpoint: '/api/ai/deployment-status',
-      description: 'Current deployment phase status',
-    },
-    {
-      method: 'POST',
-      endpoint: '/api/ai/deploy-phase',
-      description: 'Deploy specific AI phase',
-    },
-    {
-      method: 'POST',
-      endpoint: '/api/ai/rollback-phase',
-      description: 'Rollback specific AI phase',
-    },
+    { method: 'GET', endpoint: '/api/ai/health', description: 'Get overall AI system health status' },
+    { method: 'GET', endpoint: '/api/ai/metrics', description: 'Retrieve current AI performance metrics' },
+    { method: 'GET', endpoint: '/api/ai/insights', description: 'Get behavioral intelligence insights' },
+    { method: 'GET', endpoint: '/api/ai/voice-analytics', description: 'Voice AI performance and usage analytics' },
+    { method: 'GET', endpoint: '/api/ai/rewards-metrics', description: 'Rewards system engagement metrics' },
+    { method: 'GET', endpoint: '/api/ai/deployment-status', description: 'Current deployment phase status' },
+    { method: 'POST', endpoint: '/api/ai/deploy-phase', description: 'Deploy specific AI phase' },
+    { method: 'POST', endpoint: '/api/ai/rollback-phase', description: 'Rollback specific AI phase' }
   ];
 
   const useCases = [
     {
-      title: 'Production Monitoring',
-      description:
-        'Monitor AI service health, detect anomalies, and ensure optimal performance in production environments.',
+      title: "Production Monitoring",
+      description: "Monitor AI service health, detect anomalies, and ensure optimal performance in production environments."
     },
     {
-      title: 'User Experience Optimization',
-      description:
-        'Analyze user interaction patterns to optimize voice moods, reward strategies, and personalization algorithms.',
+      title: "User Experience Optimization",
+      description: "Analyze user interaction patterns to optimize voice moods, reward strategies, and personalization algorithms."
     },
     {
-      title: 'System Performance Tuning',
-      description:
-        'Identify performance bottlenecks, optimize response times, and improve overall system efficiency.',
+      title: "System Performance Tuning",
+      description: "Identify performance bottlenecks, optimize response times, and improve overall system efficiency."
     },
     {
-      title: 'Deployment Management',
-      description:
-        'Track AI feature rollouts, manage gradual deployments, and handle rollbacks when necessary.',
+      title: "Deployment Management",
+      description: "Track AI feature rollouts, manage gradual deployments, and handle rollbacks when necessary."
     },
     {
-      title: 'Business Intelligence',
-      description:
-        'Generate insights for business decisions based on AI system performance and user engagement metrics.',
-    },
+      title: "Business Intelligence",
+      description: "Generate insights for business decisions based on AI system performance and user engagement metrics."
+    }
   ];
 
   if (activeDemo === 'dashboard') {
     return (
       <div className="min-h-screen bg-gray-50">
         <div className="p-4">
-          <Button
-            variant="outline"
+          <Button 
+            variant="outline" 
             onClick={() => setActiveDemo('overview')}
             className="mb-4"
           >
@@ -219,17 +176,14 @@ Dashboard.updateMetrics({
             <div className="p-3 bg-blue-600 rounded-full">
               <Activity className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-4xl font-bold gradient-text">
-              AI Performance Dashboard
-            </h1>
+            <h1 className="text-4xl font-bold gradient-text">AI Performance Dashboard</h1>
           </div>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Comprehensive real-time monitoring and analytics dashboard for the Relife AI
-            ecosystem, providing deep insights into behavioral intelligence, voice AI,
-            rewards system, and deployment orchestration.
+            Comprehensive real-time monitoring and analytics dashboard for the Relife AI ecosystem, 
+            providing deep insights into behavioral intelligence, voice AI, rewards system, and deployment orchestration.
           </p>
           <div className="flex justify-center gap-4">
-            <Button
+            <Button 
               onClick={() => setActiveDemo('dashboard')}
               size="lg"
               className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
@@ -252,22 +206,18 @@ Dashboard.updateMetrics({
               Key Features
             </CardTitle>
             <CardDescription>
-              Advanced monitoring and analytics capabilities for comprehensive AI system
-              oversight
+              Advanced monitoring and analytics capabilities for comprehensive AI system oversight
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {features.map((feature, index) => (
-                <div
-                  key={index}
-                  className="flex gap-4 p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
-                >
-                  <div className="flex-shrink-0">{feature.icon}</div>
+                <div key={index} className="flex gap-4 p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+                  <div className="flex-shrink-0">
+                    {feature.icon}
+                  </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">
-                      {feature.title}
-                    </h3>
+                    <h3 className="font-semibold text-gray-900 mb-2">{feature.title}</h3>
                     <p className="text-sm text-gray-600">{feature.description}</p>
                   </div>
                 </div>
@@ -291,8 +241,7 @@ Dashboard.updateMetrics({
               <CardHeader>
                 <CardTitle>Integration Examples</CardTitle>
                 <CardDescription>
-                  Code examples showing how to integrate with the AI Performance
-                  Dashboard
+                  Code examples showing how to integrate with the AI Performance Dashboard
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -318,21 +267,15 @@ Dashboard.updateMetrics({
               <CardHeader>
                 <CardTitle>API Endpoints</CardTitle>
                 <CardDescription>
-                  REST API endpoints for accessing AI performance data and controlling
-                  system behavior
+                  REST API endpoints for accessing AI performance data and controlling system behavior
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {apiEndpoints.map((endpoint, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between p-4 border border-gray-200 rounded-lg"
-                    >
+                    <div key={index} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                       <div className="flex items-center gap-4">
-                        <Badge
-                          variant={endpoint.method === 'GET' ? 'secondary' : 'default'}
-                        >
+                        <Badge variant={endpoint.method === 'GET' ? 'secondary' : 'default'}>
                           {endpoint.method}
                         </Badge>
                         <code className="font-mono text-sm bg-gray-100 px-2 py-1 rounded">
@@ -386,9 +329,8 @@ Dashboard.updateMetrics({
                     <Info className="h-4 w-4" />
                     <AlertTitle>Architecture Overview</AlertTitle>
                     <AlertDescription>
-                      The AI Performance Dashboard is built on a modular architecture
-                      that integrates with multiple AI services to provide comprehensive
-                      monitoring and analytics capabilities.
+                      The AI Performance Dashboard is built on a modular architecture that integrates with 
+                      multiple AI services to provide comprehensive monitoring and analytics capabilities.
                     </AlertDescription>
                   </Alert>
 
@@ -489,8 +431,7 @@ Dashboard.updateMetrics({
           <CardHeader>
             <CardTitle>Quick Start</CardTitle>
             <CardDescription>
-              Get started with the AI Performance Dashboard in your development
-              environment
+              Get started with the AI Performance Dashboard in your development environment
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -515,9 +456,8 @@ function AdminPage() {
                 <Info className="h-4 w-4" />
                 <AlertTitle>Configuration Required</AlertTitle>
                 <AlertDescription>
-                  Make sure your AI services are properly configured and running before
-                  using the dashboard. The dashboard will show mock data in development
-                  mode and real data in production.
+                  Make sure your AI services are properly configured and running before using the dashboard. 
+                  The dashboard will show mock data in development mode and real data in production.
                 </AlertDescription>
               </Alert>
             </div>

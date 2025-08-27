@@ -1,6 +1,6 @@
 /**
  * Typed Redux Hooks
- *
+ * 
  * Pre-configured hooks with TypeScript support for the Relife app.
  * These hooks provide type safety when using Redux in components.
  */
@@ -23,27 +23,27 @@ export const useNavigationState = () => useAppSelector(state => state.navigation
 export const usePerformanceState = () => useAppSelector(state => state.performance);
 
 // Specific selectors for commonly used data
-export const useActiveAlarms = () =>
-  useAppSelector(state => state.alarm.alarms.filter(alarm => alarm.enabled));
+export const useActiveAlarms = () => useAppSelector(state => 
+  state.alarm.alarms.filter(alarm => alarm.enabled)
+);
 
 export const useCurrentUser = () => useAppSelector(state => state.user.profile);
 
-export const useSubscriptionTier = () =>
-  useAppSelector(state => state.subscription.currentTier);
+export const useSubscriptionTier = () => useAppSelector(state => 
+  state.subscription.currentTier
+);
 
-export const useIsLoading = () =>
-  useAppSelector(state => ({
-    alarms: state.alarm.loading,
-    user: state.user.loading,
-    subscription: state.subscription.loading,
-  }));
+export const useIsLoading = () => useAppSelector(state => ({
+  alarms: state.alarm.loading,
+  user: state.user.loading,
+  subscription: state.subscription.loading,
+}));
 
-export const useErrors = () =>
-  useAppSelector(state => ({
-    alarms: state.alarm.error,
-    user: state.user.error,
-    subscription: state.subscription.error,
-  }));
+export const useErrors = () => useAppSelector(state => ({
+  alarms: state.alarm.error,
+  user: state.user.error,
+  subscription: state.subscription.error,
+}));
 
 // DevTools helpers (development only)
 export const useDevTools = () => {

@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import React, { useState, useRef, useCallback } from 'react';
 import {
-  // BlobPart is a native Web API type - no import needed
+// BlobPart is a native Web API type - no import needed
   Mic,
   Upload,
   Play,

@@ -1,16 +1,11 @@
 /**
  * Enhanced Service Factories for Dependency Injection Container
- *
+ * 
  * This file contains factory implementations that create enhanced service instances
  * for the dependency injection container system.
  */
 
-import {
-  BaseService,
-  ServiceFactory,
-  ServiceConfig,
-  ServiceMap,
-} from '../../types/service-architecture';
+import { BaseService, ServiceFactory, ServiceConfig, ServiceMap } from '../../types/service-architecture';
 import {
   IAlarmService,
   IAnalyticsService,
@@ -22,7 +17,7 @@ import {
   ISecurityService,
   INotificationService,
   IAudioService,
-  IPerformanceService,
+  IPerformanceService
 } from '../../types/service-interfaces';
 
 // Import enhanced service implementations
@@ -48,26 +43,24 @@ export class EnhancedAlarmServiceFactory implements ServiceFactory<IAlarmService
     const securityService = dependencies.get('SecurityService') as ISecurityService;
     const analyticsService = dependencies.get('AnalyticsService') as IAnalyticsService;
     const battleService = dependencies.get('BattleService') as IBattleService;
-
+    
     return new EnhancedAlarmService({
       storageService,
       securityService,
       analyticsService,
       battleService,
-      config,
+      config
     });
   }
 }
 
-export class EnhancedAnalyticsServiceFactory
-  implements ServiceFactory<IAnalyticsService>
-{
+export class EnhancedAnalyticsServiceFactory implements ServiceFactory<IAnalyticsService> {
   create(dependencies: ServiceMap, config: ServiceConfig): IAnalyticsService {
     const storageService = dependencies.get('StorageService') as IStorageService;
-
+    
     return new EnhancedAnalyticsService({
       storageService,
-      config,
+      config
     });
   }
 }
@@ -82,17 +75,15 @@ export class EnhancedStorageServiceFactory implements ServiceFactory<IStorageSer
 // Legacy Service Factories (to be enhanced)
 // ============================================================================
 
-export class SubscriptionServiceFactory
-  implements ServiceFactory<ISubscriptionService>
-{
+export class SubscriptionServiceFactory implements ServiceFactory<ISubscriptionService> {
   create(dependencies: ServiceMap, config: ServiceConfig): ISubscriptionService {
     const analyticsService = dependencies.get('AnalyticsService') as IAnalyticsService;
     const storageService = dependencies.get('StorageService') as IStorageService;
-
+    
     return new SubscriptionService({
       analyticsService,
       storageService,
-      config,
+      config
     });
   }
 }
@@ -101,11 +92,11 @@ export class VoiceServiceFactory implements ServiceFactory<IVoiceService> {
   create(dependencies: ServiceMap, config: ServiceConfig): IVoiceService {
     const audioService = dependencies.get('AudioService') as IAudioService;
     const analyticsService = dependencies.get('AnalyticsService') as IAnalyticsService;
-
+    
     return new VoiceService({
       audioService,
       analyticsService,
-      config,
+      config
     });
   }
 }
@@ -114,11 +105,11 @@ export class BattleServiceFactory implements ServiceFactory<IBattleService> {
   create(dependencies: ServiceMap, config: ServiceConfig): IBattleService {
     const storageService = dependencies.get('StorageService') as IStorageService;
     const analyticsService = dependencies.get('AnalyticsService') as IAnalyticsService;
-
+    
     return new BattleService({
       storageService,
       analyticsService,
-      config,
+      config
     });
   }
 }
@@ -126,7 +117,7 @@ export class BattleServiceFactory implements ServiceFactory<IBattleService> {
 export class AudioServiceFactory implements ServiceFactory<IAudioService> {
   create(dependencies: ServiceMap, config: ServiceConfig): IAudioService {
     return new AudioService({
-      config,
+      config
     });
   }
 }
@@ -134,25 +125,23 @@ export class AudioServiceFactory implements ServiceFactory<IAudioService> {
 export class PerformanceServiceFactory implements ServiceFactory<IPerformanceService> {
   create(dependencies: ServiceMap, config: ServiceConfig): IPerformanceService {
     const analyticsService = dependencies.get('AnalyticsService') as IAnalyticsService;
-
+    
     return new PerformanceMonitorService({
       analyticsService,
-      config,
+      config
     });
   }
 }
 
-export class NotificationServiceFactory
-  implements ServiceFactory<INotificationService>
-{
+export class NotificationServiceFactory implements ServiceFactory<INotificationService> {
   create(dependencies: ServiceMap, config: ServiceConfig): INotificationService {
     const analyticsService = dependencies.get('AnalyticsService') as IAnalyticsService;
     const storageService = dependencies.get('StorageService') as IStorageService;
-
+    
     return new NotificationService({
       analyticsService,
       storageService,
-      config,
+      config
     });
   }
 }
@@ -164,11 +153,11 @@ export class NotificationServiceFactory
 export class CacheServiceFactory implements ServiceFactory<ICacheService> {
   create(dependencies: ServiceMap, config: ServiceConfig): ICacheService {
     const storageService = dependencies.get('StorageService') as IStorageService;
-
+    
     const { CacheManager } = require('../base/CacheManager');
     return new CacheManager({
       storageService,
-      config,
+      config
     });
   }
 }
@@ -176,11 +165,11 @@ export class CacheServiceFactory implements ServiceFactory<ICacheService> {
 export class SecurityServiceFactory implements ServiceFactory<ISecurityService> {
   create(dependencies: ServiceMap, config: ServiceConfig): ISecurityService {
     const analyticsService = dependencies.get('AnalyticsService') as IAnalyticsService;
-
+    
     const { SecurityService } = require('../security');
     return new SecurityService({
       analyticsService,
-      config,
+      config
     });
   }
 }
@@ -220,16 +209,14 @@ export function createEnhancedServiceDescriptor(
     dependencies,
     singleton,
     _config: config as ServiceConfig,
-    tags: tags || [],
+    tags: tags || []
   };
 }
 
 export function getDefaultServiceConfig(): ServiceConfig {
   return {
     enabled: true,
-    environment:
-      (process.env.NODE_ENV as 'development' | 'staging' | 'production') ||
-      'development',
+    environment: (process.env.NODE_ENV as 'development' | 'staging' | 'production') || 'development',
     debug: process.env.NODE_ENV === 'development',
     timeout: 30000,
     retryAttempts: 3,

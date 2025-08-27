@@ -1,6 +1,6 @@
 /**
  * API Monitor Panel - Track API Calls and Responses
- *
+ * 
  * Monitors and displays:
  * - HTTP requests and responses
  * - Request/response times
@@ -54,14 +54,10 @@ export const APIMonitorPanel: React.FC = () => {
   const [apiCalls, setApiCalls] = useState<APICall[]>([]);
   const [isMonitoring, setIsMonitoring] = useState(true);
   const [selectedCall, setSelectedCall] = useState<APICall | null>(null);
-  const [filterStatus, setFilterStatus] = useState<
-    'all' | 'success' | 'error' | 'pending'
-  >('all');
-  const [filterMethod, setFilterMethod] = useState<
-    'all' | 'GET' | 'POST' | 'PUT' | 'DELETE'
-  >('all');
+  const [filterStatus, setFilterStatus] = useState<'all' | 'success' | 'error' | 'pending'>('all');
+  const [filterMethod, setFilterMethod] = useState<'all' | 'GET' | 'POST' | 'PUT' | 'DELETE'>('all');
   const [searchTerm, setSearchTerm] = useState('');
-
+  
   const originalFetchRef = useRef<typeof fetch>();
   const pendingRequests = useRef<Map<string, number>>(new Map());
 
@@ -75,14 +71,11 @@ export const APIMonitorPanel: React.FC = () => {
     }
 
     // Create intercepted fetch
-    window.fetch = async (
-      input: RequestInfo | URL,
-      init?: RequestInit
-    ): Promise<Response> => {
+    window.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
       const url = input instanceof Request ? input.url : input.toString();
       const method = (init?.method || 'GET').toUpperCase() as APICall['method'];
       const requestId = `${Date.now()}-${Math.random()}`;
-
+      
       const startTime = performance.now();
       pendingRequests.current.set(requestId, startTime);
 
@@ -168,17 +161,12 @@ export const APIMonitorPanel: React.FC = () => {
 
   // Calculate stats
   const stats: APIStats = React.useMemo(() => {
-    const success = apiCalls.filter(
-      call => call.status >= 200 && call.status < 300
-    ).length;
-    const errors = apiCalls.filter(
-      call => call.status >= 400 || call.status === 0
-    ).length;
+    const success = apiCalls.filter(call => call.status >= 200 && call.status < 300).length;
+    const errors = apiCalls.filter(call => call.status >= 400 || call.status === 0).length;
     const pending = pendingRequests.current.size;
-    const avgTime =
-      apiCalls.length > 0
-        ? apiCalls.reduce((sum, call) => sum + call.duration, 0) / apiCalls.length
-        : 0;
+    const avgTime = apiCalls.length > 0 
+      ? apiCalls.reduce((sum, call) => sum + call.duration, 0) / apiCalls.length 
+      : 0;
 
     return {
       total: apiCalls.length,
@@ -192,19 +180,15 @@ export const APIMonitorPanel: React.FC = () => {
   // Filter API calls
   const filteredCalls = apiCalls.filter(call => {
     if (filterStatus !== 'all') {
-      if (filterStatus === 'success' && (call.status < 200 || call.status >= 300))
-        return false;
-      if (filterStatus === 'error' && call.status < 400 && call.status !== 0)
-        return false;
-      if (filterStatus === 'pending' && !pendingRequests.current.has(call.id))
-        return false;
+      if (filterStatus === 'success' && (call.status < 200 || call.status >= 300)) return false;
+      if (filterStatus === 'error' && (call.status < 400 && call.status !== 0)) return false;
+      if (filterStatus === 'pending' && !pendingRequests.current.has(call.id)) return false;
     }
-
+    
     if (filterMethod !== 'all' && call.method !== filterMethod) return false;
-
-    if (searchTerm && !call.url.toLowerCase().includes(searchTerm.toLowerCase()))
-      return false;
-
+    
+    if (searchTerm && !call.url.toLowerCase().includes(searchTerm.toLowerCase())) return false;
+    
     return true;
   });
 
@@ -246,30 +230,26 @@ export const APIMonitorPanel: React.FC = () => {
       <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <Globe
-              className={`w-5 h-5 ${isMonitoring ? 'text-green-500' : 'text-gray-400'}`}
-            />
+            <Globe className={`w-5 h-5 ${isMonitoring ? 'text-green-500' : 'text-gray-400'}`} />
             <span className="font-medium">API Monitor</span>
-            <span
-              className={`text-xs px-2 py-1 rounded ${isMonitoring ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}`}
-            >
+            <span className={`text-xs px-2 py-1 rounded ${isMonitoring ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}`}>
               {isMonitoring ? 'INTERCEPTING' : 'PAUSED'}
             </span>
           </div>
-
+          
           <input
             type="text"
             placeholder="Filter by URL..."
             value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
+            onChange={(e) => setSearchTerm(e.target.value)}
             className="px-3 py-1 border border-gray-300 rounded text-sm"
           />
         </div>
-
+        
         <div className="flex items-center gap-2">
           <select
             value={filterStatus}
-            onChange={e => setFilterStatus(e.target.value as any)}
+            onChange={(e) => setFilterStatus(e.target.value as any)}
             className="px-2 py-1 border border-gray-300 rounded text-sm"
           >
             <option value="all">All Status</option>
@@ -277,10 +257,10 @@ export const APIMonitorPanel: React.FC = () => {
             <option value="error">Error</option>
             <option value="pending">Pending</option>
           </select>
-
+          
           <select
             value={filterMethod}
-            onChange={e => setFilterMethod(e.target.value as any)}
+            onChange={(e) => setFilterMethod(e.target.value as any)}
             className="px-2 py-1 border border-gray-300 rounded text-sm"
           >
             <option value="all">All Methods</option>
@@ -289,19 +269,15 @@ export const APIMonitorPanel: React.FC = () => {
             <option value="PUT">PUT</option>
             <option value="DELETE">DELETE</option>
           </select>
-
+          
           <button
             onClick={() => setIsMonitoring(!isMonitoring)}
             className={`p-2 rounded ${isMonitoring ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}
             title={isMonitoring ? 'Pause monitoring' : 'Resume monitoring'}
           >
-            {isMonitoring ? (
-              <Pause className="w-4 h-4" />
-            ) : (
-              <Play className="w-4 h-4" />
-            )}
+            {isMonitoring ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
           </button>
-
+          
           <button
             onClick={() => setApiCalls([])}
             className="p-2 bg-gray-100 text-gray-600 rounded hover:bg-gray-200"
@@ -309,7 +285,7 @@ export const APIMonitorPanel: React.FC = () => {
           >
             <Trash2 className="w-4 h-4" />
           </button>
-
+          
           <button
             onClick={exportData}
             className="p-2 bg-blue-100 text-blue-600 rounded hover:bg-blue-200"
@@ -339,9 +315,7 @@ export const APIMonitorPanel: React.FC = () => {
           <div className="text-sm text-yellow-600">Pending</div>
         </div>
         <div className="p-3 border border-blue-200 bg-blue-50 rounded-lg text-center">
-          <div className="text-2xl font-bold text-blue-800">
-            {stats.averageResponseTime.toFixed(0)}ms
-          </div>
+          <div className="text-2xl font-bold text-blue-800">{stats.averageResponseTime.toFixed(0)}ms</div>
           <div className="text-sm text-blue-600">Avg Time</div>
         </div>
       </div>
@@ -364,14 +338,10 @@ export const APIMonitorPanel: React.FC = () => {
               >
                 <div className="flex items-center justify-between mb-1">
                   <div className="flex items-center gap-2">
-                    <span
-                      className={`px-2 py-1 rounded text-xs font-mono ${getMethodColor(call.method)}`}
-                    >
+                    <span className={`px-2 py-1 rounded text-xs font-mono ${getMethodColor(call.method)}`}>
                       {call.method}
                     </span>
-                    <span
-                      className={`px-2 py-1 rounded text-xs ${getStatusColor(call.status)}`}
-                    >
+                    <span className={`px-2 py-1 rounded text-xs ${getStatusColor(call.status)}`}>
                       {call.status || 'ERR'}
                     </span>
                   </div>
@@ -380,17 +350,17 @@ export const APIMonitorPanel: React.FC = () => {
                     {call.duration.toFixed(0)}ms
                   </div>
                 </div>
-
+                
                 <div className="text-sm font-mono text-gray-800 truncate">
                   {call.url.replace(/^https?:\/\/[^\/]+/, '')}
                 </div>
-
+                
                 <div className="text-xs text-gray-500 mt-1">
                   {new Date(call.timestamp).toLocaleTimeString()}
                 </div>
               </div>
             ))}
-
+            
             {filteredCalls.length === 0 && (
               <div className="p-8 text-center text-gray-500">
                 No API calls match the current filters
@@ -410,23 +380,11 @@ export const APIMonitorPanel: React.FC = () => {
                 <div>
                   <h5 className="font-medium text-sm mb-2">Request Info</h5>
                   <div className="space-y-1 text-sm">
-                    <div>
-                      <strong>URL:</strong> {selectedCall.url}
-                    </div>
-                    <div>
-                      <strong>Method:</strong> {selectedCall.method}
-                    </div>
-                    <div>
-                      <strong>Status:</strong> {selectedCall.status}{' '}
-                      {selectedCall.statusText}
-                    </div>
-                    <div>
-                      <strong>Duration:</strong> {selectedCall.duration.toFixed(2)}ms
-                    </div>
-                    <div>
-                      <strong>Time:</strong>{' '}
-                      {new Date(selectedCall.timestamp).toLocaleString()}
-                    </div>
+                    <div><strong>URL:</strong> {selectedCall.url}</div>
+                    <div><strong>Method:</strong> {selectedCall.method}</div>
+                    <div><strong>Status:</strong> {selectedCall.status} {selectedCall.statusText}</div>
+                    <div><strong>Duration:</strong> {selectedCall.duration.toFixed(2)}ms</div>
+                    <div><strong>Time:</strong> {new Date(selectedCall.timestamp).toLocaleString()}</div>
                   </div>
                 </div>
 
@@ -434,13 +392,9 @@ export const APIMonitorPanel: React.FC = () => {
                   <div>
                     <h5 className="font-medium text-sm mb-2">Request Headers</h5>
                     <div className="bg-gray-50 p-2 rounded text-xs font-mono">
-                      {Object.entries(selectedCall.requestHeaders).map(
-                        ([key, value]) => (
-                          <div key={key}>
-                            <strong>{key}:</strong> {value}
-                          </div>
-                        )
-                      )}
+                      {Object.entries(selectedCall.requestHeaders).map(([key, value]) => (
+                        <div key={key}><strong>{key}:</strong> {value}</div>
+                      ))}
                     </div>
                   </div>
                 )}
@@ -449,10 +403,9 @@ export const APIMonitorPanel: React.FC = () => {
                   <div>
                     <h5 className="font-medium text-sm mb-2">Request Body</h5>
                     <div className="bg-gray-50 p-2 rounded text-xs font-mono max-h-32 overflow-auto">
-                      <pre>
-                        {typeof selectedCall.requestBody === 'string'
-                          ? selectedCall.requestBody
-                          : JSON.stringify(selectedCall.requestBody, null, 2)}
+                      <pre>{typeof selectedCall.requestBody === 'string' 
+                        ? selectedCall.requestBody 
+                        : JSON.stringify(selectedCall.requestBody, null, 2)}
                       </pre>
                     </div>
                   </div>
@@ -462,13 +415,9 @@ export const APIMonitorPanel: React.FC = () => {
                   <div>
                     <h5 className="font-medium text-sm mb-2">Response Headers</h5>
                     <div className="bg-gray-50 p-2 rounded text-xs font-mono">
-                      {Object.entries(selectedCall.responseHeaders).map(
-                        ([key, value]) => (
-                          <div key={key}>
-                            <strong>{key}:</strong> {value}
-                          </div>
-                        )
-                      )}
+                      {Object.entries(selectedCall.responseHeaders).map(([key, value]) => (
+                        <div key={key}><strong>{key}:</strong> {value}</div>
+                      ))}
                     </div>
                   </div>
                 )}
@@ -477,10 +426,9 @@ export const APIMonitorPanel: React.FC = () => {
                   <div>
                     <h5 className="font-medium text-sm mb-2">Response Body</h5>
                     <div className="bg-gray-50 p-2 rounded text-xs font-mono max-h-32 overflow-auto">
-                      <pre>
-                        {typeof selectedCall.responseBody === 'string'
-                          ? selectedCall.responseBody
-                          : JSON.stringify(selectedCall.responseBody, null, 2)}
+                      <pre>{typeof selectedCall.responseBody === 'string' 
+                        ? selectedCall.responseBody 
+                        : JSON.stringify(selectedCall.responseBody, null, 2)}
                       </pre>
                     </div>
                   </div>

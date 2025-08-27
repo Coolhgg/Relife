@@ -263,159 +263,153 @@ function useAuth(): AuthHook {
     }
   };
 
-  const signIn = useCallback(
-    async (email: string, password: string): Promise<void> => {
-      // Rate limiting check
-      if (!SecurityService.checkRateLimit('sign_in', 5, RATE_LIMIT_WINDOW_MS)) {
-        setAuthState((prev: AuthState) => ({
-          ...prev,
-          _error: 'Too many sign-in attempts. Please try again in 15 minutes.',
-          rateLimitRemaining: 0,
-        }));
+  const signIn = useCallback(async (email: string, password: string): Promise<void> => {
+    // Rate limiting check
+    if (!SecurityService.checkRateLimit('sign_in', 5, RATE_LIMIT_WINDOW_MS)) {
+      setAuthState((prev: AuthState) => ({
+        ...prev,
+        _error: 'Too many sign-in attempts. Please try again in 15 minutes.',
+        rateLimitRemaining: 0,
+      }));
+      return;
+    }
+
+    setAuthState((prev: AuthState) => ({
+      ...prev,
+      isLoading: true,
+      _error: null,
+      forgotPasswordSuccess: false,
+      rateLimitRemaining: Math.max(0, prev.rateLimitRemaining - 1),
+    }));
+
+    try {
+      const analytics = AnalyticsService.getInstance();
+      const startTime = performance.now();
+
+      const { user, _error } = await SupabaseService.signIn(email, password);
+
+      if (_error) {
+        setAuthState((prev: AuthState) => ({ ...prev, isLoading: false, _error }));
+        analytics.trackError(new Error(_error), 'sign_in_failed');
         return;
       }
 
-      setAuthState((prev: AuthState) => ({
-        ...prev,
-        isLoading: true,
-        _error: null,
-        forgotPasswordSuccess: false,
-        rateLimitRemaining: Math.max(0, prev.rateLimitRemaining - 1),
-      }));
+      if (_user) {
+        setAuthState((prev: AuthState) => ({
+          ...prev,
+          _user,
+          isLoading: false,
+          _error: null,
+        }));
 
-      try {
-        const analytics = AnalyticsService.getInstance();
-        const startTime = performance.now();
-
-        const { user, _error } = await SupabaseService.signIn(email, password);
-
-        if (_error) {
-          setAuthState((prev: AuthState) => ({ ...prev, isLoading: false, _error }));
-          analytics.trackError(new Error(_error), 'sign_in_failed');
-          return;
-        }
-
-        if (_user) {
-          setAuthState((prev: AuthState) => ({
-            ...prev,
-            _user,
-            isLoading: false,
-            _error: null,
-          }));
-
-          const duration = performance.now() - startTime;
-          analytics.trackFeatureUsage('user_sign_in_success', duration, {
-            userId: _user.id,
-            method: 'email_password',
-          });
-        } else {
-          setAuthState((prev: AuthState) => ({
-            ...prev,
-            isLoading: false,
-            _error: 'Sign in failed. Please try again.',
-          }));
-        }
-      } catch (error) {
-        const analytics = AnalyticsService.getInstance();
-        analytics.trackError(
-          error instanceof Error ? error : new Error(String(error)),
-          'sign_in_error'
-        );
-
-        ErrorHandler.handleError(
-          error instanceof Error ? error : new Error(String(error)),
-          'Sign in failed',
-          { context: 'sign_in', metadata: { email } }
-        );
-
+        const duration = performance.now() - startTime;
+        analytics.trackFeatureUsage('user_sign_in_success', duration, {
+          userId: _user.id,
+          method: 'email_password',
+        });
+      } else {
         setAuthState((prev: AuthState) => ({
           ...prev,
           isLoading: false,
-          _error: 'An unexpected error occurred. Please try again.',
+          _error: 'Sign in failed. Please try again.',
         }));
       }
-    },
-    [authState.rateLimitRemaining]
-  );
+    } catch (error) {
+      const analytics = AnalyticsService.getInstance();
+      analytics.trackError(
+        error instanceof Error ? error : new Error(String(error)),
+        'sign_in_error'
+      );
 
-  const signUp = useCallback(
-    async (email: string, password: string, name: string): Promise<void> => {
-      // Rate limiting check
-      if (!SecurityService.checkRateLimit('sign_up', 3, RATE_LIMIT_WINDOW_MS)) {
-        setAuthState((prev: AuthState) => ({
-          ...prev,
-          _error: 'Too many sign-up attempts. Please try again in 15 minutes.',
-          rateLimitRemaining: 0,
-        }));
+      ErrorHandler.handleError(
+        error instanceof Error ? error : new Error(String(error)),
+        'Sign in failed',
+        { context: 'sign_in', metadata: { email } }
+      );
+
+      setAuthState((prev: AuthState) => ({
+        ...prev,
+        isLoading: false,
+        _error: 'An unexpected error occurred. Please try again.',
+      }));
+    }
+  }, [authState.rateLimitRemaining]);
+
+  const signUp = useCallback(async (
+    email: string,
+    password: string,
+    name: string
+  ): Promise<void> => {
+    // Rate limiting check
+    if (!SecurityService.checkRateLimit('sign_up', 3, RATE_LIMIT_WINDOW_MS)) {
+      setAuthState((prev: AuthState) => ({
+        ...prev,
+        _error: 'Too many sign-up attempts. Please try again in 15 minutes.',
+        rateLimitRemaining: 0,
+      }));
+      return;
+    }
+
+    setAuthState((prev: AuthState) => ({
+      ...prev,
+      isLoading: true,
+      _error: null,
+      forgotPasswordSuccess: false,
+      rateLimitRemaining: Math.max(0, prev.rateLimitRemaining - 1),
+    }));
+
+    try {
+      const analytics = AnalyticsService.getInstance();
+      const startTime = performance.now();
+
+      const { user, error } = await SupabaseService.signUp(email, password, name);
+
+      if (error) {
+        setAuthState((prev: AuthState) => ({ ...prev, isLoading: false, _error: error }));
+        analytics.trackError(new Error(error), 'sign_up_failed');
         return;
       }
 
-      setAuthState((prev: AuthState) => ({
-        ...prev,
-        isLoading: true,
-        _error: null,
-        forgotPasswordSuccess: false,
-        rateLimitRemaining: Math.max(0, prev.rateLimitRemaining - 1),
-      }));
+      if (user) {
+        setAuthState((prev: AuthState) => ({
+          ...prev,
+          user,
+          isLoading: false,
+          _error: null,
+        }));
 
-      try {
-        const analytics = AnalyticsService.getInstance();
-        const startTime = performance.now();
-
-        const { user, error } = await SupabaseService.signUp(email, password, name);
-
-        if (error) {
-          setAuthState((prev: AuthState) => ({
-            ...prev,
-            isLoading: false,
-            _error: error,
-          }));
-          analytics.trackError(new Error(error), 'sign_up_failed');
-          return;
-        }
-
-        if (user) {
-          setAuthState((prev: AuthState) => ({
-            ...prev,
-            user,
-            isLoading: false,
-            _error: null,
-          }));
-
-          const duration = performance.now() - startTime;
-          analytics.trackFeatureUsage('user_sign_up_success', duration, {
-            userId: user.id,
-            method: 'email_password',
-          });
-        } else {
-          setAuthState((prev: AuthState) => ({
-            ...prev,
-            isLoading: false,
-            _error: 'Account creation failed. Please try again.',
-          }));
-        }
-      } catch (error) {
-        const analytics = AnalyticsService.getInstance();
-        analytics.trackError(
-          error instanceof Error ? error : new Error(String(error)),
-          'sign_up_error'
-        );
-
-        ErrorHandler.handleError(
-          error instanceof Error ? error : new Error(String(error)),
-          'Sign up failed',
-          { context: 'sign_up', metadata: { email, name } }
-        );
-
+        const duration = performance.now() - startTime;
+        analytics.trackFeatureUsage('user_sign_up_success', duration, {
+          userId: user.id,
+          method: 'email_password',
+        });
+      } else {
         setAuthState((prev: AuthState) => ({
           ...prev,
           isLoading: false,
-          _error: 'An unexpected error occurred. Please try again.',
+          _error: 'Account creation failed. Please try again.',
         }));
       }
-    },
-    [authState.rateLimitRemaining]
-  );
+    } catch (error) {
+      const analytics = AnalyticsService.getInstance();
+      analytics.trackError(
+        error instanceof Error ? error : new Error(String(error)),
+        'sign_up_error'
+      );
+
+      ErrorHandler.handleError(
+        error instanceof Error ? error : new Error(String(error)),
+        'Sign up failed',
+        { context: 'sign_up', metadata: { email, name } }
+      );
+
+      setAuthState((prev: AuthState) => ({
+        ...prev,
+        isLoading: false,
+        _error: 'An unexpected error occurred. Please try again.',
+      }));
+    }
+  }, [authState.rateLimitRemaining]);
 
   const signOut = useCallback(async (): Promise<void> => {
     setAuthState((prev: AuthState) => ({ ...prev, isLoading: true, _error: null }));
@@ -427,11 +421,7 @@ function useAuth(): AuthHook {
       const { error } = await SupabaseService.signOut();
 
       if (error) {
-        setAuthState((prev: AuthState) => ({
-          ...prev,
-          isLoading: false,
-          _error: error,
-        }));
+        setAuthState((prev: AuthState) => ({ ...prev, isLoading: false, _error: error }));
         return;
       }
 
@@ -466,75 +456,72 @@ function useAuth(): AuthHook {
     }
   }, [authState.user?.id]);
 
-  const resetPassword = useCallback(
-    async (email: string): Promise<void> => {
-      // Rate limiting check
-      if (!SecurityService.checkRateLimit('password_reset', 3, RATE_LIMIT_WINDOW_MS)) {
+  const resetPassword = useCallback(async (email: string): Promise<void> => {
+    // Rate limiting check
+    if (!SecurityService.checkRateLimit('password_reset', 3, RATE_LIMIT_WINDOW_MS)) {
+      setAuthState((prev: AuthState) => ({
+        ...prev,
+        _error: 'Too many password reset attempts. Please try again in 15 minutes.',
+        rateLimitRemaining: 0,
+      }));
+      return;
+    }
+
+    setAuthState((prev: AuthState) => ({
+      ...prev,
+      isLoading: true,
+      _error: null,
+      forgotPasswordSuccess: false,
+      rateLimitRemaining: Math.max(0, prev.rateLimitRemaining - 1),
+    }));
+
+    try {
+      const analytics = AnalyticsService.getInstance();
+
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (error) {
         setAuthState((prev: AuthState) => ({
           ...prev,
-          _error: 'Too many password reset attempts. Please try again in 15 minutes.',
-          rateLimitRemaining: 0,
+          isLoading: false,
+          _error: error.message,
         }));
+        analytics.trackError(new Error(error.message), 'password_reset_failed');
         return;
       }
 
       setAuthState((prev: AuthState) => ({
         ...prev,
-        isLoading: true,
+        isLoading: false,
         _error: null,
-        forgotPasswordSuccess: false,
-        rateLimitRemaining: Math.max(0, prev.rateLimitRemaining - 1),
+        forgotPasswordSuccess: true,
       }));
 
-      try {
-        const analytics = AnalyticsService.getInstance();
+      analytics.trackFeatureUsage('password_reset_requested', undefined, {
+        email,
+      });
+    } catch (error) {
+      const analytics = AnalyticsService.getInstance();
+      analytics.trackError(
+        error instanceof Error ? error : new Error(String(error)),
+        'password_reset_error'
+      );
 
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: `${window.location.origin}/reset-password`,
-        });
+      ErrorHandler.handleError(
+        error instanceof Error ? error : new Error(String(error)),
+        'Password reset failed',
+        { context: 'password_reset', metadata: { email } }
+      );
 
-        if (error) {
-          setAuthState((prev: AuthState) => ({
-            ...prev,
-            isLoading: false,
-            _error: error.message,
-          }));
-          analytics.trackError(new Error(error.message), 'password_reset_failed');
-          return;
-        }
-
-        setAuthState((prev: AuthState) => ({
-          ...prev,
-          isLoading: false,
-          _error: null,
-          forgotPasswordSuccess: true,
-        }));
-
-        analytics.trackFeatureUsage('password_reset_requested', undefined, {
-          email,
-        });
-      } catch (error) {
-        const analytics = AnalyticsService.getInstance();
-        analytics.trackError(
-          error instanceof Error ? error : new Error(String(error)),
-          'password_reset_error'
-        );
-
-        ErrorHandler.handleError(
-          error instanceof Error ? error : new Error(String(error)),
-          'Password reset failed',
-          { context: 'password_reset', metadata: { email } }
-        );
-
-        setAuthState((prev: AuthState) => ({
-          ...prev,
-          isLoading: false,
-          _error: 'Failed to send reset email. Please try again.',
-        }));
-      }
-    },
-    [authState.rateLimitRemaining]
-  );
+      setAuthState((prev: AuthState) => ({
+        ...prev,
+        isLoading: false,
+        _error: 'Failed to send reset email. Please try again.',
+      }));
+    }
+  }, [authState.rateLimitRemaining]);
 
   const clearError = useCallback((): void => {
     setAuthState((prev: AuthState) => ({
@@ -544,105 +531,88 @@ function useAuth(): AuthHook {
     }));
   }, []);
 
-  const updateUserProfile = useCallback(
-    async (updates: Partial<User>): Promise<void> => {
-      if (!authState.user) {
-        throw new Error('No user logged in');
+  const updateUserProfile = useCallback(async (updates: Partial<User>): Promise<void> => {
+    if (!authState.user) {
+      throw new Error('No user logged in');
+    }
+
+    setAuthState((prev: AuthState) => ({ ...prev, isLoading: true, _error: null }));
+
+    try {
+      const analytics = AnalyticsService.getInstance();
+
+      // Update user profile in Supabase
+      const { error } = await supabase
+        .from('users')
+        .update({
+          name: updates.name,
+          preferences: updates.preferences,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', authState.user.id);
+
+      if (error) {
+        setAuthState((prev: AuthState) => ({
+          ...prev,
+          isLoading: false,
+          _error: error.message,
+        }));
+        return;
       }
 
-      setAuthState((prev: AuthState) => ({ ...prev, isLoading: true, _error: null }));
+      // Update local state
+      const updatedUser: User = {
+        ...authState.user,
+        ...updates,
+      };
 
-      try {
-        const analytics = AnalyticsService.getInstance();
+      setAuthState((prev: AuthState) => ({
+        ...prev,
+        user: updatedUser,
+        isLoading: false,
+        _error: null,
+      }));
 
-        // Update user profile in Supabase
-        const { error } = await supabase
-          .from('users')
-          .update({
-            name: updates.name,
-            preferences: updates.preferences,
-            updated_at: new Date().toISOString(),
-          })
-          .eq('id', authState.user.id);
+      analytics.trackFeatureUsage('user_profile_updated', undefined, {
+        userId: authState.user.id,
+        updatedFields: Object.keys(updates),
+      });
+    } catch (error) {
+      const analytics = AnalyticsService.getInstance();
+      analytics.trackError(
+        error instanceof Error ? error : new Error(String(error)),
+        'profile_update_error'
+      );
 
-        if (error) {
-          setAuthState((prev: AuthState) => ({
-            ...prev,
-            isLoading: false,
-            _error: error.message,
-          }));
-          return;
+      ErrorHandler.handleError(
+        error instanceof Error ? error : new Error(String(error)),
+        'Failed to update profile',
+        {
+          context: 'profile_update',
+          metadata: { userId: authState.user.id, updates },
         }
+      );
 
-        // Update local state
-        const updatedUser: User = {
-          ...authState.user,
-          ...updates,
-        };
+      setAuthState((prev: AuthState) => ({
+        ...prev,
+        isLoading: false,
+        _error: 'Failed to update profile. Please try again.',
+      }));
+    }
+  }, [authState.user]);
 
-        setAuthState((prev: AuthState) => ({
-          ...prev,
-          user: updatedUser,
-          isLoading: false,
-          _error: null,
-        }));
-
-        analytics.trackFeatureUsage('user_profile_updated', undefined, {
-          userId: authState.user.id,
-          updatedFields: Object.keys(updates),
-        });
-      } catch (error) {
-        const analytics = AnalyticsService.getInstance();
-        analytics.trackError(
-          error instanceof Error ? error : new Error(String(error)),
-          'profile_update_error'
-        );
-
-        ErrorHandler.handleError(
-          error instanceof Error ? error : new Error(String(error)),
-          'Failed to update profile',
-          {
-            context: 'profile_update',
-            metadata: { userId: authState.user.id, updates },
-          }
-        );
-
-        setAuthState((prev: AuthState) => ({
-          ...prev,
-          isLoading: false,
-          _error: 'Failed to update profile. Please try again.',
-        }));
-      }
-    },
-    [authState.user]
-  );
-
-  return useMemo(
-    () => ({
-      ...authState,
-      signIn,
-      signUp,
-      signOut,
-      resetPassword,
-      clearError,
-      updateUserProfile,
-      refreshSession,
-      isSessionValid,
-      getRateLimitInfo,
-    }),
-    [
-      authState,
-      signIn,
-      signUp,
-      signOut,
-      resetPassword,
-      clearError,
-      updateUserProfile,
-      refreshSession,
-      isSessionValid,
-      getRateLimitInfo,
-    ]
-  );
+  return useMemo(() => ({
+    ...authState,
+    signIn,
+    signUp,
+    signOut,
+    resetPassword,
+    clearError,
+    updateUserProfile,
+    refreshSession,
+    isSessionValid,
+    getRateLimitInfo,
+  }), [authState, signIn, signUp, signOut, resetPassword, clearError, updateUserProfile, refreshSession, isSessionValid, getRateLimitInfo]);
 }
 
 export default useAuth;

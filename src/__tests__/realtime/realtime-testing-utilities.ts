@@ -12,7 +12,7 @@ export class MockWebSocket {
   static instances: MockWebSocket[] = [];
   static events: Array<{
     type: string;
-    data: unknown;
+    data: any;
     timestamp: number;
     socketId: string;
   }> = [];
@@ -23,7 +23,7 @@ export class MockWebSocket {
   public id: string;
 
   private eventListeners: Map<string, AnyFn[]> = new Map();
-  private messageQueue: unknown[] = [];
+  private messageQueue: any[] = [];
 
   static readonly CONNECTING = 0;
   static readonly OPEN = 1;
@@ -67,7 +67,7 @@ export class MockWebSocket {
     }
   }
 
-  send(data: unknown) {
+  send(data: any) {
     MockWebSocket.events.push({
       type: 'send',
       data,
@@ -126,7 +126,7 @@ export class MockWebSocket {
   }
 
   // Test utilities
-  private trigger(type: string, _event: unknown) {
+  private trigger(type: string, _event: any) {
     const listeners = this.eventListeners.get(type) || [];
     listeners.forEach(listener => {
       try {
@@ -144,7 +144,7 @@ export class MockWebSocket {
     });
   }
 
-  private triggerMessage(data: unknown) {
+  private triggerMessage(data: any) {
     if (this.readyState !== MockWebSocket.OPEN) {
       this.messageQueue.push(data);
       return;
@@ -163,7 +163,7 @@ export class MockWebSocket {
   }
 
   // Utility method for testing - simulate receiving a message
-  simulateMessage(data: unknown) {
+  simulateMessage(data: any) {
     this.triggerMessage(data);
   }
 
@@ -199,14 +199,14 @@ export class MockWebSocket {
     return this.instances.find(ws => ws.url === url);
   }
 
-  static simulateServerMessage(url: string, data: unknown) {
+  static simulateServerMessage(url: string, data: any) {
     const ws = this.findByUrl(url);
     if (ws) {
       ws.simulateMessage(data);
     }
   }
 
-  static simulateServerBroadcast(data: unknown) {
+  static simulateServerBroadcast(data: any) {
     this.instances.forEach(ws => {
       if (ws.readyState === MockWebSocket.OPEN) {
         ws.simulateMessage(data);
@@ -220,7 +220,7 @@ export class RealTimeTestUtils {
   private static battleUpdates: Array<{
     battleId: string;
     type: string;
-    data: unknown;
+    data: any;
     timestamp: number;
   }> = [];
 
@@ -241,8 +241,8 @@ export class RealTimeTestUtils {
     const battleChannel = new MockSupabaseRealtimeChannel(`battle:${battleId}`);
 
     // Set up battle subscriptions
-    const battleEvents: unknown[] = [];
-    battleChannel.on('broadcast', (payload: unknown) => {
+    const battleEvents: any[] = [];
+    battleChannel.on('broadcast', (payload: any) => {
       battleEvents.push(payload);
       this.battleUpdates.push({
         battleId,
@@ -252,7 +252,7 @@ export class RealTimeTestUtils {
       });
     });
 
-    battleChannel.on('presence', (payload: unknown) => {
+    battleChannel.on('presence', (payload: any) => {
       battleEvents.push(payload);
       Object.entries(payload.payload || {}).forEach(([userId, data]: [string, any]) => {
         this.presenceUpdates.push({
@@ -321,8 +321,8 @@ export class RealTimeTestUtils {
   ) {
     const presenceChannel = new MockSupabaseRealtimeChannel('presence');
 
-    const presenceEvents: unknown[] = [];
-    presenceChannel.on('presence', (payload: unknown) => {
+    const presenceEvents: any[] = [];
+    presenceChannel.on('presence', (payload: any) => {
       presenceEvents.push(payload);
     });
 
@@ -363,8 +363,8 @@ export class RealTimeTestUtils {
     const wsUrl = `wss://localhost:3001/battles/${battleId}`;
     const ws = new MockWebSocket(wsUrl);
 
-    const messages: unknown[] = [];
-    ws.addEventListener('message', (_event: unknown) => {
+    const messages: any[] = [];
+    ws.addEventListener('message', (_event: any) => {
       try {
         const data = JSON.parse(_event.data);
         messages.push(data);
@@ -491,7 +491,7 @@ export class RealTimeTestUtils {
 
     let receivedMessages = 0;
 
-    ws.addEventListener('message', (_event: unknown) => {
+    ws.addEventListener('message', (_event: any) => {
       const data = JSON.parse(_event.data);
       const receivedTime = Date.now();
 
@@ -579,7 +579,7 @@ export class RealTimeTestUtils {
 
 // WebSocket Event Matchers for Jest
 export const webSocketMatchers = {
-  toHaveReceivedMessage: (ws: MockWebSocket, expectedMessage: unknown) => {
+  toHaveReceivedMessage: (ws: MockWebSocket, expectedMessage: any) => {
     const events = MockWebSocket.getEvents().filter(
       event => event.socketId === ws.id && _event.type === 'event_message'
     );
@@ -630,7 +630,7 @@ export const setupRealTimeTesting = () => {
   const originalWebSocket = global.WebSocket;
 
   beforeAll(() => {
-    global.WebSocket = MockWebSocket as unknown;
+    global.WebSocket = MockWebSocket as any;
   });
 
   beforeEach(() => {

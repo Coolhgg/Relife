@@ -15,11 +15,7 @@ import {
   isAppInitialized,
 } from '../ServiceBootstrap';
 import { ServiceContainer } from '../base/ServiceContainer';
-import {
-  IAlarmService,
-  IAnalyticsService,
-  IStorageService,
-} from '../../types/service-interfaces';
+import { IAlarmService, IAnalyticsService, IStorageService } from '../../types/service-interfaces';
 
 describe('ServiceBootstrap', () => {
   beforeEach(async () => {
@@ -43,7 +39,7 @@ describe('ServiceBootstrap', () => {
   describe('Service Initialization', () => {
     test('should initialize test services successfully', async () => {
       const container = await initializeTestServices();
-
+      
       expect(container).toBeInstanceOf(ServiceContainer);
       expect(isAppInitialized()).toBe(true);
     });
@@ -54,7 +50,7 @@ describe('ServiceBootstrap', () => {
         logDependencyGraph: false,
         validateConfiguration: true,
       });
-
+      
       expect(container).toBeInstanceOf(ServiceContainer);
       expect(isAppInitialized()).toBe(true);
     });
@@ -80,11 +76,11 @@ describe('ServiceBootstrap', () => {
       const alarmService = getService<IAlarmService>('AlarmService');
       const analyticsService = getService<IAnalyticsService>('AnalyticsService');
       const storageService = getService<IStorageService>('StorageService');
-
+      
       expect(alarmService).toBeDefined();
       expect(analyticsService).toBeDefined();
       expect(storageService).toBeDefined();
-
+      
       // Check that services have expected methods
       expect(typeof alarmService.createAlarm).toBe('function');
       expect(typeof analyticsService.track).toBe('function');
@@ -93,9 +89,8 @@ describe('ServiceBootstrap', () => {
 
     test('should resolve services asynchronously', async () => {
       const alarmService = await resolveService<IAlarmService>('AlarmService');
-      const analyticsService =
-        await resolveService<IAnalyticsService>('AnalyticsService');
-
+      const analyticsService = await resolveService<IAnalyticsService>('AnalyticsService');
+      
       expect(alarmService).toBeDefined();
       expect(analyticsService).toBeDefined();
     });
@@ -110,18 +105,16 @@ describe('ServiceBootstrap', () => {
     test('should throw error for non-existent service', () => {
       expect(() => {
         getService('NonExistentService');
-      }).toThrow(
-        'Service NonExistentService is not registered or failed to initialize'
-      );
+      }).toThrow('Service NonExistentService is not registered or failed to initialize');
     });
 
     test('should throw error when container not initialized', async () => {
       await disposeServices();
-
+      
       expect(() => {
         getServiceContainer();
       }).toThrow('Service container not initialized');
-
+      
       expect(isAppInitialized()).toBe(false);
     });
   });
@@ -133,11 +126,11 @@ describe('ServiceBootstrap', () => {
 
     test('should perform health check on initialized services', async () => {
       const healthResult = await performHealthCheck();
-
+      
       expect(healthResult).toHaveProperty('healthy');
       expect(healthResult).toHaveProperty('services');
       expect(healthResult).toHaveProperty('stats');
-
+      
       expect(typeof healthResult.healthy).toBe('boolean');
       expect(typeof healthResult.services).toBe('object');
       expect(typeof healthResult.stats).toBe('object');
@@ -145,9 +138,9 @@ describe('ServiceBootstrap', () => {
 
     test('should report unhealthy when container not initialized', async () => {
       await disposeServices();
-
+      
       const healthResult = await performHealthCheck();
-
+      
       expect(healthResult.healthy).toBe(false);
       expect(healthResult.services).toEqual({});
       expect(healthResult.stats).toHaveProperty('error');
@@ -161,11 +154,11 @@ describe('ServiceBootstrap', () => {
 
     test('should provide debug information', () => {
       const debugInfo = getDebugInfo();
-
+      
       expect(debugInfo).toHaveProperty('stats');
       expect(debugInfo).toHaveProperty('dependencyGraph');
       expect(debugInfo).toHaveProperty('containerState');
-
+      
       expect(debugInfo.containerState.initialized).toBe(true);
       expect(typeof debugInfo.stats.total).toBe('number');
       expect(typeof debugInfo.dependencyGraph).toBe('string');
@@ -173,9 +166,9 @@ describe('ServiceBootstrap', () => {
 
     test('should report error when container not initialized', async () => {
       await disposeServices();
-
+      
       const debugInfo = getDebugInfo();
-
+      
       expect(debugInfo).toHaveProperty('error');
       expect(debugInfo.error).toBe('Service container not initialized');
     });
@@ -185,7 +178,7 @@ describe('ServiceBootstrap', () => {
     test('should dispose of services properly', async () => {
       await initializeTestServices();
       expect(isAppInitialized()).toBe(true);
-
+      
       await disposeServices();
       expect(isAppInitialized()).toBe(false);
     });
@@ -203,11 +196,11 @@ describe('ServiceBootstrap', () => {
 
     test('should have working alarm service', async () => {
       const alarmService = getService<IAlarmService>('AlarmService');
-
+      
       // Test loading alarms
       const alarms = await alarmService.loadAlarms();
       expect(Array.isArray(alarms)).toBe(true);
-
+      
       // Test getting alarms
       const cachedAlarms = alarmService.getAlarms();
       expect(Array.isArray(cachedAlarms)).toBe(true);
@@ -215,12 +208,10 @@ describe('ServiceBootstrap', () => {
 
     test('should have working analytics service', async () => {
       const analyticsService = getService<IAnalyticsService>('AnalyticsService');
-
+      
       // Test tracking event
-      await expect(
-        analyticsService.track('test_event', { test: true })
-      ).resolves.toBeUndefined();
-
+      await expect(analyticsService.track('test_event', { test: true })).resolves.toBeUndefined();
+      
       // Test queue size
       const queueSize = analyticsService.getQueueSize();
       expect(typeof queueSize).toBe('number');
@@ -228,18 +219,18 @@ describe('ServiceBootstrap', () => {
 
     test('should have working storage service', async () => {
       const storageService = getService<IStorageService>('StorageService');
-
+      
       // Test storage operations
       await storageService.set('test_key', 'test_value');
       const value = await storageService.get('test_key');
       expect(value).toBe('test_value');
-
+      
       const hasKey = await storageService.has('test_key');
       expect(hasKey).toBe(true);
-
+      
       const deleted = await storageService.delete('test_key');
       expect(deleted).toBe(true);
-
+      
       const hasKeyAfterDelete = await storageService.has('test_key');
       expect(hasKeyAfterDelete).toBe(false);
     });
@@ -255,15 +246,15 @@ describe('ServiceBootstrap', () => {
       const alarmService = getService<IAlarmService>('AlarmService');
       const storageService = getService<IStorageService>('StorageService');
       const analyticsService = getService<IAnalyticsService>('AnalyticsService');
-
+      
       expect(alarmService).toBeDefined();
       expect(storageService).toBeDefined();
       expect(analyticsService).toBeDefined();
-
+      
       // All should be singleton instances
       const alarmService2 = getService<IAlarmService>('AlarmService');
       const storageService2 = getService<IStorageService>('StorageService');
-
+      
       expect(alarmService).toBe(alarmService2);
       expect(storageService).toBe(storageService2);
     });

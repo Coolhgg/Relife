@@ -9,12 +9,12 @@ import { AnyFn } from 'src/types/utility-types';
 
 const mockSentry = {
   // Initialization
-  init: jest.fn((options: unknown) => {
+  init: jest.fn((options: any) => {
     console.log('🔍 Mock Sentry initialized', options);
   }),
 
   // Error capturing
-  captureException: jest.fn((exception: unknown, hint?: any) => {
+  captureException: jest.fn((exception: any, hint?: any) => {
     console.log('❌ Mock Sentry captureException', exception, hint);
     return 'mock-event-id-' + Math.random().toString(36).substr(2, 9);
   }),
@@ -25,21 +25,21 @@ const mockSentry = {
   }),
 
   // Context and scope management
-  withScope: jest.fn((callback: (scope: unknown) => void) => {
+  withScope: jest.fn((callback: (scope: any) => void) => {
     const mockScope = {
       setTag: jest.fn((key: string, value: string) => {
         console.log(`🏷️ Mock Sentry setTag: ${key} = ${value}`);
       }),
-      setContext: jest.fn((key: string, context: unknown) => {
+      setContext: jest.fn((key: string, context: any) => {
         console.log(`📋 Mock Sentry setContext: ${key}`, context);
       }),
       setLevel: jest.fn((level: string) => {
         console.log(`📊 Mock Sentry setLevel: ${level}`);
       }),
-      setUser: jest.fn((_user: unknown) => {
+      setUser: jest.fn((_user: any) => {
         console.log('👤 Mock Sentry setUser', _user);
       }),
-      setExtra: jest.fn((key: string, extra: unknown) => {
+      setExtra: jest.fn((key: string, extra: any) => {
         console.log(`➕ Mock Sentry setExtra: ${key}`, extra);
       }),
       setFingerprint: jest.fn((fingerprint: string[]) => {
@@ -58,11 +58,11 @@ const mockSentry = {
     console.log(`🏷️ Mock Sentry global setTag: ${key} = ${value}`);
   }),
 
-  setContext: jest.fn((key: string, context: unknown) => {
+  setContext: jest.fn((key: string, context: any) => {
     console.log(`📋 Mock Sentry global setContext: ${key}`, context);
   }),
 
-  setUser: jest.fn((_user: unknown) => {
+  setUser: jest.fn((_user: any) => {
     console.log('👤 Mock Sentry global setUser', _user);
   }),
 
@@ -70,7 +70,7 @@ const mockSentry = {
     console.log(`📊 Mock Sentry global setLevel: ${level}`);
   }),
 
-  setExtra: jest.fn((key: string, extra: unknown) => {
+  setExtra: jest.fn((key: string, extra: any) => {
     console.log(`➕ Mock Sentry global setExtra: ${key}`, extra);
   }),
 
@@ -80,12 +80,12 @@ const mockSentry = {
   }),
 
   // Breadcrumbs
-  addBreadcrumb: jest.fn((breadcrumb: unknown) => {
+  addBreadcrumb: jest.fn((breadcrumb: any) => {
     console.log('🍞 Mock Sentry addBreadcrumb', breadcrumb);
   }),
 
   // Performance monitoring
-  startTransaction: jest.fn((context: unknown) => {
+  startTransaction: jest.fn((context: any) => {
     console.log('🚀 Mock Sentry startTransaction', context);
     return {
       setTag: jest.fn(),
@@ -115,14 +115,14 @@ const mockSentry = {
   })),
 
   // Configuration
-  configureScope: jest.fn((callback: (scope: unknown) => void) => {
+  configureScope: jest.fn((callback: (scope: any) => void) => {
     console.log('⚙️ Mock Sentry configureScope');
     mockSentry.withScope(callback);
   }),
 
   // Browser specific
   wrap: jest.fn((fn: AnyFn) => {
-    return (...args: unknown[]) => {
+    return (...args: any[]) => {
       try {
         return fn(...args);
       } catch (_error) {
@@ -138,7 +138,7 @@ const mockSentry = {
     return children;
   }),
 
-  withErrorBoundary: jest.fn((component: unknown, options?: any) => {
+  withErrorBoundary: jest.fn((component: any, options?: any) => {
     console.log('🛡️ Mock Sentry withErrorBoundary', options);
     return component;
   }),
@@ -147,7 +147,7 @@ const mockSentry = {
   Profiler: jest.fn(({ children }: any) => children),
 
   // Tracing
-  trace: jest.fn((operation: string, callback: () => unknown) => {
+  trace: jest.fn((operation: string, callback: () => any) => {
     console.log(`📊 Mock Sentry trace: ${operation}`);
     return callback();
   }),
@@ -194,7 +194,7 @@ const mockSentry = {
   }),
 
   // Event processors
-  addGlobalEventProcessor: jest.fn((processor: (_event: unknown) => unknown) => {
+  addGlobalEventProcessor: jest.fn((processor: (_event: any) => any) => {
     console.log('🔄 Mock Sentry addGlobalEventProcessor');
   }),
 
@@ -208,7 +208,7 @@ const mockSentry = {
     });
   }),
 
-  _mockSetUser: jest.fn((_user: unknown) => {
+  _mockSetUser: jest.fn((_user: any) => {
     mockSentry.setUser(_user);
   }),
 

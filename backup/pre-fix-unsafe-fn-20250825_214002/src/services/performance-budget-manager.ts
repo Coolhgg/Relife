@@ -1,9 +1,9 @@
 /// <reference types="node" />
 import type {
-  // auto: restored by scout - verify import path
-  // PerformanceEntryList is a native Web API type - available globally
-  // auto: restored by scout - verify import path
-  // PerformanceEntryList is a native Web API type - available globally
+// auto: restored by scout - verify import path
+// PerformanceEntryList is a native Web API type - available globally
+// auto: restored by scout - verify import path
+// PerformanceEntryList is a native Web API type - available globally
   PerformanceBudget,
   PerformanceThresholds,
   PerformanceAlert,

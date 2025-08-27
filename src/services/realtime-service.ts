@@ -8,6 +8,10 @@ import { ErrorHandler } from './error-handler';
 import PerformanceMonitor from './performance-monitor';
 import type { Alarm, User } from '../types';
 import { TimeoutHandle } from '../types/timers';
+import AnalyticsService from './analytics';
+import { ErrorHandler } from './error-handler';
+import { AnyFn } from 'src/types/utility-types';
+// Note: User data should be passed as parameters or retrieved from auth context
 
 export interface RealtimeConfig {
   enableWebSocket: boolean;
@@ -70,7 +74,7 @@ class RealtimeService {
   private performanceMonitor = PerformanceMonitor.getInstance();
 
   private constructor() {
-    this.config = {
+    this._config = {
       enableWebSocket: true,
       enablePushNotifications: true,
       enableLiveUpdates: true,
@@ -91,37 +95,37 @@ class RealtimeService {
   /**
    * Initialize the real-time service
    */
-  async initialize(user: User, config?: Partial<RealtimeConfig>): Promise<void> {
+  async initialize(_user: User, _config?: Partial<RealtimeConfig>): Promise<void> {
     try {
-      if (config) {
-        this.config = { ...this.config, ...config };
+      if (_config) {
+        this.config = { ...this.config, ..._config };
       }
 
       // Initialize push notifications
-      if (this.config.enablePushNotifications) {
+      if (this._config.enablePushNotifications) {
         await this.initializePushNotifications();
       }
 
       // Initialize WebSocket connection
-      if (this.config.enableWebSocket) {
-        await this.initializeWebSocket(user);
+      if (this._config.enableWebSocket) {
+        await this.initializeWebSocket(_user);
       }
 
       // Initialize Supabase real-time subscriptions
-      if (this.config.enableLiveUpdates) {
-        await this.initializeLiveUpdates(user);
+      if (this._config.enableLiveUpdates) {
+        await this.initializeLiveUpdates(_user);
       }
 
       // Initialize presence tracking
-      if (this.config.enablePresenceTracking) {
-        await this.initializePresenceTracking(user);
+      if (this._config.enablePresenceTracking) {
+        await this.initializePresenceTracking(_user);
       }
 
       console.info('Real-time service initialized successfully');
       this.performanceMonitor.trackCustomMetric('realtime_service_initialized', 1);
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error as Error,
+        _error as Error,
         'Failed to initialize real-time service',
         { context: 'RealtimeService.initialize' }
       );
@@ -158,8 +162,8 @@ class RealtimeService {
       } else {
         console.warn('Notification permission denied');
       }
-    } catch (error) {
-      console.error('Failed to initialize push notifications:', error);
+    } catch (_error) {
+      console._error('Failed to initialize push notifications:', _error);
     }
   }
 
@@ -180,29 +184,29 @@ class RealtimeService {
       });
 
       // Store subscription in Supabase
-      const { error } = await supabase.from('push_subscriptions').upsert({
+      const { _error } = await supabase.from('push_subscriptions').upsert({
         user_id: (await supabase.auth.getUser()).data.user?.id,
         subscription: JSON.stringify(subscription),
         created_at: new Date().toISOString(),
       });
 
-      if (error) {
-        throw error;
+      if (_error) {
+        throw _error;
       }
 
       console.info('Push notification subscription created');
-    } catch (error) {
-      console.error('Failed to subscribe to push notifications:', error);
+    } catch (_error) {
+      console._error('Failed to subscribe to push notifications:', _error);
     }
   }
 
   /**
    * Initialize WebSocket connection for real-time communication
    */
-  private async initializeWebSocket(user: User): Promise<void> {
+  private async initializeWebSocket(_user: User): Promise<void> {
     try {
       const wsUrl = process.env.REACT_APP_WEBSOCKET_URL || 'ws://localhost:8080';
-      this.websocket = new WebSocket(`${wsUrl}?userId=${user.id}`);
+      this.websocket = new WebSocket(`${wsUrl}?userId=${_user.id}`);
 
       this.websocket.onopen = () => {
         this.isConnected = true;
@@ -215,10 +219,10 @@ class RealtimeService {
 
       this.websocket.onmessage = event => {
         try {
-          const data = JSON.parse(event.data);
+          const data = JSON.parse(_event.data);
           this.handleWebSocketMessage(data);
-        } catch (error) {
-          console.error('Failed to parse WebSocket message:', error);
+        } catch (_error) {
+          console._error('Failed to parse WebSocket message:', _error);
         }
       };
 
@@ -227,33 +231,33 @@ class RealtimeService {
         console.warn('WebSocket disconnected');
         this.stopHeartbeat();
         this.emit('websocket_disconnected');
-        this.attemptReconnect(user);
+        this.attemptReconnect(_user);
       };
 
       this.websocket.onerror = error => {
-        console.error('WebSocket error:', error);
-        this.emit('websocket_error', error);
+        console.error('WebSocket _error:', _error);
+        this.emit('websocket_error', _error);
       };
-    } catch (error) {
-      console.error('Failed to initialize WebSocket:', error);
+    } catch (_error) {
+      console._error('Failed to initialize WebSocket:', _error);
     }
   }
 
   /**
    * Initialize Supabase real-time subscriptions
    */
-  private async initializeLiveUpdates(user: User): Promise<void> {
+  private async initializeLiveUpdates(_user: User): Promise<void> {
     try {
       // Subscribe to user-specific alarm changes
       const alarmChannel = supabase
-        .channel(`user-alarms-${user.id}`)
+        .channel(`user-alarms-${_user.id}`)
         .on(
           'postgres_changes',
           {
-            event: '*',
+            _event: '*',
             schema: 'public',
             table: 'alarms',
-            filter: `user_id=eq.${user.id}`,
+            filter: `user_id=eq.${_user.id}`,
           },
           payload => {
             this.handleDatabaseChange('alarm', payload);
@@ -262,10 +266,10 @@ class RealtimeService {
         .on(
           'postgres_changes',
           {
-            event: '*',
+            _event: '*',
             schema: 'public',
             table: 'alarm_events',
-            filter: `alarm_id=in.(${this.getUserAlarmIds(user.id)})`,
+            filter: `alarm_id=in.(${this.getUserAlarmIds(_user.id)})`,
           },
           payload => {
             this.handleDatabaseChange('alarm_event', payload);
@@ -277,14 +281,14 @@ class RealtimeService {
 
       // Subscribe to recommendations
       const recommendationChannel = supabase
-        .channel(`user-recommendations-${user.id}`)
+        .channel(`user-recommendations-${_user.id}`)
         .on(
           'postgres_changes',
           {
-            event: 'INSERT',
+            _event: 'INSERT',
             schema: 'public',
             table: 'smart_recommendations',
-            filter: `user_id=eq.${user.id}`,
+            filter: `user_id=eq.${_user.id}`,
           },
           payload => {
             this.handleDatabaseChange('recommendation', payload);
@@ -295,15 +299,15 @@ class RealtimeService {
       this.subscriptions.set('recommendations', recommendationChannel);
 
       console.info('Live updates initialized');
-    } catch (error) {
-      console.error('Failed to initialize live updates:', error);
+    } catch (_error) {
+      console._error('Failed to initialize live updates:', _error);
     }
   }
 
   /**
    * Initialize presence tracking
    */
-  private async initializePresenceTracking(user: User): Promise<void> {
+  private async initializePresenceTracking(_user: User): Promise<void> {
     try {
       this.presenceData = {
         userId: user.id,
@@ -319,14 +323,14 @@ class RealtimeService {
       // Track presence using Supabase real-time
       const presenceChannel = supabase
         .channel('presence-tracking')
-        .on('presence', { event: 'sync' }, () => {
+        .on('presence', { _event: 'sync' }, () => {
           const presenceState = presenceChannel.presenceState();
           this.emit('presence_updated', presenceState);
         })
-        .on('presence', { event: 'join' }, ({ key, newPresences }) => {
+        .on('presence', { _event: 'join' }, ({ key, newPresences }) => {
           this.emit('user_joined', { key, newPresences });
         })
-        .on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
+        .on('presence', { _event: 'leave' }, ({ key, leftPresences }) => {
           this.emit('user_left', { key, leftPresences });
         })
         .subscribe(async status => {
@@ -353,8 +357,8 @@ class RealtimeService {
           presenceChannel.track(this.presenceData);
         }
       });
-    } catch (error) {
-      console.error('Failed to initialize presence tracking:', error);
+    } catch (_error) {
+      console._error('Failed to initialize presence tracking:', _error);
     }
   }
 
@@ -393,8 +397,8 @@ class RealtimeService {
       this.performanceMonitor.trackCustomMetric('websocket_message_received', 1, {
         type: data.type,
       });
-    } catch (error) {
-      console.error('Failed to handle WebSocket message:', error);
+    } catch (_error) {
+      console._error('Failed to handle WebSocket message:', _error);
     }
   }
 
@@ -415,8 +419,8 @@ class RealtimeService {
         table,
         eventType: payload.eventType,
       });
-    } catch (error) {
-      console.error('Failed to handle database change:', error);
+    } catch (_error) {
+      console._error('Failed to handle database change:', _error);
     }
   }
 
@@ -438,9 +442,11 @@ class RealtimeService {
       };
 
       this.websocket.send(JSON.stringify(message));
-      this.performanceMonitor.trackCustomMetric('websocket_message_sent', 1, { type });
-    } catch (error) {
-      console.error('Failed to send WebSocket message:', error);
+      this.performanceMonitor.trackCustomMetric('websocket_message_sent', 1, {
+        type,
+      });
+    } catch (_error) {
+      console._error('Failed to send WebSocket message:', _error);
     }
   }
 
@@ -478,26 +484,26 @@ class RealtimeService {
       };
 
       this.performanceMonitor.trackCustomMetric('notification_shown', 1);
-    } catch (error) {
-      console.error('Failed to show notification:', error);
+    } catch (_error) {
+      console._error('Failed to show notification:', _error);
     }
   }
 
   /**
    * Add event listener
    */
-  on(event: string, callback: Function): void {
-    if (!this.eventListeners.has(event)) {
-      this.eventListeners.set(event, new Set());
+  on(_event: string, callback: AnyFn): void {
+    if (!this.eventListeners.has(_event)) {
+      this.eventListeners.set(_event, new Set());
     }
-    this.eventListeners.get(event)!.add(callback);
+    this.eventListeners.get(_event)!.add(callback);
   }
 
   /**
    * Remove event listener
    */
-  off(event: string, callback: Function): void {
-    const listeners = this.eventListeners.get(event);
+  off(_event: string, callback: AnyFn): void {
+    const listeners = this.eventListeners.get(_event);
     if (listeners) {
       listeners.delete(callback);
     }
@@ -506,14 +512,14 @@ class RealtimeService {
   /**
    * Emit event to all listeners
    */
-  private emit(event: string, data?: any): void {
-    const listeners = this.eventListeners.get(event);
+  private emit(_event: string, data?: any): void {
+    const listeners = this.eventListeners.get(_event);
     if (listeners) {
       listeners.forEach(callback => {
         try {
           callback(data);
-        } catch (error) {
-          console.error(`Error in event listener for ${event}:`, error);
+        } catch (_error) {
+          console._error(`Error in event listener for ${_event}:`, _error);
         }
       });
     }
@@ -541,22 +547,22 @@ class RealtimeService {
   /**
    * Attempt to reconnect WebSocket
    */
-  private async attemptReconnect(user: User): Promise<void> {
-    if (this.reconnectAttempt >= this.config.reconnectAttempts) {
-      console.error('Max reconnection attempts reached');
+  private async attemptReconnect(_user: User): Promise<void> {
+    if (this.reconnectAttempt >= this._config.reconnectAttempts) {
+      console._error('Max reconnection attempts reached');
       this.emit('reconnect_failed');
       return;
     }
 
     this.reconnectAttempt++;
     console.info(
-      `Attempting to reconnect... (${this.reconnectAttempt}/${this.config.reconnectAttempts})`
+      `Attempting to reconnect... (${this.reconnectAttempt}/${this._config.reconnectAttempts})`
     );
 
     setTimeout(
       () => {
         if (!this.isConnected) {
-          this.initializeWebSocket(user);
+          this.initializeWebSocket(_user);
         }
       },
       this.config.reconnectDelay * Math.pow(2, this.reconnectAttempt - 1)
@@ -623,8 +629,8 @@ class RealtimeService {
         .eq('user_id', userId);
 
       return alarms?.map((a: any) => a.id).join(',') || '';
-    } catch (error) {
-      console.error('Failed to get user alarm IDs:', error);
+    } catch (_error) {
+      console._error('Failed to get _user alarm IDs:', _error);
       return '';
     }
   }
@@ -656,8 +662,8 @@ class RealtimeService {
       this.eventListeners.clear();
 
       console.info('Real-time service disconnected');
-    } catch (error) {
-      console.error('Error disconnecting real-time service:', error);
+    } catch (_error) {
+      console._error('Error disconnecting real-time service:', _error);
     }
   }
 }

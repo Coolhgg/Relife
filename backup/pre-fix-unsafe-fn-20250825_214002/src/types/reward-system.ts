@@ -1,9 +1,9 @@
 /**
  * Reward System Type Definitions
- *
+ * 
  * This file contains comprehensive TypeScript interfaces for the reward system,
  * matching the database schema from migration 007_create_reward_system.sql
- *
+ * 
  * @version 1.0.0
  * @author Scout AI
  */
@@ -12,7 +12,7 @@
 // Enum Types (matching database enums)
 // ========================================
 
-export type RewardType =
+export type RewardType = 
   | 'achievement'
   | 'milestone'
   | 'streak'
@@ -31,7 +31,11 @@ export type RewardCategory =
   | 'master'
   | 'challenger';
 
-export type RewardRarity = 'common' | 'rare' | 'epic' | 'legendary';
+export type RewardRarity =
+  | 'common'
+  | 'rare'
+  | 'epic'
+  | 'legendary';
 
 export type GiftType =
   | 'theme'
@@ -60,7 +64,10 @@ export type AIInsightType =
   | 'optimization_tip'
   | 'celebration';
 
-export type InsightPriority = 'low' | 'medium' | 'high';
+export type InsightPriority =
+  | 'low'
+  | 'medium'
+  | 'high';
 
 // ========================================
 // Core Database Table Interfaces
@@ -75,30 +82,30 @@ export interface Reward {
   type: RewardType;
   category: RewardCategory;
   rarity: RewardRarity;
-
+  
   // Core reward information
   title: string;
   description: string;
   icon: string;
   points: number;
-
+  
   // Unlock conditions (stored as JSONB)
   unlock_conditions: Record<string, unknown>;
-
+  
   // Progress tracking
   progress_target?: number;
   progress_unit?: string;
-
+  
   // Personalization templates
   personalized_message_template?: string;
   ai_insight_template?: string;
-
+  
   // Metadata
   is_active: boolean;
   is_premium: boolean;
   sort_order: number;
   tags: string[];
-
+  
   // Audit fields
   created_at: string;
   updated_at: string;
@@ -112,22 +119,22 @@ export interface UserReward {
   id: string;
   user_id: string;
   reward_id: string;
-
+  
   // Unlock details
   unlocked_at: string;
   points_earned: number;
-
+  
   // Personalized content
   personalized_message?: string;
   ai_insight?: string;
-
+  
   // Progress tracking
   progress_current: number;
   progress_percentage: number;
-
+  
   // Context when unlocked
   unlock_context: Record<string, unknown>;
-
+  
   // Populated reward details (when joining with rewards table)
   reward?: Reward;
 }
@@ -139,37 +146,37 @@ export interface UserReward {
 export interface GiftCatalog {
   id: string;
   type: GiftType;
-
+  
   // Gift information
   name: string;
   description: string;
   preview_image?: string;
-
+  
   // Cost and availability
   cost_points: number;
   cost_premium_currency: number;
   is_purchasable_with_points: boolean;
   is_purchasable_with_currency: boolean;
-
+  
   // Gift content (file paths, theme data, etc.)
   content_data: Record<string, unknown>;
-
+  
   // Availability
   is_available: boolean;
   is_premium: boolean;
   is_seasonal: boolean;
   available_from?: string;
   available_until?: string;
-
+  
   // Requirements
   required_level: number;
   required_achievements: string[];
   required_subscription_tier?: string;
-
+  
   // Metadata
   tags: string[];
   sort_order: number;
-
+  
   // Audit fields
   created_at: string;
   updated_at: string;
@@ -183,21 +190,21 @@ export interface UserGiftInventory {
   id: string;
   user_id: string;
   gift_id: string;
-
+  
   // Acquisition details
   acquired_at: string;
   acquired_method: 'earned' | 'purchased_points' | 'purchased_currency' | 'gifted';
   cost_paid: number;
-
+  
   // Usage tracking
   is_equipped: boolean;
   first_used_at?: string;
   last_used_at?: string;
   usage_count: number;
-
+  
   // Metadata
   acquisition_context: Record<string, unknown>;
-
+  
   // Populated gift details (when joining with gift_catalog table)
   gift?: GiftCatalog;
 }
@@ -209,28 +216,28 @@ export interface UserGiftInventory {
 export interface UserAIInsight {
   id: string;
   user_id: string;
-
+  
   // Insight details
   type: AIInsightType;
   priority: InsightPriority;
   title: string;
   message: string;
   confidence: number;
-
+  
   // Actionability
   is_actionable: boolean;
   suggested_actions: string[];
-
+  
   // Analysis data
   analysis_data: Record<string, unknown>;
   patterns_detected: string[];
-
+  
   // User interaction
   is_read: boolean;
   is_dismissed: boolean;
   user_feedback?: number; // 1-5 rating
   user_feedback_text?: string;
-
+  
   // Timing
   created_at: string;
   expires_at?: string;
@@ -245,24 +252,24 @@ export interface UserAIInsight {
 export interface UserHabit {
   id: string;
   user_id: string;
-
+  
   // Habit identification
   pattern: string; // morning_routine, evening_routine, workout_time, etc.
   niche: UserNiche;
-
+  
   // Habit metrics
   frequency: number; // times per week
   consistency: number; // 0.0 to 1.0
   improvement_trend: number; // positive for improving, negative for declining
-
+  
   // Analysis metadata
   analyzed_from: string;
   analyzed_to: string;
   analysis_confidence: number;
-
+  
   // Habit context
   context_data: Record<string, unknown>;
-
+  
   // Audit fields
   created_at: string;
   updated_at: string;
@@ -276,16 +283,16 @@ export interface UserHabit {
 export interface UserNicheProfile {
   id: string;
   user_id: string;
-
+  
   // Primary niche identification
   primary_niche: UserNiche;
   secondary_niche?: UserNiche;
   confidence: number;
-
+  
   // User traits and preferences
   traits: string[];
   preferences: Record<string, unknown>;
-
+  
   // Analysis metadata
   analysis_version: string;
   last_updated_at: string;
@@ -298,32 +305,32 @@ export interface UserNicheProfile {
 export interface UserRewardAnalytics {
   id: string;
   user_id: string;
-
+  
   // Core metrics
   total_points: number;
   current_level: number;
   current_streak: number;
   longest_streak: number;
-
+  
   // Reward counts
   total_rewards_unlocked: number;
   rewards_this_week: number;
   rewards_this_month: number;
-
+  
   // Gift metrics
   total_gifts_owned: number;
   gifts_equipped: number;
   points_spent_on_gifts: number;
-
+  
   // Engagement metrics
   insights_generated: number;
   insights_acted_upon: number;
   avg_insight_rating?: number;
-
+  
   // Timing
   last_reward_earned_at?: string;
   last_analysis_run_at: string;
-
+  
   // Analytics metadata
   analysis_period_start: string;
   analysis_period_end: string;
@@ -339,56 +346,39 @@ export interface UserRewardAnalytics {
 export interface RewardSystem {
   // User reward management
   getUserRewards(userId: string): Promise<UserReward[]>;
-  unlockReward(
-    userId: string,
-    rewardId: string,
-    context?: Record<string, unknown>
-  ): Promise<UserReward>;
+  unlockReward(userId: string, rewardId: string, context?: Record<string, unknown>): Promise<UserReward>;
   checkRewardEligibility(userId: string, rewardId: string): Promise<boolean>;
-
+  
   // Reward catalog
   getAvailableRewards(userId: string, filters?: RewardFilters): Promise<Reward[]>;
   getRewardDetails(rewardId: string): Promise<Reward>;
-
+  
   // Gift system
   getGiftCatalog(filters?: GiftFilters): Promise<GiftCatalog[]>;
   getUserGiftInventory(userId: string): Promise<UserGiftInventory[]>;
-  purchaseGift(
-    userId: string,
-    giftId: string,
-    paymentMethod: 'points' | 'currency'
-  ): Promise<UserGiftInventory>;
+  purchaseGift(userId: string, giftId: string, paymentMethod: 'points' | 'currency'): Promise<UserGiftInventory>;
   equipGift(userId: string, giftId: string): Promise<void>;
   unequipGift(userId: string, giftId: string): Promise<void>;
-
+  
   // AI insights
   generateInsights(userId: string): Promise<UserAIInsight[]>;
   getUserInsights(userId: string, filters?: InsightFilters): Promise<UserAIInsight[]>;
   markInsightAsRead(userId: string, insightId: string): Promise<void>;
   dismissInsight(userId: string, insightId: string): Promise<void>;
-  rateInsight(
-    userId: string,
-    insightId: string,
-    rating: number,
-    feedback?: string
-  ): Promise<void>;
-
+  rateInsight(userId: string, insightId: string, rating: number, feedback?: string): Promise<void>;
+  
   // Habit analysis
   analyzeUserHabits(userId: string): Promise<UserHabit[]>;
   getUserHabits(userId: string): Promise<UserHabit[]>;
   updateUserNicheProfile(userId: string): Promise<UserNicheProfile>;
   getUserNicheProfile(userId: string): Promise<UserNicheProfile | null>;
-
+  
   // Analytics
   getUserAnalytics(userId: string): Promise<UserRewardAnalytics>;
   updateUserAnalytics(userId: string): Promise<UserRewardAnalytics>;
-
+  
   // Progress tracking
-  updateRewardProgress(
-    userId: string,
-    rewardId: string,
-    progress: number
-  ): Promise<void>;
+  updateRewardProgress(userId: string, rewardId: string, progress: number): Promise<void>;
   calculateUserLevel(userId: string): Promise<number>;
   calculateStreakInfo(userId: string): Promise<{ current: number; longest: number }>;
 }
@@ -478,12 +468,7 @@ export interface AnalysisResponse {
 // ========================================
 
 export interface RewardNotification {
-  type:
-    | 'reward_unlocked'
-    | 'level_up'
-    | 'streak_milestone'
-    | 'gift_available'
-    | 'insight_generated';
+  type: 'reward_unlocked' | 'level_up' | 'streak_milestone' | 'gift_available' | 'insight_generated';
   title: string;
   message: string;
   icon?: string;
@@ -619,23 +604,16 @@ export const isUserAIInsight = (value: unknown): value is UserAIInsight => {
 // Constants
 // ========================================
 
-export const REWARD_RARITIES: Record<RewardRarity, { color: string; weight: number }> =
-  {
-    common: { color: '#9CA3AF', weight: 1 },
-    rare: { color: '#3B82F6', weight: 2 },
-    epic: { color: '#8B5CF6', weight: 3 },
-    legendary: { color: '#F59E0B', weight: 4 },
-  };
+export const REWARD_RARITIES: Record<RewardRarity, { color: string; weight: number }> = {
+  common: { color: '#9CA3AF', weight: 1 },
+  rare: { color: '#3B82F6', weight: 2 },
+  epic: { color: '#8B5CF6', weight: 3 },
+  legendary: { color: '#F59E0B', weight: 4 },
+};
 
-export const REWARD_CATEGORIES: Record<
-  RewardCategory,
-  { icon: string; description: string }
-> = {
+export const REWARD_CATEGORIES: Record<RewardCategory, { icon: string; description: string }> = {
   consistency: { icon: '🔄', description: 'Regular alarm usage and wake-up habits' },
-  early_riser: {
-    icon: '🌅',
-    description: 'Waking up early and maintaining morning routines',
-  },
+  early_riser: { icon: '🌅', description: 'Waking up early and maintaining morning routines' },
   wellness: { icon: '🧘', description: 'Health and wellness-focused achievements' },
   productivity: { icon: '⚡', description: 'Productive habits and task completion' },
   social: { icon: '👥', description: 'Community engagement and sharing' },

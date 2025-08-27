@@ -33,7 +33,7 @@ export function MobileAlarmManager() {
   useEffect(() => {
     initializeMobileAlarmManager();
     setupMobileListeners();
-
+    
     return () => {
       // Cleanup listeners if needed
     };
@@ -55,15 +55,13 @@ export function MobileAlarmManager() {
 
       // Load alarms with fallback support
       await loadAlarms();
-
+      
       // Update storage status
       await updateStorageStatus();
 
       console.log('Mobile alarm manager initialized successfully');
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to initialize mobile storage'
-      );
+      setError(err instanceof Error ? err.message : 'Failed to initialize mobile storage');
       console.error('Mobile alarm manager initialization failed:', err);
     } finally {
       setLoading(false);
@@ -72,14 +70,14 @@ export function MobileAlarmManager() {
 
   const setupMobileListeners = () => {
     // Listen for app state changes
-    App.addListener('appStateChange', state => {
+    App.addListener('appStateChange', (state) => {
       if (state.isActive) {
         handleAppResume();
       }
     });
 
     // Listen for network changes
-    Network.addListener('networkStatusChange', status => {
+    Network.addListener('networkStatusChange', (status) => {
       handleNetworkChange(status.connected);
     });
   };
@@ -91,7 +89,7 @@ export function MobileAlarmManager() {
       setAlarms(enabledAlarms);
     } catch (err) {
       console.error('Failed to load alarms:', err);
-
+      
       // Try to load from native backup as last resort
       try {
         const backupAlarms = await mobileStorage.getCriticalAlarmsFromNative();
@@ -123,14 +121,14 @@ export function MobileAlarmManager() {
 
   const handleAppResume = useCallback(async () => {
     console.log('App resumed - refreshing alarms and checking storage health');
-
+    
     try {
       // Refresh alarms
       await loadAlarms();
-
+      
       // Update storage status
       await updateStorageStatus();
-
+      
       // Check if sync is needed
       const pendingChanges = await unifiedStorage.getPendingChanges();
       if (pendingChanges.length > 0) {
@@ -144,35 +142,33 @@ export function MobileAlarmManager() {
 
   const handleNetworkChange = useCallback(async (isOnline: boolean) => {
     console.log(`Network changed: ${isOnline ? 'online' : 'offline'}`);
-
+    
     if (isOnline) {
       // Network reconnected - check for pending sync
       try {
         const pendingChanges = await unifiedStorage.getPendingChanges();
         if (pendingChanges.length > 0) {
-          console.log(
-            `Network restored - ${pendingChanges.length} changes ready to sync`
-          );
+          console.log(`Network restored - ${pendingChanges.length} changes ready to sync`);
           // Could auto-sync here
         }
       } catch (err) {
         console.error('Failed to check pending changes:', err);
       }
     }
-
+    
     await updateStorageStatus();
   }, []);
 
   const saveAlarm = async (alarm: Alarm) => {
     try {
       setError(null);
-
+      
       // Use mobile-optimized save with automatic native backup
       await mobileStorage.saveAlarmOptimized(alarm);
-
+      
       // Refresh the alarm list
       await loadAlarms();
-
+      
       console.log('Alarm saved successfully:', alarm.title);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to save alarm';
@@ -184,17 +180,16 @@ export function MobileAlarmManager() {
   const deleteAlarm = async (alarmId: string) => {
     try {
       setError(null);
-
+      
       // Delete from main storage
       await unifiedStorage.deleteAlarm(alarmId);
-
+      
       // Refresh the alarm list
       await loadAlarms();
-
+      
       console.log('Alarm deleted successfully:', alarmId);
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : 'Failed to delete alarm';
+      const errorMessage = err instanceof Error ? err.message : 'Failed to delete alarm';
       setError(errorMessage);
       console.error('Failed to delete alarm:', err);
     }
@@ -204,32 +199,32 @@ export function MobileAlarmManager() {
     try {
       setSyncing(true);
       setError(null);
-
+      
       // Check storage health first
       const health = await unifiedStorage.checkStorageHealth();
-
+      
       if (!health.isHealthy) {
         console.warn('Storage health issues detected:', health.issues);
-
+        
         // Perform maintenance
         const maintenanceResult = await unifiedStorage.performMaintenance();
         console.log('Maintenance performed:', maintenanceResult);
       }
-
+      
       // Get pending changes
       const pendingChanges = await unifiedStorage.getPendingChanges();
       console.log(`Syncing ${pendingChanges.length} pending changes`);
-
+      
       // Here you would implement your server sync logic
       // For now, we'll just simulate it
       await new Promise(resolve => setTimeout(resolve, 1000));
-
+      
       // Clear pending changes after successful sync
       await unifiedStorage.clearPendingChanges();
-
+      
       // Refresh status
       await updateStorageStatus();
-
+      
       console.log('Sync completed successfully');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Sync failed';
@@ -243,13 +238,13 @@ export function MobileAlarmManager() {
   const clearMobileCache = async () => {
     try {
       setError(null);
-
+      
       // Clear non-essential cache for mobile optimization
       await unifiedStorage.clearCache(['temp', 'preview', 'images']);
-
+      
       // Update status
       await updateStorageStatus();
-
+      
       console.log('Mobile cache cleared successfully');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to clear cache';
@@ -269,7 +264,7 @@ export function MobileAlarmManager() {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-
+    
     await saveAlarm(testAlarm);
   };
 
@@ -287,16 +282,18 @@ export function MobileAlarmManager() {
       <header className="manager-header">
         <h2>Mobile Alarm Manager</h2>
         {storageStatus && (
-          <div
-            className={`storage-status ${storageStatus.isHealthy ? 'healthy' : 'warning'}`}
-          >
+          <div className={`storage-status ${storageStatus.isHealthy ? 'healthy' : 'warning'}`}>
             <span className="status-indicator"></span>
             {storageStatus.storageType} ({storageStatus.networkStatus})
           </div>
         )}
       </header>
 
-      {error && <div className="error-message">⚠️ {error}</div>}
+      {error && (
+        <div className="error-message">
+          ⚠️ {error}
+        </div>
+      )}
 
       {/* Storage Information */}
       {storageStatus && (
@@ -321,9 +318,11 @@ export function MobileAlarmManager() {
               </span>
             </div>
           </div>
-
+          
           {storageStatus.memoryOptimized && (
-            <div className="memory-warning">🧠 Memory optimization active</div>
+            <div className="memory-warning">
+              🧠 Memory optimization active
+            </div>
           )}
         </div>
       )}
@@ -332,11 +331,15 @@ export function MobileAlarmManager() {
       <div className="alarms-section">
         <div className="section-header">
           <h3>Enabled Alarms ({alarms.length})</h3>
-          <button className="add-button" onClick={addTestAlarm} disabled={syncing}>
+          <button 
+            className="add-button"
+            onClick={addTestAlarm}
+            disabled={syncing}
+          >
             + Add Test Alarm
           </button>
         </div>
-
+        
         <div className="alarms-list">
           {alarms.length === 0 ? (
             <div className="empty-state">
@@ -352,12 +355,12 @@ export function MobileAlarmManager() {
                   {alarm.label && <span className="alarm-label">{alarm.label}</span>}
                 </div>
                 <div className="alarm-actions">
-                  <button
+                  <button 
                     onClick={() => {
-                      const updatedAlarm = {
-                        ...alarm,
+                      const updatedAlarm = { 
+                        ...alarm, 
                         title: alarm.title + ' (Updated)',
-                        updatedAt: new Date(),
+                        updatedAt: new Date()
                       };
                       saveAlarm(updatedAlarm);
                     }}
@@ -365,7 +368,7 @@ export function MobileAlarmManager() {
                   >
                     Update
                   </button>
-                  <button
+                  <button 
                     onClick={() => deleteAlarm(alarm.id)}
                     disabled={syncing}
                     className="delete-button"
@@ -381,15 +384,23 @@ export function MobileAlarmManager() {
 
       {/* Actions */}
       <div className="actions-section">
-        <button onClick={performMobileSync} disabled={syncing} className="sync-button">
+        <button 
+          onClick={performMobileSync}
+          disabled={syncing}
+          className="sync-button"
+        >
           {syncing ? 'Syncing...' : 'Sync Storage'}
         </button>
-
-        <button onClick={clearMobileCache} disabled={syncing} className="cache-button">
+        
+        <button 
+          onClick={clearMobileCache}
+          disabled={syncing}
+          className="cache-button"
+        >
           Clear Cache
         </button>
-
-        <button
+        
+        <button 
           onClick={updateStorageStatus}
           disabled={syncing}
           className="refresh-button"

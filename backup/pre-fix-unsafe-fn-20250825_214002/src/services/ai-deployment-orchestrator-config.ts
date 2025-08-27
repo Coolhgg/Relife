@@ -22,11 +22,7 @@ export const deploymentOrchestratorConfigMethods = {
     preflightChecks: true,
     postDeploymentValidation: true,
     backupBeforeDeployment: true,
-    loadBalancing: 'weighted' as
-      | 'round_robin'
-      | 'weighted'
-      | 'least_connections'
-      | 'adaptive',
+    loadBalancing: 'weighted' as 'round_robin' | 'weighted' | 'least_connections' | 'adaptive',
     scalingPolicy: 'auto' as 'none' | 'manual' | 'auto' | 'predictive',
     performanceBaseline: true,
     userImpactMinimization: 0.9, // 0-1
@@ -35,7 +31,7 @@ export const deploymentOrchestratorConfigMethods = {
     secretsManagement: 'secure' as 'basic' | 'secure' | 'vault',
     complianceValidation: true,
     auditLogging: true,
-    deploymentNotifications: true,
+    deploymentNotifications: true
   },
 
   /**
@@ -96,11 +92,7 @@ export const deploymentOrchestratorConfigMethods = {
               }
               break;
             case 'loadBalancing':
-              if (
-                ['round_robin', 'weighted', 'least_connections', 'adaptive'].includes(
-                  value
-                )
-              ) {
+              if (['round_robin', 'weighted', 'least_connections', 'adaptive'].includes(value)) {
                 this.parameters.loadBalancing = value;
               }
               break;
@@ -120,10 +112,7 @@ export const deploymentOrchestratorConfigMethods = {
               }
               break;
             default:
-              if (
-                typeof this.parameters[key] === 'boolean' &&
-                typeof value === 'boolean'
-              ) {
+              if (typeof this.parameters[key] === 'boolean' && typeof value === 'boolean') {
                 this.parameters[key] = value;
               } else if (typeof this.parameters[key] === typeof value) {
                 this.parameters[key] = value;
@@ -169,7 +158,7 @@ export const deploymentOrchestratorConfigMethods = {
       secretsManagement: 'secure',
       complianceValidation: true,
       auditLogging: true,
-      deploymentNotifications: true,
+      deploymentNotifications: true
     };
   },
 
@@ -182,13 +171,13 @@ export const deploymentOrchestratorConfigMethods = {
         type: 'select',
         options: ['immediate', 'gradual', 'canary', 'blue_green'],
         description: 'Strategy for deploying AI services',
-        impact: 'risk_management',
+        impact: 'risk_management'
       },
       rollbackStrategy: {
         type: 'select',
         options: ['immediate', 'gradual', 'manual'],
         description: 'Strategy for rolling back failed deployments',
-        impact: 'recovery_time',
+        impact: 'recovery_time'
       },
       healthCheckInterval: {
         type: 'number',
@@ -196,7 +185,7 @@ export const deploymentOrchestratorConfigMethods = {
         max: 300,
         step: 5,
         description: 'Interval between health checks (seconds)',
-        impact: 'monitoring_frequency',
+        impact: 'monitoring_frequency'
       },
       phaseTimeout: {
         type: 'number',
@@ -204,7 +193,7 @@ export const deploymentOrchestratorConfigMethods = {
         max: 1800,
         step: 30,
         description: 'Maximum time allowed per phase (seconds)',
-        impact: 'deployment_speed',
+        impact: 'deployment_speed'
       },
       successThreshold: {
         type: 'slider',
@@ -212,7 +201,7 @@ export const deploymentOrchestratorConfigMethods = {
         max: 1.0,
         step: 0.01,
         description: 'Minimum success rate to continue deployment',
-        impact: 'quality_gate',
+        impact: 'quality_gate'
       },
       errorThreshold: {
         type: 'slider',
@@ -220,36 +209,36 @@ export const deploymentOrchestratorConfigMethods = {
         max: 0.2,
         step: 0.01,
         description: 'Maximum error rate before triggering rollback',
-        impact: 'error_tolerance',
+        impact: 'error_tolerance'
       },
       monitoringDepth: {
         type: 'select',
         options: ['basic', 'standard', 'comprehensive', 'full'],
         description: 'Depth of deployment monitoring',
-        impact: 'observability',
+        impact: 'observability'
       },
       autoRollback: {
         type: 'boolean',
         description: 'Automatically rollback on failure',
-        impact: 'reliability',
+        impact: 'reliability'
       },
       progressReporting: {
         type: 'select',
         options: ['minimal', 'standard', 'detailed', 'realtime'],
         description: 'Level of progress reporting detail',
-        impact: 'transparency',
+        impact: 'transparency'
       },
       parallelDeployment: {
         type: 'boolean',
         description: 'Deploy multiple phases in parallel',
         impact: 'deployment_speed',
-        riskLevel: 'high',
+        riskLevel: 'high'
       },
       resourceAllocation: {
         type: 'select',
         options: ['minimal', 'balanced', 'high', 'maximum'],
         description: 'Resource allocation strategy',
-        impact: 'performance',
+        impact: 'performance'
       },
       userImpactMinimization: {
         type: 'slider',
@@ -257,42 +246,42 @@ export const deploymentOrchestratorConfigMethods = {
         max: 1.0,
         step: 0.05,
         description: 'Priority level for minimizing user impact',
-        impact: 'user_experience',
+        impact: 'user_experience'
       },
       loadBalancing: {
         type: 'select',
         options: ['round_robin', 'weighted', 'least_connections', 'adaptive'],
         description: 'Load balancing strategy during deployment',
-        impact: 'performance_distribution',
+        impact: 'performance_distribution'
       },
       scalingPolicy: {
         type: 'select',
         options: ['none', 'manual', 'auto', 'predictive'],
         description: 'Scaling policy during deployment',
-        impact: 'resource_management',
+        impact: 'resource_management'
       },
       configurationManagement: {
         type: 'select',
         options: ['local', 'centralized', 'hybrid'],
         description: 'Configuration management approach',
-        impact: 'consistency',
+        impact: 'consistency'
       },
       secretsManagement: {
         type: 'select',
         options: ['basic', 'secure', 'vault'],
         description: 'Secrets and credential management level',
-        impact: 'security',
+        impact: 'security'
       },
       complianceValidation: {
         type: 'boolean',
         description: 'Validate compliance requirements during deployment',
-        impact: 'compliance',
+        impact: 'compliance'
       },
       auditLogging: {
         type: 'boolean',
         description: 'Enable comprehensive audit logging',
-        impact: 'auditability',
-      },
+        impact: 'auditability'
+      }
     };
-  },
+  }
 };

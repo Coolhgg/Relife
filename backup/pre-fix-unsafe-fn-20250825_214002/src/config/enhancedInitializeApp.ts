@@ -1,6 +1,6 @@
 /**
  * Enhanced App Initialization with Dependency Injection
- *
+ * 
  * This file replaces the legacy initialization system with a proper
  * dependency injection container and enhanced service management.
  */
@@ -15,7 +15,7 @@ import {
   getServiceContainer,
   getService,
   performHealthCheck,
-  getDebugInfo,
+  getDebugInfo
 } from '../services/ServiceBootstrap';
 import { IAlarmService, IAnalyticsService } from '../types/service-interfaces';
 
@@ -38,9 +38,7 @@ interface AppInitializationOptions {
 /**
  * Enhanced app initialization with dependency injection container
  */
-export const initializeEnhancedApp = async (
-  options: AppInitializationOptions = {}
-): Promise<void> => {
+export const initializeEnhancedApp = async (options: AppInitializationOptions = {}): Promise<void> => {
   const {
     environment = (process.env.NODE_ENV as any) || 'development',
     enableHealthCheck = true,
@@ -64,7 +62,7 @@ export const initializeEnhancedApp = async (
 
     // Step 2: Initialize dependency injection container and services
     console.log('⚡ Step 2: Initializing enhanced services...');
-
+    
     let serviceContainer;
     const initPromise = (async () => {
       switch (environment) {
@@ -87,10 +85,7 @@ export const initializeEnhancedApp = async (
     serviceContainer = await Promise.race([
       initPromise,
       new Promise<never>((_, reject) =>
-        setTimeout(
-          () => reject(new Error('Service initialization timeout')),
-          initializationTimeout
-        )
+        setTimeout(() => reject(new Error('Service initialization timeout')), initializationTimeout)
       ),
     ]);
 
@@ -100,7 +95,7 @@ export const initializeEnhancedApp = async (
     if (enableHealthCheck) {
       console.log('🏥 Step 3: Performing service health check...');
       const healthResult = await performHealthCheck();
-
+      
       if (healthResult.healthy) {
         console.log('✅ All critical services are healthy');
       } else {
@@ -136,10 +131,11 @@ export const initializeEnhancedApp = async (
     console.log('=====================================');
     console.log(`⏱️ Total Time: ${totalTime}ms`);
     console.log(`🎯 Environment: ${environment}`);
-
+    
     if (enableDebugLogging) {
       console.log('🐛 Debug Info:', getDebugInfo());
     }
+
   } catch (error) {
     console.error('❌ Enhanced app initialization failed:', error);
 
@@ -148,8 +144,8 @@ export const initializeEnhancedApp = async (
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
         'Enhanced app initialization failed',
-        {
-          context: 'enhanced_app_initialization',
+        { 
+          context: 'enhanced_app_initialization', 
           critical: true,
           environment,
           initializationTime: Date.now() - startTime,
@@ -179,15 +175,16 @@ async function initializeLegacyIntegrations(): Promise<void> {
     // These would be gradually migrated to the DI container
     console.log('📱 Initializing PWA capabilities...');
     // PWA initialization logic here
-
+    
     console.log('🔔 Setting up push notifications...');
     // Push notification setup here
-
+    
     console.log('📊 Initializing performance monitoring...');
     // Performance monitoring setup here
-
+    
     console.log('🔒 Setting up security monitoring...');
     // Security monitoring setup here
+    
   } catch (error) {
     console.warn('⚠️ Some legacy integrations failed to initialize:', error);
     // Don't throw - these are non-critical
@@ -199,15 +196,16 @@ async function initializeLegacyIntegrations(): Promise<void> {
  */
 async function fallbackInitialization(): Promise<void> {
   console.log('🆘 Starting fallback initialization...');
-
+  
   try {
     // Initialize only the most critical services manually
     console.log('⚠️ Initializing minimal critical services...');
-
+    
     // You could initialize services manually here as a fallback
     // For example, directly instantiate critical services without DI
-
+    
     console.log('✅ Fallback initialization completed');
+    
   } catch (error) {
     console.error('❌ Fallback initialization failed:', error);
     throw error;
@@ -223,12 +221,10 @@ async function fallbackInitialization(): Promise<void> {
  * This wraps the enhanced initialization with default settings
  */
 export const initializeApp = async (): Promise<void> => {
-  console.log(
-    '📢 Using legacy initializeApp wrapper - consider migrating to initializeEnhancedApp'
-  );
-
+  console.log('📢 Using legacy initializeApp wrapper - consider migrating to initializeEnhancedApp');
+  
   const environment = (process.env.NODE_ENV as any) || 'development';
-
+  
   await initializeEnhancedApp({
     environment,
     enableHealthCheck: true,
@@ -250,9 +246,7 @@ export function getAppService<T>(serviceName: string): T {
     return getService<T>(serviceName);
   } catch (error) {
     console.error(`Failed to get service ${serviceName}:`, error);
-    throw new Error(
-      `Service ${serviceName} is not available. Ensure app is initialized.`
-    );
+    throw new Error(`Service ${serviceName} is not available. Ensure app is initialized.`);
   }
 }
 
@@ -310,9 +304,9 @@ if (process.env.NODE_ENV === 'development') {
     getService: getAppService,
     isInitialized: isAppInitialized,
     getHealth: getAppHealth,
-    getDebugInfo: () => (isAppInitialized() ? getDebugInfo() : null),
-    performHealthCheck: () => (isAppInitialized() ? performHealthCheck() : null),
+    getDebugInfo: () => isAppInitialized() ? getDebugInfo() : null,
+    performHealthCheck: () => isAppInitialized() ? performHealthCheck() : null,
   };
-
+  
   console.log('🛠️ Development helpers exposed to window.RelifeApp');
 }

@@ -21,9 +21,9 @@ export interface E2ETestConfig {
 
 // E2E test context
 export interface E2ETestContext {
-  page?: unknown; // Browser page object
-  browser?: unknown; // Browser instance
-  context?: unknown; // Browser context
+  page?: any; // Browser page object
+  browser?: any; // Browser instance
+  context?: any; // Browser context
   _config: E2ETestConfig;
   helpers: TestHelpers;
 }
@@ -102,7 +102,7 @@ export class E2ETestingUtils {
         }
       },
 
-      waitForSelector: async (selector: string, options: unknown = {}) => {
+      waitForSelector: async (selector: string, options: any = {}) => {
         console.log(`[E2E] Waiting for ${selector}`);
         const timeout = options.timeout || this.config.timeout;
         return this.helpers.waitForElement(
@@ -111,13 +111,13 @@ export class E2ETestingUtils {
         );
       },
 
-      screenshot: async (_options: unknown = {}) => {
+      screenshot: async (_options: any = {}) => {
         console.log(`[E2E] Taking screenshot`);
         const timestamp = Date.now();
         return `screenshot-${timestamp}.png`;
       },
 
-      evaluate: async (fn: AnyFn, ...args: unknown[]) => {
+      evaluate: async (fn: AnyFn, ...args: any[]) => {
         console.log(`[E2E] Evaluating function`);
         return fn(...args);
       },
@@ -158,7 +158,7 @@ export class E2ETestingUtils {
   // Complete user journey testing
   async testCompleteUserJourney(context: E2ETestContext): Promise<E2EFlowResult> {
     const startTime = performance.now();
-    const steps: unknown[] = [];
+    const steps: any[] = [];
     const artifacts = { screenshots: [] as string[] };
     let pageLoads = 0;
     let apiCalls = 0;
@@ -387,7 +387,7 @@ export class E2ETestingUtils {
   // Test mobile responsiveness
   async testMobileResponsiveness(context: E2ETestContext): Promise<E2EFlowResult> {
     const startTime = performance.now();
-    const steps: unknown[] = [];
+    const steps: any[] = [];
     const artifacts = { screenshots: [] as string[] };
 
     const viewports = [
@@ -455,7 +455,7 @@ export class E2ETestingUtils {
   // Test cross-browser compatibility
   async testCrossBrowserCompatibility(): Promise<E2EFlowResult> {
     const startTime = performance.now();
-    const steps: unknown[] = [];
+    const steps: any[] = [];
     const browsers = ['chromium', 'firefox', 'webkit'];
 
     for (const browserType of browsers) {
@@ -510,7 +510,7 @@ export class E2ETestingUtils {
   // Test performance under load
   async testPerformanceUnderLoad(context: E2ETestContext): Promise<E2EFlowResult> {
     const startTime = performance.now();
-    const steps: unknown[] = [];
+    const steps: any[] = [];
     const artifacts = { screenshots: [] as string[] };
 
     // Step 1: Baseline performance
@@ -574,7 +574,7 @@ export class E2ETestingUtils {
     const memoryTestStart = performance.now();
     try {
       const memoryUsage = await context.page!.evaluate(() => {
-        const memory = (performance as unknown).memory;
+        const memory = (performance as any).memory;
         return memory
           ? {
               usedJSHeapSize: memory.usedJSHeapSize,
@@ -621,7 +621,7 @@ export class E2ETestingUtils {
 
   // Simulate swipe gesture (mock implementation)
   private async simulateSwipeGesture(
-    page: unknown,
+    page: any,
     direction: 'left' | 'right' | 'up' | 'down'
   ): Promise<void> {
     console.log(`[E2E] Simulating ${direction} swipe gesture`);

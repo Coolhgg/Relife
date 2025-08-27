@@ -1,6 +1,6 @@
 /**
  * Accessibility Panel - A11y Testing and Validation
- *
+ * 
  * Provides tools for testing and validating accessibility:
  * - ARIA attributes validation
  * - Color contrast checking
@@ -61,13 +61,11 @@ export const AccessibilityPanel: React.FC = () => {
   const [isScanning, setIsScanning] = useState(false);
   const [issues, setIssues] = useState<AccessibilityIssue[]>([]);
   const [selectedIssue, setSelectedIssue] = useState<AccessibilityIssue | null>(null);
-  const [colorContrastResults, setColorContrastResults] = useState<
-    ColorContrastResult[]
-  >([]);
+  const [colorContrastResults, setColorContrastResults] = useState<ColorContrastResult[]>([]);
   const [focusVisible, setFocusVisible] = useState(false);
   const [screenReaderMode, setScreenReaderMode] = useState(false);
   const [keyboardNavMode, setKeyboardNavMode] = useState(false);
-
+  
   const scanIntervalRef = useRef<NodeJS.Timeout>();
 
   // Calculate accessibility stats
@@ -96,10 +94,10 @@ export const AccessibilityPanel: React.FC = () => {
       const computedStyle = window.getComputedStyle(element);
       const color = computedStyle.color;
       const backgroundColor = computedStyle.backgroundColor;
-
+      
       if (color && backgroundColor && backgroundColor !== 'rgba(0, 0, 0, 0)') {
         const ratio = calculateContrastRatio(color, backgroundColor);
-
+        
         if (ratio < 4.5) {
           results.push({
             foreground: color,
@@ -123,15 +121,15 @@ export const AccessibilityPanel: React.FC = () => {
   const calculateContrastRatio = (color1: string, color2: string): number => {
     const rgb1 = parseColor(color1);
     const rgb2 = parseColor(color2);
-
+    
     if (!rgb1 || !rgb2) return 0;
-
+    
     const l1 = getRelativeLuminance(rgb1);
     const l2 = getRelativeLuminance(rgb2);
-
+    
     const lighter = Math.max(l1, l2);
     const darker = Math.min(l1, l2);
-
+    
     return (lighter + 0.05) / (darker + 0.05);
   };
 
@@ -141,13 +139,13 @@ export const AccessibilityPanel: React.FC = () => {
     canvas.width = 1;
     canvas.height = 1;
     const ctx = canvas.getContext('2d');
-
+    
     if (!ctx) return null;
-
+    
     ctx.fillStyle = color;
     ctx.fillRect(0, 0, 1, 1);
     const imageData = ctx.getImageData(0, 0, 1, 1);
-
+    
     return [imageData.data[0], imageData.data[1], imageData.data[2]];
   };
 
@@ -157,12 +155,9 @@ export const AccessibilityPanel: React.FC = () => {
     const gsRGB = g / 255;
     const bsRGB = b / 255;
 
-    const rLum =
-      rsRGB <= 0.03928 ? rsRGB / 12.92 : Math.pow((rsRGB + 0.055) / 1.055, 2.4);
-    const gLum =
-      gsRGB <= 0.03928 ? gsRGB / 12.92 : Math.pow((gsRGB + 0.055) / 1.055, 2.4);
-    const bLum =
-      bsRGB <= 0.03928 ? bsRGB / 12.92 : Math.pow((bsRGB + 0.055) / 1.055, 2.4);
+    const rLum = rsRGB <= 0.03928 ? rsRGB / 12.92 : Math.pow((rsRGB + 0.055) / 1.055, 2.4);
+    const gLum = gsRGB <= 0.03928 ? gsRGB / 12.92 : Math.pow((gsRGB + 0.055) / 1.055, 2.4);
+    const bLum = bsRGB <= 0.03928 ? bsRGB / 12.92 : Math.pow((bsRGB + 0.055) / 1.055, 2.4);
 
     return 0.2126 * rLum + 0.7152 * gLum + 0.0722 * bLum;
   };
@@ -170,7 +165,7 @@ export const AccessibilityPanel: React.FC = () => {
   // ARIA attributes scanner
   const scanAriaAttributes = () => {
     const newIssues: AccessibilityIssue[] = [];
-
+    
     // Check for missing alt text on images
     document.querySelectorAll('img').forEach((img, index) => {
       if (!img.alt && !img.getAttribute('aria-label')) {
@@ -192,7 +187,7 @@ export const AccessibilityPanel: React.FC = () => {
       const hasText = button.textContent?.trim();
       const hasAriaLabel = button.getAttribute('aria-label');
       const hasAriaLabelledby = button.getAttribute('aria-labelledby');
-
+      
       if (!hasText && !hasAriaLabel && !hasAriaLabelledby) {
         newIssues.push({
           id: `button-name-${index}`,
@@ -213,7 +208,7 @@ export const AccessibilityPanel: React.FC = () => {
       const hasLabel = id && document.querySelector(`label[for="${id}"]`);
       const hasAriaLabel = input.getAttribute('aria-label');
       const hasAriaLabelledby = input.getAttribute('aria-labelledby');
-
+      
       if (!hasLabel && !hasAriaLabel && !hasAriaLabelledby) {
         newIssues.push({
           id: `input-label-${index}`,
@@ -234,27 +229,24 @@ export const AccessibilityPanel: React.FC = () => {
   // Keyboard navigation scanner
   const scanKeyboardNavigation = () => {
     const newIssues: AccessibilityIssue[] = [];
-
+    
     // Check for interactive elements without proper tabindex
-    document
-      .querySelectorAll('div[onclick], span[onclick]')
-      .forEach((element, index) => {
-        const tabIndex = element.getAttribute('tabindex');
-        const role = element.getAttribute('role');
-
-        if (!tabIndex && !role) {
-          newIssues.push({
-            id: `keyboard-${index}`,
-            type: 'warning',
-            category: 'keyboard',
-            element: element.tagName.toLowerCase(),
-            description: 'Interactive element not keyboard accessible',
-            suggestion:
-              'Add tabindex="0" and appropriate role, or use semantic HTML elements',
-            wcagLevel: 'A',
-          });
-        }
-      });
+    document.querySelectorAll('div[onclick], span[onclick]').forEach((element, index) => {
+      const tabIndex = element.getAttribute('tabindex');
+      const role = element.getAttribute('role');
+      
+      if (!tabIndex && !role) {
+        newIssues.push({
+          id: `keyboard-${index}`,
+          type: 'warning',
+          category: 'keyboard',
+          element: element.tagName.toLowerCase(),
+          description: 'Interactive element not keyboard accessible',
+          suggestion: 'Add tabindex="0" and appropriate role, or use semantic HTML elements',
+          wcagLevel: 'A',
+        });
+      }
+    });
 
     return newIssues;
   };
@@ -262,16 +254,17 @@ export const AccessibilityPanel: React.FC = () => {
   // Comprehensive accessibility scan
   const runAccessibilityScan = async () => {
     setIsScanning(true);
-
+    
     try {
       const ariaIssues = scanAriaAttributes();
       const keyboardIssues = scanKeyboardNavigation();
-
+      
       setIssues([...ariaIssues, ...keyboardIssues]);
       checkColorContrast();
-
+      
       // Simulate additional checks
       await new Promise(resolve => setTimeout(resolve, 1000));
+      
     } catch (error) {
       console.error('Accessibility scan failed:', error);
     } finally {
@@ -290,7 +283,7 @@ export const AccessibilityPanel: React.FC = () => {
         }
       `;
       document.head.appendChild(style);
-
+      
       return () => {
         document.head.removeChild(style);
       };
@@ -301,10 +294,8 @@ export const AccessibilityPanel: React.FC = () => {
   useEffect(() => {
     if (screenReaderMode) {
       document.body.style.filter = 'blur(5px)';
-      console.log(
-        'Screen Reader Mode: Visual content is blurred. Use tab navigation and screen reader to test.'
-      );
-
+      console.log('Screen Reader Mode: Visual content is blurred. Use tab navigation and screen reader to test.');
+      
       return () => {
         document.body.style.filter = '';
       };
@@ -345,19 +336,14 @@ export const AccessibilityPanel: React.FC = () => {
           <div className="flex items-center gap-2">
             <Eye className="w-5 h-5 text-blue-500" />
             <span className="font-medium">Accessibility Scanner</span>
-            <span
-              className={`text-xs px-2 py-1 rounded ${
-                stats.score >= 90
-                  ? 'bg-green-100 text-green-800'
-                  : stats.score >= 70
-                    ? 'bg-yellow-100 text-yellow-800'
-                    : 'bg-red-100 text-red-800'
-              }`}
-            >
+            <span className={`text-xs px-2 py-1 rounded ${
+              stats.score >= 90 ? 'bg-green-100 text-green-800' :
+              stats.score >= 70 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'
+            }`}>
               Score: {stats.score}%
             </span>
           </div>
-
+          
           <button
             onClick={runAccessibilityScan}
             disabled={isScanning}
@@ -373,39 +359,33 @@ export const AccessibilityPanel: React.FC = () => {
           <button
             onClick={() => setFocusVisible(!focusVisible)}
             className={`p-2 rounded text-sm flex items-center gap-2 ${
-              focusVisible
-                ? 'bg-blue-500 text-white'
-                : 'bg-white border border-gray-300'
+              focusVisible ? 'bg-blue-500 text-white' : 'bg-white border border-gray-300'
             }`}
           >
             <Target className="w-4 h-4" />
             Focus Visible
           </button>
-
+          
           <button
             onClick={() => setScreenReaderMode(!screenReaderMode)}
             className={`p-2 rounded text-sm flex items-center gap-2 ${
-              screenReaderMode
-                ? 'bg-blue-500 text-white'
-                : 'bg-white border border-gray-300'
+              screenReaderMode ? 'bg-blue-500 text-white' : 'bg-white border border-gray-300'
             }`}
           >
             <Headphones className="w-4 h-4" />
             Screen Reader
           </button>
-
+          
           <button
             onClick={() => setKeyboardNavMode(!keyboardNavMode)}
             className={`p-2 rounded text-sm flex items-center gap-2 ${
-              keyboardNavMode
-                ? 'bg-blue-500 text-white'
-                : 'bg-white border border-gray-300'
+              keyboardNavMode ? 'bg-blue-500 text-white' : 'bg-white border border-gray-300'
             }`}
           >
             <Keyboard className="w-4 h-4" />
             Keyboard Nav
           </button>
-
+          
           <button
             onClick={checkColorContrast}
             className="p-2 bg-white border border-gray-300 rounded text-sm flex items-center gap-2 hover:bg-gray-50"
@@ -462,13 +442,13 @@ export const AccessibilityPanel: React.FC = () => {
                 <div className="text-sm text-gray-800">{issue.description}</div>
               </div>
             ))}
-
+            
             {issues.length === 0 && !isScanning && (
               <div className="p-8 text-center text-gray-500">
                 Run an accessibility scan to see issues
               </div>
             )}
-
+            
             {isScanning && (
               <div className="p-8 text-center text-gray-500">
                 <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2" />
@@ -490,12 +470,12 @@ export const AccessibilityPanel: React.FC = () => {
                   {getIssueIcon(selectedIssue.type)}
                   <span className="font-medium">{selectedIssue.description}</span>
                 </div>
-
+                
                 <div>
                   <h5 className="font-medium text-sm mb-1">Suggestion</h5>
                   <p className="text-sm text-gray-700">{selectedIssue.suggestion}</p>
                 </div>
-
+                
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <strong>Element:</strong> {selectedIssue.element}
@@ -510,7 +490,7 @@ export const AccessibilityPanel: React.FC = () => {
                     <strong>WCAG Level:</strong> {selectedIssue.wcagLevel}
                   </div>
                 </div>
-
+                
                 {selectedIssue.selector && (
                   <div>
                     <h5 className="font-medium text-sm mb-1">CSS Selector</h5>
@@ -533,16 +513,11 @@ export const AccessibilityPanel: React.FC = () => {
       {colorContrastResults.length > 0 && (
         <div className="border border-gray-200 rounded-lg">
           <div className="p-3 bg-gray-50 border-b border-gray-200">
-            <h4 className="font-medium">
-              Color Contrast Issues ({colorContrastResults.length})
-            </h4>
+            <h4 className="font-medium">Color Contrast Issues ({colorContrastResults.length})</h4>
           </div>
           <div className="p-4 space-y-2 max-h-60 overflow-y-auto">
             {colorContrastResults.map((result, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between p-2 bg-gray-50 rounded"
-              >
+              <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
                 <div className="flex items-center gap-3">
                   <div className="flex gap-1">
                     <div
@@ -559,14 +534,10 @@ export const AccessibilityPanel: React.FC = () => {
                   </span>
                 </div>
                 <div className="flex gap-1 text-xs">
-                  <span
-                    className={`px-2 py-1 rounded ${result.passes.aa ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
-                  >
+                  <span className={`px-2 py-1 rounded ${result.passes.aa ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                     AA
                   </span>
-                  <span
-                    className={`px-2 py-1 rounded ${result.passes.aaa ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
-                  >
+                  <span className={`px-2 py-1 rounded ${result.passes.aaa ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                     AAA
                   </span>
                 </div>

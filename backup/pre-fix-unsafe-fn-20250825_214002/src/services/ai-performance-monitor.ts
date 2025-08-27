@@ -43,12 +43,7 @@ export interface PerformanceMetric {
 }
 
 export interface BehavioralInsightMetric {
-  type:
-    | 'pattern_discovery'
-    | 'anomaly_detection'
-    | 'optimization'
-    | 'prediction'
-    | 'intervention';
+  type: 'pattern_discovery' | 'anomaly_detection' | 'optimization' | 'prediction' | 'intervention';
   count: number;
   averageConfidence: number;
   actionabilityRate: number;
@@ -119,7 +114,7 @@ class AIPerformanceMonitorService {
       try {
         const metrics = await this.collectMetrics();
         this.metricsHistory.push(metrics);
-
+        
         // Keep only last 100 metrics (about 50 minutes of history)
         if (this.metricsHistory.length > 100) {
           this.metricsHistory.shift();
@@ -157,7 +152,7 @@ class AIPerformanceMonitorService {
    */
   subscribe(callback: (metrics: AIPerformanceMetrics) => void): () => void {
     this.subscribers.push(callback);
-
+    
     // Return unsubscribe function
     return () => {
       const index = this.subscribers.indexOf(callback);
@@ -210,22 +205,22 @@ class AIPerformanceMonitorService {
 
     // Collect service health metrics
     const serviceHealth = await this.collectServiceHealth();
-
+    
     // Collect performance metrics
     const performanceMetrics = await this.collectPerformanceMetrics();
-
+    
     // Collect behavioral insights metrics
     const behavioralInsights = await this.collectBehavioralInsights();
-
+    
     // Collect voice analytics
     const voiceAnalytics = await this.collectVoiceAnalytics();
-
+    
     // Collect rewards metrics
     const rewardsMetrics = await this.collectRewardsMetrics();
-
+    
     // Collect deployment status
     const deploymentStatus = await this.collectDeploymentStatus();
-
+    
     // Get current system alerts
     const systemAlerts = [...this.activeAlerts];
 
@@ -259,7 +254,7 @@ class AIPerformanceMonitorService {
       const baseResponseTime = 1000 + Math.random() * 500;
       const errorRate = Math.random() * 2;
       const uptime = 99.0 + Math.random() * 1;
-
+      
       let status: ServiceHealthMetric['status'];
       if (errorRate > 1.5 || baseResponseTime > 2000) {
         status = 'unhealthy';
@@ -334,13 +329,13 @@ class AIPerformanceMonitorService {
         type: 'pattern_discovery',
         count: 300 + Math.round(Math.random() * 100),
         averageConfidence: 0.85 + Math.random() * 0.1,
-        actionabilityRate: 0.7 + Math.random() * 0.15,
-        successRate: 0.8 + Math.random() * 0.15,
+        actionabilityRate: 0.70 + Math.random() * 0.15,
+        successRate: 0.80 + Math.random() * 0.15,
       },
       {
         type: 'anomaly_detection',
         count: 80 + Math.round(Math.random() * 30),
-        averageConfidence: 0.9 + Math.random() * 0.08,
+        averageConfidence: 0.90 + Math.random() * 0.08,
         actionabilityRate: 0.85 + Math.random() * 0.1,
         successRate: 0.88 + Math.random() * 0.1,
       },
@@ -356,14 +351,14 @@ class AIPerformanceMonitorService {
         count: 200 + Math.round(Math.random() * 60),
         averageConfidence: 0.82 + Math.random() * 0.1,
         actionabilityRate: 0.55 + Math.random() * 0.15,
-        successRate: 0.7 + Math.random() * 0.15,
+        successRate: 0.70 + Math.random() * 0.15,
       },
       {
         type: 'intervention',
         count: 60 + Math.round(Math.random() * 20),
         averageConfidence: 0.92 + Math.random() * 0.06,
         actionabilityRate: 0.88 + Math.random() * 0.08,
-        successRate: 0.9 + Math.random() * 0.08,
+        successRate: 0.90 + Math.random() * 0.08,
       },
     ];
   }
@@ -373,12 +368,8 @@ class AIPerformanceMonitorService {
    */
   private async collectVoiceAnalytics(): Promise<VoiceAnalyticsMetric[]> {
     const voiceMoods = [
-      'motivational',
-      'drill-sergeant',
-      'sweet-angel',
-      'gentle',
-      'anime-hero',
-      'savage-roast',
+      'motivational', 'drill-sergeant', 'sweet-angel', 
+      'gentle', 'anime-hero', 'savage-roast'
     ];
 
     return voiceMoods.map(mood => ({
@@ -396,12 +387,8 @@ class AIPerformanceMonitorService {
    */
   private async collectRewardsMetrics(): Promise<RewardsMetric[]> {
     const categories = [
-      'consistency',
-      'productivity',
-      'wellness',
-      'explorer',
-      'challenger',
-      'social',
+      'consistency', 'productivity', 'wellness', 
+      'explorer', 'challenger', 'social'
     ];
 
     return categories.map(category => ({
@@ -470,7 +457,7 @@ class AIPerformanceMonitorService {
     metrics.serviceHealth.forEach(service => {
       if (service.status !== 'healthy') {
         const alertId = `service_${service.serviceName.replace(/\s+/g, '_').toLowerCase()}_${service.status}`;
-
+        
         // Check if alert already exists
         if (!this.activeAlerts.find(a => a.id === alertId && !a.resolved)) {
           newAlerts.push({
@@ -490,7 +477,7 @@ class AIPerformanceMonitorService {
     metrics.performanceMetrics.forEach(metric => {
       if (metric.value >= metric.threshold.critical) {
         const alertId = `performance_${metric.metricName.replace(/\s+/g, '_').toLowerCase()}_critical`;
-
+        
         if (!this.activeAlerts.find(a => a.id === alertId && !a.resolved)) {
           newAlerts.push({
             id: alertId,
@@ -504,7 +491,7 @@ class AIPerformanceMonitorService {
         }
       } else if (metric.value >= metric.threshold.warning) {
         const alertId = `performance_${metric.metricName.replace(/\s+/g, '_').toLowerCase()}_warning`;
-
+        
         if (!this.activeAlerts.find(a => a.id === alertId && !a.resolved)) {
           newAlerts.push({
             id: alertId,
@@ -524,8 +511,8 @@ class AIPerformanceMonitorService {
 
     // Remove old resolved alerts (older than 24 hours)
     const cutoffTime = new Date(Date.now() - 24 * 60 * 60 * 1000);
-    this.activeAlerts = this.activeAlerts.filter(
-      alert => !alert.resolved || alert.timestamp >= cutoffTime
+    this.activeAlerts = this.activeAlerts.filter(alert => 
+      (!alert.resolved || alert.timestamp >= cutoffTime)
     );
   }
 
@@ -552,7 +539,7 @@ class AIPerformanceMonitorService {
     alertCount: number;
   } {
     const recentMetrics = this.getMetricsHistory(hours);
-
+    
     if (recentMetrics.length === 0) {
       return {
         averageResponseTime: 0,
@@ -562,27 +549,19 @@ class AIPerformanceMonitorService {
       };
     }
 
-    const avgResponseTime =
-      recentMetrics.reduce((sum, m) => {
-        const responseTimeMetric = m.performanceMetrics.find(
-          pm => pm.metricName === 'Average Response Time'
-        );
-        return sum + (responseTimeMetric?.value || 0);
-      }, 0) / recentMetrics.length;
+    const avgResponseTime = recentMetrics.reduce((sum, m) => {
+      const responseTimeMetric = m.performanceMetrics.find(pm => pm.metricName === 'Average Response Time');
+      return sum + (responseTimeMetric?.value || 0);
+    }, 0) / recentMetrics.length;
 
     const healthyServicesCount = recentMetrics.reduce((sum, m) => {
       return sum + m.serviceHealth.filter(s => s.status === 'healthy').length;
     }, 0);
-    const totalServicesCount = recentMetrics.reduce(
-      (sum, m) => sum + m.serviceHealth.length,
-      0
-    );
+    const totalServicesCount = recentMetrics.reduce((sum, m) => sum + m.serviceHealth.length, 0);
     const overallHealthScore = (healthyServicesCount / totalServicesCount) * 100;
 
     const totalInsights = recentMetrics.reduce((sum, m) => {
-      return (
-        sum + m.behavioralInsights.reduce((insightSum, bi) => insightSum + bi.count, 0)
-      );
+      return sum + m.behavioralInsights.reduce((insightSum, bi) => insightSum + bi.count, 0);
     }, 0);
 
     const alertCount = this.getActiveAlerts().length;

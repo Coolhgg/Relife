@@ -76,12 +76,7 @@ interface ContextualFactors {
 
 interface BehavioralInsight {
   id: string;
-  type:
-    | 'pattern_discovery'
-    | 'anomaly_detection'
-    | 'prediction'
-    | 'optimization'
-    | 'intervention';
+  type: 'pattern_discovery' | 'anomaly_detection' | 'prediction' | 'optimization' | 'intervention';
   title: string;
   description: string;
   confidence: number;
@@ -115,7 +110,7 @@ export class AdvancedBehavioralIntelligence {
   private static instance: AdvancedBehavioralIntelligence;
   private userModels: Map<string, UserBehavioralModel> = new Map();
   private crossPlatformData: Map<string, Record<string, any>> = new Map();
-
+  
   private constructor() {
     this.initializeAdvancedAnalytics();
   }
@@ -155,34 +150,22 @@ export class AdvancedBehavioralIntelligence {
     contextualIntelligence: ContextualFactors;
   }> {
     // Update user model with latest data
-    await this.updateUserBehavioralModel(
-      userId,
-      alarms,
-      alarmEvents,
-      crossPlatformData
-    );
-
+    await this.updateUserBehavioralModel(userId, alarms, alarmEvents, crossPlatformData);
+    
     const userModel = this.userModels.get(userId);
     if (!userModel) {
       throw new Error('User behavioral model not found');
     }
 
     // Generate advanced insights using multiple AI techniques
-    const insights = await this.generateDeepBehavioralInsights(
-      userModel,
-      alarms,
-      alarmEvents
-    );
-
+    const insights = await this.generateDeepBehavioralInsights(userModel, alarms, alarmEvents);
+    
     // Create personalized recommendations using enhanced algorithms
-    const recommendations = await this.generateAdvancedRecommendations(
-      userModel,
-      insights
-    );
-
+    const recommendations = await this.generateAdvancedRecommendations(userModel, insights);
+    
     // Perform predictive analysis
     const predictiveAnalysis = await this.performPredictiveAnalysis(userModel, alarms);
-
+    
     // Analyze contextual factors
     const contextualIntelligence = await this.analyzeContextualIntelligence(userId);
 
@@ -215,10 +198,7 @@ export class AdvancedBehavioralIntelligence {
         description: pattern.description,
         confidence: pattern.confidence,
         actionability: pattern.actionability,
-        personalizedMessage: this.generatePersonalizedMessage(
-          pattern,
-          userModel.psychologicalProfile
-        ),
+        personalizedMessage: this.generatePersonalizedMessage(pattern, userModel.psychologicalProfile),
         suggestedActions: pattern.suggestedActions,
         supportingData: pattern.data,
         createdAt: new Date(),
@@ -236,10 +216,7 @@ export class AdvancedBehavioralIntelligence {
         description: anomaly.description,
         confidence: anomaly.confidence,
         actionability: 'immediate',
-        personalizedMessage: this.generateAnomalyMessage(
-          anomaly,
-          userModel.psychologicalProfile
-        ),
+        personalizedMessage: this.generateAnomalyMessage(anomaly, userModel.psychologicalProfile),
         suggestedActions: anomaly.interventions,
         supportingData: anomaly.data,
         createdAt: new Date(),
@@ -256,12 +233,8 @@ export class AdvancedBehavioralIntelligence {
         title: optimization.title,
         description: optimization.description,
         confidence: optimization.confidence,
-        actionability:
-          optimization.timeframe === 'immediate' ? 'immediate' : 'short_term',
-        personalizedMessage: this.generateOptimizationMessage(
-          optimization,
-          userModel.psychologicalProfile
-        ),
+        actionability: optimization.timeframe === 'immediate' ? 'immediate' : 'short_term',
+        personalizedMessage: this.generateOptimizationMessage(optimization, userModel.psychologicalProfile),
         suggestedActions: optimization.actions,
         supportingData: optimization.data,
         createdAt: new Date(),
@@ -279,10 +252,7 @@ export class AdvancedBehavioralIntelligence {
         description: intervention.description,
         confidence: intervention.confidence,
         actionability: 'long_term',
-        personalizedMessage: this.generateInterventionMessage(
-          intervention,
-          userModel.psychologicalProfile
-        ),
+        personalizedMessage: this.generateInterventionMessage(intervention, userModel.psychologicalProfile),
         suggestedActions: intervention.steps,
         supportingData: intervention.reasoning,
         createdAt: new Date(),
@@ -292,10 +262,7 @@ export class AdvancedBehavioralIntelligence {
 
     return insights.sort((a, b) => {
       const priorityOrder = { critical: 4, high: 3, medium: 2, low: 1 };
-      return (
-        priorityOrder[b.priority] - priorityOrder[a.priority] ||
-        b.confidence - a.confidence
-      );
+      return priorityOrder[b.priority] - priorityOrder[a.priority] || b.confidence - a.confidence;
     });
   }
 
@@ -310,12 +277,7 @@ export class AdvancedBehavioralIntelligence {
     description: string;
     confidence: number;
     actionability: 'immediate' | 'short_term' | 'long_term';
-    suggestedActions: Array<{
-      action: string;
-      impact: 'high' | 'medium' | 'low';
-      difficulty: 'easy' | 'moderate' | 'challenging';
-      timeframe: string;
-    }>;
+    suggestedActions: Array<{ action: string; impact: 'high' | 'medium' | 'low'; difficulty: 'easy' | 'moderate' | 'challenging'; timeframe: string }>;
     data: Record<string, any>;
     priority: 'critical' | 'high' | 'medium' | 'low';
   }> {
@@ -334,31 +296,28 @@ export class AdvancedBehavioralIntelligence {
             action: `Align primary alarm with your natural peak at ${circadianPattern.peak}`,
             impact: 'high',
             difficulty: 'easy',
-            timeframe: '1-2 weeks',
+            timeframe: '1-2 weeks'
           },
           {
             action: 'Use light therapy 30 minutes before natural wake time',
             impact: 'medium',
             difficulty: 'moderate',
-            timeframe: '2-4 weeks',
+            timeframe: '2-4 weeks'
           },
           {
             action: 'Avoid screens 2 hours before optimal sleep time',
             impact: 'medium',
             difficulty: 'moderate',
-            timeframe: '1 week',
-          },
+            timeframe: '1 week'
+          }
         ],
         data: circadianPattern,
-        priority: 'high',
+        priority: 'high'
       });
     }
 
     // Stress-Performance Correlation
-    const stressPattern = this.analyzeStressPerformanceCorrelation(
-      userModel,
-      alarmEvents
-    );
+    const stressPattern = this.analyzeStressPerformanceCorrelation(userModel, alarmEvents);
     if (stressPattern.correlation > 0.6) {
       patterns.push({
         name: 'Stress-Performance Correlation',
@@ -370,23 +329,23 @@ export class AdvancedBehavioralIntelligence {
             action: 'Implement 5-minute evening meditation routine',
             impact: 'high',
             difficulty: 'easy',
-            timeframe: '2 weeks',
+            timeframe: '2 weeks'
           },
           {
             action: 'Use gentler voice moods on high-stress days',
             impact: 'medium',
             difficulty: 'easy',
-            timeframe: 'immediate',
+            timeframe: 'immediate'
           },
           {
             action: 'Create stress-reduction buffer time in morning routine',
             impact: 'medium',
             difficulty: 'moderate',
-            timeframe: '1 week',
-          },
+            timeframe: '1 week'
+          }
         ],
         data: stressPattern,
-        priority: 'high',
+        priority: 'high'
       });
     }
 
@@ -403,17 +362,17 @@ export class AdvancedBehavioralIntelligence {
             action: `Schedule social activities during peak energy times: ${socialPattern.peakSocialTimes.join(', ')}`,
             impact: 'medium',
             difficulty: 'easy',
-            timeframe: '1 week',
+            timeframe: '1 week'
           },
           {
             action: 'Use motivational voice mood before social commitments',
             impact: 'medium',
             difficulty: 'easy',
-            timeframe: 'immediate',
-          },
+            timeframe: 'immediate'
+          }
         ],
         data: socialPattern,
-        priority: 'medium',
+        priority: 'medium'
       });
     }
 
@@ -430,17 +389,17 @@ export class AdvancedBehavioralIntelligence {
             action: `Start with ${habitPattern.velocity === 'fast' ? '3-5' : habitPattern.velocity === 'medium' ? '2-3' : '1-2'} micro-habits simultaneously`,
             impact: 'high',
             difficulty: habitPattern.velocity === 'slow' ? 'easy' : 'moderate',
-            timeframe: `${habitPattern.daysToFormation} days`,
+            timeframe: `${habitPattern.daysToFormation} days`
           },
           {
             action: 'Use incremental progression rather than dramatic changes',
             impact: 'high',
             difficulty: 'easy',
-            timeframe: 'ongoing',
-          },
+            timeframe: 'ongoing'
+          }
         ],
         data: habitPattern,
-        priority: 'medium',
+        priority: 'medium'
       });
     }
 
@@ -453,16 +412,14 @@ export class AdvancedBehavioralIntelligence {
   private async generateAdvancedRecommendations(
     userModel: UserBehavioralModel,
     insights: BehavioralInsight[]
-  ): Promise<
-    Array<{
-      type: string;
-      title: string;
-      description: string;
-      impact: number;
-      confidence: number;
-      implementation: string[];
-    }>
-  > {
+  ): Promise<Array<{
+    type: string;
+    title: string;
+    description: string;
+    impact: number;
+    confidence: number;
+    implementation: string[];
+  }>> {
     const recommendations = [];
 
     // Sleep Quality Enhancement Recommendations
@@ -485,9 +442,7 @@ export class AdvancedBehavioralIntelligence {
     const habitRec = this.generateHabitDevelopmentRecommendations(userModel);
     recommendations.push(...habitRec);
 
-    return recommendations.sort(
-      (a, b) => b.impact * b.confidence - a.impact * a.confidence
-    );
+    return recommendations.sort((a, b) => (b.impact * b.confidence) - (a.impact * a.confidence));
   }
 
   /**
@@ -504,13 +459,13 @@ export class AdvancedBehavioralIntelligence {
   }> {
     // Predict sleep quality for next 7 days
     const sleepQualityForecast = this.predictSleepQuality(userModel);
-
+    
     // Predict energy levels
     const energyLevelPrediction = this.predictEnergyLevels(userModel);
-
+    
     // Calculate optimal wake times
     const optimalWakeTimes = this.calculateOptimalWakeTimes(userModel, alarms);
-
+    
     // Identify risk factors
     const riskFactors = this.identifyRiskFactors(userModel);
 
@@ -518,18 +473,16 @@ export class AdvancedBehavioralIntelligence {
       sleepQualityForecast,
       energyLevelPrediction,
       optimalWakeTimes,
-      riskFactors,
+      riskFactors
     };
   }
 
   /**
    * Analyze contextual intelligence factors
    */
-  private async analyzeContextualIntelligence(
-    userId: string
-  ): Promise<ContextualFactors> {
+  private async analyzeContextualIntelligence(userId: string): Promise<ContextualFactors> {
     const crossPlatformData = this.crossPlatformData.get(userId) || {};
-
+    
     return {
       environmental: {
         weather: crossPlatformData.weather?.condition || 'unknown',
@@ -560,95 +513,74 @@ export class AdvancedBehavioralIntelligence {
   }
 
   // Helper methods for pattern analysis
-  private analyzeCircadianRhythm(
-    userModel: UserBehavioralModel,
-    alarmEvents: AlarmEvent[]
-  ) {
+  private analyzeCircadianRhythm(userModel: UserBehavioralModel, alarmEvents: AlarmEvent[]) {
     // Analyze user's natural circadian rhythm based on wake/sleep patterns
     const wakeTimesMinutes = alarmEvents
       .filter(e => e.dismissed)
       .map(e => e.firedAt.getHours() * 60 + e.firedAt.getMinutes());
-
+    
     if (wakeTimesMinutes.length < 5) {
       return { strength: 0, peak: '07:00', consistency: 0 };
     }
 
-    const avgWakeTime =
-      wakeTimesMinutes.reduce((sum, time) => sum + time, 0) / wakeTimesMinutes.length;
-    const variance =
-      wakeTimesMinutes.reduce((sum, time) => sum + Math.pow(time - avgWakeTime, 2), 0) /
-      wakeTimesMinutes.length;
-    const consistency = Math.max(0, 1 - variance / 10000); // Normalize variance
-
+    const avgWakeTime = wakeTimesMinutes.reduce((sum, time) => sum + time, 0) / wakeTimesMinutes.length;
+    const variance = wakeTimesMinutes.reduce((sum, time) => sum + Math.pow(time - avgWakeTime, 2), 0) / wakeTimesMinutes.length;
+    const consistency = Math.max(0, 1 - (variance / 10000)); // Normalize variance
+    
     const peakHour = Math.floor(avgWakeTime / 60);
     const peakMinute = Math.floor(avgWakeTime % 60);
     const peak = `${peakHour.toString().padStart(2, '0')}:${peakMinute.toString().padStart(2, '0')}`;
-
+    
     return {
       strength: consistency,
       peak,
       consistency,
-      naturalWindow: [
-        peak,
-        `${(peakHour + 1).toString().padStart(2, '0')}:${peakMinute.toString().padStart(2, '0')}`,
-      ],
+      naturalWindow: [peak, `${(peakHour + 1).toString().padStart(2, '0')}:${peakMinute.toString().padStart(2, '0')}`]
     };
   }
 
-  private analyzeStressPerformanceCorrelation(
-    userModel: UserBehavioralModel,
-    alarmEvents: AlarmEvent[]
-  ) {
+  private analyzeStressPerformanceCorrelation(userModel: UserBehavioralModel, alarmEvents: AlarmEvent[]) {
     // Analyze correlation between stress indicators and alarm performance
-    const stressVector = userModel.behavioralVectors.find(
-      v => v.dimension === 'stress_level'
-    );
+    const stressVector = userModel.behavioralVectors.find(v => v.dimension === 'stress_level');
     if (!stressVector) {
       return { correlation: 0, improvementPotential: 0 };
     }
 
-    const performanceSuccess =
-      alarmEvents.filter(e => e.dismissed && !e.snoozed).length / alarmEvents.length;
+    const performanceSuccess = alarmEvents.filter(e => e.dismissed && !e.snoozed).length / alarmEvents.length;
     const stressLevel = stressVector.value;
-
+    
     // Simple correlation calculation (in real implementation, use more sophisticated methods)
     const correlation = Math.abs(1 - stressLevel - performanceSuccess);
     const improvementPotential = stressLevel * 0.6; // Potential improvement if stress reduced
-
+    
     return {
       correlation,
       improvementPotential,
       stressLevel,
       performanceSuccess,
-      recommendations:
-        stressLevel > 0.7 ? ['high_stress_management'] : ['moderate_stress_management'],
+      recommendations: stressLevel > 0.7 ? ['high_stress_management'] : ['moderate_stress_management']
     };
   }
 
   private analyzeSocialInfluencePattern(userModel: UserBehavioralModel) {
-    const socialVector = userModel.behavioralVectors.find(
-      v => v.dimension === 'social_influence'
-    );
+    const socialVector = userModel.behavioralVectors.find(v => v.dimension === 'social_influence');
     const influence = socialVector?.value || 0.3;
-
+    
     return {
       influence,
       peakSocialTimes: ['10:00-12:00', '14:00-16:00', '19:00-21:00'],
       socialActivityCorrelation: influence,
-      optimalSocialScheduling: influence > 0.6 ? 'high_priority' : 'moderate_priority',
+      optimalSocialScheduling: influence > 0.6 ? 'high_priority' : 'moderate_priority'
     };
   }
 
-  private analyzeHabitFormationVelocity(
-    userModel: UserBehavioralModel,
-    alarmEvents: AlarmEvent[]
-  ) {
+  private analyzeHabitFormationVelocity(userModel: UserBehavioralModel, alarmEvents: AlarmEvent[]) {
     const consistencyTrend = this.calculateConsistencyTrend(alarmEvents);
     const retentionRate = userModel.habitFormationSpeed;
-
+    
     let velocity: 'fast' | 'medium' | 'slow' | 'unknown';
     let daysToFormation: number;
-
+    
     if (retentionRate > 0.8) {
       velocity = 'fast';
       daysToFormation = 21;
@@ -662,39 +594,34 @@ export class AdvancedBehavioralIntelligence {
       velocity = 'unknown';
       daysToFormation = 30;
     }
-
+    
     return {
       velocity,
       daysToFormation,
       retentionRate,
       confidence: Math.min(0.9, alarmEvents.length / 30),
-      consistencyTrend,
+      consistencyTrend
     };
   }
 
   // Additional helper methods would continue here...
-
+  
   private calculateConsistencyTrend(alarmEvents: AlarmEvent[]): number {
     // Calculate trend in consistency over time
     if (alarmEvents.length < 7) return 0;
-
+    
     const recentEvents = alarmEvents.slice(-7);
     const olderEvents = alarmEvents.slice(-14, -7);
-
-    const recentSuccess =
-      recentEvents.filter(e => e.dismissed).length / recentEvents.length;
-    const olderSuccess =
-      olderEvents.filter(e => e.dismissed).length / olderEvents.length;
-
+    
+    const recentSuccess = recentEvents.filter(e => e.dismissed).length / recentEvents.length;
+    const olderSuccess = olderEvents.filter(e => e.dismissed).length / olderEvents.length;
+    
     return recentSuccess - olderSuccess;
   }
 
-  private generatePersonalizedMessage(
-    pattern: any,
-    profile: PsychologicalProfile
-  ): string {
+  private generatePersonalizedMessage(pattern: any, profile: PsychologicalProfile): string {
     const { bigFiveTraits } = profile;
-
+    
     if (bigFiveTraits.conscientiousness > 0.7) {
       return `Your disciplined nature is already showing in your ${pattern.name.toLowerCase()}. Let's optimize this further with precision-focused adjustments.`;
     } else if (bigFiveTraits.extraversion > 0.7) {
@@ -714,10 +641,7 @@ export class AdvancedBehavioralIntelligence {
     }
   }
 
-  private generateOptimizationMessage(
-    optimization: any,
-    profile: PsychologicalProfile
-  ): string {
+  private generateOptimizationMessage(optimization: any, profile: PsychologicalProfile): string {
     if (profile.bigFiveTraits.openness > 0.7) {
       return `Here's an exciting opportunity to try something new with your routine! Your openness to experience suggests you'll love this optimization.`;
     } else {
@@ -725,10 +649,7 @@ export class AdvancedBehavioralIntelligence {
     }
   }
 
-  private generateInterventionMessage(
-    intervention: any,
-    profile: PsychologicalProfile
-  ): string {
+  private generateInterventionMessage(intervention: any, profile: PsychologicalProfile): string {
     if (profile.changeAdaptability === 'high') {
       return `This intervention could significantly improve your wake experience. Your adaptability makes you perfect for implementing these changes.`;
     } else {
@@ -737,18 +658,12 @@ export class AdvancedBehavioralIntelligence {
   }
 
   // Continue with remaining helper methods...
-  private detectBehavioralAnomalies(
-    userModel: UserBehavioralModel,
-    alarmEvents: AlarmEvent[]
-  ): any[] {
+  private detectBehavioralAnomalies(userModel: UserBehavioralModel, alarmEvents: AlarmEvent[]): any[] {
     // Implementation for anomaly detection
     return [];
   }
 
-  private identifyOptimizationOpportunities(
-    userModel: UserBehavioralModel,
-    alarms: Alarm[]
-  ): any[] {
+  private identifyOptimizationOpportunities(userModel: UserBehavioralModel, alarms: Alarm[]): any[] {
     // Implementation for optimization opportunities
     return [];
   }
@@ -760,93 +675,78 @@ export class AdvancedBehavioralIntelligence {
 
   // Placeholder implementations for various recommendation generators
   private generateSleepQualityRecommendations(userModel: UserBehavioralModel): any[] {
-    return [
-      {
-        type: 'sleep_optimization',
-        title: 'Optimize Sleep Quality',
-        description:
-          'Enhance your sleep quality with personalized timing recommendations',
-        impact: 0.8,
-        confidence: 0.9,
-        implementation: [
-          'Maintain consistent bedtime within 30 minutes',
-          'Use gradual light reduction 1 hour before sleep',
-          'Set optimal room temperature (65-68°F)',
-        ],
-      },
-    ];
+    return [{
+      type: 'sleep_optimization',
+      title: 'Optimize Sleep Quality',
+      description: 'Enhance your sleep quality with personalized timing recommendations',
+      impact: 0.8,
+      confidence: 0.9,
+      implementation: [
+        'Maintain consistent bedtime within 30 minutes',
+        'Use gradual light reduction 1 hour before sleep',
+        'Set optimal room temperature (65-68°F)'
+      ]
+    }];
   }
 
   private generateProductivityRecommendations(userModel: UserBehavioralModel): any[] {
-    return [
-      {
-        type: 'productivity_boost',
-        title: 'Peak Productivity Alignment',
-        description: 'Align your most important tasks with your natural energy peaks',
-        impact: 0.7,
-        confidence: 0.8,
-        implementation: [
-          'Schedule deep work during morning energy peak',
-          'Use afternoon for collaborative tasks',
-          'Reserve routine tasks for low-energy periods',
-        ],
-      },
-    ];
+    return [{
+      type: 'productivity_boost',
+      title: 'Peak Productivity Alignment',
+      description: 'Align your most important tasks with your natural energy peaks',
+      impact: 0.7,
+      confidence: 0.8,
+      implementation: [
+        'Schedule deep work during morning energy peak',
+        'Use afternoon for collaborative tasks',
+        'Reserve routine tasks for low-energy periods'
+      ]
+    }];
   }
 
   private generateWellbeingRecommendations(userModel: UserBehavioralModel): any[] {
-    return [
-      {
-        type: 'wellbeing_enhancement',
-        title: 'Psychological Well-being Support',
-        description: 'Enhance your mental well-being with targeted interventions',
-        impact: 0.6,
-        confidence: 0.7,
-        implementation: [
-          'Implement 5-minute morning mindfulness routine',
-          'Use positive affirmations aligned with your personality',
-          'Create buffer time for stress reduction',
-        ],
-      },
-    ];
+    return [{
+      type: 'wellbeing_enhancement',
+      title: 'Psychological Well-being Support',
+      description: 'Enhance your mental well-being with targeted interventions',
+      impact: 0.6,
+      confidence: 0.7,
+      implementation: [
+        'Implement 5-minute morning mindfulness routine',
+        'Use positive affirmations aligned with your personality',
+        'Create buffer time for stress reduction'
+      ]
+    }];
   }
 
-  private generateSocialOptimizationRecommendations(
-    userModel: UserBehavioralModel
-  ): any[] {
-    return [
-      {
-        type: 'social_optimization',
-        title: 'Social Energy Optimization',
-        description: 'Optimize your social interactions based on energy patterns',
-        impact: 0.5,
-        confidence: 0.6,
-        implementation: [
-          'Schedule social activities during high-energy periods',
-          'Use appropriate voice moods for social days',
-          'Plan recovery time after high-social periods',
-        ],
-      },
-    ];
+  private generateSocialOptimizationRecommendations(userModel: UserBehavioralModel): any[] {
+    return [{
+      type: 'social_optimization',
+      title: 'Social Energy Optimization',
+      description: 'Optimize your social interactions based on energy patterns',
+      impact: 0.5,
+      confidence: 0.6,
+      implementation: [
+        'Schedule social activities during high-energy periods',
+        'Use appropriate voice moods for social days',
+        'Plan recovery time after high-social periods'
+      ]
+    }];
   }
 
-  private generateHabitDevelopmentRecommendations(
-    userModel: UserBehavioralModel
-  ): any[] {
-    return [
-      {
-        type: 'habit_development',
-        title: 'Strategic Habit Formation',
-        description: 'Develop new habits using your personal formation patterns',
-        impact: 0.8,
-        confidence: 0.8,
-        implementation: [
-          'Start with micro-habits during peak consistency times',
-          'Stack new habits on existing strong routines',
-          'Use appropriate reward timing based on your motivation profile',
-        ],
-      },
-    ];
+  private generateHabitDevelopmentRecommendations(userModel: UserBehavioralModel): any[] {
+    return [{
+      type: 'habit_development',
+      title: 'Strategic Habit Formation',
+      description: 'Develop new habits using your personal formation patterns',
+      impact: 0.8,
+      confidence: 0.8,
+      implementation: [
+        'Start with micro-habits during peak consistency times',
+        'Stack new habits on existing strong routines',
+        'Use appropriate reward timing based on your motivation profile'
+      ]
+    }];
   }
 
   // Utility methods
@@ -859,13 +759,13 @@ export class AdvancedBehavioralIntelligence {
     if (crossPlatformData) {
       this.crossPlatformData.set(userId, crossPlatformData);
     }
-
+    
     // Update or create user model
     let userModel = this.userModels.get(userId);
     if (!userModel) {
       userModel = this.createInitialUserModel(userId);
     }
-
+    
     // Update model with new data
     userModel.lastModelUpdate = new Date();
     this.userModels.set(userId, userModel);
@@ -907,9 +807,7 @@ export class AdvancedBehavioralIntelligence {
 
   private initializeAdvancedAnalytics(): void {
     // Initialize advanced analytics systems
-    console.log(
-      '[AdvancedBehavioralIntelligence] Initializing advanced behavioral intelligence system...'
-    );
+    console.log('[AdvancedBehavioralIntelligence] Initializing advanced behavioral intelligence system...');
   }
 
   // Prediction methods
@@ -923,30 +821,23 @@ export class AdvancedBehavioralIntelligence {
     return [7.0, 7.8, 6.5, 8.2, 7.5, 8.0, 7.3];
   }
 
-  private calculateOptimalWakeTimes(
-    userModel: UserBehavioralModel,
-    alarms: Alarm[]
-  ): string[] {
+  private calculateOptimalWakeTimes(userModel: UserBehavioralModel, alarms: Alarm[]): string[] {
     // Calculate optimal wake times for next 7 days
     return ['06:45', '06:50', '07:00', '06:40', '06:55', '07:15', '07:30'];
   }
 
-  private identifyRiskFactors(
-    userModel: UserBehavioralModel
-  ): Array<{ factor: string; probability: number; mitigation: string }> {
+  private identifyRiskFactors(userModel: UserBehavioralModel): Array<{ factor: string; probability: number; mitigation: string }> {
     return [
       {
         factor: 'Sleep debt accumulation',
         probability: 0.3,
-        mitigation:
-          'Maintain consistent sleep schedule and avoid late-night screen time',
+        mitigation: 'Maintain consistent sleep schedule and avoid late-night screen time'
       },
       {
         factor: 'Seasonal mood changes',
         probability: 0.4,
-        mitigation:
-          'Use light therapy during darker months and maintain vitamin D levels',
-      },
+        mitigation: 'Use light therapy during darker months and maintain vitamin D levels'
+      }
     ];
   }
 
@@ -962,11 +853,8 @@ export class AdvancedBehavioralIntelligence {
   private calculateDaylightHours(): number {
     // Simplified calculation - in production, use geolocation and astronomical data
     const now = new Date();
-    const dayOfYear = Math.floor(
-      (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) /
-        (1000 * 60 * 60 * 24)
-    );
-    return 12 + 4 * Math.sin((2 * Math.PI * (dayOfYear - 81)) / 365);
+    const dayOfYear = Math.floor((now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
+    return 12 + 4 * Math.sin(2 * Math.PI * (dayOfYear - 81) / 365);
   }
 
   private isWorkday(): boolean {
@@ -985,7 +873,7 @@ export class AdvancedBehavioralIntelligence {
       consistency: 0.8,
       energy: 0.7,
       stress: 0.4,
-      social: 0.6,
+      social: 0.6
     };
   }
 
@@ -1007,7 +895,7 @@ export class AdvancedBehavioralIntelligence {
     minimumDataPoints: 10,
     enablePredictiveInsights: true,
     crossReferenceLimit: 5,
-    adaptiveThreshold: true,
+    adaptiveThreshold: true
   };
 
   /**
@@ -1068,10 +956,7 @@ export class AdvancedBehavioralIntelligence {
               }
               break;
             default:
-              if (
-                typeof this.parameters[key] === 'boolean' &&
-                typeof value === 'boolean'
-              ) {
+              if (typeof this.parameters[key] === 'boolean' && typeof value === 'boolean') {
                 this.parameters[key] = value;
               } else if (typeof this.parameters[key] === typeof value) {
                 this.parameters[key] = value;
@@ -1103,7 +988,7 @@ export class AdvancedBehavioralIntelligence {
       minimumDataPoints: 10,
       enablePredictiveInsights: true,
       crossReferenceLimit: 5,
-      adaptiveThreshold: true,
+      adaptiveThreshold: true
     };
   }
 
@@ -1116,7 +1001,7 @@ export class AdvancedBehavioralIntelligence {
         type: 'select',
         options: ['surface', 'moderate', 'deep', 'comprehensive'],
         description: 'Depth of behavioral pattern analysis',
-        impact: 'performance',
+        impact: 'performance'
       },
       learningRate: {
         type: 'number',
@@ -1124,7 +1009,7 @@ export class AdvancedBehavioralIntelligence {
         max: 1.0,
         step: 0.05,
         description: 'Rate at which the system learns from new data',
-        impact: 'accuracy',
+        impact: 'accuracy'
       },
       confidenceThreshold: {
         type: 'number',
@@ -1132,19 +1017,19 @@ export class AdvancedBehavioralIntelligence {
         max: 0.95,
         step: 0.05,
         description: 'Minimum confidence required for insights',
-        impact: 'precision',
+        impact: 'precision'
       },
       psychologicalProfiling: {
         type: 'boolean',
         description: 'Enable deep psychological trait analysis',
         impact: 'privacy',
-        requiresConsent: true,
+        requiresConsent: true
       },
       patternRecognitionSensitivity: {
         type: 'select',
         options: ['low', 'medium', 'high'],
         description: 'Sensitivity for detecting behavioral patterns',
-        impact: 'performance',
+        impact: 'performance'
       },
       contextualWeight: {
         type: 'number',
@@ -1152,7 +1037,7 @@ export class AdvancedBehavioralIntelligence {
         max: 1,
         step: 0.1,
         description: 'Weight given to contextual factors',
-        impact: 'accuracy',
+        impact: 'accuracy'
       },
       temporalAnalysisWindow: {
         type: 'number',
@@ -1160,7 +1045,7 @@ export class AdvancedBehavioralIntelligence {
         max: 365,
         step: 7,
         description: 'Time window for pattern analysis (days)',
-        impact: 'memory',
+        impact: 'memory'
       },
       minimumDataPoints: {
         type: 'number',
@@ -1168,12 +1053,12 @@ export class AdvancedBehavioralIntelligence {
         max: 50,
         step: 1,
         description: 'Minimum data points required for analysis',
-        impact: 'reliability',
+        impact: 'reliability'
       },
       enablePredictiveInsights: {
         type: 'boolean',
         description: 'Enable predictive behavioral insights',
-        impact: 'performance',
+        impact: 'performance'
       },
       crossReferenceLimit: {
         type: 'number',
@@ -1181,13 +1066,13 @@ export class AdvancedBehavioralIntelligence {
         max: 20,
         step: 1,
         description: 'Maximum cross-references per analysis',
-        impact: 'performance',
+        impact: 'performance'
       },
       adaptiveThreshold: {
         type: 'boolean',
         description: 'Enable adaptive confidence thresholds',
-        impact: 'accuracy',
-      },
+        impact: 'accuracy'
+      }
     };
   }
 }

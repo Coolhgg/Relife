@@ -10,15 +10,15 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Alert, AlertDescription } from './ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import {
-  Settings,
-  Lightbulb,
-  Code,
-  BookOpen,
+import { 
+  Settings, 
+  Lightbulb, 
+  Code, 
+  BookOpen, 
   CheckCircle,
   AlertTriangle,
   Info,
-  Zap,
+  Zap
 } from 'lucide-react';
 
 interface AIConfigurationState {
@@ -45,10 +45,10 @@ const AIParametersDemo: React.FC = () => {
     try {
       // Simulate API call to save parameters
       await new Promise(resolve => setTimeout(resolve, 2000));
-
+      
       // In a real implementation, you would save to your backend
       localStorage.setItem('ai-model-parameters', JSON.stringify(parameters));
-
+      
       setSaveStatus('success');
       console.log('AI parameters saved:', parameters);
     } catch (error) {
@@ -72,7 +72,7 @@ const AIParametersDemo: React.FC = () => {
   const handleImport = async (file: File): Promise<AIConfigurationState> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = e => {
+      reader.onload = (e) => {
         try {
           const config = JSON.parse(e.target?.result as string);
           resolve(config);
@@ -102,7 +102,7 @@ const AIParametersDemo: React.FC = () => {
               </p>
             </div>
           </div>
-
+          
           {saveStatus === 'success' && (
             <Alert className="max-w-md mx-auto border-green-200 bg-green-50">
               <CheckCircle className="h-4 w-4 text-green-600" />
@@ -111,7 +111,7 @@ const AIParametersDemo: React.FC = () => {
               </AlertDescription>
             </Alert>
           )}
-
+          
           {saveStatus === 'error' && (
             <Alert className="max-w-md mx-auto" variant="destructive">
               <AlertTriangle className="h-4 w-4" />
@@ -148,14 +148,12 @@ const AIParametersDemo: React.FC = () => {
               <CardHeader>
                 <CardTitle>What is the AI Model Parameters Customizer?</CardTitle>
                 <CardDescription>
-                  A comprehensive interface for configuring all AI systems in the Relife
-                  app
+                  A comprehensive interface for configuring all AI systems in the Relife app
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-muted-foreground">
-                  The AI Model Parameters Customizer provides fine-grained control over
-                  six main AI systems:
+                  The AI Model Parameters Customizer provides fine-grained control over six main AI systems:
                 </p>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="p-4 border rounded-lg">
@@ -164,8 +162,7 @@ const AIParametersDemo: React.FC = () => {
                       Core AI Settings
                     </h4>
                     <p className="text-sm text-muted-foreground mt-2">
-                      Learning rate, confidence thresholds, pattern recognition
-                      sensitivity
+                      Learning rate, confidence thresholds, pattern recognition sensitivity
                     </p>
                   </div>
                   <div className="p-4 border rounded-lg">
@@ -174,8 +171,7 @@ const AIParametersDemo: React.FC = () => {
                       Voice AI Enhancement
                     </h4>
                     <p className="text-sm text-muted-foreground mt-2">
-                      Contextual responses, personality adaptation, emotional
-                      intelligence
+                      Contextual responses, personality adaptation, emotional intelligence
                     </p>
                   </div>
                   <div className="p-4 border rounded-lg">
@@ -193,8 +189,7 @@ const AIParametersDemo: React.FC = () => {
                       Rewards System
                     </h4>
                     <p className="text-sm text-muted-foreground mt-2">
-                      Personalization levels, motivational factors, gamification
-                      intensity
+                      Personalization levels, motivational factors, gamification intensity
                     </p>
                   </div>
                 </div>
@@ -268,53 +263,41 @@ const AIParametersDemo: React.FC = () => {
               <CardContent className="space-y-4">
                 <div className="space-y-4">
                   <div className="flex gap-4">
-                    <Badge className="rounded-full w-8 h-8 flex items-center justify-center">
-                      1
-                    </Badge>
+                    <Badge className="rounded-full w-8 h-8 flex items-center justify-center">1</Badge>
                     <div>
                       <h4 className="font-semibold">Navigate Through Tabs</h4>
                       <p className="text-sm text-muted-foreground">
-                        Use the six tabs (Core AI, Voice AI, Behavioral, Rewards,
-                        Platforms, Deployment) to access different AI system settings.
+                        Use the six tabs (Core AI, Voice AI, Behavioral, Rewards, Platforms, Deployment) to access different AI system settings.
                       </p>
                     </div>
                   </div>
-
+                  
                   <div className="flex gap-4">
-                    <Badge className="rounded-full w-8 h-8 flex items-center justify-center">
-                      2
-                    </Badge>
+                    <Badge className="rounded-full w-8 h-8 flex items-center justify-center">2</Badge>
                     <div>
                       <h4 className="font-semibold">Adjust Parameters</h4>
                       <p className="text-sm text-muted-foreground">
-                        Use sliders, toggles, and dropdowns to modify AI behavior.
-                        Real-time feedback shows the impact of your changes.
+                        Use sliders, toggles, and dropdowns to modify AI behavior. Real-time feedback shows the impact of your changes.
                       </p>
                     </div>
                   </div>
-
+                  
                   <div className="flex gap-4">
-                    <Badge className="rounded-full w-8 h-8 flex items-center justify-center">
-                      3
-                    </Badge>
+                    <Badge className="rounded-full w-8 h-8 flex items-center justify-center">3</Badge>
                     <div>
                       <h4 className="font-semibold">Save Configuration</h4>
                       <p className="text-sm text-muted-foreground">
-                        Click "Save" to apply your changes. The system will validate and
-                        deploy the new configuration.
+                        Click "Save" to apply your changes. The system will validate and deploy the new configuration.
                       </p>
                     </div>
                   </div>
-
+                  
                   <div className="flex gap-4">
-                    <Badge className="rounded-full w-8 h-8 flex items-center justify-center">
-                      4
-                    </Badge>
+                    <Badge className="rounded-full w-8 h-8 flex items-center justify-center">4</Badge>
                     <div>
                       <h4 className="font-semibold">Monitor Performance</h4>
                       <p className="text-sm text-muted-foreground">
-                        Use the configuration summary and monitoring tools to track how
-                        your changes affect AI performance.
+                        Use the configuration summary and monitoring tools to track how your changes affect AI performance.
                       </p>
                     </div>
                   </div>
@@ -336,32 +319,21 @@ const AIParametersDemo: React.FC = () => {
                   <div>
                     <h4 className="font-semibold mb-2">Props</h4>
                     <div className="bg-muted p-4 rounded-lg text-sm font-mono">
-                      <div>
-                        onParametersChange?: (parameters: AIConfigurationState) =&gt;
-                        void
-                      </div>
-                      <div>
-                        onSave?: (parameters: AIConfigurationState) =&gt;
-                        Promise&lt;void&gt;
-                      </div>
+                      <div>onParametersChange?: (parameters: AIConfigurationState) =&gt; void</div>
+                      <div>onSave?: (parameters: AIConfigurationState) =&gt; Promise&lt;void&gt;</div>
                       <div>onReset?: () =&gt; void</div>
-                      <div>
-                        onExport?: (parameters: AIConfigurationState) =&gt; void
-                      </div>
-                      <div>
-                        onImport?: (file: File) =&gt;
-                        Promise&lt;AIConfigurationState&gt;
-                      </div>
+                      <div>onExport?: (parameters: AIConfigurationState) =&gt; void</div>
+                      <div>onImport?: (file: File) =&gt; Promise&lt;AIConfigurationState&gt;</div>
                       <div>currentUserId?: string</div>
                       <div>isLoading?: boolean</div>
                     </div>
                   </div>
-
+                  
                   <div>
                     <h4 className="font-semibold mb-2">Example Usage</h4>
                     <div className="bg-muted p-4 rounded-lg text-sm">
                       <pre className="text-xs">
-                        {`<AIModelParametersCustomizer
+{`<AIModelParametersCustomizer
   onParametersChange={handleParametersChange}
   onSave={handleSave}
   onReset={handleReset}
@@ -407,38 +379,26 @@ const AIParametersDemo: React.FC = () => {
                   </div>
                   <div className="text-sm text-muted-foreground">Learning Rate</div>
                 </div>
-
+                
                 <div className="p-3 bg-green-50 rounded-lg">
                   <div className="text-2xl font-bold text-green-600">
-                    {Math.round(
-                      currentConfig.voiceSettings.personalityAdaptation * 100
-                    )}
-                    %
+                    {Math.round(currentConfig.voiceSettings.personalityAdaptation * 100)}%
                   </div>
                   <div className="text-sm text-muted-foreground">Voice Adaptation</div>
                 </div>
-
+                
                 <div className="p-3 bg-purple-50 rounded-lg">
                   <div className="text-2xl font-bold text-purple-600">
-                    {Math.round(
-                      currentConfig.behavioralIntelligence
-                        .patternRecognitionSensitivity * 100
-                    )}
-                    %
+                    {Math.round(currentConfig.behavioralIntelligence.patternRecognitionSensitivity * 100)}%
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    Pattern Sensitivity
-                  </div>
+                  <div className="text-sm text-muted-foreground">Pattern Sensitivity</div>
                 </div>
-
+                
                 <div className="p-3 bg-orange-50 rounded-lg">
                   <div className="text-2xl font-bold text-orange-600">
-                    {Math.round(currentConfig.rewardsSystem.personalizationLevel * 100)}
-                    %
+                    {Math.round(currentConfig.rewardsSystem.personalizationLevel * 100)}%
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    Reward Personalization
-                  </div>
+                  <div className="text-sm text-muted-foreground">Reward Personalization</div>
                 </div>
               </div>
             </CardContent>

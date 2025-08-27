@@ -1,6 +1,6 @@
 /**
  * Comprehensive Reward Service
- *
+ * 
  * Main service for the reward system that integrates:
  * - Database persistence (PostgreSQL)
  * - AI-driven behavior analysis
@@ -8,7 +8,7 @@
  * - Achievement unlocking
  * - Gift management
  * - Analytics tracking
- *
+ * 
  * @version 1.0.0
  * @author Scout AI
  */
@@ -199,9 +199,7 @@ export class RewardService implements RewardSystem {
         this.cache.gifts.set(gift.id, gift);
       });
 
-      this.log(
-        `Loaded ${rewards?.length || 0} rewards and ${gifts?.length || 0} gifts into cache`
-      );
+      this.log(`Loaded ${rewards?.length || 0} rewards and ${gifts?.length || 0} gifts into cache`);
     } catch (error) {
       this.handleError(error as Error, 'Failed to preload cache');
       throw error;
@@ -217,7 +215,9 @@ export class RewardService implements RewardSystem {
    */
   async getRewards(filter?: RewardFilter): Promise<Reward[]> {
     try {
-      let query = this.db.client.from('rewards').select('*');
+      let query = this.db.client
+        .from('rewards')
+        .select('*');
 
       // Apply filters
       if (filter?.category) {
@@ -259,12 +259,10 @@ export class RewardService implements RewardSystem {
 
       let query = this.db.client
         .from('user_rewards')
-        .select(
-          `
+        .select(`
           *,
           reward:rewards(*)
-        `
-        )
+        `)
         .eq('user_id', userId);
 
       // Apply filters
@@ -294,10 +292,7 @@ export class RewardService implements RewardSystem {
   /**
    * Check and unlock rewards for a user based on their activity
    */
-  async checkAndUnlockRewards(
-    userId: string,
-    activityData: any
-  ): Promise<UserReward[]> {
+  async checkAndUnlockRewards(userId: string, activityData: any): Promise<UserReward[]> {
     try {
       // Get AI recommendations for potential rewards
       const potentialRewards = await this.aiService.analyzeAndRecommendRewards(
@@ -375,12 +370,10 @@ export class RewardService implements RewardSystem {
       const { data, error } = await this.db.client
         .from('user_rewards')
         .insert(userRewardData)
-        .select(
-          `
+        .select(`
           *,
           reward:rewards(*)
-        `
-        )
+        `)
         .single();
 
       if (error) {
@@ -454,12 +447,11 @@ export class RewardService implements RewardSystem {
   /**
    * Get all available gifts
    */
-  async getGifts(filter?: {
-    type?: GiftType;
-    isActive?: boolean;
-  }): Promise<GiftCatalog[]> {
+  async getGifts(filter?: { type?: GiftType; isActive?: boolean }): Promise<GiftCatalog[]> {
     try {
-      let query = this.db.client.from('gift_catalog').select('*');
+      let query = this.db.client
+        .from('gift_catalog')
+        .select('*');
 
       if (filter?.type) {
         query = query.eq('type', filter.type);
@@ -493,12 +485,10 @@ export class RewardService implements RewardSystem {
 
       const { data, error } = await this.db.client
         .from('user_gift_inventory')
-        .select(
-          `
+        .select(`
           *,
           gift:gift_catalog(*)
-        `
-        )
+        `)
         .eq('user_id', userId)
         .order('unlocked_at', { ascending: false });
 
@@ -562,12 +552,10 @@ export class RewardService implements RewardSystem {
       const { data, error } = await this.db.client
         .from('user_gift_inventory')
         .insert(userGiftData)
-        .select(
-          `
+        .select(`
           *,
           gift:gift_catalog(*)
-        `
-        )
+        `)
         .single();
 
       if (error) {
@@ -605,11 +593,7 @@ export class RewardService implements RewardSystem {
   /**
    * Equip/unequip a gift
    */
-  async equipGift(
-    userId: string,
-    giftId: string,
-    equip: boolean = true
-  ): Promise<boolean> {
+  async equipGift(userId: string, giftId: string, equip: boolean = true): Promise<boolean> {
     try {
       // First, if equipping, unequip other gifts of the same type
       if (equip) {
@@ -631,9 +615,7 @@ export class RewardService implements RewardSystem {
         .eq('gift_id', giftId);
 
       if (error) {
-        throw new Error(
-          `Failed to ${equip ? 'equip' : 'unequip'} gift: ${error.message}`
-        );
+        throw new Error(`Failed to ${equip ? 'equip' : 'unequip'} gift: ${error.message}`);
       }
 
       // Clear cache
@@ -728,10 +710,7 @@ export class RewardService implements RewardSystem {
   /**
    * Track user habits
    */
-  async updateUserHabits(
-    userId: string,
-    habitData: Partial<UserHabit>
-  ): Promise<UserHabit | null> {
+  async updateUserHabits(userId: string, habitData: Partial<UserHabit>): Promise<UserHabit | null> {
     try {
       // Check if habit record exists
       const { data: existing } = await this.db.client
@@ -808,8 +787,7 @@ export class RewardService implements RewardSystem {
         .eq('user_id', userId)
         .single();
 
-      if (error && error.code !== 'PGRST116') {
-        // PGRST116 is "not found"
+      if (error && error.code !== 'PGRST116') { // PGRST116 is "not found"
         throw new Error(`Failed to fetch user analytics: ${error.message}`);
       }
 
@@ -1000,10 +978,7 @@ export class RewardService implements RewardSystem {
   /**
    * Check if user has a specific reward
    */
-  private async hasUserReward(
-    userId: string,
-    rewardId: string
-  ): Promise<UserReward | null> {
+  private async hasUserReward(userId: string, rewardId: string): Promise<UserReward | null> {
     try {
       const { data, error } = await this.db.client
         .from('user_rewards')
@@ -1026,10 +1001,7 @@ export class RewardService implements RewardSystem {
   /**
    * Check if user has a specific gift
    */
-  private async hasUserGift(
-    userId: string,
-    giftId: string
-  ): Promise<UserGiftInventory | null> {
+  private async hasUserGift(userId: string, giftId: string): Promise<UserGiftInventory | null> {
     try {
       const { data, error } = await this.db.client
         .from('user_gift_inventory')
@@ -1171,7 +1143,7 @@ export class RewardService implements RewardSystem {
    */
   private handleError(error: Error, context: string): void {
     const errorMessage = `${context}: ${error.message}`;
-
+    
     if (this.config.debugMode) {
       console.error('RewardService Error:', errorMessage, error);
     }

@@ -34,16 +34,12 @@ export default function AdminAIDashboard({ onBack }: AdminAIDashboardProps) {
                 <Activity className="w-6 h-6 text-blue-600" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">
-                  AI Performance Dashboard
-                </h1>
-                <p className="text-sm text-gray-500">
-                  Monitor and analyze AI system performance
-                </p>
+                <h1 className="text-xl font-bold text-gray-900">AI Performance Dashboard</h1>
+                <p className="text-sm text-gray-500">Monitor and analyze AI system performance</p>
               </div>
             </div>
           </div>
-
+          
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
               <Button
@@ -61,7 +57,7 @@ export default function AdminAIDashboard({ onBack }: AdminAIDashboardProps) {
                 Demo & Docs
               </Button>
             </div>
-
+            
             <Badge variant="secondary" className="ml-2">
               <Settings className="w-3 h-3 mr-1" />
               Admin

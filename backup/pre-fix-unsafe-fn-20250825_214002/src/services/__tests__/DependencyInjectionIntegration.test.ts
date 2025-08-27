@@ -1,6 +1,6 @@
 /**
  * Integration Tests for Dependency Injection System
- *
+ * 
  * These tests verify that the entire DI system works correctly
  * with real service dependencies and initialization flows.
  */
@@ -40,7 +40,7 @@ describe('Dependency Injection Integration', () => {
 
     test('should provide service statistics', () => {
       const stats = getEnhancedServiceStats();
-
+      
       expect(stats).toHaveProperty('total');
       expect(stats).toHaveProperty('enhanced');
       expect(stats).toHaveProperty('critical');
@@ -63,7 +63,7 @@ describe('Dependency Injection Integration', () => {
 
     test('should generate dependency graph', () => {
       const graph = generateDependencyGraph();
-
+      
       expect(typeof graph).toBe('string');
       expect(graph).toContain('Enhanced Service Dependency Graph');
       expect(graph).toContain('AlarmService');
@@ -105,7 +105,7 @@ describe('Dependency Injection Integration', () => {
   describe('Service Registration', () => {
     test('should register enhanced services successfully', async () => {
       await registerEnhancedServices(container);
-
+      
       // Check that services are registered
       expect(container.has('AlarmService')).toBe(true);
       expect(container.has('AnalyticsService')).toBe(true);
@@ -118,7 +118,7 @@ describe('Dependency Injection Integration', () => {
 
     test('should handle duplicate registration gracefully', async () => {
       await registerEnhancedServices(container);
-
+      
       // Attempting to register again should throw an error
       await expect(registerEnhancedServices(container)).rejects.toThrow();
     });
@@ -128,13 +128,13 @@ describe('Dependency Injection Integration', () => {
     test('should initialize critical services successfully', async () => {
       await registerEnhancedServices(container);
       await initializeEnhancedCriticalServices(container);
-
+      
       // Check that critical services are initialized
       const criticalServices = getEnhancedServicesByTag('critical');
-
+      
       for (const serviceName of criticalServices) {
         expect(container.has(serviceName)).toBe(true);
-
+        
         // Try to resolve the service
         const service = await container.resolve(serviceName);
         expect(service).toBeDefined();
@@ -145,7 +145,7 @@ describe('Dependency Injection Integration', () => {
     test('should initialize container properly', async () => {
       await registerEnhancedServices(container);
       await container.initialize();
-
+      
       // All registered services should be available
       const stats = getEnhancedServiceStats();
       const serviceNames = Object.keys({
@@ -154,10 +154,10 @@ describe('Dependency Injection Integration', () => {
         ...stats.services.infrastructure,
         ...stats.services.business,
       });
-
+      
       // Remove duplicates
       const uniqueServiceNames = [...new Set(serviceNames)];
-
+      
       for (const serviceName of uniqueServiceNames) {
         if (container.has(serviceName)) {
           const service = await container.resolve(serviceName);
@@ -171,17 +171,17 @@ describe('Dependency Injection Integration', () => {
     test('should resolve dependencies correctly', async () => {
       await registerEnhancedServices(container);
       await container.initialize();
-
+      
       // AlarmService depends on StorageService, SecurityService, AnalyticsService, BattleService
       const alarmService = await container.resolve('AlarmService');
       expect(alarmService).toBeDefined();
       expect(alarmService.isInitialized()).toBe(true);
-
+      
       // AnalyticsService depends on StorageService
       const analyticsService = await container.resolve('AnalyticsService');
       expect(analyticsService).toBeDefined();
       expect(analyticsService.isInitialized()).toBe(true);
-
+      
       // StorageService has no dependencies
       const storageService = await container.resolve('StorageService');
       expect(storageService).toBeDefined();
@@ -198,12 +198,12 @@ describe('Dependency Injection Integration', () => {
     test('should enforce singleton behavior', async () => {
       await registerEnhancedServices(container);
       await container.initialize();
-
+      
       // Get the same service multiple times
       const alarmService1 = await container.resolve('AlarmService');
       const alarmService2 = await container.resolve('AlarmService');
       const alarmService3 = container.get('AlarmService');
-
+      
       // Should be the same instance
       expect(alarmService1).toBe(alarmService2);
       expect(alarmService1).toBe(alarmService3);
@@ -214,11 +214,11 @@ describe('Dependency Injection Integration', () => {
     test('should provide service health information', async () => {
       await registerEnhancedServices(container);
       await container.initialize();
-
+      
       // Enhanced services should provide health information
       const alarmService = await container.resolve('AlarmService');
       const health = await alarmService.getHealth();
-
+      
       expect(health).toBeDefined();
       expect(health).toHaveProperty('status');
     });
@@ -226,12 +226,12 @@ describe('Dependency Injection Integration', () => {
     test('should track service metrics', async () => {
       await registerEnhancedServices(container);
       await container.initialize();
-
+      
       const analyticsService = await container.resolve('AnalyticsService');
-
+      
       // Track a metric
       await analyticsService.track('test_metric', { value: 123 });
-
+      
       // Service should maintain queue size
       expect(typeof analyticsService.getQueueSize()).toBe('number');
     });
@@ -242,13 +242,13 @@ describe('Dependency Injection Integration', () => {
       // This test would require injecting a faulty service
       // For now, we test that the error handling mechanisms exist
       await registerEnhancedServices(container);
-
+      
       expect(container.has('AlarmService')).toBe(true);
     });
 
     test('should handle service resolution errors', async () => {
       await registerEnhancedServices(container);
-
+      
       // Try to resolve a non-existent service
       await expect(container.resolve('NonExistentService')).rejects.toThrow();
     });
@@ -258,14 +258,14 @@ describe('Dependency Injection Integration', () => {
     test('should dispose of services properly', async () => {
       await registerEnhancedServices(container);
       await container.initialize();
-
+      
       // Services should be initialized
       const alarmService = await container.resolve('AlarmService');
       expect(alarmService.isInitialized()).toBe(true);
-
+      
       // Dispose of container
       await container.dispose();
-
+      
       // Services should be cleaned up (we can't easily test this without internal access)
       // But the dispose should complete without error
     });
@@ -275,9 +275,9 @@ describe('Dependency Injection Integration', () => {
     test('should handle service configuration updates', async () => {
       await registerEnhancedServices(container);
       await container.initialize();
-
+      
       const analyticsService = await container.resolve('AnalyticsService');
-
+      
       // Update configuration
       await analyticsService.updateConfiguration({
         enabled: true,
@@ -287,7 +287,7 @@ describe('Dependency Injection Integration', () => {
           flushInterval: 15000,
         },
       } as any);
-
+      
       // Configuration should be updated (we can't easily verify this without internal access)
       // But the update should complete without error
     });
@@ -315,7 +315,7 @@ describe('Service Integration Scenarios', () => {
     test('should handle alarm creation workflow', async () => {
       const alarmService = await container.resolve('AlarmService');
       const analyticsService = await container.resolve('AnalyticsService');
-
+      
       // Create an alarm (this would trigger analytics tracking)
       const alarm = await alarmService.createAlarm({
         time: '08:00',
@@ -324,38 +324,35 @@ describe('Service Integration Scenarios', () => {
         voiceMood: 'motivational' as any,
         userId: 'test-user',
       });
-
+      
       expect(alarm).toBeDefined();
       expect(alarm.id).toBeDefined();
       expect(alarm.time).toBe('08:00');
       expect(alarm.label).toBe('Test Alarm');
-
+      
       // Analytics should have tracked the event
       expect(analyticsService.getQueueSize()).toBeGreaterThan(0);
     });
 
     test('should handle data persistence workflow', async () => {
       const storageService = await container.resolve('StorageService');
-
+      
       // Store some data
-      await storageService.set('test_key', {
-        value: 'test_data',
-        timestamp: Date.now(),
-      });
-
+      await storageService.set('test_key', { value: 'test_data', timestamp: Date.now() });
+      
       // Retrieve the data
       const data = await storageService.get('test_key');
       expect(data).toBeDefined();
       expect(data.value).toBe('test_data');
-
+      
       // Check if key exists
       const hasKey = await storageService.has('test_key');
       expect(hasKey).toBe(true);
-
+      
       // Delete the data
       const deleted = await storageService.delete('test_key');
       expect(deleted).toBe(true);
-
+      
       // Verify deletion
       const hasKeyAfterDelete = await storageService.has('test_key');
       expect(hasKeyAfterDelete).toBe(false);
@@ -363,18 +360,14 @@ describe('Service Integration Scenarios', () => {
 
     test('should handle analytics tracking workflow', async () => {
       const analyticsService = await container.resolve('AnalyticsService');
-
+      
       // Track various events
       await analyticsService.track('user_login', { userId: 'test-user' });
-      await analyticsService.trackUserAction('test-user', 'button_click', {
-        button: 'create_alarm',
-      });
-      await analyticsService.trackPerformanceMetric('load_time', 1500, {
-        page: 'home',
-      });
-
+      await analyticsService.trackUserAction('test-user', 'button_click', { button: 'create_alarm' });
+      await analyticsService.trackPerformanceMetric('load_time', 1500, { page: 'home' });
+      
       expect(analyticsService.getQueueSize()).toBe(3);
-
+      
       // Flush events
       await analyticsService.flush();
       expect(analyticsService.getQueueSize()).toBe(0);

@@ -1,4 +1,4 @@
-import _AnalyticsService from './analytics';
+import AnalyticsService from './analytics';
 import { AnyFn } from 'src/types/utility-types';
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
@@ -39,7 +39,7 @@ export class PWAManager {
     standalone: false,
   };
 
-  private eventListeners: Map<string, AnyFn[]> = new Map();
+  private eventListeners: Map<string, Function[]> = new Map();
   private serviceWorkerRegistration: ServiceWorkerRegistration | null = null;
 
   constructor() {
@@ -177,8 +177,8 @@ export class PWAManager {
   private setupServiceWorkerMessaging() {
     if (!this.capabilities.serviceWorker) return;
 
-    navigator.serviceWorker.addEventListener('message', _event => {
-      const { type, data } = event.data;
+    navigator.serviceWorker.addEventListener('message', event => {
+      const { type, data } = _event.data;
 
       switch (type) {
         case 'SYNC_COMPLETE':
@@ -380,7 +380,7 @@ export class PWAManager {
   // Utility functions
   private urlBase64ToUint8Array(base64String: string): Uint8Array {
     const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
 
     const rawData = window.atob(base64);
     const outputArray = new Uint8Array(rawData.length);

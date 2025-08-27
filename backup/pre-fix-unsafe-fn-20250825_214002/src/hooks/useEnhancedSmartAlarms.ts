@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import {
-  // Replaced stub import with proper implementation // auto: restored by scout - verify
+// Replaced stub import with proper implementation // auto: restored by scout - verify
   EnhancedSmartAlarmScheduler,
   type EnhancedSmartAlarm,
 } from '../services/enhanced-smart-alarm-scheduler';

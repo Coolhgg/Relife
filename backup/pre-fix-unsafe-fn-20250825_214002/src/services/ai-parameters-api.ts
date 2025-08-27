@@ -4,11 +4,11 @@
  * validation, rollback capabilities, and synchronization across services
  */
 
-import type {
-  AISettings,
-  PlatformConfig,
+import type { 
+  AISettings, 
+  PlatformConfig, 
   MonitoringConfig,
-  PhaseConfig,
+  PhaseConfig 
 } from '../config/ai-deployment-config';
 import AdvancedBehavioralIntelligence from './advanced-behavioral-intelligence';
 import VoiceAIEnhancedService from './voice-ai-enhanced';
@@ -18,13 +18,7 @@ import { PerformanceMonitor } from './ai-performance-monitor';
 
 // Real-time parameter update types
 export interface ParameterUpdateRequest {
-  category:
-    | 'core_ai'
-    | 'voice_ai'
-    | 'behavioral_intelligence'
-    | 'rewards'
-    | 'platform'
-    | 'deployment';
+  category: 'core_ai' | 'voice_ai' | 'behavioral_intelligence' | 'rewards' | 'platform' | 'deployment';
   parameters: Record<string, any>;
   userId: string;
   immediate?: boolean; // Apply immediately or queue for next cycle
@@ -113,12 +107,9 @@ class AIParametersAPIService {
   /**
    * Start a live configuration session
    */
-  async startLiveSession(
-    userId: string,
-    previewMode = false
-  ): Promise<LiveConfigurationSession> {
+  async startLiveSession(userId: string, previewMode = false): Promise<LiveConfigurationSession> {
     const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-
+    
     const session: LiveConfigurationSession = {
       sessionId,
       userId,
@@ -127,7 +118,7 @@ class AIParametersAPIService {
       pendingChanges: [],
       rollbackTokens: new Map(),
       autoSaveEnabled: !previewMode,
-      previewMode,
+      previewMode
     };
 
     this.activeSessions.set(sessionId, session);
@@ -137,9 +128,7 @@ class AIParametersAPIService {
   /**
    * Get current configuration state for all services
    */
-  async getCurrentConfiguration(
-    userId: string
-  ): Promise<Record<string, ServiceConfigurationState>> {
+  async getCurrentConfiguration(userId: string): Promise<Record<string, ServiceConfigurationState>> {
     const configurations: Record<string, ServiceConfigurationState> = {};
 
     try {
@@ -150,17 +139,17 @@ class AIParametersAPIService {
         pendingUpdates: {},
         lastUpdated: new Date(),
         version: '2.1.0',
-        rollbackAvailable: true,
+        rollbackAvailable: true
       };
 
-      // Voice AI Configuration
+      // Voice AI Configuration  
       configurations.voice_ai = {
         serviceName: 'Voice AI Enhanced',
         currentParameters: await this.voiceService.getCurrentConfiguration(),
         pendingUpdates: {},
         lastUpdated: new Date(),
         version: '1.8.3',
-        rollbackAvailable: true,
+        rollbackAvailable: true
       };
 
       // AI Rewards Configuration
@@ -170,7 +159,7 @@ class AIParametersAPIService {
         pendingUpdates: {},
         lastUpdated: new Date(),
         version: '1.5.2',
-        rollbackAvailable: true,
+        rollbackAvailable: true
       };
 
       // Deployment Configuration
@@ -180,8 +169,9 @@ class AIParametersAPIService {
         pendingUpdates: {},
         lastUpdated: new Date(),
         version: '3.0.1',
-        rollbackAvailable: true,
+        rollbackAvailable: true
       };
+
     } catch (error) {
       console.error('[AIParametersAPI] Error getting current configuration:', error);
     }
@@ -192,14 +182,12 @@ class AIParametersAPIService {
   /**
    * Validate parameters before applying
    */
-  async validateParameters(
-    request: ParameterUpdateRequest
-  ): Promise<ParameterValidationResult> {
+  async validateParameters(request: ParameterUpdateRequest): Promise<ParameterValidationResult> {
     const result: ParameterValidationResult = {
       isValid: true,
       errors: [],
       warnings: [],
-      performanceImpact: 'low',
+      performanceImpact: 'low'
     };
 
     try {
@@ -234,9 +222,7 @@ class AIParametersAPIService {
   /**
    * Apply parameter updates to AI services
    */
-  async updateParameters(
-    request: ParameterUpdateRequest
-  ): Promise<ParameterUpdateResponse> {
+  async updateParameters(request: ParameterUpdateRequest): Promise<ParameterUpdateResponse> {
     // Validate first
     if (!request.validateOnly) {
       const validation = await this.validateParameters(request);
@@ -247,7 +233,7 @@ class AIParametersAPIService {
           validationErrors: validation.errors,
           affectedServices: [],
           estimatedEffectTime: 0,
-          warnings: validation.warnings,
+          warnings: validation.warnings
         };
       }
     }
@@ -256,7 +242,7 @@ class AIParametersAPIService {
       success: false,
       appliedParameters: {},
       affectedServices: [],
-      estimatedEffectTime: 0,
+      estimatedEffectTime: 0
     };
 
     try {
@@ -274,6 +260,7 @@ class AIParametersAPIService {
         response.rollbackToken = `rollback_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
         await this.createRollbackPoint(request, response.rollbackToken);
       }
+
     } catch (error) {
       response.success = false;
       response.validationErrors = [`Update error: ${error.message}`];
@@ -286,7 +273,7 @@ class AIParametersAPIService {
    * Apply parameters immediately to services
    */
   private async applyParametersImmediately(
-    request: ParameterUpdateRequest,
+    request: ParameterUpdateRequest, 
     response: ParameterUpdateResponse
   ): Promise<void> {
     switch (request.category) {
@@ -324,14 +311,11 @@ class AIParametersAPIService {
           success: false,
           appliedParameters: {},
           affectedServices: [],
-          estimatedEffectTime: 0,
+          estimatedEffectTime: 0
         };
 
         await this.applyParametersImmediately(request, response);
-        console.log(
-          `[AIParametersAPI] Applied queued update for ${request.category}:`,
-          response
-        );
+        console.log(`[AIParametersAPI] Applied queued update for ${request.category}:`, response);
       } catch (error) {
         console.error(`[AIParametersAPI] Error processing queued update:`, error);
       }
@@ -343,16 +327,13 @@ class AIParametersAPIService {
   /**
    * Rollback parameters to a previous state
    */
-  async rollbackParameters(
-    rollbackToken: string,
-    userId: string
-  ): Promise<ParameterUpdateResponse> {
+  async rollbackParameters(rollbackToken: string, userId: string): Promise<ParameterUpdateResponse> {
     // Implementation for rollback functionality
     const response: ParameterUpdateResponse = {
       success: true,
       appliedParameters: {},
       affectedServices: [],
-      estimatedEffectTime: 1000,
+      estimatedEffectTime: 1000
     };
 
     try {
@@ -376,29 +357,18 @@ class AIParametersAPIService {
   /**
    * Get real-time performance metrics for parameter changes
    */
-  async getParameterPerformanceMetrics(
-    timeRange: 'hour' | 'day' | 'week' = 'hour'
-  ): Promise<any> {
+  async getParameterPerformanceMetrics(timeRange: 'hour' | 'day' | 'week' = 'hour'): Promise<any> {
     return await this.performanceMonitor.getParameterImpactMetrics(timeRange);
   }
 
   // Validation methods for each category
-  private async validateCoreAIParameters(
-    parameters: Record<string, any>,
-    result: ParameterValidationResult
-  ): Promise<void> {
-    if (
-      parameters.learningRate &&
-      (parameters.learningRate < 0.1 || parameters.learningRate > 0.9)
-    ) {
+  private async validateCoreAIParameters(parameters: Record<string, any>, result: ParameterValidationResult): Promise<void> {
+    if (parameters.learningRate && (parameters.learningRate < 0.1 || parameters.learningRate > 0.9)) {
       result.errors.push('Learning rate must be between 0.1 and 0.9');
       result.isValid = false;
     }
 
-    if (
-      parameters.confidenceThreshold &&
-      (parameters.confidenceThreshold < 0.5 || parameters.confidenceThreshold > 0.95)
-    ) {
+    if (parameters.confidenceThreshold && (parameters.confidenceThreshold < 0.5 || parameters.confidenceThreshold > 0.95)) {
       result.errors.push('Confidence threshold must be between 0.5 and 0.95');
       result.isValid = false;
     }
@@ -409,16 +379,8 @@ class AIParametersAPIService {
     }
   }
 
-  private async validateVoiceAIParameters(
-    parameters: Record<string, any>,
-    result: ParameterValidationResult
-  ): Promise<void> {
-    if (
-      parameters.responseComplexity &&
-      !['simple', 'moderate', 'complex', 'adaptive'].includes(
-        parameters.responseComplexity
-      )
-    ) {
+  private async validateVoiceAIParameters(parameters: Record<string, any>, result: ParameterValidationResult): Promise<void> {
+    if (parameters.responseComplexity && !['simple', 'moderate', 'complex', 'adaptive'].includes(parameters.responseComplexity)) {
       result.errors.push('Invalid response complexity level');
       result.isValid = false;
     }
@@ -428,16 +390,8 @@ class AIParametersAPIService {
     }
   }
 
-  private async validateBehavioralParameters(
-    parameters: Record<string, any>,
-    result: ParameterValidationResult
-  ): Promise<void> {
-    if (
-      parameters.analysisDepth &&
-      !['surface', 'moderate', 'deep', 'comprehensive'].includes(
-        parameters.analysisDepth
-      )
-    ) {
+  private async validateBehavioralParameters(parameters: Record<string, any>, result: ParameterValidationResult): Promise<void> {
+    if (parameters.analysisDepth && !['surface', 'moderate', 'deep', 'comprehensive'].includes(parameters.analysisDepth)) {
       result.errors.push('Invalid analysis depth level');
       result.isValid = false;
     }
@@ -448,87 +402,55 @@ class AIParametersAPIService {
     }
   }
 
-  private async validateRewardsParameters(
-    parameters: Record<string, any>,
-    result: ParameterValidationResult
-  ): Promise<void> {
-    if (
-      parameters.gamificationIntensity &&
-      (parameters.gamificationIntensity < 0 || parameters.gamificationIntensity > 100)
-    ) {
+  private async validateRewardsParameters(parameters: Record<string, any>, result: ParameterValidationResult): Promise<void> {
+    if (parameters.gamificationIntensity && (parameters.gamificationIntensity < 0 || parameters.gamificationIntensity > 100)) {
       result.errors.push('Gamification intensity must be between 0 and 100');
       result.isValid = false;
     }
   }
 
-  private async validatePlatformParameters(
-    parameters: Record<string, any>,
-    result: ParameterValidationResult
-  ): Promise<void> {
+  private async validatePlatformParameters(parameters: Record<string, any>, result: ParameterValidationResult): Promise<void> {
     // Platform-specific validation logic
   }
 
-  private async validateDeploymentParameters(
-    parameters: Record<string, any>,
-    result: ParameterValidationResult
-  ): Promise<void> {
-    if (
-      parameters.rollbackStrategy &&
-      !['immediate', 'gradual', 'manual'].includes(parameters.rollbackStrategy)
-    ) {
+  private async validateDeploymentParameters(parameters: Record<string, any>, result: ParameterValidationResult): Promise<void> {
+    if (parameters.rollbackStrategy && !['immediate', 'gradual', 'manual'].includes(parameters.rollbackStrategy)) {
       result.errors.push('Invalid rollback strategy');
       result.isValid = false;
     }
   }
 
   // Application methods for each service
-  private async applyBehavioralParameters(
-    parameters: Record<string, any>,
-    response: ParameterUpdateResponse
-  ): Promise<void> {
+  private async applyBehavioralParameters(parameters: Record<string, any>, response: ParameterUpdateResponse): Promise<void> {
     await this.behavioralService.updateParameters(parameters);
     response.appliedParameters = parameters;
     response.affectedServices.push('behavioral_intelligence');
   }
 
-  private async applyVoiceAIParameters(
-    parameters: Record<string, any>,
-    response: ParameterUpdateResponse
-  ): Promise<void> {
+  private async applyVoiceAIParameters(parameters: Record<string, any>, response: ParameterUpdateResponse): Promise<void> {
     await this.voiceService.updateConfiguration(parameters);
     response.appliedParameters = parameters;
     response.affectedServices.push('voice_ai');
   }
 
-  private async applyRewardsParameters(
-    parameters: Record<string, any>,
-    response: ParameterUpdateResponse
-  ): Promise<void> {
+  private async applyRewardsParameters(parameters: Record<string, any>, response: ParameterUpdateResponse): Promise<void> {
     await this.rewardsService.updateConfiguration(parameters);
     response.appliedParameters = parameters;
     response.affectedServices.push('rewards');
   }
 
-  private async applyDeploymentParameters(
-    parameters: Record<string, any>,
-    response: ParameterUpdateResponse
-  ): Promise<void> {
+  private async applyDeploymentParameters(parameters: Record<string, any>, response: ParameterUpdateResponse): Promise<void> {
     await this.deploymentOrchestrator.updateConfiguration(parameters);
     response.appliedParameters = parameters;
     response.affectedServices.push('deployment');
   }
 
   // Rollback support methods
-  private async createRollbackPoint(
-    request: ParameterUpdateRequest,
-    token: string
-  ): Promise<void> {
+  private async createRollbackPoint(request: ParameterUpdateRequest, token: string): Promise<void> {
     // Store current state for rollback
     const currentState = await this.getCurrentConfiguration(request.userId);
     // Implementation would store this in database or cache
-    console.log(
-      `[AIParametersAPI] Created rollback point ${token} for user ${request.userId}`
-    );
+    console.log(`[AIParametersAPI] Created rollback point ${token} for user ${request.userId}`);
   }
 
   private async getRollbackData(token: string): Promise<any> {
@@ -536,9 +458,7 @@ class AIParametersAPIService {
     return null; // Placeholder
   }
 
-  private async restoreServiceConfiguration(
-    config: ServiceConfigurationState
-  ): Promise<void> {
+  private async restoreServiceConfiguration(config: ServiceConfigurationState): Promise<void> {
     // Restore service to previous configuration
     console.log(`[AIParametersAPI] Restoring ${config.serviceName} configuration`);
   }
@@ -554,7 +474,7 @@ class AIParametersAPIService {
         this.updateQueue.push(change);
       }
     }
-
+    
     this.activeSessions.delete(sessionId);
   }
 

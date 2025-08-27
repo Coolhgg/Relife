@@ -11,16 +11,13 @@ import { subscriptionReducer } from './subscriptionReducer';
 
 export const rootReducer = (
   state: AppState = INITIAL_DOMAIN_APP_STATE,
-  action:
-    | AppAction
-    | { type: 'APP_UPDATE'; payload: AppState }
-    | { type: 'STORE_HYDRATED'; payload: Partial<AppState> }
+  action: AppAction | { type: 'APP_UPDATE'; payload: AppState } | { type: 'STORE_HYDRATED'; payload: Partial<AppState> }
 ): AppState => {
   // Handle legacy APP_UPDATE action for gradual migration
   if (action.type === 'APP_UPDATE') {
     return action.payload;
   }
-
+  
   // Handle store hydration from persisted state
   if (action.type === 'STORE_HYDRATED') {
     return {

@@ -1,19 +1,16 @@
 # Service Migration Guide: From Direct Imports to Dependency Injection
 
-This guide explains how to migrate from direct service imports to using the new dependency injection
-container.
+This guide explains how to migrate from direct service imports to using the new dependency injection container.
 
 ## Overview
 
-The app now uses a sophisticated dependency injection (DI) container that manages service lifecycle,
-dependencies, and configuration. This replaces the old singleton pattern used by most services.
+The app now uses a sophisticated dependency injection (DI) container that manages service lifecycle, dependencies, and configuration. This replaces the old singleton pattern used by most services.
 
 ## Migration Steps
 
 ### 1. Remove Direct Service Imports
 
 **Before (Old Pattern):**
-
 ```typescript
 import { AlarmService } from '../services/alarm';
 import AnalyticsService from '../services/analytics';
@@ -21,7 +18,6 @@ import { VoiceService } from '../services/voice';
 ```
 
 **After (New Pattern):**
-
 ```typescript
 import { getService } from '../services/ServiceBootstrap';
 import { IAlarmService, IAnalyticsService, IVoiceService } from '../types/service-interfaces';
@@ -30,7 +26,6 @@ import { IAlarmService, IAnalyticsService, IVoiceService } from '../types/servic
 ### 2. Update Service Usage in Components
 
 **Before (Old Pattern):**
-
 ```typescript
 class MyComponent extends React.Component {
   async componentDidMount() {
@@ -41,7 +36,6 @@ class MyComponent extends React.Component {
 ```
 
 **After (New Pattern):**
-
 ```typescript
 class MyComponent extends React.Component {
   private alarmService = getService<IAlarmService>('AlarmService');
@@ -57,7 +51,6 @@ class MyComponent extends React.Component {
 ### 3. Update Service Usage in Hooks
 
 **Before (Old Pattern):**
-
 ```typescript
 function useAlarms() {
   useEffect(() => {
@@ -67,11 +60,10 @@ function useAlarms() {
 ```
 
 **After (New Pattern):**
-
 ```typescript
 function useAlarms() {
   const alarmService = useMemo(() => getService<IAlarmService>('AlarmService'), []);
-
+  
   useEffect(() => {
     alarmService.loadAlarms().then(setAlarms);
   }, [alarmService]);
@@ -81,7 +73,6 @@ function useAlarms() {
 ### 4. Update Service Usage in Utility Functions
 
 **Before (Old Pattern):**
-
 ```typescript
 export async function processAlarms() {
   const alarms = await AlarmService.loadAlarms();
@@ -90,7 +81,6 @@ export async function processAlarms() {
 ```
 
 **After (New Pattern):**
-
 ```typescript
 import { getService } from '../services/ServiceBootstrap';
 import { IAlarmService, IAnalyticsService } from '../types/service-interfaces';
@@ -98,7 +88,7 @@ import { IAlarmService, IAnalyticsService } from '../types/service-interfaces';
 export async function processAlarms() {
   const alarmService = getService<IAlarmService>('AlarmService');
   const analyticsService = getService<IAnalyticsService>('AnalyticsService');
-
+  
   const alarms = await alarmService.loadAlarms();
   await analyticsService.track('alarms_processed', { count: alarms.length });
 }
@@ -109,19 +99,16 @@ export async function processAlarms() {
 The following services are available through the DI container:
 
 ### Core Services
-
 - `AlarmService` - Enhanced alarm management (implements `IAlarmService`)
-- `AnalyticsService` - Enhanced analytics and tracking (implements `IAnalyticsService`)
+- `AnalyticsService` - Enhanced analytics and tracking (implements `IAnalyticsService`) 
 - `StorageService` - Enhanced storage with caching (implements `IStorageService`)
 
 ### Infrastructure Services
-
 - `CacheService` - Caching and performance (implements `ICacheService`)
 - `SecurityService` - Security and authentication (implements `ISecurityService`)
 - `PerformanceService` - Performance monitoring (implements `IPerformanceService`)
 
 ### Business Services
-
 - `SubscriptionService` - Subscription management (implements `ISubscriptionService`)
 - `VoiceService` - Voice and audio features (implements `IVoiceService`)
 - `BattleService` - Gaming and challenges (implements `IBattleService`)
@@ -179,20 +166,17 @@ test('should load alarms', async () => {
 Based on the codebase scan, these files need migration:
 
 ### Critical (High Priority)
-
 - `src/App.tsx` - Main app component with many service imports
 - `src/components/AlarmForm.tsx` - Alarm creation and editing
 - `src/components/AlarmList.tsx` - Alarm listing and management
 - `src/components/AlarmRinging.tsx` - Active alarm handling
 
-### Important (Medium Priority)
-
+### Important (Medium Priority)  
 - `src/components/AlarmManagement.tsx` - Alarm management interface
 - `src/analytics/PersonaAnalytics.tsx` - Analytics tracking
 - `src/backend/*.ts` - Backend API integrations
 
 ### Utilities (Low Priority)
-
 - Various utility functions and helper components
 
 ## Next Steps
@@ -203,5 +187,4 @@ Based on the codebase scan, these files need migration:
 4. Monitor for any service initialization issues
 5. Gradually migrate remaining files
 
-The migration can be done incrementally - the old services will continue to work alongside the new
-DI system during the transition period.
+The migration can be done incrementally - the old services will continue to work alongside the new DI system during the transition period.

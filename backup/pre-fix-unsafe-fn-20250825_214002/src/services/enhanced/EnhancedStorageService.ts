@@ -1,6 +1,6 @@
 /**
  * Enhanced Storage Service Implementation
- *
+ * 
  * Extends BaseService and implements IStorageService interface
  * Provides dependency-injected storage with encryption and caching
  */
@@ -50,21 +50,20 @@ export class EnhancedStorageService extends BaseService implements IStorageServi
 
   async initialize(config?: ServiceConfig): Promise<void> {
     await super.initialize(config);
-
+    
     try {
       // Initialize IndexedDB
       await this.initializeIndexedDB();
-
+      
       // Load cache from persistent storage
       await this.loadCache();
-
+      
       // Start cleanup timer
       this.startCleanupTimer();
-
+      
       this.markReady();
-      console.log(
-        `${this.name} initialized successfully with ${this.stats.totalKeys} cached items`
-      );
+      console.log(`${this.name} initialized successfully with ${this.stats.totalKeys} cached items`);
+      
     } catch (error) {
       console.error(`${this.name} initialization failed:`, error);
       throw error;
@@ -73,10 +72,10 @@ export class EnhancedStorageService extends BaseService implements IStorageServi
 
   async stop(): Promise<void> {
     await super.stop();
-
+    
     // Flush cache to persistent storage
     await this.flushCache();
-
+    
     // Close database connection
     this.closeDatabase();
   }
@@ -117,6 +116,7 @@ export class EnhancedStorageService extends BaseService implements IStorageServi
 
       this.stats.cacheMisses++;
       return null;
+
     } catch (error) {
       await this.handleError(error as Error, 'get');
       return null;
@@ -144,6 +144,7 @@ export class EnhancedStorageService extends BaseService implements IStorageServi
       this.updateStats(key, item);
 
       this.emit('storage:item_set', { key, hasValue: value != null });
+
     } catch (error) {
       await this.handleError(error as Error, 'set');
       throw error;
@@ -168,6 +169,7 @@ export class EnhancedStorageService extends BaseService implements IStorageServi
       }
 
       return deleted;
+
     } catch (error) {
       await this.handleError(error as Error, 'delete');
       return false;
@@ -194,6 +196,7 @@ export class EnhancedStorageService extends BaseService implements IStorageServi
       };
 
       this.emit('storage:cleared');
+
     } catch (error) {
       await this.handleError(error as Error, 'clear');
       throw error;
@@ -216,6 +219,7 @@ export class EnhancedStorageService extends BaseService implements IStorageServi
 
       // Check persistent storage
       return await this.hasInStorage(key);
+
     } catch (error) {
       await this.handleError(error as Error, 'has');
       return false;
@@ -228,10 +232,11 @@ export class EnhancedStorageService extends BaseService implements IStorageServi
     try {
       const storageKeys = await this.getStorageKeys();
       const cacheKeys = Array.from(this.memoryCache.keys());
-
+      
       // Combine and deduplicate
       const allKeys = new Set([...storageKeys, ...cacheKeys]);
       return Array.from(allKeys);
+
     } catch (error) {
       await this.handleError(error as Error, 'keys');
       return [];
@@ -240,7 +245,7 @@ export class EnhancedStorageService extends BaseService implements IStorageServi
 
   async size(): Promise<number> {
     this.ensureInitialized();
-
+    
     try {
       return await this.getStorageSize();
     } catch (error) {
@@ -257,9 +262,9 @@ export class EnhancedStorageService extends BaseService implements IStorageServi
     this.ensureInitialized();
 
     const results: Record<string, T | null> = {};
-
+    
     await Promise.all(
-      keys.map(async key => {
+      keys.map(async (key) => {
         results[key] = await this.get<T>(key);
       })
     );
@@ -271,14 +276,18 @@ export class EnhancedStorageService extends BaseService implements IStorageServi
     this.ensureInitialized();
 
     await Promise.all(
-      Object.entries(items).map(([key, value]) => this.set(key, value, ttl))
+      Object.entries(items).map(([key, value]) =>
+        this.set(key, value, ttl)
+      )
     );
   }
 
   async deleteMultiple(keys: string[]): Promise<number> {
     this.ensureInitialized();
 
-    const results = await Promise.all(keys.map(key => this.delete(key)));
+    const results = await Promise.all(
+      keys.map(key => this.delete(key))
+    );
 
     return results.filter(Boolean).length;
   }
@@ -303,6 +312,7 @@ export class EnhancedStorageService extends BaseService implements IStorageServi
 
       this.emit('storage:backup_created', { keyCount: keys.length });
       return backup;
+
     } catch (error) {
       await this.handleError(error as Error, 'backup');
       throw error;
@@ -314,12 +324,13 @@ export class EnhancedStorageService extends BaseService implements IStorageServi
 
     try {
       await this.clear();
-
+      
       for (const [key, value] of Object.entries(backup)) {
         await this.set(key, value);
       }
 
       this.emit('storage:backup_restored', { keyCount: Object.keys(backup).length });
+
     } catch (error) {
       await this.handleError(error as Error, 'restore');
       throw error;
@@ -339,15 +350,15 @@ export class EnhancedStorageService extends BaseService implements IStorageServi
       const request = indexedDB.open(this.dbName, this.dbVersion);
 
       request.onerror = () => reject(new Error('Failed to open IndexedDB'));
-
-      request.onsuccess = event => {
+      
+      request.onsuccess = (event) => {
         this.dbConnection = (event.target as IDBOpenDBRequest).result;
         resolve();
       };
 
-      request.onupgradeneeded = event => {
+      request.onupgradeneeded = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
-
+        
         if (!db.objectStoreNames.contains('storage')) {
           db.createObjectStore('storage', { keyPath: 'key' });
         }
@@ -387,7 +398,7 @@ export class EnhancedStorageService extends BaseService implements IStorageServi
     return new Promise((resolve, reject) => {
       const transaction = this.dbConnection!.transaction(['storage'], 'readwrite');
       const store = transaction.objectStore('storage');
-
+      
       const storageItem = {
         key,
         value: item.value,
@@ -454,7 +465,7 @@ export class EnhancedStorageService extends BaseService implements IStorageServi
 
   private isValidItem(item: StorageItem): boolean {
     if (!item.ttl) return true;
-
+    
     const now = new Date();
     const expirationTime = new Date(item.timestamp.getTime() + item.ttl);
     return now <= expirationTime;
@@ -485,8 +496,7 @@ export class EnhancedStorageService extends BaseService implements IStorageServi
       const keys = await this.getStorageKeys();
       let loadedCount = 0;
 
-      for (const key of keys.slice(0, 100)) {
-        // Load first 100 items to cache
+      for (const key of keys.slice(0, 100)) { // Load first 100 items to cache
         const item = await this.getFromStorage(key);
         if (item && this.isValidItem(item)) {
           this.memoryCache.set(key, item);

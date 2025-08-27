@@ -1,16 +1,14 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import RewardNotificationSystem, {
-  useRewardNotifications,
-} from './RewardNotificationSystem';
+import RewardNotificationSystem, { useRewardNotifications } from './RewardNotificationSystem';
 import CelebrationEffects, { useCelebrationEffects } from './CelebrationEffects';
-import type {
-  UserReward,
-  UserGiftInventory,
-  UserAIInsight,
+import type { 
+  UserReward, 
+  UserGiftInventory, 
+  UserAIInsight, 
   UserHabit,
   RewardRarity,
   RewardCategory,
-  GiftType,
+  GiftType 
 } from '../types/reward-system';
 import { rewardService } from '../services/reward-service';
 import AnalyticsService from '../services/analytics';
@@ -116,13 +114,15 @@ const RewardManager: React.FC<RewardManagerProps> = ({
 
     try {
       const unprocessedEvents = eventQueue.filter(event => !event.processed);
-
+      
       for (const event of unprocessedEvents) {
         await processEvent(event);
-
+        
         // Mark as processed
         setEventQueue(prev =>
-          prev.map(e => (e.id === event.id ? { ...e, processed: true } : e))
+          prev.map(e => 
+            e.id === event.id ? { ...e, processed: true } : e
+          )
         );
 
         // Small delay between events to avoid overwhelming the user
@@ -223,23 +223,15 @@ const RewardManager: React.FC<RewardManagerProps> = ({
 
   const handleStreakEvent = async (habit: UserHabit) => {
     const streakDays = habit.current_streak || 0;
-
+    
     // Only celebrate significant streaks
-    if (
-      streakDays > 0 &&
-      (streakDays % 7 === 0 || streakDays === 3 || streakDays === 5)
-    ) {
+    if (streakDays > 0 && (streakDays % 7 === 0 || streakDays === 3 || streakDays === 5)) {
       showStreak(streakDays, habit.habit_name);
-
+      
       if (enableCelebrations) {
-        const intensity =
-          streakDays >= 30
-            ? 'epic'
-            : streakDays >= 14
-              ? 'high'
-              : streakDays >= 7
-                ? 'medium'
-                : 'low';
+        const intensity = streakDays >= 30 ? 'epic' : 
+                         streakDays >= 14 ? 'high' : 
+                         streakDays >= 7 ? 'medium' : 'low';
         celebrate('streak', intensity as RewardRarity);
       }
     }
@@ -254,18 +246,15 @@ const RewardManager: React.FC<RewardManagerProps> = ({
 
   const handleMilestoneEvent = async (data: any) => {
     showMilestone(data.title, data.description, data);
-
+    
     if (enableCelebrations) {
       celebrate('milestone', 'epic');
     }
   };
 
-  const handleLevelUpEvent = async (data: {
-    newLevel: number;
-    previousLevel: number;
-  }) => {
+  const handleLevelUpEvent = async (data: { newLevel: number; previousLevel: number }) => {
     showLevelUp(data.newLevel, data.previousLevel);
-
+    
     if (enableCelebrations) {
       celebrate('level_up', 'epic');
     }
@@ -279,67 +268,48 @@ const RewardManager: React.FC<RewardManagerProps> = ({
   }, [eventQueue, isProcessing, processQueue]);
 
   // Public methods for manual triggering
-  const triggerRewardCelebration = useCallback(
-    (userReward: UserReward) => {
-      addToQueue('reward', userReward);
-    },
-    [addToQueue]
-  );
+  const triggerRewardCelebration = useCallback((userReward: UserReward) => {
+    addToQueue('reward', userReward);
+  }, [addToQueue]);
 
-  const triggerGiftCelebration = useCallback(
-    (userGift: UserGiftInventory) => {
-      addToQueue('gift', userGift);
-    },
-    [addToQueue]
-  );
+  const triggerGiftCelebration = useCallback((userGift: UserGiftInventory) => {
+    addToQueue('gift', userGift);
+  }, [addToQueue]);
 
-  const triggerMilestoneCelebration = useCallback(
-    (title: string, description: string, data?: any) => {
-      addToQueue('milestone', { title, description, ...data });
-    },
-    [addToQueue]
-  );
+  const triggerMilestoneCelebration = useCallback((title: string, description: string, data?: any) => {
+    addToQueue('milestone', { title, description, ...data });
+  }, [addToQueue]);
 
-  const triggerStreakCelebration = useCallback(
-    (streakDays: number, habitName?: string) => {
-      addToQueue('streak', { current_streak: streakDays, habit_name: habitName });
-    },
-    [addToQueue]
-  );
+  const triggerStreakCelebration = useCallback((streakDays: number, habitName?: string) => {
+    addToQueue('streak', { current_streak: streakDays, habit_name: habitName });
+  }, [addToQueue]);
 
-  const triggerLevelUpCelebration = useCallback(
-    (newLevel: number, previousLevel: number) => {
-      addToQueue('level_up', { newLevel, previousLevel });
-    },
-    [addToQueue]
-  );
+  const triggerLevelUpCelebration = useCallback((newLevel: number, previousLevel: number) => {
+    addToQueue('level_up', { newLevel, previousLevel });
+  }, [addToQueue]);
 
   // Expose methods via context or ref
-  React.useImperativeHandle(
-    React.forwardRef(() => null),
-    () => ({
-      triggerRewardCelebration,
-      triggerGiftCelebration,
-      triggerMilestoneCelebration,
-      triggerStreakCelebration,
-      triggerLevelUpCelebration,
-      clearQueue: () => setEventQueue([]),
-      stopCelebration,
-    }),
-    [
-      triggerRewardCelebration,
-      triggerGiftCelebration,
-      triggerMilestoneCelebration,
-      triggerStreakCelebration,
-      triggerLevelUpCelebration,
-      stopCelebration,
-    ]
-  );
+  React.useImperativeHandle(React.forwardRef(() => null), () => ({
+    triggerRewardCelebration,
+    triggerGiftCelebration,
+    triggerMilestoneCelebration,
+    triggerStreakCelebration,
+    triggerLevelUpCelebration,
+    clearQueue: () => setEventQueue([]),
+    stopCelebration,
+  }), [
+    triggerRewardCelebration,
+    triggerGiftCelebration,
+    triggerMilestoneCelebration,
+    triggerStreakCelebration,
+    triggerLevelUpCelebration,
+    stopCelebration,
+  ]);
 
   return (
     <>
       {children}
-
+      
       {/* Notification System */}
       <NotificationSystem
         enableSounds={enableSounds}

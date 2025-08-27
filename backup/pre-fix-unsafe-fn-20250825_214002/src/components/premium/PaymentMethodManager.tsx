@@ -6,10 +6,10 @@ import { CreditCard, Trash2, Plus, Check, AlertCircle, Star } from 'lucide-react
 import { Button } from '../ui/button';
 import { Card } from '../ui/card';
 import {
-  // auto: restored by scout - verify import path
-  // Replaced stub import with proper implementation
-  // auto: restored by scout - verify import path
-  // Replaced stub import with proper implementation
+// auto: restored by scout - verify import path
+// Replaced stub import with proper implementation
+// auto: restored by scout - verify import path
+// Replaced stub import with proper implementation
   Dialog,
   DialogContent,
   DialogHeader,

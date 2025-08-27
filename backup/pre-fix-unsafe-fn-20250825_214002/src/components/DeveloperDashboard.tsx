@@ -1,6 +1,6 @@
 /**
  * Developer Dashboard - Central Hub for All Dev Tools
- *
+ * 
  * This component provides a comprehensive developer dashboard with access
  * to all debugging and monitoring tools available in development mode.
  */
@@ -37,10 +37,7 @@ interface DeveloperDashboardProps {
   onClose: () => void;
 }
 
-export const DeveloperDashboard: React.FC<DeveloperDashboardProps> = ({
-  isOpen,
-  onClose,
-}) => {
+export const DeveloperDashboard: React.FC<DeveloperDashboardProps> = ({ isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState('redux');
   const [isMinimized, setIsMinimized] = useState(false);
   const [position, setPosition] = useState({ x: 20, y: 20 });
@@ -146,8 +143,7 @@ export const DeveloperDashboard: React.FC<DeveloperDashboardProps> = ({
     document.addEventListener('mouseup', handleDragEnd);
   };
 
-  const ActiveComponent =
-    devToolsTabs.find(tab => tab.id === activeTab)?.component || ReduxDevToolsPanel;
+  const ActiveComponent = devToolsTabs.find(tab => tab.id === activeTab)?.component || ReduxDevToolsPanel;
 
   if (!isOpen) return null;
 
@@ -166,22 +162,16 @@ export const DeveloperDashboard: React.FC<DeveloperDashboardProps> = ({
         <div className="flex items-center gap-2">
           <Bug className="w-5 h-5 text-blue-500" />
           <h2 className="font-semibold text-gray-800">Developer Dashboard</h2>
-          <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-            DEV
-          </span>
+          <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">DEV</span>
         </div>
-
+        
         <div className="flex items-center gap-1">
           <button
             onClick={() => setIsMinimized(!isMinimized)}
             className="p-1 hover:bg-gray-200 rounded"
             title={isMinimized ? 'Maximize' : 'Minimize'}
           >
-            {isMinimized ? (
-              <Maximize2 className="w-4 h-4" />
-            ) : (
-              <Minimize2 className="w-4 h-4" />
-            )}
+            {isMinimized ? <Maximize2 className="w-4 h-4" /> : <Minimize2 className="w-4 h-4" />}
           </button>
           <button
             onClick={onClose}
@@ -228,7 +218,7 @@ export const DeveloperDashboard: React.FC<DeveloperDashboardProps> = ({
                   {devToolsTabs.find(tab => tab.id === activeTab)?.description}
                 </p>
               </div>
-
+              
               <ActiveComponent />
             </div>
           </div>
@@ -251,7 +241,7 @@ const ReduxDevToolsPanel: React.FC = () => {
           <p>✅ Time travel debugging available</p>
         </div>
       </div>
-
+      
       <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
         <h4 className="font-semibold text-yellow-800 mb-2">Quick Actions</h4>
         <div className="space-y-2">
@@ -275,13 +265,7 @@ import { ComponentInspectorPanel } from './devtools/ComponentInspectorPanel';
 import { ErrorTrackerPanel } from './devtools/ErrorTrackerPanel';
 
 // Placeholder components for remaining panels
-const ThemeDebuggerPanel = () => (
-  <div className="p-4">Theme Debugger - Coming soon!</div>
-);
-const StorageInspectorPanel = () => (
-  <div className="p-4">Storage Inspector - Coming soon!</div>
-);
-const NetworkMonitorPanel = () => (
-  <div className="p-4">Network Monitor - Coming soon!</div>
-);
+const ThemeDebuggerPanel = () => <div className="p-4">Theme Debugger - Coming soon!</div>;
+const StorageInspectorPanel = () => <div className="p-4">Storage Inspector - Coming soon!</div>;
+const NetworkMonitorPanel = () => <div className="p-4">Network Monitor - Coming soon!</div>;
 const AnalyticsPanel = () => <div className="p-4">Analytics Panel - Coming soon!</div>;

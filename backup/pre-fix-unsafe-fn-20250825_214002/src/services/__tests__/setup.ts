@@ -1,6 +1,6 @@
 /**
  * Test setup for Service Tests
- *
+ * 
  * This file configures the test environment for service testing,
  * including mocks for browser APIs and service dependencies.
  */
@@ -164,7 +164,7 @@ if (typeof process === 'undefined') {
 Object.defineProperty(global, 'crypto', {
   value: {
     randomUUID: jest.fn(() => '123e4567-e89b-12d3-a456-426614174000'),
-    getRandomValues: jest.fn(arr => {
+    getRandomValues: jest.fn((arr) => {
       for (let i = 0; i < arr.length; i++) {
         arr[i] = Math.floor(Math.random() * 256);
       }
@@ -190,7 +190,7 @@ export const testUtils = {
   mockIDBTransaction,
   mockIDBRequest: mockIDBRequest(),
   mockStorage,
-
+  
   // Helper to simulate IndexedDB success
   simulateIDBSuccess: (request: any, result?: any) => {
     setTimeout(() => {
@@ -200,7 +200,7 @@ export const testUtils = {
       }
     }, 0);
   },
-
+  
   // Helper to simulate IndexedDB error
   simulateIDBError: (request: any, error?: Error) => {
     setTimeout(() => {
@@ -210,7 +210,7 @@ export const testUtils = {
       }
     }, 0);
   },
-
+  
   // Helper to reset all mocks
   resetMocks: () => {
     jest.clearAllMocks();
