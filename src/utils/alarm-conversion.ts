@@ -126,6 +126,7 @@ export class AlarmConversionUtil {
   /**
    * Validate an advanced alarm configuration
    */
+  static validateAdvancedAlarm(alarm: AdvancedAlarm): {
     isValid: boolean;
     errors: string[];
   } {
