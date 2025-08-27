@@ -8,7 +8,7 @@ import {
   CacheEntry,
   CacheStats,
   CacheManager as ICacheManager,
-  CacheConfig,
+  CacheConfig
 } from '../../types/service-architecture';
 
 // ============================================================================
@@ -23,7 +23,7 @@ export class MemoryCacheProvider implements CacheProvider {
     sets: 0,
     deletes: 0,
     size: 0,
-    hitRate: 0,
+    hitRate: 0
   };
   private maxSize: number;
   private defaultTtl: number;
@@ -31,14 +31,14 @@ export class MemoryCacheProvider implements CacheProvider {
   constructor(maxSize: number = 1000, defaultTtl: number = 300000) {
     this.maxSize = maxSize;
     this.defaultTtl = defaultTtl;
-
+    
     // Cleanup expired entries every minute
     setInterval(() => this.cleanupExpired(), 60000);
   }
 
   async get<T>(key: string): Promise<T | null> {
     const entry = this.cache.get(key);
-
+    
     if (!entry) {
       this.stats.misses++;
       this.updateHitRate();
@@ -70,7 +70,7 @@ export class MemoryCacheProvider implements CacheProvider {
       timestamp: new Date(),
       ttl: ttl || this.defaultTtl,
       hits: 0,
-      tags: [],
+      tags: []
     };
 
     this.cache.set(key, entry);
@@ -100,7 +100,7 @@ export class MemoryCacheProvider implements CacheProvider {
   async keys(pattern?: string): Promise<string[]> {
     const keys = Array.from(this.cache.keys());
     if (!pattern) return keys;
-
+    
     const regex = new RegExp(pattern.replace(/\*/g, '.*'));
     return keys.filter(key => regex.test(key));
   }
@@ -161,7 +161,7 @@ export class LocalStorageCacheProvider implements CacheProvider {
     sets: 0,
     deletes: 0,
     size: 0,
-    hitRate: 0,
+    hitRate: 0
   };
 
   constructor(prefix: string = 'cache:') {
@@ -171,7 +171,7 @@ export class LocalStorageCacheProvider implements CacheProvider {
 
   async get<T>(key: string): Promise<T | null> {
     const fullKey = this.prefix + key;
-
+    
     try {
       const stored = localStorage.getItem(fullKey);
       if (!stored) {
@@ -181,7 +181,7 @@ export class LocalStorageCacheProvider implements CacheProvider {
       }
 
       const entry: CacheEntry<T> = JSON.parse(stored);
-
+      
       if (this.isExpired(entry)) {
         localStorage.removeItem(fullKey);
         this.stats.misses++;
@@ -194,8 +194,8 @@ export class LocalStorageCacheProvider implements CacheProvider {
       this.stats.hits++;
       this.updateHitRate();
       return entry.value;
-    } catch (_error) {
-      console.warn('LocalStorage cache _error:', _error);
+    } catch (error) {
+      console.warn('LocalStorage cache error:', error);
       this.stats.misses++;
       this.updateHitRate();
       return null;
@@ -204,20 +204,20 @@ export class LocalStorageCacheProvider implements CacheProvider {
 
   async set<T>(key: string, value: T, ttl?: number): Promise<void> {
     const fullKey = this.prefix + key;
-
+    
     const entry: CacheEntry<T> = {
       value,
       timestamp: new Date(),
       ttl: ttl || 300000,
-      hits: 0,
+      hits: 0
     };
 
     try {
       localStorage.setItem(fullKey, JSON.stringify(entry));
       this.stats.sets++;
       this.updateSize();
-    } catch (_error) {
-      console.warn('LocalStorage cache set _error:', _error);
+    } catch (error) {
+      console.warn('LocalStorage cache set error:', error);
       // Try to make space by removing expired items
       await this.cleanupExpired();
       try {
@@ -234,12 +234,12 @@ export class LocalStorageCacheProvider implements CacheProvider {
     const fullKey = this.prefix + key;
     const existed = localStorage.getItem(fullKey) !== null;
     localStorage.removeItem(fullKey);
-
+    
     if (existed) {
       this.stats.deletes++;
       this.updateSize();
     }
-
+    
     return existed;
   }
 
@@ -256,7 +256,7 @@ export class LocalStorageCacheProvider implements CacheProvider {
 
   async keys(pattern?: string): Promise<string[]> {
     const keys: string[] = [];
-
+    
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key && key.startsWith(this.prefix)) {
@@ -266,7 +266,7 @@ export class LocalStorageCacheProvider implements CacheProvider {
         }
       }
     }
-
+    
     return keys;
   }
 
@@ -284,24 +284,24 @@ export class LocalStorageCacheProvider implements CacheProvider {
 
   private async cleanupExpired(): Promise<void> {
     const keys = await this.keys();
-
+    
     for (const key of keys) {
       const fullKey = this.prefix + key;
       const stored = localStorage.getItem(fullKey);
-
+      
       if (stored) {
         try {
           const entry = JSON.parse(stored);
           if (this.isExpired(entry)) {
             localStorage.removeItem(fullKey);
           }
-        } catch (_error) {
+        } catch (error) {
           // Remove corrupted entries
           localStorage.removeItem(fullKey);
         }
       }
     }
-
+    
     this.updateSize();
   }
 
@@ -336,7 +336,7 @@ export class IndexedDBCacheProvider implements CacheProvider {
     sets: 0,
     deletes: 0,
     size: 0,
-    hitRate: 0,
+    hitRate: 0
   };
 
   constructor(dbName: string = 'app-cache', storeName: string = 'cache-entries') {
@@ -348,15 +348,15 @@ export class IndexedDBCacheProvider implements CacheProvider {
   private async initDB(): Promise<void> {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(this.dbName, 1);
-
-      request.onerror = () => reject(request._error);
+      
+      request.onerror = () => reject(request.error);
       request.onsuccess = () => {
         this.db = request.result;
         resolve();
       };
-
-      request.onupgradeneeded = _event => {
-        const db = (_event.target as IDBOpenDBRequest).result;
+      
+      request.onupgradeneeded = (event) => {
+        const db = (event.target as IDBOpenDBRequest).result;
         if (!db.objectStoreNames.contains(this.storeName)) {
           db.createObjectStore(this.storeName, { keyPath: 'key' });
         }
@@ -366,15 +366,15 @@ export class IndexedDBCacheProvider implements CacheProvider {
 
   async get<T>(key: string): Promise<T | null> {
     if (!this.db) await this.initDB();
-
-    return new Promise(resolve => {
+    
+    return new Promise((resolve) => {
       const transaction = this.db!.transaction([this.storeName], 'readonly');
       const store = transaction.objectStore(this.storeName);
       const request = store.get(key);
-
+      
       request.onsuccess = () => {
         const result = request.result;
-
+        
         if (!result) {
           this.stats.misses++;
           this.updateHitRate();
@@ -383,7 +383,7 @@ export class IndexedDBCacheProvider implements CacheProvider {
         }
 
         const entry: CacheEntry<T> = result;
-
+        
         if (this.isExpired(entry)) {
           this.delete(key);
           this.stats.misses++;
@@ -396,7 +396,7 @@ export class IndexedDBCacheProvider implements CacheProvider {
         this.updateHitRate();
         resolve(entry.value);
       };
-
+      
       request.onerror = () => {
         this.stats.misses++;
         this.updateHitRate();
@@ -407,60 +407,60 @@ export class IndexedDBCacheProvider implements CacheProvider {
 
   async set<T>(key: string, value: T, ttl?: number): Promise<void> {
     if (!this.db) await this.initDB();
-
+    
     const entry: CacheEntry<T> & { key: string } = {
       key,
       value,
       timestamp: new Date(),
       ttl: ttl || 300000,
-      hits: 0,
+      hits: 0
     };
 
     return new Promise((resolve, reject) => {
       const transaction = this.db!.transaction([this.storeName], 'readwrite');
       const store = transaction.objectStore(this.storeName);
       const request = store.put(entry);
-
+      
       request.onsuccess = () => {
         this.stats.sets++;
         resolve();
       };
-
-      request.onerror = () => reject(request._error);
+      
+      request.onerror = () => reject(request.error);
     });
   }
 
   async delete(key: string): Promise<boolean> {
     if (!this.db) await this.initDB();
-
-    return new Promise(resolve => {
+    
+    return new Promise((resolve) => {
       const transaction = this.db!.transaction([this.storeName], 'readwrite');
       const store = transaction.objectStore(this.storeName);
       const request = store.delete(key);
-
+      
       request.onsuccess = () => {
         this.stats.deletes++;
         resolve(true);
       };
-
+      
       request.onerror = () => resolve(false);
     });
   }
 
   async clear(): Promise<void> {
     if (!this.db) await this.initDB();
-
+    
     return new Promise((resolve, reject) => {
       const transaction = this.db!.transaction([this.storeName], 'readwrite');
       const store = transaction.objectStore(this.storeName);
       const request = store.clear();
-
+      
       request.onsuccess = () => {
         this.stats.size = 0;
         resolve();
       };
-
-      request.onerror = () => reject(request._error);
+      
+      request.onerror = () => reject(request.error);
     });
   }
 
@@ -471,15 +471,15 @@ export class IndexedDBCacheProvider implements CacheProvider {
 
   async keys(pattern?: string): Promise<string[]> {
     if (!this.db) await this.initDB();
-
-    return new Promise(resolve => {
+    
+    return new Promise((resolve) => {
       const keys: string[] = [];
       const transaction = this.db!.transaction([this.storeName], 'readonly');
       const store = transaction.objectStore(this.storeName);
       const request = store.openCursor();
-
-      request.onsuccess = _event => {
-        const cursor = (_event.target as IDBRequest).result;
+      
+      request.onsuccess = (event) => {
+        const cursor = (event.target as IDBRequest).result;
         if (cursor) {
           const key = cursor.value.key;
           if (!pattern || new RegExp(pattern.replace(/\*/g, '.*')).test(key)) {
@@ -490,24 +490,24 @@ export class IndexedDBCacheProvider implements CacheProvider {
           resolve(keys);
         }
       };
-
+      
       request.onerror = () => resolve([]);
     });
   }
 
   async size(): Promise<number> {
     if (!this.db) await this.initDB();
-
-    return new Promise(resolve => {
+    
+    return new Promise((resolve) => {
       const transaction = this.db!.transaction([this.storeName], 'readonly');
       const store = transaction.objectStore(this.storeName);
       const request = store.count();
-
+      
       request.onsuccess = () => {
         this.stats.size = request.result;
         resolve(request.result);
       };
-
+      
       request.onerror = () => resolve(0);
     });
   }
@@ -556,12 +556,12 @@ export class CacheManager implements ICacheManager {
 
   async cleanup(): Promise<void> {
     // Cleanup expired entries across all providers
-    const cleanupPromises = Array.from(this.providers.values()).map(async provider => {
+    const cleanupPromises = Array.from(this.providers.values()).map(async (provider) => {
       try {
         // This would need to be implemented in each provider
         console.log('Cleaning up cache provider');
-      } catch (_error) {
-        console.warn('Cache cleanup _error:', _error);
+      } catch (error) {
+        console.warn('Cache cleanup error:', error);
       }
     });
 
@@ -573,17 +573,14 @@ export class CacheManager implements ICacheManager {
       Array.from(this.providers.values()).map(provider => provider.stats())
     );
 
-    return allStats.reduce(
-      (total, stats) => ({
-        hits: total.hits + stats.hits,
-        misses: total.misses + stats.misses,
-        sets: total.sets + stats.sets,
-        deletes: total.deletes + stats.deletes,
-        size: total.size + stats.size,
-        hitRate: 0, // Will be calculated below
-      }),
-      { hits: 0, misses: 0, sets: 0, deletes: 0, size: 0, hitRate: 0 }
-    );
+    return allStats.reduce((total, stats) => ({
+      hits: total.hits + stats.hits,
+      misses: total.misses + stats.misses,
+      sets: total.sets + stats.sets,
+      deletes: total.deletes + stats.deletes,
+      size: total.size + stats.size,
+      hitRate: 0 // Will be calculated below
+    }), { hits: 0, misses: 0, sets: 0, deletes: 0, size: 0, hitRate: 0 });
   }
 }
 

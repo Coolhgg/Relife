@@ -7,13 +7,11 @@ import type { Alarm, VoiceMood } from '../types';
 import { formatTime } from '../utils';
 import { BaseService } from './base/BaseService';
 import { CacheProvider, getCacheManager } from './base/CacheManager';
-import { config } from '../config/environment';
-import { ErrorHandler } from './error-handler';
 import {
   VoiceServiceInterface,
   ServiceConfig,
   ServiceHealth,
-  AnalyticsServiceInterface,
+  AnalyticsServiceInterface
 } from '../types/service-architecture';
 
 // ============================================================================
@@ -38,10 +36,10 @@ export interface VoiceServiceConfig extends ServiceConfig {
 
 export interface VoiceServiceDependencies {
   analyticsService?: AnalyticsServiceInterface;
-  premiumVoiceService?: unknown;
-  subscriptionService?: unknown;
-  cloudTTSService?: unknown;
-  errorHandler?: unknown;
+  premiumVoiceService?: any;
+  subscriptionService?: any;
+  cloudTTSService?: any;
+  errorHandler?: any;
 }
 
 export interface VoiceSettings {
@@ -68,34 +66,34 @@ export interface AudioClip {
 // Voice mood templates
 const VOICE_TEMPLATES = {
   'drill-sergeant': [
-    "WAKE UP SOLDIER! It's {time}! {label}! NO EXCUSES!",
-    "DROP AND GIVE ME TWENTY! It's {time} and time for {label}!",
+    'WAKE UP SOLDIER! It\'s {time}! {label}! NO EXCUSES!',
+    'DROP AND GIVE ME TWENTY! It\'s {time} and time for {label}!',
     'MOVE IT MOVE IT! {time} means {label} time! GET UP NOW!',
   ],
   'sweet-angel': [
-    "Good morning sunshine! It's {time} and time for {label}. Have a beautiful day!",
-    "Rise and shine, dear! It's {time}. Time to start your wonderful day with {label}.",
-    "Sweet dreams are over! It's {time} and your {label} awaits. You've got this!",
+    'Good morning sunshine! It\'s {time} and time for {label}. Have a beautiful day!',
+    'Rise and shine, dear! It\'s {time}. Time to start your wonderful day with {label}.',
+    'Sweet dreams are over! It\'s {time} and your {label} awaits. You\'ve got this!',
   ],
   'anime-hero': [
-    "The power of friendship compels you! It's {time}! Time for {label}! Believe in yourself!",
-    "Your destiny awaits! It's {time} and {label} is calling! Never give up!",
-    "Transform and roll out! It's {time}! Time to conquer {label} with determination!",
+    'The power of friendship compels you! It\'s {time}! Time for {label}! Believe in yourself!',
+    'Your destiny awaits! It\'s {time} and {label} is calling! Never give up!',
+    'Transform and roll out! It\'s {time}! Time to conquer {label} with determination!',
   ],
   'savage-roast': [
-    "Oh look, sleeping beauty decided to join us. It's {time} and your {label} is waiting.",
-    "Well well well, it's {time}. Time for {label}. Hope you enjoyed your beauty sleep.",
-    "Rise and grind, sunshine. It's {time} and {label} won't do itself. Time to adult.",
+    'Oh look, sleeping beauty decided to join us. It\'s {time} and your {label} is waiting.',
+    'Well well well, it\'s {time}. Time for {label}. Hope you enjoyed your beauty sleep.',
+    'Rise and grind, sunshine. It\'s {time} and {label} won\'t do itself. Time to adult.',
   ],
-  motivational: [
-    "Champions rise early! It's {time} and time for {label}! Today is your day to shine!",
-    "Success starts now! It's {time}! Your {label} is the first step to greatness!",
-    "Winners don't snooze! It's {time}! Time to crush {label} and own this day!",
+  'motivational': [
+    'Champions rise early! It\'s {time} and time for {label}! Today is your day to shine!',
+    'Success starts now! It\'s {time}! Your {label} is the first step to greatness!',
+    'Winners don\'t snooze! It\'s {time}! Time to crush {label} and own this day!',
   ],
-  gentle: [
-    "Good morning! It's {time}. Take your time, but please remember {label} when you're ready.",
-    "Gentle wake-up call: it's {time}. Your {label} is waiting, but no rush.",
-    "Sweet morning! It's {time} and time for {label}. Hope you slept well.",
+  'gentle': [
+    'Good morning! It\'s {time}. Take your time, but please remember {label} when you\'re ready.',
+    'Gentle wake-up call: it\'s {time}. Your {label} is waiting, but no rush.',
+    'Sweet morning! It\'s {time} and time for {label}. Hope you slept well.',
   ],
 };
 
@@ -110,10 +108,10 @@ export class EnhancedVoiceService extends BaseService implements VoiceServiceInt
   private speechSynthesis: SpeechSynthesis | null = null;
   private availableVoices: SpeechSynthesisVoice[] = [];
 
-  constructor(dependencies: VoiceServiceDependencies, _config: VoiceServiceConfig) {
-    super('VoiceService', '2.0.0', _config);
+  constructor(dependencies: VoiceServiceDependencies, config: VoiceServiceConfig) {
+    super('VoiceService', '2.0.0', config);
     this.dependencies = dependencies;
-    this.cache = getCacheManager().getProvider(_config.caching?.strategy || 'memory');
+    this.cache = getCacheManager().getProvider(config.caching?.strategy || 'memory');
   }
 
   // ============================================================================
@@ -135,7 +133,7 @@ export class EnhancedVoiceService extends BaseService implements VoiceServiceInt
       cloudTTSProvider: 'elevenlabs',
       audioQuality: 'medium',
       audioFormat: 'mp3',
-      ...(super.getDefaultConfig?.() || {}),
+      ...super.getDefaultConfig?.() || {}
     };
   }
 
@@ -143,25 +141,26 @@ export class EnhancedVoiceService extends BaseService implements VoiceServiceInt
     const timerId = this.startTimer('initialize');
 
     try {
-      if ((this._config as VoiceServiceConfig).enableWebSpeechAPI) {
+      if ((this.config as VoiceServiceConfig).enableWebSpeechAPI) {
         await this.initializeWebSpeechAPI();
       }
 
       await this.loadAudioClipsFromCache();
 
-      if ((this._config as VoiceServiceConfig).enableCloudTTS) {
+      if ((this.config as VoiceServiceConfig).enableCloudTTS) {
         await this.initializeCloudTTS();
       }
 
       this.emit('voice:initialized', {
         availableVoices: this.availableVoices.length,
-        cachedClips: this.audioCache.size,
+        cachedClips: this.audioCache.size
       });
 
       this.recordMetric('initialize_duration', this.endTimer(timerId) || 0);
-    } catch (_error) {
-      this.handleError(_error, 'Failed to initialize VoiceService');
-      throw _error;
+
+    } catch (error) {
+      this.handleError(error, 'Failed to initialize VoiceService');
+      throw error;
     }
   }
 
@@ -174,22 +173,23 @@ export class EnhancedVoiceService extends BaseService implements VoiceServiceInt
       if (this.speechSynthesis) {
         this.speechSynthesis.cancel();
       }
-    } catch (_error) {
-      this.handleError(_error, 'Failed to cleanup VoiceService');
+
+    } catch (error) {
+      this.handleError(error, 'Failed to cleanup VoiceService');
     }
   }
 
   public async getHealth(): Promise<ServiceHealth> {
     const baseHealth = await super.getHealth();
-
+    
     const config = this.config as VoiceServiceConfig;
-    const cacheUsage = this.audioCache.size / _config.maxCacheSize;
-
+    const cacheUsage = this.audioCache.size / config.maxCacheSize;
+    
     let status = baseHealth.status;
     if (cacheUsage > 0.8) {
       status = 'degraded';
     }
-    if (!this.speechSynthesis && !_config.enableCloudTTS) {
+    if (!this.speechSynthesis && !config.enableCloudTTS) {
       status = 'unhealthy';
     }
 
@@ -197,11 +197,11 @@ export class EnhancedVoiceService extends BaseService implements VoiceServiceInt
       ...baseHealth,
       status,
       metrics: {
-        ...(baseHealth.metrics || {}),
+        ...baseHealth.metrics || {},
         cachedClips: this.audioCache.size,
         availableVoices: this.availableVoices.length,
-        cacheUsage: cacheUsage * 100,
-      },
+        cacheUsage: cacheUsage * 100
+      }
     };
   }
 
@@ -209,21 +209,21 @@ export class EnhancedVoiceService extends BaseService implements VoiceServiceInt
   // VoiceServiceInterface Implementation
   // ============================================================================
 
-  public async speak(text: string, options: unknown = {}): Promise<void> {
+  public async speak(text: string, options: any = {}): Promise<void> {
     const timerId = this.startTimer('speak');
 
     try {
       const settings: VoiceSettings = {
-        rate: options.rate || (this._config as VoiceServiceConfig).defaultRate,
-        pitch: options.pitch || (this._config as VoiceServiceConfig).defaultPitch,
-        volume: options.volume || (this._config as VoiceServiceConfig).defaultVolume,
+        rate: options.rate || (this.config as VoiceServiceConfig).defaultRate,
+        pitch: options.pitch || (this.config as VoiceServiceConfig).defaultPitch,
+        volume: options.volume || (this.config as VoiceServiceConfig).defaultVolume,
         emotionalIntensity: options.emotionalIntensity || 1.0,
-        ...options,
+        ...options
       };
 
       if (this.speechSynthesis) {
         await this.speakWithWebAPI(text, settings);
-      } else if ((this._config as VoiceServiceConfig).enableCloudTTS) {
+      } else if ((this.config as VoiceServiceConfig).enableCloudTTS) {
         await this.speakWithCloudTTS(text, settings);
       } else {
         throw new Error('No TTS service available');
@@ -232,13 +232,14 @@ export class EnhancedVoiceService extends BaseService implements VoiceServiceInt
       if (this.dependencies.analyticsService) {
         await this.dependencies.analyticsService.track('voice_synthesis_used', {
           textLength: text.length,
-          provider: this.speechSynthesis ? 'web_speech_api' : 'cloud_tts',
+          provider: this.speechSynthesis ? 'web_speech_api' : 'cloud_tts'
         });
       }
 
       this.recordMetric('speak_duration', this.endTimer(timerId) || 0);
-    } catch (_error) {
-      this.handleError(_error, 'Failed to speak text', { text, options });
+
+    } catch (error) {
+      this.handleError(error, 'Failed to speak text', { text, options });
       throw error;
     }
   }
@@ -267,28 +268,25 @@ export class EnhancedVoiceService extends BaseService implements VoiceServiceInt
 
     try {
       const cacheKey = this.generateCacheKey(text, voiceId);
-
-      const cachedClip =
-        this.audioCache.get(cacheKey) || (await this.cache.get<AudioClip>(cacheKey));
+      
+      const cachedClip = this.audioCache.get(cacheKey) || await this.cache.get<AudioClip>(cacheKey);
       if (cachedClip && !this.isExpired(cachedClip)) {
         this.recordMetric('audio_cache_hits', 1);
         return cachedClip.url;
       }
 
       const audioUrl = await this.synthesizeAudio(text, voiceId);
-
+      
       const audioClip: AudioClip = {
         id: cacheKey,
         url: audioUrl,
         duration: this.estimateAudioDuration(text),
-        format: (this._config as VoiceServiceConfig).audioFormat,
+        format: (this.config as VoiceServiceConfig).audioFormat,
         size: this.estimateAudioSize(text),
         createdAt: new Date(),
-        expiresAt: new Date(
-          Date.now() + (this._config as VoiceServiceConfig).audioFileExpiry
-        ),
+        expiresAt: new Date(Date.now() + (this.config as VoiceServiceConfig).audioFileExpiry),
         mood: 'motivational',
-        premium: false,
+        premium: false
       };
 
       await this.cacheAudioClip(audioClip);
@@ -296,8 +294,9 @@ export class EnhancedVoiceService extends BaseService implements VoiceServiceInt
       this.recordMetric('generateAudio_duration', this.endTimer(timerId) || 0);
 
       return audioUrl;
-    } catch (_error) {
-      this.handleError(_error, 'Failed to generate audio', { text, voiceId });
+
+    } catch (error) {
+      this.handleError(error, 'Failed to generate audio', { text, voiceId });
       throw error;
     }
   }
@@ -306,14 +305,11 @@ export class EnhancedVoiceService extends BaseService implements VoiceServiceInt
   // Enhanced Voice Methods
   // ============================================================================
 
-  public async generateAlarmMessage(
-    alarm: Alarm,
-    userId?: string
-  ): Promise<string | null> {
+  public async generateAlarmMessage(alarm: Alarm, userId?: string): Promise<string | null> {
     const timerId = this.startTimer('generateAlarmMessage');
 
     try {
-      if (userId && (this._config as VoiceServiceConfig).enablePremiumVoices) {
+      if (userId && (this.config as VoiceServiceConfig).enablePremiumVoices) {
         const premiumResult = await this.tryPremiumVoiceGeneration(alarm, userId);
         if (premiumResult) {
           this.recordMetric('premium_voice_used', 1);
@@ -323,34 +319,30 @@ export class EnhancedVoiceService extends BaseService implements VoiceServiceInt
 
       const messageText = this.generateMessageText(alarm);
       const audioUrl = await this.generateAudio(messageText, alarm.voiceMood);
-
+      
       this.recordMetric('generateAlarmMessage_duration', this.endTimer(timerId) || 0);
-
+      
       return audioUrl;
-    } catch (_error) {
-      this.handleError(_error, 'Failed to generate alarm message', {
-        alarmId: alarm.id,
-        userId,
-      });
+
+    } catch (error) {
+      this.handleError(error, 'Failed to generate alarm message', { alarmId: alarm.id, userId });
       return null;
     }
   }
 
   public async preloadAlarmMessages(alarms: Alarm[], userId?: string): Promise<void> {
-    const config = this._config as VoiceServiceConfig;
-
-    if (!_config.preloadEnabled) return;
+    const config = this.config as VoiceServiceConfig;
+    
+    if (!config.preloadEnabled) return;
 
     const timerId = this.startTimer('preloadAlarmMessages');
 
     try {
-      const alarmsToPreload = alarms.slice(0, _config.preloadLimit);
-
-      const preloadPromises = alarmsToPreload.map(alarm =>
-        this.generateAlarmMessage(alarm, userId).catch(_error =>
-          this.handleError(_error, 'Failed to preload alarm message', {
-            alarmId: alarm.id,
-          })
+      const alarmsToPreload = alarms.slice(0, config.preloadLimit);
+      
+      const preloadPromises = alarmsToPreload.map(alarm => 
+        this.generateAlarmMessage(alarm, userId).catch(error => 
+          this.handleError(error, 'Failed to preload alarm message', { alarmId: alarm.id })
         )
       );
 
@@ -358,11 +350,12 @@ export class EnhancedVoiceService extends BaseService implements VoiceServiceInt
 
       this.recordMetric('preloadAlarmMessages_duration', this.endTimer(timerId) || 0);
 
-      this.emit('voice:preload_completed', {
-        preloadedCount: alarmsToPreload.length,
+      this.emit('voice:preload_completed', { 
+        preloadedCount: alarmsToPreload.length
       });
-    } catch (_error) {
-      this.handleError(_error, 'Failed to preload alarm messages');
+
+    } catch (error) {
+      this.handleError(error, 'Failed to preload alarm messages');
     }
   }
 
@@ -380,16 +373,14 @@ export class EnhancedVoiceService extends BaseService implements VoiceServiceInt
     };
 
     const messageText = this.generateMessageText(testAlarm);
-
+    
     await this.speak(messageText, this.getVoiceSettingsForMood(mood));
   }
 
   public async clearVoiceCache(userId?: string): Promise<void> {
     if (userId) {
-      const userClips = Array.from(this.audioCache.values()).filter(
-        clip => clip.userId === userId
-      );
-
+      const userClips = Array.from(this.audioCache.values()).filter(clip => clip.userId === userId);
+      
       for (const clip of userClips) {
         this.audioCache.delete(clip.id);
         await this.cache.delete(clip.id);
@@ -419,7 +410,7 @@ export class EnhancedVoiceService extends BaseService implements VoiceServiceInt
     return new Promise(resolve => {
       const loadVoices = () => {
         this.availableVoices = this.speechSynthesis!.getVoices();
-
+        
         if (this.availableVoices.length > 0) {
           resolve();
         } else {
@@ -451,11 +442,11 @@ export class EnhancedVoiceService extends BaseService implements VoiceServiceInt
       }
 
       const utterance = new SpeechSynthesisUtterance(text);
-
+      
       utterance.rate = settings.rate;
       utterance.pitch = settings.pitch;
       utterance.volume = settings.volume;
-
+      
       if (settings.voiceId) {
         const voice = this.availableVoices.find(v => v.voiceURI === settings.voiceId);
         if (voice) {
@@ -464,8 +455,7 @@ export class EnhancedVoiceService extends BaseService implements VoiceServiceInt
       }
 
       utterance.onend = () => resolve();
-      utterance.onerror = _error =>
-        reject(new Error(`Speech synthesis error: ${_error._error}`));
+      utterance.onerror = (error) => reject(new Error(`Speech synthesis error: ${error.error}`));
 
       this.speechSynthesis.speak(utterance);
 
@@ -476,10 +466,7 @@ export class EnhancedVoiceService extends BaseService implements VoiceServiceInt
     });
   }
 
-  private async speakWithCloudTTS(
-    text: string,
-    settings: VoiceSettings
-  ): Promise<void> {
+  private async speakWithCloudTTS(text: string, settings: VoiceSettings): Promise<void> {
     if (!this.dependencies.cloudTTSService) {
       throw new Error('Cloud TTS service not available');
     }
@@ -488,121 +475,71 @@ export class EnhancedVoiceService extends BaseService implements VoiceServiceInt
   }
 
   private async synthesizeAudio(text: string, voiceId: string): Promise<string> {
-    const config = this._config as VoiceServiceConfig;
-
-    if (_config.enableCloudTTS && this.dependencies.cloudTTSService) {
+    const config = this.config as VoiceServiceConfig;
+    
+    if (config.enableCloudTTS && this.dependencies.cloudTTSService) {
       return await this.dependencies.cloudTTSService.generateAudio(text, voiceId);
     }
 
-    return `data:audio/${_config.audioFormat};base64,placeholder`;
+    return `data:audio/${config.audioFormat};base64,placeholder`;
   }
 
   private generateMessageText(alarm: Alarm): string {
     const time = formatTime(alarm.time);
     const label = alarm.label;
-    const templates =
-      VOICE_TEMPLATES[alarm.voiceMood] || VOICE_TEMPLATES['motivational'];
-
+    const templates = VOICE_TEMPLATES[alarm.voiceMood] || VOICE_TEMPLATES['motivational'];
+    
     const template = templates[Math.floor(Math.random() * templates.length)];
-
-    return template.replace('{time}', time).replace('{label}', label);
+    
+    return template
+      .replace('{time}', time)
+      .replace('{label}', label);
   }
 
   private getVoiceSettingsForMood(mood: VoiceMood): VoiceSettings {
     const config = this.config as VoiceServiceConfig;
-
+    
     const baseSettings: VoiceSettings = {
       rate: config.defaultRate,
       pitch: config.defaultPitch,
-      volume: _config.defaultVolume,
-      emotionalIntensity: 1.0,
+      volume: config.defaultVolume,
+      emotionalIntensity: 1.0
     };
 
     switch (mood) {
       case 'drill-sergeant':
-        return {
-          ...baseSettings,
-          rate: 1.2,
-          pitch: 0.8,
-          volume: 1.0,
-          emotionalIntensity: 1.5,
-        };
+        return { ...baseSettings, rate: 1.2, pitch: 0.8, volume: 1.0, emotionalIntensity: 1.5 };
       case 'sweet-angel':
-        return {
-          ...baseSettings,
-          rate: 0.9,
-          pitch: 1.2,
-          volume: 0.8,
-          emotionalIntensity: 0.8,
-        };
+        return { ...baseSettings, rate: 0.9, pitch: 1.2, volume: 0.8, emotionalIntensity: 0.8 };
       case 'anime-hero':
-        return {
-          ...baseSettings,
-          rate: 1.1,
-          pitch: 1.1,
-          volume: 1.0,
-          emotionalIntensity: 1.3,
-        };
+        return { ...baseSettings, rate: 1.1, pitch: 1.1, volume: 1.0, emotionalIntensity: 1.3 };
       case 'savage-roast':
-        return {
-          ...baseSettings,
-          rate: 1.0,
-          pitch: 0.9,
-          volume: 0.9,
-          emotionalIntensity: 1.1,
-        };
+        return { ...baseSettings, rate: 1.0, pitch: 0.9, volume: 0.9, emotionalIntensity: 1.1 };
       case 'motivational':
-        return {
-          ...baseSettings,
-          rate: 1.0,
-          pitch: 1.0,
-          volume: 1.0,
-          emotionalIntensity: 1.2,
-        };
+        return { ...baseSettings, rate: 1.0, pitch: 1.0, volume: 1.0, emotionalIntensity: 1.2 };
       case 'gentle':
-        return {
-          ...baseSettings,
-          rate: 0.8,
-          pitch: 1.1,
-          volume: 0.7,
-          emotionalIntensity: 0.6,
-        };
+        return { ...baseSettings, rate: 0.8, pitch: 1.1, volume: 0.7, emotionalIntensity: 0.6 };
       default:
         return baseSettings;
     }
   }
 
-  private async tryPremiumVoiceGeneration(
-    alarm: Alarm,
-    userId: string
-  ): Promise<string | null> {
+  private async tryPremiumVoiceGeneration(alarm: Alarm, userId: string): Promise<string | null> {
     if (!this.dependencies.premiumVoiceService) return null;
 
     try {
-      const hasAccess = await this.dependencies.premiumVoiceService.canAccessVoice(
-        userId,
-        alarm.voiceMood
-      );
+      const hasAccess = await this.dependencies.premiumVoiceService.canAccessVoice(userId, alarm.voiceMood);
       if (!hasAccess) return null;
 
-      return await this.dependencies.premiumVoiceService.generatePremiumAlarmMessage(
-        alarm,
-        userId
-      );
-    } catch (_error) {
-      this.handleError(_error, 'Premium voice generation failed', {
-        alarmId: alarm.id,
-        userId,
-      });
+      return await this.dependencies.premiumVoiceService.generatePremiumAlarmMessage(alarm, userId);
+      
+    } catch (error) {
+      this.handleError(error, 'Premium voice generation failed', { alarmId: alarm.id, userId });
       return null;
     }
   }
 
-  private generateCacheKey(
-    text: string,
-    voiceMood: VoiceMood | string,
-    userId?: string
-  ): string {
+  private generateCacheKey(text: string, voiceMood: VoiceMood | string, userId?: string): string {
     const baseKey = `${text}_${voiceMood}`;
     return userId ? `${userId}_${baseKey}` : baseKey;
   }
@@ -619,40 +556,39 @@ export class EnhancedVoiceService extends BaseService implements VoiceServiceInt
   }
 
   private estimateAudioSize(text: string): number {
-    const config = this._config as VoiceServiceConfig;
+    const config = this.config as VoiceServiceConfig;
     const duration = this.estimateAudioDuration(text) / 1000;
-
+    
     const bitrateMap = {
       low: 64,
       medium: 128,
-      high: 256,
+      high: 256
     };
-
+    
     const bitrate = bitrateMap[config.audioQuality];
     return (duration * bitrate * 1000) / 8;
   }
 
   private async cacheAudioClip(audioClip: AudioClip): Promise<void> {
-    const config = this._config as VoiceServiceConfig;
-
-    if (this.audioCache.size >= _config.maxCacheSize) {
+    const config = this.config as VoiceServiceConfig;
+    
+    if (this.audioCache.size >= config.maxCacheSize) {
       await this.evictOldestCacheEntries();
     }
 
     this.audioCache.set(audioClip.id, audioClip);
-    await this.cache.set(audioClip.id, audioClip, _config.audioFileExpiry);
+    await this.cache.set(audioClip.id, audioClip, config.audioFileExpiry);
   }
 
   private async evictOldestCacheEntries(): Promise<void> {
-    const config = this._config as VoiceServiceConfig;
-    const entriesToRemove = Math.floor(_config.maxCacheSize * 0.2);
-
-    const sortedClips = Array.from(this.audioCache.values()).sort(
-      (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
-    );
-
+    const config = this.config as VoiceServiceConfig;
+    const entriesToRemove = Math.floor(config.maxCacheSize * 0.2);
+    
+    const sortedClips = Array.from(this.audioCache.values())
+      .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+    
     const toRemove = sortedClips.slice(0, entriesToRemove);
-
+    
     for (const clip of toRemove) {
       this.audioCache.delete(clip.id);
       await this.cache.delete(clip.id);
@@ -661,10 +597,9 @@ export class EnhancedVoiceService extends BaseService implements VoiceServiceInt
 
   private async cleanupExpiredAudioClips(): Promise<void> {
     const now = new Date();
-    const expiredClips = Array.from(this.audioCache.values()).filter(
-      clip => now > clip.expiresAt
-    );
-
+    const expiredClips = Array.from(this.audioCache.values())
+      .filter(clip => now > clip.expiresAt);
+    
     for (const clip of expiredClips) {
       this.audioCache.delete(clip.id);
       await this.cache.delete(clip.id);
@@ -678,29 +613,29 @@ export class EnhancedVoiceService extends BaseService implements VoiceServiceInt
   private async loadAudioClipsFromCache(): Promise<void> {
     try {
       const audioKeys = await this.cache.keys('audio_*');
-
+      
       for (const key of audioKeys) {
         const audioClip = await this.cache.get<AudioClip>(key);
         if (audioClip && !this.isExpired(audioClip)) {
           this.audioCache.set(key, audioClip);
         }
       }
-    } catch (_error) {
-      this.handleError(_error, 'Failed to load audio clips from cache');
+    } catch (error) {
+      this.handleError(error, 'Failed to load audio clips from cache');
     }
   }
 
   private async saveAudioClipsToCache(): Promise<void> {
     try {
-      const config = this._config as VoiceServiceConfig;
-
+      const config = this.config as VoiceServiceConfig;
+      
       for (const [key, audioClip] of this.audioCache) {
         if (!this.isExpired(audioClip)) {
-          await this.cache.set(key, audioClip, _config.audioFileExpiry);
+          await this.cache.set(key, audioClip, config.audioFileExpiry);
         }
       }
-    } catch (_error) {
-      this.handleError(_error, 'Failed to save audio clips to cache');
+    } catch (error) {
+      this.handleError(error, 'Failed to save audio clips to cache');
     }
   }
 
@@ -709,7 +644,7 @@ export class EnhancedVoiceService extends BaseService implements VoiceServiceInt
   // ============================================================================
 
   public async reset(): Promise<void> {
-    if (this._config.environment !== 'test') {
+    if (this.config.environment !== 'test') {
       throw new Error('Reset only allowed in test environment');
     }
 
@@ -717,13 +652,13 @@ export class EnhancedVoiceService extends BaseService implements VoiceServiceInt
   }
 
   public getTestState(): any {
-    if (this._config.environment !== 'test') {
+    if (this.config.environment !== 'test') {
       throw new Error('Test state only available in test environment');
     }
 
     return {
       cachedClips: Array.from(this.audioCache.values()),
-      availableVoices: this.availableVoices.length,
+      availableVoices: this.availableVoices.length
     };
   }
 }
@@ -734,7 +669,7 @@ export class EnhancedVoiceService extends BaseService implements VoiceServiceInt
 
 export const createVoiceService = (
   dependencies: VoiceServiceDependencies = {},
-  _config: Partial<VoiceServiceConfig> = {}
+  config: Partial<VoiceServiceConfig> = {}
 ): EnhancedVoiceService => {
   const fullConfig: VoiceServiceConfig = {
     enabled: true,
@@ -752,7 +687,7 @@ export const createVoiceService = (
     cloudTTSProvider: config.cloudTTSProvider || 'elevenlabs',
     audioQuality: config.audioQuality || 'medium',
     audioFormat: config.audioFormat || 'mp3',
-    ..._config,
+    ...config
   };
 
   return new EnhancedVoiceService(dependencies, fullConfig);

@@ -4,11 +4,9 @@ This directory contains both legacy and enhanced service mocks for testing.
 
 ## New Enhanced Service Architecture
 
-The enhanced service mocks implement the new dependency injection patterns and BaseService
-architecture:
+The enhanced service mocks implement the new dependency injection patterns and BaseService architecture:
 
 ### Key Features
-
 - **Dependency Injection**: Services receive dependencies through constructor injection
 - **BaseService Pattern**: All services extend MockBaseService with standardized lifecycle
 - **Health Monitoring**: Built-in health checks and metrics collection
@@ -20,7 +18,6 @@ architecture:
 ### Usage
 
 #### With React Provider (Recommended)
-
 ```typescript
 import { EnhancedServiceProvider, useEnhancedAlarmService } from './enhanced-service-providers';
 
@@ -38,7 +35,6 @@ render(
 ```
 
 #### Direct Usage
-
 ```typescript
 import { createMockServiceContainer, initializeAllMockServices } from './enhanced-service-mocks';
 

@@ -558,21 +558,19 @@ if (global && typeof global === 'object') {
   let enhancedServiceMocks: any;
   try {
     enhancedServiceMocks = require('../mocks/enhanced-service-mocks');
-
+    
     // Create a global service container for tests
-    global.__ENHANCED_SERVICE_CONTAINER__ =
-      enhancedServiceMocks.createMockServiceContainer();
-
+    global.__ENHANCED_SERVICE_CONTAINER__ = enhancedServiceMocks.createMockServiceContainer();
+    
     // Initialize services by default for tests
-    enhancedServiceMocks
-      .initializeAllMockServices(global.__ENHANCED_SERVICE_CONTAINER__)
+    enhancedServiceMocks.initializeAllMockServices(global.__ENHANCED_SERVICE_CONTAINER__)
       .then(() => {
         console.log('🔧 Enhanced service architecture initialized');
       })
-      .catch((_error: unknown) => {
-        console.warn('⚠️ Enhanced service initialization failed:', _error);
+      .catch((error: any) => {
+        console.warn('⚠️ Enhanced service initialization failed:', error);
       });
-  } catch (_error) {
+  } catch (error) {
     // Enhanced services not available in this test run
     console.log('⚠️ Enhanced services not available, using legacy mocks');
   }
@@ -580,12 +578,8 @@ if (global && typeof global === 'object') {
   // Setup global test utilities for service management
   global.__RESET_ENHANCED_SERVICES__ = async () => {
     if (enhancedServiceMocks && global.__ENHANCED_SERVICE_CONTAINER__) {
-      await enhancedServiceMocks.resetAllMockServices(
-        global.__ENHANCED_SERVICE_CONTAINER__
-      );
-      await enhancedServiceMocks.initializeAllMockServices(
-        global.__ENHANCED_SERVICE_CONTAINER__
-      );
+      await enhancedServiceMocks.resetAllMockServices(global.__ENHANCED_SERVICE_CONTAINER__);
+      await enhancedServiceMocks.initializeAllMockServices(global.__ENHANCED_SERVICE_CONTAINER__);
     }
   };
 }

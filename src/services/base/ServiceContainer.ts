@@ -9,7 +9,7 @@ import {
   ServiceDescriptor,
   ServiceMap,
   ServiceConfig,
-  ServiceHealth,
+  ServiceHealth
 } from '../../types/service-architecture';
 
 export class ServiceContainer implements IServiceContainer {
@@ -65,7 +65,7 @@ export class ServiceContainer implements IServiceContainer {
         dependencies.set(depName, depInstance);
       }
 
-      const config = this.mergeConfig(descriptor._config);
+      const config = this.mergeConfig(descriptor.config);
       const instance = descriptor.factory.create(dependencies, config);
       await instance.initialize(config);
 
@@ -83,15 +83,15 @@ export class ServiceContainer implements IServiceContainer {
 
   public async initialize(): Promise<void> {
     if (this.initialized) return;
-
+    
     this.validateAllDependencies();
     const initOrder = this.getInitializationOrder();
 
     for (const serviceName of initOrder) {
       try {
         await this.resolve(serviceName);
-      } catch (_error) {
-        console.error(`Failed to initialize ${serviceName}:`, _error);
+      } catch (error) {
+        console.error(`Failed to initialize ${serviceName}:`, error);
         const descriptor = this.descriptors.get(serviceName);
         if (descriptor?.tags?.includes('critical')) {
           throw new Error(`Critical service ${serviceName} failed to initialize`);
@@ -104,13 +104,12 @@ export class ServiceContainer implements IServiceContainer {
   public async dispose(): Promise<void> {
     const disposeOrder = this.getInitializationOrder().reverse();
     for (const serviceName of disposeOrder) {
-      const instance =
-        this.singletons.get(serviceName) || this.instances.get(serviceName);
+      const instance = this.singletons.get(serviceName) || this.instances.get(serviceName);
       if (instance) {
         try {
           await instance.cleanup();
-        } catch (_error) {
-          console.error(`Error disposing ${serviceName}:`, _error);
+        } catch (error) {
+          console.error(`Error disposing ${serviceName}:`, error);
         }
       }
     }
@@ -161,12 +160,10 @@ export class ServiceContainer implements IServiceContainer {
     return this.createInstance<T>(descriptor);
   }
 
-  private createInstance<T extends BaseService>(
-    descriptor: ServiceDescriptor
-  ): T | null {
+  private createInstance<T extends BaseService>(descriptor: ServiceDescriptor): T | null {
     try {
       const dependencies = this.resolveDependencies(descriptor.dependencies);
-      const config = this.mergeConfig(descriptor._config);
+      const config = this.mergeConfig(descriptor.config);
       const instance = descriptor.factory.create(dependencies, config) as T;
 
       if (descriptor.singleton) {
@@ -175,8 +172,8 @@ export class ServiceContainer implements IServiceContainer {
         this.instances.set(descriptor.name, instance);
       }
       return instance;
-    } catch (_error) {
-      console.error(`Failed to create instance of ${descriptor.name}:`, _error);
+    } catch (error) {
+      console.error(`Failed to create instance of ${descriptor.name}:`, error);
       return null;
     }
   }
@@ -204,19 +201,19 @@ export class ServiceContainer implements IServiceContainer {
         enabled: true,
         strategy: 'memory',
         ttl: 300000,
-        maxSize: 1000,
+        maxSize: 1000
       },
       errorHandling: {
         retryAttempts: 3,
         retryDelay: 1000,
         fallbackStrategy: 'none',
-        reportingEnabled: true,
+        reportingEnabled: true
       },
       monitoring: {
         metricsEnabled: true,
         healthCheckInterval: 60000,
-        performanceTracking: true,
-      },
+        performanceTracking: true
+      }
     };
     return { ...defaultConfig, ...serviceConfig };
   }
@@ -225,9 +222,7 @@ export class ServiceContainer implements IServiceContainer {
     for (const [serviceName, descriptor] of this.descriptors) {
       descriptor.dependencies.forEach(depName => {
         if (!this.descriptors.has(depName)) {
-          throw new Error(
-            `Service ${serviceName} depends on ${depName} which is not registered`
-          );
+          throw new Error(`Service ${serviceName} depends on ${depName} which is not registered`);
         }
       });
     }
@@ -241,9 +236,7 @@ export class ServiceContainer implements IServiceContainer {
     const visit = (serviceName: string): void => {
       if (visited.has(serviceName)) return;
       if (visiting.has(serviceName)) {
-        throw new Error(
-          `Circular dependency detected involving service: ${serviceName}`
-        );
+        throw new Error(`Circular dependency detected involving service: ${serviceName}`);
       }
 
       visiting.add(serviceName);
@@ -270,9 +263,7 @@ export function getServiceContainer(): ServiceContainer {
   return globalContainer;
 }
 
-export function registerService<T extends BaseService>(
-  descriptor: ServiceDescriptor
-): void {
+export function registerService<T extends BaseService>(descriptor: ServiceDescriptor): void {
   getServiceContainer().register(descriptor);
 }
 

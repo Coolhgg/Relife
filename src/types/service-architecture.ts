@@ -36,7 +36,7 @@ export interface ServiceError {
   code: string;
   timestamp: Date;
   severity: 'low' | 'medium' | 'high' | 'critical';
-  context?: Record<string, unknown>;
+  context?: Record<string, any>;
 }
 
 // ============================================================================
@@ -44,7 +44,28 @@ export interface ServiceError {
 // ============================================================================
 
 export interface BaseService {
-  [key: string]: unknown;
+  readonly name: string;
+  readonly version: string;
+  
+  // Lifecycle methods
+  initialize(config?: ServiceConfig): Promise<void>;
+  start?(): Promise<void>;
+  stop?(): Promise<void>;
+  cleanup(): Promise<void>;
+  
+  // Status and health
+  isReady(): boolean;
+  isInitialized(): boolean;
+  getHealth(): Promise<ServiceHealth>;
+  
+  // Configuration
+  getConfig(): ServiceConfig;
+  updateConfig(config: Partial<ServiceConfig>): Promise<void>;
+  
+  // Event handling
+  on?(event: string, handler: (...args: any[]) => void): void;
+  off?(event: string, handler: (...args: any[]) => void): void;
+  emit?(event: string, ...args: any[]): void;
 }
 
 // ============================================================================
@@ -52,7 +73,16 @@ export interface BaseService {
 // ============================================================================
 
 export interface ServiceConfig {
-  [key: string]: unknown;
+  enabled: boolean;
+  environment: 'development' | 'staging' | 'production';
+  debug?: boolean;
+  timeout?: number;
+  retryAttempts?: number;
+  retryDelay?: number;
+  caching?: CacheConfig;
+  errorHandling?: ErrorHandlingConfig;
+  monitoring?: MonitoringConfig;
+  [key: string]: any;
 }
 
 export interface CacheConfig {
@@ -101,15 +131,15 @@ export interface AlertingConfig {
 
 export interface ServiceDescriptor {
   name: string;
-  factory: ServiceFactory<unknown>;
+  factory: ServiceFactory<any>;
   dependencies: string[];
   singleton: boolean;
-  _config?: ServiceConfig;
+  config?: ServiceConfig;
   tags?: string[];
 }
 
 export interface ServiceFactory<T extends BaseService> {
-  create(dependencies: ServiceMap, _config: ServiceConfig): T;
+  create(dependencies: ServiceMap, config: ServiceConfig): T;
 }
 
 export interface ServiceContainer {
@@ -169,15 +199,18 @@ export interface CacheManager {
 // ============================================================================
 
 export interface ServiceEvent {
-  [key: string]: unknown;
+  type: string;
+  source: string;
+  timestamp: Date;
+  data?: any;
   correlationId?: string;
 }
 
 export interface EventBus {
-  subscribe(eventType: string, handler: (_event: ServiceEvent) => void): void;
-  unsubscribe(eventType: string, handler: (_event: ServiceEvent) => void): void;
-  publish(_event: ServiceEvent): void;
-  publishAsync(_event: ServiceEvent): Promise<void>;
+  subscribe(eventType: string, handler: (event: ServiceEvent) => void): void;
+  unsubscribe(eventType: string, handler: (event: ServiceEvent) => void): void;
+  publish(event: ServiceEvent): void;
+  publishAsync(event: ServiceEvent): Promise<void>;
 }
 
 // ============================================================================
@@ -185,7 +218,7 @@ export interface EventBus {
 // ============================================================================
 
 export interface ServiceLifecycle {
-  phase: 'initializing' | 'starting' | 'running' | 'stopping' | 'stopped' | '_error';
+  phase: 'initializing' | 'starting' | 'running' | 'stopping' | 'stopped' | 'error';
   startTime?: Date;
   stopTime?: Date;
   initializationTime?: number;
@@ -198,7 +231,10 @@ export interface ServiceLifecycle {
 // ============================================================================
 
 export interface PerformanceTracker {
-  [key: string]: unknown;
+  startTimer(operation: string): string;
+  endTimer(timerId: string): number;
+  recordMetric(name: string, value: number, tags?: Record<string, string>): void;
+  recordEvent(name: string, data?: any): void;
   getMetrics(timeRange?: { start: Date; end: Date }): Promise<PerformanceMetrics>;
 }
 
@@ -225,7 +261,10 @@ export interface OperationMetrics {
 }
 
 export interface EventMetrics {
-  [key: string]: unknown;
+  name: string;
+  count: number;
+  lastOccurrence: Date;
+  data?: any;
 }
 
 // ============================================================================
@@ -267,8 +306,8 @@ export interface ServiceRegistryHealth {
 // ============================================================================
 
 export interface AlarmServiceInterface extends BaseService {
-  createAlarm(alarm: unknown): Promise<unknown>;
-  updateAlarm(id: string, updates: unknown): Promise<unknown>;
+  createAlarm(alarm: any): Promise<any>;
+  updateAlarm(id: string, updates: any): Promise<any>;
   deleteAlarm(id: string): Promise<boolean>;
   getAlarms(): Promise<any[]>;
   triggerAlarm(id: string): Promise<void>;
@@ -276,27 +315,27 @@ export interface AlarmServiceInterface extends BaseService {
 }
 
 export interface AnalyticsServiceInterface extends BaseService {
-  track(_event: string, properties?: Record<string, unknown>): Promise<void>;
-  identify(userId: string, traits?: Record<string, unknown>): Promise<void>;
-  page(name: string, properties?: Record<string, unknown>): Promise<void>;
+  track(event: string, properties?: Record<string, any>): Promise<void>;
+  identify(userId: string, traits?: Record<string, any>): Promise<void>;
+  page(name: string, properties?: Record<string, any>): Promise<void>;
   flush(): Promise<void>;
   getQueueSize(): number;
 }
 
 export interface SubscriptionServiceInterface extends BaseService {
-  getSubscription(userId: string): Promise<unknown>;
-  createSubscription(data: unknown): Promise<unknown>;
-  updateSubscription(id: string, updates: unknown): Promise<unknown>;
+  getSubscription(userId: string): Promise<any>;
+  createSubscription(data: any): Promise<any>;
+  updateSubscription(id: string, updates: any): Promise<any>;
   cancelSubscription(id: string): Promise<void>;
   checkFeatureAccess(feature: string): boolean;
 }
 
 export interface BattleServiceInterface extends BaseService {
-  createBattle(_config: unknown): Promise<unknown>;
-  joinBattle(battleId: string, userId: string): Promise<unknown>;
-  updateBattleProgress(battleId: string, progress: unknown): Promise<void>;
+  createBattle(config: any): Promise<any>;
+  joinBattle(battleId: string, userId: string): Promise<any>;
+  updateBattleProgress(battleId: string, progress: any): Promise<void>;
   getBattleHistory(userId: string): Promise<any[]>;
-  endBattle(battleId: string): Promise<unknown>;
+  endBattle(battleId: string): Promise<any>;
 }
 
 export interface VoiceServiceInterface extends BaseService {
@@ -311,33 +350,29 @@ export interface PerformanceMonitorInterface extends BaseService {
   recordMetric(name: string, value: number, tags?: Record<string, string>): void;
   recordWebVital(name: string, value: number): void;
   setThreshold(metric: string, threshold: number): void;
-  getMetrics(timeRange?: { start: Date; end: Date }): Promise<unknown>;
-  createAlert(_config: unknown): Promise<string>;
+  getMetrics(timeRange?: { start: Date; end: Date }): Promise<any>;
+  createAlert(config: any): Promise<string>;
 }
 
 // ============================================================================
 // Type Guards and Utilities
 // ============================================================================
 
-export function isBaseService(obj: unknown): obj is BaseService {
-  return (
-    obj &&
+export function isBaseService(obj: any): obj is BaseService {
+  return obj && 
     typeof obj.name === 'string' &&
     typeof obj.version === 'string' &&
     typeof obj.initialize === 'function' &&
     typeof obj.cleanup === 'function' &&
     typeof obj.isReady === 'function' &&
-    typeof obj.getHealth === 'function'
-  );
+    typeof obj.getHealth === 'function';
 }
 
-export function isServiceConfig(obj: unknown): obj is ServiceConfig {
-  return (
-    obj &&
+export function isServiceConfig(obj: any): obj is ServiceConfig {
+  return obj && 
     typeof obj.enabled === 'boolean' &&
     typeof obj.environment === 'string' &&
-    ['development', 'staging', 'production'].includes(obj.environment)
-  );
+    ['development', 'staging', 'production'].includes(obj.environment);
 }
 
 // ============================================================================
@@ -347,7 +382,7 @@ export function isServiceConfig(obj: unknown): obj is ServiceConfig {
 export interface ServiceBuilder<T extends BaseService> {
   withName(name: string): ServiceBuilder<T>;
   withVersion(version: string): ServiceBuilder<T>;
-  withConfig(_config: ServiceConfig): ServiceBuilder<T>;
+  withConfig(config: ServiceConfig): ServiceBuilder<T>;
   withDependencies(dependencies: string[]): ServiceBuilder<T>;
   withTags(tags: string[]): ServiceBuilder<T>;
   withFactory(factory: ServiceFactory<T>): ServiceBuilder<T>;
