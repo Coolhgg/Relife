@@ -1,0 +1,120 @@
+src/App.tsx(2,19): error TS2307: Cannot find module 'react' or its corresponding type declarations.
+src/App.tsx(3,50): error TS2307: Cannot find module 'react' or its corresponding type declarations.
+src/App.tsx(13,8): error TS2307: Cannot find module 'lucide-react' or its corresponding type declarations.
+src/App.tsx(253,43): error TS7006: Parameter 'alarm' implicitly has an 'any' type.
+src/App.tsx(273,21): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/App.tsx(303,21): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/App.tsx(316,23): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/App.tsx(344,21): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/App.tsx(379,21): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/App.tsx(403,21): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/App.tsx(417,25): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/App.tsx(455,27): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/App.tsx(488,19): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/App.tsx(704,21): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/App.tsx(796,17): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/App.tsx(985,36): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/App.tsx(1102,54): error TS7006: Parameter 'alarm' implicitly has an 'any' type.
+src/App.tsx(1113,55): error TS7006: Parameter 'alarm' implicitly has an 'any' type.
+src/App.tsx(1280,19): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/App.tsx(1377,50): error TS7006: Parameter 'a' implicitly has an 'any' type.
+src/App.tsx(1398,49): error TS7006: Parameter 'alarm' implicitly has an 'any' type.
+src/App.tsx(1402,19): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/App.tsx(1476,50): error TS7006: Parameter 'a' implicitly has an 'any' type.
+src/App.tsx(1477,52): error TS7006: Parameter 'alarm' implicitly has an 'any' type.
+src/App.tsx(1478,19): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/App.tsx(1538,50): error TS7006: Parameter 'a' implicitly has an 'any' type.
+src/App.tsx(1559,49): error TS7006: Parameter 'alarm' implicitly has an 'any' type.
+src/App.tsx(1563,19): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/App.tsx(1622,17): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/App.tsx(1651,21): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/App.tsx(1674,21): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/App.tsx(1684,7): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1684,7): error TS2875: This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+src/App.tsx(1685,9): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1687,11): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1687,74): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1688,11): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1700,11): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1701,9): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1702,7): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1712,11): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1713,13): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1714,15): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1716,15): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1717,15): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1720,15): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1721,15): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1726,15): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1727,13): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1728,11): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1762,11): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1763,13): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1764,15): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1766,15): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1767,15): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1769,15): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1770,15): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1771,44): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/App.tsx(1775,15): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1776,13): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1777,11): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1797,48): error TS7006: Parameter 'a' implicitly has an 'any' type.
+src/App.tsx(1813,29): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/App.tsx(1827,28): error TS7006: Parameter 'alarm' implicitly has an 'any' type.
+src/App.tsx(1857,31): error TS7006: Parameter 'battle' implicitly has an 'any' type.
+src/App.tsx(1876,29): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/App.tsx(1884,29): error TS7006: Parameter 'battleId' implicitly has an 'any' type.
+src/App.tsx(1889,33): error TS7006: Parameter 'battleId' implicitly has an 'any' type.
+src/App.tsx(1889,43): error TS7006: Parameter 'message' implicitly has an 'any' type.
+src/App.tsx(1903,13): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1905,15): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1906,17): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1911,17): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1912,17): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1915,17): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1917,15): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1920,15): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1923,15): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1924,17): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1929,17): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1938,15): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1939,13): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1949,26): error TS7006: Parameter 'plan' implicitly has an 'any' type.
+src/App.tsx(1971,9): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1979,11): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1984,11): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1987,11): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1996,13): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1997,15): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1998,17): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(1999,19): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2004,19): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2006,21): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2007,23): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2012,23): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2014,25): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2022,25): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2024,21): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2026,17): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2027,17): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2037,63): error TS7006: Parameter 'alarm' implicitly has an 'any' type.
+src/App.tsx(2041,19): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2048,21): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2050,21): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2051,19): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2052,19): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2059,21): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2061,21): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2062,19): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2063,17): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2064,15): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2065,13): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2066,11): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2069,11): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2071,11): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2074,11): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2083,13): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2088,15): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists.
+src/App.tsx(2092,31): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/App.tsx(2109,31): error TS7006: Parameter 'e' implicitly has an 'any' type.

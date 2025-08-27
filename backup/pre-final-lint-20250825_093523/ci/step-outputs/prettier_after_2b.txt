@@ -1,0 +1,2240 @@
+npm WARN exec The following package was not found and will be installed: prettier@3.6.2
+.commitlintrc.cjs 43ms (unchanged)
+.detoxrc.json 14ms
+.github/branch-protection-config.json 33ms
+.github/CI_CD_DOCUMENTATION.md 215ms (unchanged)
+.github/dependabot.yml 44ms (unchanged)
+.github/ENVIRONMENT_SETUP.md 53ms (unchanged)
+.github/environments/production.yml 12ms (unchanged)
+.github/environments/staging.yml 17ms (unchanged)
+.github/pull_request_template.md 34ms (unchanged)
+.github/SECRETS_CONFIGURATION.md 41ms (unchanged)
+.github/workflows/accessibility-testing.yml 40ms
+.github/workflows/chromatic.yml 6ms
+.github/workflows/ci-quality-gates.yml 33ms (unchanged)
+.github/workflows/deploy-production-bun.yml 16ms
+.github/workflows/e2e-tests.yml 37ms
+.github/workflows/enhanced-ci-cd.yml 27ms (unchanged)
+.github/workflows/integration-tests.yml 32ms (unchanged)
+.github/workflows/mobile-release.yml 40ms (unchanged)
+.github/workflows/mobile-testing.yml 62ms (unchanged)
+.github/workflows/performance-monitoring.yml 24ms (unchanged)
+.github/workflows/pr-validation.yml 22ms (unchanged)
+.github/workflows/quality-checks.yml 8ms (unchanged)
+.github/workflows/security-scanning.yml 3ms (unchanged)
+.github/workflows/staging-deploy.yml 17ms (unchanged)
+.github/workflows/strict-quality-gates.yml 15ms (unchanged)
+.github/workflows/test-reporting.yml 17ms (unchanged)
+.github/workflows/translation-deployment.yml 34ms (unchanged)
+.github/workflows/translation-monitoring.yml 13ms (unchanged)
+.github/workflows/translation-notifications.yml 10ms (unchanged)
+.github/workflows/translation-reports.yml 54ms (unchanged)
+.github/workflows/translation-validation.yml 16ms (unchanged)
+.prettierrc.cjs 3ms (unchanged)
+.storybook/chromatic.config.js 1ms (unchanged)
+.storybook/decorators.tsx 22ms (unchanged)
+.storybook/main.ts 2ms (unchanged)
+.storybook/preview.tsx 48ms (unchanged)
+ALARM_RELIABILITY.md 40ms (unchanged)
+ANALYTICS_TRACKING_SETUP.md 83ms (unchanged)
+artifacts/cleanup-progress-update.md 17ms
+artifacts/unused-vars-cleanup-report.json 10ms
+AUTO_FIX_RESULTS_SUMMARY.md 24ms (unchanged)
+AUTO_FIX_ROUND_2_RESULTS.md 28ms (unchanged)
+auto-fix-unused.cjs 22ms (unchanged)
+auto-fix-unused.js 27ms (unchanged)
+capacitor.config.ts 12ms (unchanged)
+ci/step-outputs/tsc_buckets_report.md 250ms (unchanged)
+ci/step-outputs/tsc_buckets-1a.json 278ms (unchanged)
+ci/step-outputs/tsc_buckets-1a.md 6ms (unchanged)
+ci/step-outputs/tsc_buckets-1b.json 201ms (unchanged)
+ci/step-outputs/tsc_buckets-1b.md 36ms (unchanged)
+ci/step-outputs/tsc_buckets.json 127ms (unchanged)
+CODE_QUALITY.md 12ms (unchanged)
+CONTRIBUTING.md 24ms (unchanged)
+database/README.md 10ms (unchanged)
+DEVELOPER_QUICKSTART.md 13ms (unchanged)
+docker-compose.dev.yml 6ms (unchanged)
+docker-compose.yml 14ms (unchanged)
+docs/a11y-developer-workflow.md 85ms (unchanged)
+docs/a11y-examples.md 138ms (unchanged)
+docs/A11Y-Guide.md 68ms (unchanged)
+docs/archive/analysis/a11y-baseline/accessibility-baseline.html 72ms (unchanged)
+docs/archive/analysis/a11y-baseline/accessibility-baseline.json 6ms (unchanged)
+docs/archive/analysis/corruption-report.json 121ms (unchanged)
+docs/archive/analysis/corruption-summary.md 6ms (unchanged)
+docs/archive/architecture/MOBILE_OPTIMIZATION_SUMMARY.md 40ms (unchanged)
+docs/archive/architecture/PERSONA_DRIVEN_IMPLEMENTATION_SUMMARY.md 36ms (unchanged)
+docs/archive/architecture/PREMIUM_MONETIZATION_SUMMARY.md 31ms (unchanged)
+docs/archive/architecture/SECURITY_IMPLEMENTATION_SUMMARY.md 31ms (unchanged)
+docs/archive/README.md 8ms (unchanged)
+docs/e2e-testing.md 44ms (unchanged)
+docs/ENHANCED_QUALITY_SYSTEM.md 33ms (unchanged)
+docs/jest-setup-notes.md 2ms (unchanged)
+docs/jest-testing-guide.md 13ms (unchanged)
+docs/manual-qa-checklist.md 28ms (unchanged)
+docs/RTL_DEVELOPMENT_GUIDE.md 39ms (unchanged)
+docs/THEME_API_REFERENCE.md 53ms (unchanged)
+docs/THEME_QUICK_START.md 30ms (unchanged)
+docs/THEME_SYSTEM.md 43ms (unchanged)
+docs/TRANSLATION_TROUBLESHOOTING.md 18ms (unchanged)
+docs/TRANSLATOR_QUICK_START.md 9ms (unchanged)
+DOCUMENTATION_INDEX.md 14ms (unchanged)
+EMAIL_CAMPAIGN_SETUP_GUIDE.md 44ms (unchanged)
+email-campaigns/automation-config.js 26ms (unchanged)
+email-campaigns/busy-ben-series.html 88ms (unchanged)
+email-campaigns/professional-paula-sample.html 43ms (unchanged)
+email-campaigns/quick-setup.js 24ms (unchanged)
+email-campaigns/struggling-sam-series.html 31ms (unchanged)
+ENHANCED_PERSONA_FOCUS_STRATEGY.md 53ms (unchanged)
+ESCAPED_NEWLINES_ANALYSIS.md 6ms (unchanged)
+ESLINT_MODULE_COMPATIBILITY_FIXES.md 15ms (unchanged)
+eslint-results.json 240ms (unchanged)
+eslint.config.backup.js 11ms (unchanged)
+eslint.config.js 10ms (unchanged)
+FINAL_AUTO_FIX_SUMMARY.md 13ms (unchanged)
+fix_strategy.md 10ms (unchanged)
+fix-summary-batch1.md 6ms (unchanged)
+index.html 27ms (unchanged)
+ios/App/App/Assets.xcassets/AppIcon.appiconset/Contents.json 1ms (unchanged)
+ios/App/App/Assets.xcassets/Contents.json 0ms (unchanged)
+ios/App/App/Assets.xcassets/Splash.imageset/Contents.json 1ms (unchanged)
+lighthouserc.js 4ms (unchanged)
+lighthouserc.perf.js 3ms (unchanged)
+LINT_CLEANUP_SUMMARY.md 17ms (unchanged)
+MANUAL_ESLINT_FIXES_SUMMARY.md 8ms (unchanged)
+MARKETING_CAMPAIGNS_BY_PERSONA.md 47ms (unchanged)
+MOBILE_TESTING_GUIDE.md 18ms (unchanged)
+mobile-testing-guide.md 25ms (unchanged)
+monitoring/alertmanager/alertmanager.yml 16ms (unchanged)
+monitoring/datadog/datadog.yaml 8ms (unchanged)
+monitoring/grafana/dashboard.json 4ms (unchanged)
+monitoring/newrelic/newrelic.yml 26ms (unchanged)
+monitoring/prometheus/alerts/performance.yml 17ms (unchanged)
+monitoring/prometheus/prometheus.yml 6ms (unchanged)
+package-lock.json 111ms (unchanged)
+package.json 1ms (unchanged)
+parsing-errors-fixed-summary.md 6ms (unchanged)
+PAYMENT_SETUP_GUIDE.md 21ms (unchanged)
+performance/k6/alarm-lifecycle-load-test.js 13ms (unchanged)
+performance/k6/baseline-smoke-test.js 3ms (unchanged)
+performance/k6/critical-endpoints-stress-test.js 12ms (unchanged)
+performance/k6/soak-endurance-test.js 12ms (unchanged)
+performance/k6/validation-test.js 3ms (unchanged)
+performance/README.md 24ms (unchanged)
+PERSONA_ANALYTICS_INTEGRATION_GUIDE.md 39ms (unchanged)
+playwright.config.ts 11ms (unchanged)
+PREMIUM_FEATURES.md 73ms (unchanged)
+[error] public/locales/ar/alarms.json: SyntaxError: Unexpected token, expected "," (74:28)
+[error]   72 |     "snoozesLeft_plural": "{{count}} غفوات متبقية",
+[error]   73 |     "noSnoozesLeft": "لا توجد غفوات متبقية",
+[error] > 74 |     "voiceChallenge": "قل "أنا مستيقظ" للإيقاف",
+[error]      |                            ^
+[error]   75 |     "shakeToSnooze": "هز الجهاز للغفوة",
+[error]   76 |     "challenges": {
+[error]   77 |       "math": "حل المسألة الحسابية",
+public/locales/ar/auth.json 2ms (unchanged)
+public/locales/ar/common.json 9ms (unchanged)
+public/locales/ar/errors.json 2ms (unchanged)
+public/locales/ar/gaming.json 2ms (unchanged)
+public/locales/ar/settings.json 2ms (unchanged)
+[error] public/locales/bn/alarms.json: SyntaxError: Unexpected token, expected "," (74:35)
+[error]   72 |     "snoozesLeft_plural": "{{count}}টি স্নুজ বাকি",
+[error]   73 |     "noSnoozesLeft": "আর স্নুজ বাকি নেই",
+[error] > 74 |     "voiceChallenge": "বন্ধ করতে "আমি জেগেছি" বলুন",
+[error]      |                                   ^
+[error]   75 |     "shakeToSnooze": "স্নুজ করতে ডিভাইস নাড়ান",
+[error]   76 |     "challenges": {
+[error]   77 |       "math": "গণিতের সমস্যা সমাধান করুন",
+public/locales/bn/auth.json 1ms (unchanged)
+public/locales/bn/common.json 2ms (unchanged)
+public/locales/bn/errors.json 2ms (unchanged)
+public/locales/bn/gaming.json 4ms (unchanged)
+public/locales/bn/settings.json 2ms (unchanged)
+[error] public/locales/de/alarms.json: SyntaxError: Unexpected token, expected "," (52:35)
+[error]   50 |     "snoozesLeft_plural": "{{count}} Schlummer übrig",
+[error]   51 |     "noSnoozesLeft": "Keine Schlummer mehr übrig",
+[error] > 52 |     "voiceChallenge": "Sagen Sie "Ich bin wach", um zu beenden",
+[error]      |                                   ^
+[error]   53 |     "shakeToSnooze": "Gerät schütteln zum Schlummern",
+[error]   54 |     "challenges": {
+[error]   55 |       "math": "Löse das Rechenproblem",
+public/locales/de/auth.json 1ms (unchanged)
+public/locales/de/common.json 1ms (unchanged)
+public/locales/de/errors.json 1ms (unchanged)
+public/locales/de/gaming.json 2ms (unchanged)
+public/locales/de/settings.json 2ms (unchanged)
+[error] public/locales/en-AU/alarms.json: SyntaxError: Unexpected token, expected "," (74:29)
+[error]   72 |     "snoozesLeft_plural": "{{count}} snoozes left",
+[error]   73 |     "noSnoozesLeft": "No snoozes left",
+[error] > 74 |     "voiceChallenge": "Say "I'm awake" to dismiss",
+[error]      |                             ^
+[error]   75 |     "shakeToSnooze": "Shake device to snooze",
+[error]   76 |     "challenges": {
+[error]   77 |       "math": "Solve the math problem",
+public/locales/en-AU/auth.json 1ms (unchanged)
+public/locales/en-AU/common.json 13ms (unchanged)
+public/locales/en-AU/errors.json 1ms (unchanged)
+public/locales/en-AU/gaming.json 4ms (unchanged)
+public/locales/en-AU/settings.json 2ms (unchanged)
+[error] public/locales/en-GB/alarms.json: SyntaxError: Unexpected token, expected "," (74:29)
+[error]   72 |     "snoozesLeft_plural": "{{count}} snoozes left",
+[error]   73 |     "noSnoozesLeft": "No snoozes left",
+[error] > 74 |     "voiceChallenge": "Say "I'm awake" to dismiss",
+[error]      |                             ^
+[error]   75 |     "shakeToSnooze": "Shake device to snooze",
+[error]   76 |     "challenges": {
+[error]   77 |       "math": "Solve the math problem",
+public/locales/en-GB/auth.json 1ms (unchanged)
+public/locales/en-GB/common.json 1ms (unchanged)
+public/locales/en-GB/errors.json 1ms (unchanged)
+public/locales/en-GB/gaming.json 2ms (unchanged)
+public/locales/en-GB/settings.json 2ms (unchanged)
+[error] public/locales/en/alarms.json: SyntaxError: Unexpected token, expected "," (74:29)
+[error]   72 |     "snoozesLeft_plural": "{{count}} snoozes left",
+[error]   73 |     "noSnoozesLeft": "No snoozes left",
+[error] > 74 |     "voiceChallenge": "Say "I'm awake" to dismiss",
+[error]      |                             ^
+[error]   75 |     "shakeToSnooze": "Shake device to snooze",
+[error]   76 |     "challenges": {
+[error]   77 |       "math": "Solve the math problem",
+public/locales/en/auth.json 1ms (unchanged)
+public/locales/en/common.json 2ms (unchanged)
+public/locales/en/errors.json 1ms (unchanged)
+public/locales/en/gaming.json 2ms (unchanged)
+public/locales/en/settings.json 2ms (unchanged)
+[error] public/locales/es-419/alarms.json: SyntaxError: Unexpected token, expected "," (65:28)
+[error]   63 |     "snoozesLeft_plural": "{{count}} repeticiones restantes",
+[error]   64 |     "noSnoozesLeft": "No quedan repeticiones",
+[error] > 65 |     "voiceChallenge": "Di "Estoy despierto" para descartar",
+[error]      |                            ^
+[error]   66 |     "shakeToSnooze": "Agita el dispositivo para repetir",
+[error]   67 |     "challenges": {
+[error]   68 |       "math": "Resuelve el problema matemático",
+public/locales/es-419/auth.json 1ms (unchanged)
+public/locales/es-419/common.json 1ms (unchanged)
+public/locales/es-419/errors.json 2ms (unchanged)
+public/locales/es-419/gaming.json 2ms (unchanged)
+public/locales/es-419/settings.json 2ms (unchanged)
+[error] public/locales/es-MX/alarms.json: SyntaxError: Unexpected token, expected "," (65:28)
+[error]   63 |     "snoozesLeft_plural": "{{count}} repeticiones restantes",
+[error]   64 |     "noSnoozesLeft": "No quedan repeticiones",
+[error] > 65 |     "voiceChallenge": "Di "Estoy despierto" para descartar",
+[error]      |                            ^
+[error]   66 |     "shakeToSnooze": "Agita el dispositivo para repetir",
+[error]   67 |     "challenges": {
+[error]   68 |       "math": "Resuelve el problema matemático",
+public/locales/es-MX/auth.json 1ms (unchanged)
+public/locales/es-MX/common.json 2ms (unchanged)
+public/locales/es-MX/errors.json 2ms (unchanged)
+public/locales/es-MX/gaming.json 2ms (unchanged)
+public/locales/es-MX/settings.json 2ms (unchanged)
+[error] public/locales/es/alarms.json: SyntaxError: Unexpected token, expected "," (65:28)
+[error]   63 |     "snoozesLeft_plural": "{{count}} repeticiones restantes",
+[error]   64 |     "noSnoozesLeft": "No quedan repeticiones",
+[error] > 65 |     "voiceChallenge": "Di "Estoy despierto" para descartar",
+[error]      |                            ^
+[error]   66 |     "shakeToSnooze": "Agita el dispositivo para repetir",
+[error]   67 |     "challenges": {
+[error]   68 |       "math": "Resuelve el problema matemático",
+public/locales/es/auth.json 1ms (unchanged)
+public/locales/es/common.json 2ms (unchanged)
+public/locales/es/errors.json 2ms (unchanged)
+public/locales/es/gaming.json 2ms (unchanged)
+public/locales/es/settings.json 2ms (unchanged)
+public/locales/fa/alarms.json 1ms (unchanged)
+public/locales/fa/auth.json 0ms (unchanged)
+public/locales/fa/common.json 1ms (unchanged)
+public/locales/fa/errors.json 1ms (unchanged)
+public/locales/fa/gaming.json 0ms (unchanged)
+public/locales/fa/settings.json 0ms (unchanged)
+[error] public/locales/fr-CA/alarms.json: SyntaxError: Unexpected token, expected "," (52:31)
+[error]   50 |     "snoozesLeft_plural": "{{count}} répétitions restantes",
+[error]   51 |     "noSnoozesLeft": "Aucune répétition restante",
+[error] > 52 |     "voiceChallenge": "Dites "Je suis réveillé" pour arrêter",
+[error]      |                               ^
+[error]   53 |     "shakeToSnooze": "Secouez l'appareil pour reporter",
+[error]   54 |     "challenges": {
+[error]   55 |       "math": "Résolvez le problème mathématique",
+public/locales/fr-CA/auth.json 1ms (unchanged)
+public/locales/fr-CA/common.json 3ms (unchanged)
+public/locales/fr-CA/errors.json 1ms (unchanged)
+public/locales/fr-CA/gaming.json 2ms (unchanged)
+public/locales/fr-CA/settings.json 2ms (unchanged)
+[error] public/locales/fr/alarms.json: SyntaxError: Unexpected token, expected "," (52:31)
+[error]   50 |     "snoozesLeft_plural": "{{count}} répétitions restantes",
+[error]   51 |     "noSnoozesLeft": "Aucune répétition restante",
+[error] > 52 |     "voiceChallenge": "Dites "Je suis réveillé" pour arrêter",
+[error]      |                               ^
+[error]   53 |     "shakeToSnooze": "Secouez l'appareil pour reporter",
+[error]   54 |     "challenges": {
+[error]   55 |       "math": "Résolvez le problème mathématique",
+public/locales/fr/auth.json 1ms (unchanged)
+public/locales/fr/common.json 1ms (unchanged)
+public/locales/fr/errors.json 1ms (unchanged)
+public/locales/fr/gaming.json 2ms (unchanged)
+public/locales/fr/settings.json 2ms (unchanged)
+public/locales/he/alarms.json 0ms (unchanged)
+public/locales/he/auth.json 0ms (unchanged)
+public/locales/he/common.json 1ms (unchanged)
+public/locales/he/errors.json 0ms (unchanged)
+public/locales/he/gaming.json 0ms (unchanged)
+public/locales/he/settings.json 0ms (unchanged)
+[error] public/locales/hi/alarms.json: SyntaxError: Unexpected token, expected "," (74:25)
+[error]   72 |     "snoozesLeft_plural": "{{count}} स्नूज़ बचे",
+[error]   73 |     "noSnoozesLeft": "अब स्नूज़ नहीं कर सकते!",
+[error] > 74 |     "voiceChallenge": ""मैं जाग गया" बोलें अलार्म बंद करने के लिए",
+[error]      |                         ^
+[error]   75 |     "shakeToSnooze": "स्नूज़ के लिए फोन हिलाएं",
+[error]   76 |     "challenges": {
+[error]   77 |       "math": "गणित की समस्या हल करें",
+public/locales/hi/auth.json 1ms (unchanged)
+public/locales/hi/common.json 1ms (unchanged)
+public/locales/hi/errors.json 1ms (unchanged)
+public/locales/hi/gaming.json 6ms (unchanged)
+public/locales/hi/settings.json 3ms (unchanged)
+[error] public/locales/id/alarms.json: SyntaxError: Unexpected token, expected "," (74:33)
+[error]   72 |     "snoozesLeft_plural": "{{count}} snooze tersisa",
+[error]   73 |     "noSnoozesLeft": "Tidak ada snooze tersisa",
+[error] > 74 |     "voiceChallenge": "Katakan "Saya sudah bangun" untuk mematikan",
+[error]      |                                 ^
+[error]   75 |     "shakeToSnooze": "Goyangkan perangkat untuk snooze",
+[error]   76 |     "challenges": {
+[error]   77 |       "math": "Selesaikan soal matematika",
+public/locales/id/auth.json 1ms (unchanged)
+public/locales/id/common.json 1ms (unchanged)
+public/locales/id/errors.json 16ms (unchanged)
+public/locales/id/gaming.json 2ms (unchanged)
+public/locales/id/settings.json 2ms (unchanged)
+[error] public/locales/it/alarms.json: SyntaxError: Unexpected token, expected "," (74:28)
+[error]   72 |     "snoozesLeft_plural": "{{count}} ripetizioni rimaste",
+[error]   73 |     "noSnoozesLeft": "Nessuna ripetizione rimasta",
+[error] > 74 |     "voiceChallenge": "Dì "Sono sveglio" per disattivare",
+[error]      |                            ^
+[error]   75 |     "shakeToSnooze": "Scuoti il dispositivo per ripetere",
+[error]   76 |     "challenges": {
+[error]   77 |       "math": "Risolvi il problema matematico",
+public/locales/it/auth.json 1ms (unchanged)
+public/locales/it/common.json 2ms (unchanged)
+public/locales/it/errors.json 1ms (unchanged)
+public/locales/it/gaming.json 1ms (unchanged)
+public/locales/it/settings.json 2ms (unchanged)
+public/locales/ja/alarms.json 2ms (unchanged)
+public/locales/ja/auth.json 3ms (unchanged)
+public/locales/ja/common.json 2ms (unchanged)
+public/locales/ja/errors.json 1ms (unchanged)
+public/locales/ja/gaming.json 2ms (unchanged)
+public/locales/ja/settings.json 3ms (unchanged)
+[error] public/locales/ko/alarms.json: SyntaxError: Unexpected token, expected "," (74:25)
+[error]   72 |     "snoozesLeft_plural": "스누즈 {{count}}번 남음",
+[error]   73 |     "noSnoozesLeft": "스누즈 기회 없음",
+[error] > 74 |     "voiceChallenge": ""일어났어요"라고 말하여 끄기",
+[error]      |                         ^
+[error]   75 |     "shakeToSnooze": "기기를 흔들어 스누즈",
+[error]   76 |     "challenges": {
+[error]   77 |       "math": "수학 문제를 풀어보세요",
+public/locales/ko/auth.json 5ms (unchanged)
+public/locales/ko/common.json 1ms (unchanged)
+public/locales/ko/errors.json 1ms (unchanged)
+public/locales/ko/gaming.json 2ms (unchanged)
+public/locales/ko/settings.json 2ms (unchanged)
+public/locales/ku/alarms.json 1ms (unchanged)
+public/locales/ku/auth.json 0ms (unchanged)
+public/locales/ku/common.json 1ms (unchanged)
+public/locales/ku/errors.json 1ms (unchanged)
+public/locales/ku/gaming.json 1ms (unchanged)
+public/locales/ku/settings.json 0ms (unchanged)
+[error] public/locales/pt-BR/alarms.json: SyntaxError: Unexpected token, expected "," (74:30)
+[error]   72 |     "snoozesLeft_plural": "{{count}} sonecas restantes",
+[error]   73 |     "noSnoozesLeft": "Nenhuma soneca restante",
+[error] > 74 |     "voiceChallenge": "Diga "Estou acordado" para descartar",
+[error]      |                              ^
+[error]   75 |     "shakeToSnooze": "Balance o dispositivo para dar soneca",
+[error]   76 |     "challenges": {
+[error]   77 |       "math": "Resolva o problema matemático",
+public/locales/pt-BR/auth.json 2ms (unchanged)
+public/locales/pt-BR/common.json 2ms (unchanged)
+public/locales/pt-BR/errors.json 2ms (unchanged)
+public/locales/pt-BR/gaming.json 2ms (unchanged)
+public/locales/pt-BR/settings.json 2ms (unchanged)
+[error] public/locales/pt/alarms.json: SyntaxError: Unexpected token, expected "," (74:30)
+[error]   72 |     "snoozesLeft_plural": "{{count}} sonecas restantes",
+[error]   73 |     "noSnoozesLeft": "Nenhuma soneca restante",
+[error] > 74 |     "voiceChallenge": "Diga "Estou acordado" para descartar",
+[error]      |                              ^
+[error]   75 |     "shakeToSnooze": "Balance o dispositivo para dar soneca",
+[error]   76 |     "challenges": {
+[error]   77 |       "math": "Resolva o problema matemático",
+public/locales/pt/auth.json 1ms (unchanged)
+public/locales/pt/common.json 2ms (unchanged)
+public/locales/pt/errors.json 2ms (unchanged)
+public/locales/pt/gaming.json 1ms (unchanged)
+public/locales/pt/settings.json 2ms (unchanged)
+public/locales/README.md 8ms (unchanged)
+[error] public/locales/ru/alarms.json: SyntaxError: Unexpected token, expected "," (74:33)
+[error]   72 |     "snoozesLeft_plural": "Осталось {{count}} повторов",
+[error]   73 |     "noSnoozesLeft": "Повторы закончились",
+[error] > 74 |     "voiceChallenge": "Скажите "Я проснулся" для отключения",
+[error]      |                                 ^
+[error]   75 |     "shakeToSnooze": "Потрясите устройство для повтора",
+[error]   76 |     "challenges": {
+[error]   77 |       "math": "Решите математическую задачу",
+public/locales/ru/auth.json 1ms (unchanged)
+public/locales/ru/common.json 2ms (unchanged)
+public/locales/ru/errors.json 2ms (unchanged)
+public/locales/ru/gaming.json 2ms (unchanged)
+public/locales/ru/settings.json 3ms (unchanged)
+[error] public/locales/th/alarms.json: SyntaxError: Unexpected token, expected "," (74:32)
+[error]   72 |     "snoozesLeft_plural": "เหลือ Snooze {{count}} ครั้ง",
+[error]   73 |     "noSnoozesLeft": "ไม่เหลือ Snooze",
+[error] > 74 |     "voiceChallenge": "พูดว่า "ฉันตื่นแล้ว" เพื่อปิด",
+[error]      |                                ^
+[error]   75 |     "shakeToSnooze": "เขย่าเครื่องเพื่อ Snooze",
+[error]   76 |     "challenges": {
+[error]   77 |       "math": "แก้โจทย์คณิตศาสตร์",
+public/locales/th/auth.json 1ms (unchanged)
+public/locales/th/common.json 1ms (unchanged)
+public/locales/th/errors.json 1ms (unchanged)
+public/locales/th/gaming.json 1ms (unchanged)
+public/locales/th/settings.json 2ms (unchanged)
+public/locales/ur/alarms.json 0ms (unchanged)
+public/locales/ur/auth.json 1ms (unchanged)
+public/locales/ur/common.json 1ms (unchanged)
+public/locales/ur/errors.json 0ms (unchanged)
+public/locales/ur/gaming.json 0ms (unchanged)
+public/locales/ur/settings.json 0ms (unchanged)
+[error] public/locales/vi/alarms.json: SyntaxError: Unexpected token, expected "," (74:29)
+[error]   72 |     "snoozesLeft_plural": "Còn {{count}} lần báo lại",
+[error]   73 |     "noSnoozesLeft": "Hết lần báo lại",
+[error] > 74 |     "voiceChallenge": "Nói "Tôi đã thức" để tắt",
+[error]      |                             ^
+[error]   75 |     "shakeToSnooze": "Lắc thiết bị để báo lại",
+[error]   76 |     "challenges": {
+[error]   77 |       "math": "Giải bài toán",
+public/locales/vi/auth.json 1ms (unchanged)
+public/locales/vi/common.json 2ms (unchanged)
+public/locales/vi/errors.json 4ms (unchanged)
+public/locales/vi/gaming.json 2ms (unchanged)
+public/locales/vi/settings.json 6ms (unchanged)
+public/locales/zh-TW/alarms.json 1ms (unchanged)
+public/locales/zh-TW/auth.json 1ms (unchanged)
+public/locales/zh-TW/common.json 1ms (unchanged)
+public/locales/zh-TW/errors.json 1ms (unchanged)
+public/locales/zh-TW/gaming.json 1ms (unchanged)
+public/locales/zh-TW/settings.json 2ms (unchanged)
+public/locales/zh/alarms.json 1ms (unchanged)
+public/locales/zh/auth.json 1ms (unchanged)
+public/locales/zh/common.json 2ms (unchanged)
+public/locales/zh/errors.json 1ms (unchanged)
+public/locales/zh/gaming.json 1ms (unchanged)
+public/locales/zh/settings.json 2ms (unchanged)
+public/manifest.json 1ms (unchanged)
+public/offline.html 21ms (unchanged)
+public/sw-unified.js 82ms (unchanged)
+QUALITY_SYSTEM_SETUP_GUIDE.md 29ms (unchanged)
+QUALITY_SYSTEM_SETUP.md 33ms (unchanged)
+README.md 18ms (unchanged)
+relife-campaign-dashboard/components.json 1ms (unchanged)
+relife-campaign-dashboard/eslint.config.js 1ms (unchanged)
+relife-campaign-dashboard/index.html 1ms (unchanged)
+relife-campaign-dashboard/main.ts 1ms (unchanged)
+relife-campaign-dashboard/package.json 1ms (unchanged)
+relife-campaign-dashboard/public/scout-tag.js 1ms (unchanged)
+relife-campaign-dashboard/README.md 8ms (unchanged)
+relife-campaign-dashboard/src/App.tsx 30ms (unchanged)
+relife-campaign-dashboard/src/backend/api.ts 12ms (unchanged)
+relife-campaign-dashboard/src/components/ai/ContentOptimization.tsx 28ms (unchanged)
+relife-campaign-dashboard/src/components/ai/PersonaPrediction.tsx 34ms (unchanged)
+relife-campaign-dashboard/src/components/analytics/ABTesting.tsx 34ms (unchanged)
+relife-campaign-dashboard/src/components/analytics/CohortAnalysis.tsx 24ms (unchanged)
+relife-campaign-dashboard/src/components/analytics/TimeSeriesChart.tsx 16ms (unchanged)
+relife-campaign-dashboard/src/components/analytics/timeSeriesUtils.ts 7ms (unchanged)
+relife-campaign-dashboard/src/components/email-designer/EmailBuilder.tsx 49ms (unchanged)
+relife-campaign-dashboard/src/components/email-designer/EmailPreview.tsx 36ms (unchanged)
+relife-campaign-dashboard/src/components/email-designer/TemplateLibrary.tsx 25ms (unchanged)
+relife-campaign-dashboard/src/components/ui/accordion.tsx 3ms (unchanged)
+relife-campaign-dashboard/src/components/ui/alert-dialog.tsx 5ms (unchanged)
+relife-campaign-dashboard/src/components/ui/alert.tsx 3ms (unchanged)
+relife-campaign-dashboard/src/components/ui/aspect-ratio.tsx 1ms (unchanged)
+relife-campaign-dashboard/src/components/ui/avatar.tsx 2ms (unchanged)
+relife-campaign-dashboard/src/components/ui/badge.tsx 2ms (unchanged)
+relife-campaign-dashboard/src/components/ui/breadcrumb.tsx 6ms (unchanged)
+relife-campaign-dashboard/src/components/ui/button.tsx 2ms (unchanged)
+relife-campaign-dashboard/src/components/ui/calendar.tsx 3ms (unchanged)
+relife-campaign-dashboard/src/components/ui/card.tsx 3ms (unchanged)
+relife-campaign-dashboard/src/components/ui/carousel.tsx 9ms (unchanged)
+relife-campaign-dashboard/src/components/ui/chart.tsx 21ms (unchanged)
+relife-campaign-dashboard/src/components/ui/checkbox.tsx 2ms (unchanged)
+relife-campaign-dashboard/src/components/ui/collapsible.tsx 1ms (unchanged)
+relife-campaign-dashboard/src/components/ui/command.tsx 6ms (unchanged)
+relife-campaign-dashboard/src/components/ui/context-menu.tsx 5ms (unchanged)
+relife-campaign-dashboard/src/components/ui/dialog.tsx 4ms (unchanged)
+relife-campaign-dashboard/src/components/ui/drawer.tsx 3ms (unchanged)
+relife-campaign-dashboard/src/components/ui/dropdown-menu.tsx 6ms (unchanged)
+relife-campaign-dashboard/src/components/ui/form.tsx 8ms (unchanged)
+relife-campaign-dashboard/src/components/ui/hover-card.tsx 2ms (unchanged)
+relife-campaign-dashboard/src/components/ui/input-otp.tsx 4ms (unchanged)
+relife-campaign-dashboard/src/components/ui/input.tsx 1ms (unchanged)
+relife-campaign-dashboard/src/components/ui/label.tsx 1ms (unchanged)
+relife-campaign-dashboard/src/components/ui/menubar.tsx 14ms (unchanged)
+relife-campaign-dashboard/src/components/ui/navigation-menu.tsx 4ms (unchanged)
+relife-campaign-dashboard/src/components/ui/pagination.tsx 3ms (unchanged)
+relife-campaign-dashboard/src/components/ui/popover.tsx 2ms (unchanged)
+relife-campaign-dashboard/src/components/ui/progress.tsx 2ms (unchanged)
+relife-campaign-dashboard/src/components/ui/radio-group.tsx 2ms (unchanged)
+relife-campaign-dashboard/src/components/ui/resizable.tsx 2ms (unchanged)
+relife-campaign-dashboard/src/components/ui/scroll-area.tsx 2ms (unchanged)
+relife-campaign-dashboard/src/components/ui/select.tsx 7ms (unchanged)
+relife-campaign-dashboard/src/components/ui/separator.tsx 1ms (unchanged)
+relife-campaign-dashboard/src/components/ui/sheet.tsx 4ms (unchanged)
+relife-campaign-dashboard/src/components/ui/sidebar.tsx 17ms (unchanged)
+relife-campaign-dashboard/src/components/ui/skeleton.tsx 1ms (unchanged)
+relife-campaign-dashboard/src/components/ui/slider.tsx 2ms (unchanged)
+relife-campaign-dashboard/src/components/ui/sonner.tsx 1ms (unchanged)
+relife-campaign-dashboard/src/components/ui/switch.tsx 1ms (unchanged)
+relife-campaign-dashboard/src/components/ui/table.tsx 3ms (unchanged)
+relife-campaign-dashboard/src/components/ui/tabs.tsx 2ms (unchanged)
+relife-campaign-dashboard/src/components/ui/textarea.tsx 1ms (unchanged)
+relife-campaign-dashboard/src/components/ui/toggle-group.tsx 3ms (unchanged)
+relife-campaign-dashboard/src/components/ui/toggle.tsx 2ms (unchanged)
+relife-campaign-dashboard/src/components/ui/tooltip.tsx 2ms (unchanged)
+relife-campaign-dashboard/src/hooks/use-mobile.ts 2ms (unchanged)
+relife-campaign-dashboard/src/index.css 16ms (unchanged)
+relife-campaign-dashboard/src/lib/constants/sidebar-constants.ts 1ms (unchanged)
+relife-campaign-dashboard/src/lib/hooks/use-form-field.ts 3ms (unchanged)
+relife-campaign-dashboard/src/lib/hooks/use-sidebar.tsx 8ms (unchanged)
+relife-campaign-dashboard/src/lib/utils.ts 1ms (unchanged)
+relife-campaign-dashboard/src/lib/variants/badge-variants.ts 1ms (unchanged)
+relife-campaign-dashboard/src/lib/variants/button-variants.ts 1ms (unchanged)
+relife-campaign-dashboard/src/lib/variants/navigation-menu-variants.ts 1ms (unchanged)
+relife-campaign-dashboard/src/lib/variants/sidebar-variants.ts 1ms (unchanged)
+relife-campaign-dashboard/src/lib/variants/toggle-variants.ts 1ms (unchanged)
+relife-campaign-dashboard/src/main.tsx 1ms (unchanged)
+relife-campaign-dashboard/src/services/activecampaign.ts 17ms (unchanged)
+relife-campaign-dashboard/src/services/ai.ts 17ms (unchanged)
+relife-campaign-dashboard/src/services/convertkit.ts 16ms (unchanged)
+relife-campaign-dashboard/src/services/index.ts 27ms (unchanged)
+relife-campaign-dashboard/src/services/mailchimp.ts 10ms (unchanged)
+relife-campaign-dashboard/src/vite-env.d.ts 1ms (unchanged)
+relife-campaign-dashboard/tsconfig.json 3ms (unchanged)
+relife-campaign-dashboard/vite.config.ts 2ms (unchanged)
+REMAINING_ESLINT_ISSUES_ANALYSIS.md 17ms (unchanged)
+remaining-issues.json 35ms (unchanged)
+scripts/advanced-translation-manager.mjs 35ms (unchanged)
+scripts/analyze-language-quality.js 3ms (unchanged)
+scripts/analyze-quality-results.js 6ms (unchanged)
+scripts/analyze-translation-health.js 5ms (unchanged)
+scripts/bundle-size-monitor.js 10ms (unchanged)
+scripts/check-notification-history.js 2ms (unchanged)
+scripts/check-pr-a11y.mjs 28ms (unchanged)
+scripts/cleanup-quality-history.js 2ms (unchanged)
+scripts/enhanced-commit-validator.js 15ms (unchanged)
+scripts/generate-a11y-baseline.js 14ms (unchanged)
+scripts/generate-a11y-baseline.mjs 8ms (unchanged)
+scripts/generate-a11y-report.mjs 16ms (unchanged)
+scripts/generate-comprehensive-themes.js 49ms (unchanged)
+scripts/generate-coverage-report.js 7ms (unchanged)
+scripts/generate-csv-reports.js 3ms (unchanged)
+scripts/generate-notification-content.js 2ms (unchanged)
+scripts/generate-notification-templates.js 13ms (unchanged)
+scripts/generate-pdf-reports.js 2ms (unchanged)
+scripts/generate-perf-report.mjs 18ms (unchanged)
+scripts/generate-report-statistics.js 4ms (unchanged)
+scripts/generate-sounds.js 19ms (unchanged)
+scripts/generate-status-page.js 3ms (unchanged)
+scripts/generate-theme-sounds.js 32ms (unchanged)
+scripts/generate-trends.js 4ms (unchanged)
+scripts/intelligent-eslint-fix.js 18ms (unchanged)
+scripts/manage-translations.mjs 12ms (unchanged)
+scripts/persona-optimizer.js 15ms (unchanged)
+scripts/quality-dashboard.js 16ms (unchanged)
+scripts/react-hooks-enforcer.js 12ms (unchanged)
+scripts/setup-convertkit.js 16ms (unchanged)
+scripts/test-payment-config.js 7ms (unchanged)
+scripts/test-pwa-browsers.cjs 11ms (unchanged)
+scripts/update-notification-history.js 2ms (unchanged)
+scripts/update-readme-status.js 2ms (unchanged)
+scripts/validate-external-services.js 9ms (unchanged)
+scripts/validate-mixed-scripts.js 7ms (unchanged)
+SERVICE_WORKER_INTEGRATION.md 22ms (unchanged)
+SOUND_THEMES_GUIDE.md 33ms (unchanged)
+src/__tests__/config/global-setup.ts 9ms (unchanged)
+src/__tests__/config/global-teardown.ts 16ms (unchanged)
+src/__tests__/config/test-sequencer.js 9ms (unchanged)
+src/__tests__/factories/core-factories-type-safety.test.ts 23ms (unchanged)
+src/__tests__/factories/core-factories.ts 65ms (unchanged)
+src/__tests__/factories/enhanced-factories.test.ts 6ms (unchanged)
+src/__tests__/factories/enhanced-factories.ts 20ms (unchanged)
+src/__tests__/factories/factories.test.ts 19ms (unchanged)
+src/__tests__/factories/factory-utils.ts 31ms (unchanged)
+src/__tests__/factories/gaming-factories.ts 75ms (unchanged)
+src/__tests__/factories/index.ts 1ms (unchanged)
+src/__tests__/factories/premium-factories.ts 32ms
+src/__tests__/factories/support-factories.ts 35ms (unchanged)
+src/__tests__/mocks/audio-mock.ts 6ms (unchanged)
+src/__tests__/mocks/capacitor.mock.ts 113ms (unchanged)
+src/__tests__/mocks/file-mock.ts 22ms (unchanged)
+src/__tests__/mocks/msw-handlers.ts 35ms (unchanged)
+src/__tests__/mocks/msw-setup.ts 3ms (unchanged)
+src/__tests__/mocks/posthog.mock.ts 23ms (unchanged)
+src/__tests__/mocks/react-router.mock.ts 25ms (unchanged)
+src/__tests__/mocks/sentry.mock.ts 16ms (unchanged)
+src/__tests__/mocks/stripe.mock.ts 27ms (unchanged)
+src/__tests__/mocks/supabase.mock.ts 46ms (unchanged)
+src/__tests__/providers/context-providers.tsx 31ms (unchanged)
+src/__tests__/providers/index.ts 22ms (unchanged)
+src/__tests__/providers/integration-provider.tsx 17ms (unchanged)
+src/__tests__/providers/service-providers.tsx 48ms (unchanged)
+src/__tests__/providers/test-providers.tsx 97ms (unchanged)
+src/__tests__/rtl/Button.rtl.test.tsx 4ms (unchanged)
+src/__tests__/rtl/Card.rtl.test.tsx 4ms (unchanged)
+src/__tests__/rtl/Dialog.rtl.test.tsx 7ms (unchanged)
+src/__tests__/setup/after-env-setup.ts 46ms (unchanged)
+src/__tests__/setup/global-setup.ts 3ms (unchanged)
+src/__tests__/theme-integration.test.tsx 18ms (unchanged)
+src/__tests__/utils/accessibility-helpers.ts 13ms (unchanged)
+src/__tests__/utils/animation-helpers.tsx 23ms (unchanged)
+src/__tests__/utils/assertion-helpers.ts 10ms (unchanged)
+src/__tests__/utils/async-helpers.ts 22ms (unchanged)
+src/__tests__/utils/audio-helpers.ts 23ms (unchanged)
+src/__tests__/utils/data-builders.ts 24ms (unchanged)
+src/__tests__/utils/dom-helpers.ts 24ms (unchanged)
+[error] src/__tests__/utils/hook-testing-utils.tsx: SyntaxError: ',' expected. (350:14)
+[error]   348 |   Object.defineProperty(window, 'matchMedia', {
+[error]   349 |     value: vi.fn().mockImplementation((query: any) => // auto: implicit any ({
+[error] > 350 |       matches: false,
+[error]       |              ^
+[error]   351 |       media: query,
+[error]   352 |       onchange: null,
+[error]   353 |       addListener: vi.fn(), // deprecated
+src/__tests__/utils/i18n-helpers.ts 33ms (unchanged)
+src/__tests__/utils/index.ts 8ms (unchanged)
+src/__tests__/utils/mobile-helpers.ts 17ms (unchanged)
+src/__tests__/utils/mock-helpers.ts 6ms (unchanged)
+src/__tests__/utils/performance-helpers.ts 16ms (unchanged)
+src/__tests__/utils/render-helpers.ts 46ms (unchanged)
+src/__tests__/utils/storage-helpers.ts 27ms (unchanged)
+src/analytics/PersonaAnalytics.tsx 21ms (unchanged)
+src/App.css 31ms (unchanged)
+[error] src/App.tsx: SyntaxError: ',' expected. (254:13)
+[error]   252 |     activeAlarm: appState.activeAlarm,
+[error]   253 |     enabledAlarms: appState.alarms.filter((alarm: any) => // auto: implicit any alarm.enabled),
+[error] > 254 |     settings: tabProtectionSettings.settings,
+[error]       |             ^
+[error]   255 |   });
+[error]   256 |
+[error]   257 |   // PWA Installation handlers
+src/backend/api.ts 35ms (unchanged)
+src/backend/cloudflare-functions.ts 47ms (unchanged)
+src/backend/database-types.ts 7ms (unchanged)
+src/backend/monitoring-integration.ts 33ms (unchanged)
+src/backend/performance-monitoring.ts 72ms (unchanged)
+src/backend/stripe-webhooks.ts 32ms (unchanged)
+src/backend/subscription-api.ts 35ms (unchanged)
+src/backend/webhook-config.ts 13ms (unchanged)
+src/backend/webhook-endpoint.ts 15ms (unchanged)
+src/components/__tests__/AccessibilityDashboard.test.tsx 19ms (unchanged)
+src/components/__tests__/AccessibilityIntegration.test.tsx 20ms (unchanged)
+src/components/__tests__/AccessibilityTester.test.tsx 7ms (unchanged)
+src/components/__tests__/AlarmForm.a11y.test.tsx 23ms (unchanged)
+src/components/__tests__/AlarmForm.test.tsx 18ms (unchanged)
+src/components/__tests__/AlarmRinging.test.tsx 19ms (unchanged)
+src/components/__tests__/BattleSystem.test.tsx 32ms (unchanged)
+src/components/__tests__/Dashboard.test.tsx 17ms (unchanged)
+src/components/__tests__/ErrorBoundary.test.tsx 13ms (unchanged)
+src/components/__tests__/GamingHub.test.tsx 21ms (unchanged)
+src/components/__tests__/GamingIntegration.test.tsx 31ms (unchanged)
+src/components/__tests__/RootErrorBoundary.test.tsx 22ms (unchanged)
+src/components/__tests__/SimpleTest.test.tsx 3ms (unchanged)
+[error] src/components/AccessibilityDashboard.tsx: SyntaxError: '}' expected. (93:43)
+[error]   91 |     <div
+[error]   92 |       ref={(el: any) => // auto: implicit any {
+[error] > 93 |         sectionRefs.current['visual'] = el;
+[error]      |                                           ^
+[error]   94 |       }}
+[error]   95 |       className="space-y-6"
+[error]   96 |       tabIndex={-1}
+src/components/AccessibilityTester.tsx 28ms
+[error] src/components/AchievementBadges.tsx: SyntaxError: '{' expected. (155:3)
+[error]   153 |
+[error]   154 |   const unlockedAchievements = achievements.filter((a: any) => // auto: implicit any a.unlockedAt);
+[error] > 155 |   const lockedAchievements = achievements.filter((a: any) => // auto: implicit any !a.unlockedAt);
+[error]       |   ^
+[error]   156 |
+[error]   157 |   const getBadgeVariant = (rarity: string) => {
+[error]   158 |     const config = RARITY_CONFIGS[rarity as keyof typeof RARITY_CONFIGS];
+[error] src/components/ActiveAlarm.tsx: SyntaxError: Expression expected. (101:5)
+[error]    99 |     const timer = setInterval(() => {
+[error]   100 |       setTimeLeft((prev: any) => // auto: implicit any prev - 1);
+[error] > 101 |     }, 1000);
+[error]       |     ^
+[error]   102 |
+[error]   103 |     return () => clearInterval(timer);
+[error]   104 |   }, [timeLeft, onMiss]);
+[error] src/components/AdaptiveAlarmList.tsx: SyntaxError: Expression expected. (76:5)
+[error]   74 |       if (alarm.days.length === 0) return 'Never';
+[error]   75 |       return alarm.days.map((day: any) => // auto: implicit any dayNames[day]).join(', ');
+[error] > 76 |     }, [alarm.days]);
+[error]      |     ^
+[error]   77 |
+[error]   78 |     return (
+[error]   79 |       <div className={itemClassName}>
+src/components/AdaptiveButton.tsx 9ms (unchanged)
+[error] src/components/AdaptiveImage.tsx: SyntaxError: '{' expected. (239:7)
+[error]   237 |
+[error]   238 |       const webpVariants = variants.filter((v: any) => // auto: implicit any v.format === 'webp' && supportsWebP());
+[error] > 239 |       if (webpVariants.length === 0) return '';
+[error]       |       ^
+[error]   240 |
+[error]   241 |       return webpVariants
+[error]   242 |         .map((variant: any) => // auto: implicit any {
+[error] src/components/AdaptiveModal.tsx: SyntaxError: '}' expected. (290:11)
+[error]   288 |         >
+[error]   289 |           {/* Header */}
+[error] > 290 |           {(title || closable) && (
+[error]       |           ^
+[error]   291 |             <div className="flex items-center justify-between p-4 border-b border-gray-200">
+[error]   292 |               {title && (
+[error]   293 |                 <h2 id="modal-title" className="text-lg font-semibold text-gray-900">
+src/components/AdaptiveSpinner.tsx 13ms (unchanged)
+[error] src/components/AdvancedAlarmScheduling.tsx: SyntaxError: ',' expected. (238:23)
+[error]   236 |                         {alarm.smartOptimizations.filter((o: any) => // auto: implicit any o.isEnabled).length}{' '}
+[error]   237 |                         optimizations
+[error] > 238 |                       </span>
+[error]       |                       ^
+[error]   239 |                     </div>
+[error]   240 |                   )}
+[error]   241 |
+src/components/AdvancedAnalytics.tsx 44ms (unchanged)
+src/components/AdvancedSchedulingDashboard.tsx 6ms (unchanged)
+src/components/AIAutomation.tsx 38ms
+[error] src/components/AlarmForm.tsx: SyntaxError: '{' expected. (285:7)
+[error]   283 |   const toggleDay = (dayId: number) => {
+[error]   284 |     setFormData((prev: any) => // auto: implicit any {
+[error] > 285 |       const newDays = prev.days.includes(dayId)
+[error]       |       ^
+[error]   286 |         ? prev.days.filter((d: any) => // auto: implicit any d !== dayId)
+[error]   287 |         : [...prev.days, dayId].sort();
+[error]   288 |
+[error] src/components/AlarmList.tsx: SyntaxError: ')' expected. (120:32)
+[error]   118 |     if (idToDelete) {
+[error]   119 |       const alarm = alarms.find((a: any) => // auto: implicit any a.id === idToDelete);
+[error] > 120 |       onDeleteAlarm(idToDelete);
+[error]       |                                ^
+[error]   121 |       setDeleteConfirmId(null);
+[error]   122 |
+[error]   123 |       // Announce deletion
+[error] src/components/AlarmManagement.tsx: SyntaxError: '{' expected. (208:11)
+[error]   206 |         snoozeCount: 0,
+[error]   207 |         dayNames: formData.days.map((dayNum: any) => // auto: implicit any {
+[error] > 208 |           const dayNames = [
+[error]       |           ^
+[error]   209 |             'sunday',
+[error]   210 |             'monday',
+[error]   211 |             'tuesday',
+src/components/AlarmRinging.tsx 46ms (unchanged)
+[error] src/components/AlarmTester.tsx: SyntaxError: Expression expected. (119:11)
+[error]   117 |             value={selectedDifficulty}
+[error]   118 |             onValueChange={(value: any) => // auto: implicit any setSelectedDifficulty(value as AlarmDifficulty)}
+[error] > 119 |           >
+[error]       |           ^
+[error]   120 |             <SelectTrigger>
+[error]   121 |               <SelectValue />
+[error]   122 |             </SelectTrigger>
+[error] src/components/AlarmThemeBrowser.tsx: SyntaxError: '{' expected. (150:7)
+[error]   148 |     // Apply filters
+[error]   149 |     filtered = filtered.filter((combo: any) => // auto: implicit any {
+[error] > 150 |       if (selectedCategory !== 'all' && combo.category !== selectedCategory)
+[error]       |       ^
+[error]   151 |         return false;
+[error]   152 |       if (selectedIntensity !== 'all' && combo.difficulty !== selectedIntensity)
+[error]   153 |         return false;
+[error] src/components/AlarmThemeSelector.tsx: SyntaxError: Unterminated string literal. (246:103)
+[error]   244 |               value={searchQuery}
+[error]   245 |               onChange={(e: any) => // auto: implicit any setSearchQuery(e.target.value)}
+[error] > 246 |               className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
+[error]       |                                                                                                       ^
+[error]   247 |                          focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800"
+[error]   248 |             />
+[error]   249 |           </div>
+src/components/AnalyticsDashboard.tsx 13ms (unchanged)
+src/components/AnalyticsProvider.tsx 10ms (unchanged)
+[error] src/components/animations/AnimationLibrary.tsx: SyntaxError: Expression expected. (613:5)
+[error]   611 |     const interval = setInterval(() => {
+[error]   612 |       setProgress((prev: any) => // auto: implicit any Math.max(0, prev - 100 / (duration / 100)));
+[error] > 613 |     }, 100);
+[error]       |     ^
+[error]   614 |
+[error]   615 |     return () => {
+[error]   616 |       clearTimeout(timer);
+src/components/animations/LoadingStates.tsx 24ms (unchanged)
+[error] src/components/animations/MicroInteractions.tsx: SyntaxError: '}' expected. (137:11)
+[error]   135 |           onChange={(e: any) => // auto: implicit any onChange(e.target.value)}
+[error]   136 |           onFocus={handleFocus}
+[error] > 137 |           onBlur={handleBlur}
+[error]       |           ^
+[error]   138 |           disabled={disabled}
+[error]   139 |           className={`
+[error]   140 |             w-full bg-transparent px-${icon ? '12' : '4'} py-4 text-gray-900 placeholder-gray-400
+src/components/AuthenticationFlow.tsx 3ms (unchanged)
+[error] src/components/BattleSystem.tsx: SyntaxError: Expression expected. (340:5)
+[error]   338 |     setSelectedFriends((prev: any) => // auto: implicit any
+[error]   339 |       prev.includes(friendId) ? prev.filter((id: any) => // auto: implicit any id !== friendId) : [...prev, friendId]
+[error] > 340 |     );
+[error]       |     ^
+[error]   341 |   };
+[error]   342 |
+[error]   343 |   const handleJoinBattle = async (battle: Battle) => {
+src/components/CloudSyncControls.tsx 10ms (unchanged)
+[error] src/components/CommunityChallenge.tsx: SyntaxError: Expression expected. (118:5)
+[error]   116 |     if (selectedType !== 'all') {
+[error]   117 |       filtered = filtered.filter((c: any) => // auto: implicit any c.challengeType === selectedType);
+[error] > 118 |     }
+[error]       |     ^
+[error]   119 |
+[error]   120 |     if (selectedDifficulty !== 'all') {
+[error]   121 |       filtered = filtered.filter((c: any) => // auto: implicit any c.difficulty === selectedDifficulty);
+[error] src/components/CommunityHub.tsx: SyntaxError: '}' expected. (581:48)
+[error]   579 |                           className="w-full"
+[error]   580 |                           onClick={(e: any) => // auto: implicit any {
+[error] > 581 |                             e.stopPropagation();
+[error]       |                                                ^
+[error]   582 |                             announceRewardEvent('claimed', {
+[error]   583 |                               title: `${quest.reward.experience} XP${quest.reward.title ? ` + ${quest.reward.title}` : ''}${quest.reward.badge ? ` + ${quest.reward.badge}` : ''}`,
+[error]   584 |                               description: `Completed quest: ${quest.title}`,
+[error] src/components/CompleteThemeSystemDemo.tsx: SyntaxError: Expression expected. (88:16)
+[error]   86 |                 onChange={(e: any) => // auto: implicit any setCustomTheme({ ...customTheme, name: e.target.value })}
+[error]   87 |                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+[error] > 88 |               />
+[error]      |                ^
+[error]   89 |               <textarea
+[error]   90 |                 placeholder="Describe your ideal wake-up experience..."
+[error]   91 |                 value={customTheme.description}
+[error] src/components/ComprehensiveSecurityDashboard.tsx: SyntaxError: '}' expected. (276:19)
+[error]   274 |                   onChange={(e: any) => // auto: implicit any setAutoRefresh(e.target.checked)}
+[error]   275 |                   className="alarm-toggle rounded border-white/30 text-primary-500 focus:ring-primary-300 bg-white/10"
+[error] > 276 |                   aria-describedby="auto-refresh-desc"
+[error]       |                   ^
+[error]   277 |                 />
+[error]   278 |                 <span id="auto-refresh-desc" className="text-sm text-white/90">
+[error]   279 |                   Auto-refresh
+[error] src/components/ConsentBanner.tsx: SyntaxError: Expression expected. (73:7)
+[error]   71 |   const handleConsentChange = (type: keyof ConsentSettings, value: boolean) => {
+[error]   72 |     setConsents((prev: any) => // auto: implicit any ({
+[error] > 73 |       ...prev,
+[error]      |       ^
+[error]   74 |       [type]: value,
+[error]   75 |     }));
+[error]   76 |   };
+src/components/CSRFProtection.tsx 5ms (unchanged)
+[error] src/components/CustomSoundThemeCreator.tsx: SyntaxError: Expression expected. (632:8)
+[error]   630 |         onChange={(e: any) => // auto: implicit any onUpdate('name', e.target.value)}
+[error]   631 |         placeholder="My Awesome Theme"
+[error] > 632 |       />
+[error]       |        ^
+[error]   633 |     </div>
+[error]   634 |
+[error]   635 |     <div>
+[error] src/components/CustomThemeManager.tsx: SyntaxError: Expression expected. (145:7)
+[error]   143 |           theme.description.toLowerCase().includes(query) ||
+[error]   144 |           theme.tags.some((tag: any) => // auto: implicit any tag.toLowerCase().includes(query))
+[error] > 145 |       );
+[error]       |       ^
+[error]   146 |     }
+[error]   147 |
+[error]   148 |     // Apply category filter
+[error] src/components/Dashboard.tsx: SyntaxError: '{' expected. (50:3)
+[error]   48 |   const { alarm: nextAlarm, timeUntil } = getTimeUntilNextAlarm(alarms);
+[error]   49 |   const enabledAlarms = alarms.filter((a: any) => // auto: implicit any a.enabled);
+[error] > 50 |   const [smartInsights, setSmartInsights] = useState<any[]>([]);
+[error]      |   ^
+[error]   51 |   const [optimizationSuggestions, setOptimizationSuggestions] = useState<any[]>([]);
+[error]   52 |   const [advancedFeaturesEnabled, setAdvancedFeaturesEnabled] = useState(false);
+[error]   53 |
+[error] src/components/EmotionalNudgeModal.tsx: SyntaxError: '{' expected. (178:13)
+[error]   176 |           className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+[error]   177 |           onClick={(e: any) => // auto: implicit any {
+[error] > 178 |             if (e.target === e.currentTarget) {
+[error]       |             ^
+[error]   179 |               handleDismiss();
+[error]   180 |             }
+[error]   181 |           }}
+[error] src/components/EnhancedBattles.tsx: SyntaxError: '}' expected. (417:16)
+[error]   415 |                   </div>
+[error]   416 |                 </div>
+[error] > 417 |               ))}
+[error]       |                ^
+[error]   418 |             </CardContent>
+[error]   419 |           </Card>
+[error]   420 |         </TabsContent>
+[error] src/components/EnhancedDashboard.tsx: SyntaxError: '{' expected. (53:3)
+[error]   51 |   const { alarm: nextAlarm, timeUntil } = getTimeUntilNextAlarm(alarms);
+[error]   52 |   const enabledAlarms = alarms?.filter((a: any) => // auto: implicit any a.enabled) || [];
+[error] > 53 |   const [smartInsights, setSmartInsights] = useState<any[]>([]);
+[error]      |   ^
+[error]   54 |   const [optimizationSuggestions, setOptimizationSuggestions] = useState<any[]>([]);
+[error]   55 |   const [advancedFeaturesEnabled, setAdvancedFeaturesEnabled] = useState(false);
+[error]   56 |
+[error] src/components/EnhancedMediaContent.tsx: SyntaxError: '{' expected. (273:7)
+[error]   271 |       setPlayerState((prev: any) => // auto: implicit any ({ ...prev, loading: true, error: null }));
+[error]   272 |
+[error] > 273 |       try {
+[error]       |       ^
+[error]   274 |         // Stop current audio if playing
+[error]   275 |         if (currentAudioSource.current) {
+[error]   276 |           currentAudioSource.current.stop();
+src/components/EnhancedSettings.tsx 6ms (unchanged)
+[error] src/components/EnhancedSmartAlarmSettings.tsx: SyntaxError: Expression expected. (137:5)
+[error]   135 |     setConditions((prev: any) => // auto: implicit any
+[error]   136 |       prev.map((cond: any) => // auto: implicit any (cond.id === id ? { ...cond, ...updates } : cond))
+[error] > 137 |     );
+[error]       |     ^
+[error]   138 |   };
+[error]   139 |
+[error]   140 |   const getConfidenceColor = (confidence: number): string => {
+src/components/ErrorBoundary.tsx 5ms (unchanged)
+src/components/ErrorBoundaryTest.tsx 6ms (unchanged)
+[error] src/components/ExtendedScreenReaderTester.tsx: SyntaxError: ')' expected. (299:40)
+[error]   297 |
+[error]   298 |         setTestResults((prev: any) => // auto: implicit any [...prev.filter((r: any) => // auto: implicit any r.testId !== test.id), result]);
+[error] > 299 |         onTestComplete?.(test.id, true);
+[error]       |                                        ^
+[error]   300 |       } catch (error) {
+[error]   301 |         console.error('Test playback failed:', error);
+[error]   302 |         const result: TestResult = {
+[error] src/components/FeatureLockOverlay.tsx: SyntaxError: '}' expected. (277:39)
+[error]   275 |           feature={featureId}
+[error]   276 |           onUpgrade={(tier: any) => // auto: implicit any {
+[error] > 277 |             setShowUpgradeModal(false);
+[error]       |                                       ^
+[error]   278 |             onUpgrade?.(tier);
+[error]   279 |           }}
+[error]   280 |           onDismiss={() => setShowUpgradeModal(false)}
+[error] src/components/ForgotPasswordForm.tsx: SyntaxError: Property assignment expected. (155:26)
+[error]   153 |               value={email}
+[error]   154 |               onChange={(e: any) => // auto: implicit any handleEmailChange(e.target.value)}
+[error] > 155 |               className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+[error]       |                          ^
+[error]   156 |                 validationError
+[error]   157 |                   ? 'border-red-500'
+[error]   158 |                   : 'border-gray-300 dark:border-dark-600'
+[error] src/components/FriendsManager.tsx: SyntaxError: Expression expected. (369:14)
+[error]   367 |               onChange={(e: any) => // auto: implicit any setSearchQuery(e.target.value)}
+[error]   368 |               className="pl-10"
+[error] > 369 |             />
+[error]       |              ^
+[error]   370 |           </div>
+[error]   371 |
+[error]   372 |           {/* Friends List */}
+src/components/Gamification.tsx 38ms (unchanged)
+src/components/GamingHub.tsx 4ms (unchanged)
+[error] src/components/HabitCelebration.tsx: SyntaxError: Expression expected. (128:11)
+[error]   126 |       pieces
+[error]   127 |         .map((piece: any) => // auto: implicit any ({
+[error] > 128 |           ...piece,
+[error]       |           ^
+[error]   129 |           x: piece.x + piece.velocityX,
+[error]   130 |           y: piece.y + piece.velocityY,
+[error]   131 |           rotation: piece.rotation + 5,
+src/components/LanguageSelector.tsx 5ms (unchanged)
+[error] src/components/LoginForm.tsx: SyntaxError: Property assignment expected. (108:26)
+[error]   106 |               value={email}
+[error]   107 |               onChange={(e: any) => // auto: implicit any setEmail(e.target.value)}
+[error] > 108 |               className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+[error]       |                          ^
+[error]   109 |                 validationErrors.email
+[error]   110 |                   ? 'border-red-500'
+[error]   111 |                   : 'border-gray-300 dark:border-dark-600'
+[error] src/components/MediaContent.tsx: SyntaxError: '}' expected. (414:17)
+[error]   412 |                 onChange={(e: any) => // auto: implicit any handleSearchChange(e.target.value)}
+[error]   413 |                 className="w-full"
+[error] > 414 |                 aria-label="Search through sound library"
+[error]       |                 ^
+[error]   415 |                 role="searchbox"
+[error]   416 |               />
+[error]   417 |             </div>
+src/components/MobileAccessibilityProvider.tsx 6ms (unchanged)
+[error] src/components/MobileAlarmCard.tsx: SyntaxError: Expression expected. (294:5)
+[error]   292 |     setAlarms((prev: any) => // auto: implicit any
+[error]   293 |       prev.map((alarm: any) => // auto: implicit any (alarm.id === id ? { ...alarm, enabled } : alarm))
+[error] > 294 |     );
+[error]       |     ^
+[error]   295 |   };
+[error]   296 |
+[error]   297 |   const handleEdit = (id: string) => {
+[error] src/components/MobileNavigation.tsx: SyntaxError: '}' expected. (75:12)
+[error]   73 |               onPress={() => handleNavigate(item.path)}
+[error]   74 |             />
+[error] > 75 |           ))}
+[error]      |            ^
+[error]   76 |
+[error]   77 |           {/* More Button */}
+[error]   78 |           {items.length > 4 && (
+[error] src/components/MobileTester.tsx: SyntaxError: '{' expected. (101:7)
+[error]    99 |   ) => {
+[error]   100 |     setTestResults((prev: any) => // auto: implicit any {
+[error] > 101 |       const existing = prev.find((r: any) => // auto: implicit any r.name === name);
+[error]       |       ^
+[error]   102 |       if (existing) {
+[error]   103 |         return prev.map((r: any) => // auto: implicit any
+[error]   104 |           r.name === name ? { ...r, status, message, details } : r
+[error] src/components/NuclearModeBattle.tsx: SyntaxError: '{' expected. (150:9)
+[error]   148 |     timerRef.current = setInterval(() => {
+[error]   149 |       setTimeRemaining((prev: any) => // auto: implicit any {
+[error] > 150 |         if (prev <= 1) {
+[error]       |         ^
+[error]   151 |           handleChallengeTimeout();
+[error]   152 |           return 0;
+[error]   153 |         }
+[error] src/components/NuclearModeChallenge.tsx: SyntaxError: ')' expected. (139:21)
+[error]   137 |         setCurrentProblem(0);
+[error]   138 |         setProblems(problems.map((p: any) => // auto: implicit any ({ ...p, userAnswer: '', correct: undefined })));
+[error] > 139 |         setErrors(0);
+[error]       |                     ^
+[error]   140 |         setUserAnswer('');
+[error]   141 |         return;
+[error]   142 |       }
+src/components/NuclearModeResults.tsx 17ms (unchanged)
+[error] src/components/NuclearModeSelector.tsx: SyntaxError: Expression expected. (123:5)
+[error]   121 |     } else {
+[error]   122 |       onChallengesChange(selectedChallenges.filter((c: any) => // auto: implicit any c !== challengeType));
+[error] > 123 |     }
+[error]       |     ^
+[error]   124 |   };
+[error]   125 |
+[error]   126 |   const getDifficultyLabel = (difficulty: number) => {
+[error] src/components/OfflineDiagnostics.tsx: SyntaxError: '}' expected. (540:10)
+[error]   538 |             </div>
+[error]   539 |           </div>
+[error] > 540 |         ))}
+[error]       |          ^
+[error]   541 |
+[error]   542 |         {diagnostics.length === 0 && !isRunning && (
+[error]   543 |           <div className="text-center py-8 text-muted-foreground">
+src/components/OfflineIndicator.tsx 22ms (unchanged)
+[error] src/components/OnboardingFlow.tsx: SyntaxError: Expression expected. (83:9)
+[error]   81 |       const granted = await requestNotificationPermissions();
+[error]   82 |       setAppState((prev: any) => // auto: implicit any ({
+[error] > 83 |         ...prev,
+[error]      |         ^
+[error]   84 |         permissions: {
+[error]   85 |           ...prev.permissions,
+[error]   86 |           notifications: {
+[error] src/components/PerformanceDashboard.tsx: SyntaxError: Expression expected. (68:9)
+[error]   66 |
+[error]   67 |       setState((prev: any) => // auto: implicit any ({
+[error] > 68 |         ...prev,
+[error]      |         ^
+[error]   69 |         performanceData: {
+[error]   70 |           webVitals: [
+[error]   71 |             {
+[error] src/components/PerformanceProfilerWrapper.tsx: SyntaxError: '}' expected. (136:16)
+[error]   134 |                   </div>
+[error]   135 |                 </div>
+[error] > 136 |               ))}
+[error]       |                ^
+[error]   137 |             </div>
+[error]   138 |           </div>
+[error]   139 |         )}
+[error] src/components/PersonaAnalyticsDashboard.tsx: SyntaxError: '{' expected. (106:7)
+[error]   104 |
+[error]   105 |     analyticsData.forEach((data: any) => // auto: implicit any {
+[error] > 106 |       const existing = metrics.get(data.persona) || {
+[error]       |       ^
+[error]   107 |         persona: data.persona,
+[error]   108 |         detections: 0,
+[error]   109 |         conversions: 0,
+src/components/PersonaDrivenUI.tsx 12ms (unchanged)
+[error] src/components/PersonaFocusDashboard.tsx: SyntaxError: ',' expected. (258:11)
+[error]   256 |   const ConversionFunnel = () => {
+[error]   257 |     const funnelData = metrics.map((persona: any) => // auto: implicit any ({
+[error] > 258 |       name: persona.personaName,
+[error]       |           ^
+[error]   259 |       users: persona.count,
+[error]   260 |       conversions: Math.round(persona.count * persona.conversionRate),
+[error]   261 |       conversionRate: persona.conversionRate,
+[error] src/components/PersonalizationSettings.tsx: SyntaxError: Expression expected. (389:12)
+[error]   387 |             onChange={(e: any) => // auto: implicit any updateMotionPreference('enableAnimations', e.target.checked)}
+[error]   388 |             className="h-4 w-4 text-blue-600 rounded border-gray-300"
+[error] > 389 |           />
+[error]       |            ^
+[error]   390 |         </label>
+[error]   391 |       </div>
+[error]   392 |
+src/components/premium/__tests__/FeatureGate.test.tsx 20ms (unchanged)
+src/components/premium/__tests__/FeatureUtils.test.tsx 37ms (unchanged)
+src/components/premium/__tests__/PaymentFlow.test.tsx 20ms (unchanged)
+src/components/premium/__tests__/PremiumIntegration.test.tsx 23ms (unchanged)
+src/components/premium/__tests__/PricingTable.test.tsx 15ms (unchanged)
+src/components/premium/__tests__/SubscriptionDashboard.test.tsx 13ms (unchanged)
+src/components/premium/BillingHistory.tsx 18ms (unchanged)
+src/components/premium/enhanced-index.ts 1ms (unchanged)
+[error] src/components/premium/EnhancedUpgradePrompt.tsx: SyntaxError: Expression expected. (78:5)
+[error]   76 |     const interval = setInterval(() => {
+[error]   77 |       setCurrentTestimonial((prev: any) => // auto: implicit any (prev + 1) % testimonials.length);
+[error] > 78 |     }, 4000);
+[error]      |     ^
+[error]   79 |     return () => clearInterval(interval);
+[error]   80 |   }, [showSocialProof]);
+[error]   81 |
+src/components/premium/FeatureGate.tsx 2ms (unchanged)
+src/components/premium/FeatureUtils.tsx 18ms (unchanged)
+src/components/premium/index.ts 1ms (unchanged)
+[error] src/components/premium/PaymentFlow.tsx: SyntaxError: Expression expected. (188:9)
+[error]   186 |       const addressField = field.replace('billingAddress.', '');
+[error]   187 |       setFormData((prev: any) => // auto: implicit any ({
+[error] > 188 |         ...prev,
+[error]       |         ^
+[error]   189 |         billingAddress: {
+[error]   190 |           ...prev.billingAddress,
+[error]   191 |           [addressField]: value,
+src/components/premium/PaymentMethodManager.tsx 9ms (unchanged)
+[error] src/components/premium/PremiumAlarmFeatures.tsx: SyntaxError: ':' expected. (61:24)
+[error]   59 |                 value={[smartWindow]}
+[error]   60 |                 onValueChange={(value: any) => // auto: implicit any setSmartWindow(value[0])}
+[error] > 61 |                 max={60}
+[error]      |                        ^
+[error]   62 |                 min={5}
+[error]   63 |                 step={5}
+[error]   64 |                 className="w-full"
+src/components/premium/PremiumAnalytics.tsx 15ms (unchanged)
+[error] src/components/premium/PremiumFeaturePreview.tsx: SyntaxError: Expression expected. (51:7)
+[error]   49 |       const interval = setInterval(() => {
+[error]   50 |         setNuclearIntensity((prev: any) => // auto: implicit any (prev + 1) % 100);
+[error] > 51 |       }, 50);
+[error]      |       ^
+[error]   52 |       return () => clearInterval(interval);
+[error]   53 |     }
+[error]   54 |   }, [feature, isPlaying]);
+[error] src/components/premium/PremiumTeamFeatures.tsx: SyntaxError: '}' expected. (182:12)
+[error]   180 |               </div>
+[error]   181 |             </div>
+[error] > 182 |           ))}
+[error]       |            ^
+[error]   183 |         </div>
+[error]   184 |
+[error]   185 |         <div className="flex gap-2">
+[error] src/components/premium/PremiumVoiceFeatures.tsx: SyntaxError: Expression expected. (124:17)
+[error]   122 |                 onValueChange={(value: any) => // auto: implicit any
+[error]   123 |                   setVoiceSettings((prev: any) => // auto: implicit any ({ ...prev, speed: value[0] }))
+[error] > 124 |                 }
+[error]       |                 ^
+[error]   125 |                 min={0.5}
+[error]   126 |                 max={2.0}
+[error]   127 |                 step={0.1}
+src/components/premium/PricingTable.tsx 4ms (unchanged)
+[error] src/components/premium/PsychologyDrivenCTA.tsx: SyntaxError: '{' expected. (66:9)
+[error]   64 |     const interval = setInterval(() => {
+[error]   65 |       setTimeLeft((prev: any) => // auto: implicit any {
+[error] > 66 |         if (prev.seconds > 0) {
+[error]      |         ^
+[error]   67 |           return { ...prev, seconds: prev.seconds - 1 };
+[error]   68 |         } else if (prev.minutes > 0) {
+[error]   69 |           return { ...prev, minutes: prev.minutes - 1, seconds: 59 };
+src/components/premium/SubscriptionDashboard.tsx 19ms (unchanged)
+[error] src/components/premium/SubscriptionManagement.tsx: SyntaxError: Expression expected. (223:7)
+[error]   221 |   const handleAcceptRetentionOffer = (offerId: string) => {
+[error]   222 |     setCancellationData((prev: any) => // auto: implicit any ({
+[error] > 223 |       ...prev,
+[error]       |       ^
+[error]   224 |       retentionOfferAccepted: true,
+[error]   225 |     }));
+[error]   226 |     // In a real implementation, you would apply the retention offer here
+src/components/premium/SubscriptionPage.tsx 11ms (unchanged)
+[error] src/components/PremiumDashboard.tsx: SyntaxError: '{' expected. (185:5)
+[error]   183 |     setState((prev: any) => // auto: implicit any ({ ...prev, loading: true }));
+[error]   184 |
+[error] > 185 |     try {
+[error]       |     ^
+[error]   186 |       const [tier, featureAccess, trialDays, isTrialing, upgradeRec] =
+[error]   187 |         await Promise.all([
+[error]   188 |           SubscriptionService.getUserTier(userId),
+[error] src/components/PremiumFeatureCard.tsx: SyntaxError: '}' expected. (171:36)
+[error]   169 |             <button
+[error]   170 |               onClick={(e: any) => // auto: implicit any {
+[error] > 171 |                 e.stopPropagation();
+[error]       |                                    ^
+[error]   172 |                 onClick?.();
+[error]   173 |               }}
+[error]   174 |               className="flex items-center gap-2 text-green-600 font-medium hover:text-green-700"
+[error] src/components/PremiumFeatureTest.tsx: SyntaxError: '}' expected. (122:44)
+[error]   120 |                     <button
+[error]   121 |                       onClick={(e: any) => // auto: implicit any {
+[error] > 122 |                         e.stopPropagation();
+[error]       |                                            ^
+[error]   123 |                         onUpgrade?.();
+[error]   124 |                       }}
+[error]   125 |                       className="text-xs px-3 py-1 bg-yellow-500 text-white rounded-full hover:bg-yellow-600"
+src/components/PremiumGate.tsx 3ms (unchanged)
+[error] src/components/PremiumThemeSettings.tsx: SyntaxError: '{' expected. (221:5)
+[error]   219 |     setState((prev: any) => // auto: implicit any ({ ...prev, loading: true }));
+[error]   220 |
+[error] > 221 |     try {
+[error]       |     ^
+[error]   222 |       const hasAccess = await SubscriptionService.hasFeatureAccess(
+[error]   223 |         userId,
+[error]   224 |         'premiumThemes'
+[error] src/components/PremiumThemeShowcase.tsx: SyntaxError: Expression expected. (200:14)
+[error]   198 |               onChange={(e: any) => // auto: implicit any setSearchTerm(e.target.value)}
+[error]   199 |               className="search-input"
+[error] > 200 |             />
+[error]       |              ^
+[error]   201 |             <span className="search-icon">🔍</span>
+[error]   202 |           </div>
+[error]   203 |
+[error] src/components/PremiumUsageTracker.tsx: SyntaxError: '{' expected. (51:5)
+[error]   49 |     setUsageData((prev: any) => // auto: implicit any ({ ...prev, isLoading: true, error: undefined }));
+[error]   50 |
+[error] > 51 |     try {
+[error]      |     ^
+[error]   52 |       const summary = await PremiumVoiceService.getUsageSummary(userId);
+[error]   53 |       setUsageData({
+[error]   54 |         ...summary,
+src/components/PricingPage.tsx 6ms (unchanged)
+[error] src/components/PushNotificationSettings.tsx: SyntaxError: '}' expected. (186:17)
+[error]   184 |                 onChange={(e: any) => // auto: implicit any handleToggleEnabled(e.target.checked)}
+[error]   185 |                 className="sr-only peer"
+[error] > 186 |                 disabled={status.isLoading}
+[error]       |                 ^
+[error]   187 |               />
+[error]   188 |               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+[error]   189 |             </label>
+[error] src/components/PushNotificationTester.tsx: SyntaxError: Expression expected. (96:5)
+[error]   94 |
+[error]   95 |       setTestResults((prev: any) => // auto: implicit any [result, ...prev.slice(0, 9)]); // Keep last 10 results
+[error] > 96 |     },
+[error]      |     ^
+[error]   97 |     []
+[error]   98 |   );
+[error]   99 |
+src/components/PWAInstallPrompt.tsx 6ms (unchanged)
+src/components/PWAStatusDashboard.tsx 16ms (unchanged)
+[error] src/components/QuickAlarmSetup.tsx: SyntaxError: Expression expected. (74:5)
+[error]   72 |     setSelectedDays((prev: any) => // auto: implicit any
+[error]   73 |       prev.includes(day) ? prev.filter((d: any) => // auto: implicit any d !== day) : [...prev, day]
+[error] > 74 |     );
+[error]      |     ^
+[error]   75 |   };
+[error]   76 |
+[error]   77 |   const handleSubmit = (e: React.FormEvent) => {
+[error] src/components/RewardsDashboard.tsx: SyntaxError: '{' expected. (246:17)
+[error]   244 |             <div className="grid gap-3">
+[error]   245 |               {rewardSystem.unlockedRewards.slice(0, 3).map((reward: any) => // auto: implicit any {
+[error] > 246 |                 const CategoryIcon = getCategoryIcon(reward.category);
+[error]       |                 ^
+[error]   247 |                 return (
+[error]   248 |                   <div
+[error]   249 |                     key={reward.id}
+src/components/RootErrorBoundary.tsx 8ms (unchanged)
+src/components/RTLContainer.tsx 1ms (unchanged)
+src/components/RTLFlex.tsx 1ms (unchanged)
+src/components/RTLForm.tsx 0ms (unchanged)
+src/components/RTLGrid.tsx 0ms (unchanged)
+src/components/RTLLayout/index.ts 1ms (unchanged)
+src/components/RTLLayout/RTLContainer.tsx 3ms (unchanged)
+src/components/RTLLayout/RTLFlex.tsx 3ms (unchanged)
+src/components/RTLLayout/RTLForm.tsx 11ms (unchanged)
+src/components/RTLLayout/RTLGrid.tsx 7ms (unchanged)
+src/components/RTLLayout/RTLText.tsx 4ms (unchanged)
+src/components/RTLText.tsx 1ms (unchanged)
+src/components/ScreenReaderProvider.tsx 7ms (unchanged)
+src/components/ServiceWorkerStatus.tsx 5ms (unchanged)
+[error] src/components/SettingsPage.tsx: SyntaxError: '}' expected. (272:13)
+[error]   270 |             onKeyDown={(e: any) => // auto: implicit any handleKeyDown(e, 'permissions')}
+[error]   271 |             className="w-full flex items-center justify-between p-1"
+[error] > 272 |             aria-expanded={activeSection === 'permissions'}
+[error]       |             ^
+[error]   273 |             aria-controls="permissions-content"
+[error]   274 |             aria-labelledby="permissions-heading"
+[error]   275 |           >
+[error] src/components/SignUpForm.tsx: SyntaxError: '{' expected. (97:5)
+[error]    95 |
+[error]    96 |     // Check password strength in real-time
+[error] >  97 |     if (field === 'password') {
+[error]       |     ^
+[error]    98 |       setPasswordStrength(SecurityService.checkPasswordStrength(value));
+[error]    99 |     }
+[error]   100 |
+[error] src/components/SleepTracker.tsx: SyntaxError: Expression expected. (220:23)
+[error]   218 |                       onChange={(e: any) => // auto: implicit any
+[error]   219 |                         setSleepEntry((prev: any) => // auto: implicit any ({ ...prev, date: e.target.value }))
+[error] > 220 |                       }
+[error]       |                       ^
+[error]   221 |                       className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
+[error]   222 |                     />
+[error]   223 |                   </div>
+[error] src/components/SmartAlarmDashboard.tsx: SyntaxError: '{' expected. (70:9)
+[error]   68 |
+[error]   69 |       for (const alarm of alarms.filter((a: any) => // auto: implicit any a.smartEnabled)) {
+[error] > 70 |         try {
+[error]      |         ^
+[error]   71 |           const times =
+[error]   72 |             await EnhancedSmartAlarmScheduler.calculateOptimalTimeSlots(alarm);
+[error]   73 |           timesMap.set(alarm.id, times);
+[error] src/components/SmartAlarmSettings.tsx: SyntaxError: Expression expected. (212:22)
+[error]   210 |                       onChange={(e: any) => // auto: implicit any setSmartEnabled(e.target.checked)}
+[error]   211 |                       className="sr-only peer"
+[error] > 212 |                     />
+[error]       |                      ^
+[error]   213 |                     <div className="w-11 h-6 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
+[error]   214 |                   </label>
+[error]   215 |                 </div>
+src/components/SmartFeatures.tsx 36ms
+src/components/SmartUpgradePrompt.tsx 17ms (unchanged)
+[error] src/components/SocialProof.tsx: SyntaxError: Expression expected. (59:5)
+[error]   57 |     const interval = setInterval(() => {
+[error]   58 |       setCurrentProofIndex((prev: any) => // auto: implicit any (prev + 1) % socialProofData.length);
+[error] > 59 |     }, 4000);
+[error]      |     ^
+[error]   60 |
+[error]   61 |     return () => clearInterval(interval);
+[error]   62 |   }, [socialProofData.length, autoRotate]);
+[error] src/components/SoundPicker.tsx: SyntaxError: '{' expected. (106:5)
+[error]   104 |       sound.tags?.some((tag: any) => // auto: implicit any tag.toLowerCase().includes(searchQuery.toLowerCase()));
+[error]   105 |
+[error] > 106 |     const matchesCategory =
+[error]       |     ^
+[error]   107 |       filterCategory === 'all' || sound.category === filterCategory;
+[error]   108 |
+[error]   109 |     return matchesSearch && matchesCategory;
+[error] src/components/SoundPreviewSystem.tsx: SyntaxError: '{' expected. (280:9)
+[error]   278 |     return () => {
+[error]   279 |       audioRefs.current.forEach((audio: any) => // auto: implicit any {
+[error] > 280 |         if (!audio.paused) {
+[error]       |         ^
+[error]   281 |           audio.pause();
+[error]   282 |         }
+[error]   283 |       });
+[error] src/components/SoundSettings.tsx: SyntaxError: ',' expected. (146:11)
+[error]   144 |       // Transform custom themes to match built-in theme format
+[error]   145 |       const transformedThemes = userCustomThemes.map((theme: any) => // auto: implicit any ({
+[error] > 146 |         id: theme.id,
+[error]       |           ^
+[error]   147 |         name: theme.displayName || theme.name,
+[error]   148 |         description: theme.description || 'Custom theme',
+[error]   149 |         category: 'custom',
+[error] src/components/SoundThemeDemo.tsx: SyntaxError: '{' expected. (180:5)
+[error]   178 |     setTestResults((prev: any) => // auto: implicit any ({ ...prev, [key]: 'testing' }));
+[error]   179 |
+[error] > 180 |     try {
+[error]       |     ^
+[error]   181 |       // Temporarily switch to theme for testing
+[error]   182 |       const originalTheme = soundEffectsService.getSoundTheme();
+[error]   183 |       if (themeId !== originalTheme) {
+[error] src/components/SoundUploader.tsx: SyntaxError: ')' expected. (206:7)
+[error]   204 |         uploadFile(item);
+[error]   205 |       }
+[error] > 206 |     });
+[error]       |       ^
+[error]   207 |   };
+[error]   208 |
+[error]   209 |   const uploadFile = async (item: UploadItem) => {
+src/components/SpecializedErrorBoundaries.tsx 7ms (unchanged)
+src/components/Statistics.tsx 17ms (unchanged)
+src/components/StreakCounter.tsx 12ms (unchanged)
+src/components/StrugglingSamWrapper.tsx 2ms (unchanged)
+src/components/SubscriptionModal.tsx 5ms (unchanged)
+src/components/SubscriptionStatus.tsx 12ms (unchanged)
+[error] src/components/SyncStatus.tsx: SyntaxError: ')' expected. (62:29)
+[error]   60 |     const handleOnline = () => {
+[error]   61 |       setStatus((prev: any) => // auto: implicit any ({ ...prev, isOnline: true }));
+[error] > 62 |       triggerSyncAnimation();
+[error]      |                             ^
+[error]   63 |     };
+[error]   64 |
+[error]   65 |     const handleOffline = () => {
+[error] src/components/TabProtectionSettings.tsx: SyntaxError: Unterminated regular expression literal. (95:11)
+[error]   93 |             checked={settings.enabled}
+[error]   94 |             onChange={(e: any) => // auto: implicit any updateSettings({ enabled: e.target.checked })}
+[error] > 95 |           />
+[error]      |           ^
+[error]   96 |           <div
+[error]   97 |             className={`w-11 h-6 bg-gray-200 dark:bg-gray-700 rounded-full peer peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full`}
+[error]   98 |           ></div>
+[error] src/components/TabProtectionWarning.tsx: SyntaxError: '{' expected. (38:9)
+[error]   36 |
+[error]   37 |       const upcoming = enabledAlarms.filter((alarm: any) => // auto: implicit any {
+[error] > 38 |         const today = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
+[error]      |         ^
+[error]   39 |
+[error]   40 |         // Check if alarm is set for today
+[error]   41 |         if (!alarm.days.includes(today)) {
+[error] src/components/ThemeCreator.tsx: SyntaxError: '{' expected. (260:7)
+[error]   258 |
+[error]   259 |       // Save to localStorage
+[error] > 260 |       const savedCustomThemes = JSON.parse(
+[error]       |       ^
+[error]   261 |         localStorage.getItem('custom-themes') || '[]'
+[error]   262 |       );
+[error]   263 |       savedCustomThemes.push(customTheme);
+[error] src/components/ThemeCustomizationStudio.tsx: SyntaxError: Expression expected. (28:8)
+[error]   26 |         onChange={(e: any) => // auto: implicit any onChange(e.target.value)}
+[error]   27 |         className="color-picker-input"
+[error] > 28 |       />
+[error]      |        ^
+[error]   29 |       <input
+[error]   30 |         type="text"
+[error]   31 |         value={color}
+src/components/ThemeDemo.tsx 16ms (unchanged)
+[error] src/components/ThemeGallery.tsx: SyntaxError: Expression expected. (270:5)
+[error]   268 |       !theme.description.toLowerCase().includes(searchQuery.toLowerCase()) &&
+[error]   269 |       !theme.tags.some((tag: any) => // auto: implicit any tag.toLowerCase().includes(searchQuery.toLowerCase()))
+[error] > 270 |     ) {
+[error]       |     ^
+[error]   271 |       return false;
+[error]   272 |     }
+[error]   273 |
+[error] src/components/ThemeManager.tsx: SyntaxError: '}' expected. (267:40)
+[error]   265 |                 <button
+[error]   266 |                   onClick={(e: any) => // auto: implicit any {
+[error] > 267 |                     e.stopPropagation();
+[error]       |                                        ^
+[error]   268 |                     toggleFavorite(quickTheme.id);
+[error]   269 |                   }}
+[error]   270 |                   className="absolute top-2 right-2 p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white"
+src/components/ThemeSelector.tsx 2ms (unchanged)
+src/components/ThemeStudio.tsx 5ms (unchanged)
+[error] src/components/TranslationDashboard.tsx: SyntaxError: '}' expected. (390:20)
+[error]   388 |                       </div>
+[error]   389 |                     </div>
+[error] > 390 |                   ))}
+[error]       |                    ^
+[error]   391 |                 </div>
+[error]   392 |               </div>
+[error]   393 |             )}
+src/components/ui/__tests__/button.a11y.test.tsx 19ms (unchanged)
+src/components/ui/__tests__/input.a11y.test.tsx 20ms (unchanged)
+src/components/ui/accordion.tsx 2ms (unchanged)
+src/components/ui/alert-dialog.tsx 3ms (unchanged)
+src/components/ui/alert.tsx 2ms (unchanged)
+src/components/ui/aspect-ratio.tsx 1ms (unchanged)
+src/components/ui/avatar.tsx 2ms (unchanged)
+src/components/ui/badge.tsx 2ms (unchanged)
+src/components/ui/breadcrumb.tsx 3ms (unchanged)
+src/components/ui/button.tsx 2ms (unchanged)
+src/components/ui/calendar.tsx 2ms (unchanged)
+src/components/ui/card.tsx 3ms (unchanged)
+src/components/ui/carousel.tsx 6ms (unchanged)
+[error] src/components/ui/chart.tsx: SyntaxError: '{' expected. (269:9)
+[error]   267 |     >
+[error]   268 |       {payload.map((item: any) => // auto: implicit any {
+[error] > 269 |         const key = `${nameKey || item.dataKey || 'value'}`;
+[error]       |         ^
+[error]   270 |         const itemConfig = getPayloadConfigFromPayload(config, item, key);
+[error]   271 |
+[error]   272 |         return (
+src/components/ui/checkbox.tsx 1ms (unchanged)
+src/components/ui/collapsible.tsx 1ms (unchanged)
+src/components/ui/command.tsx 5ms (unchanged)
+src/components/ui/context-menu.tsx 5ms (unchanged)
+src/components/ui/dialog.tsx 4ms (unchanged)
+src/components/ui/drawer.tsx 4ms (unchanged)
+src/components/ui/dropdown-menu.tsx 17ms (unchanged)
+src/components/ui/form.tsx 6ms (unchanged)
+src/components/ui/hover-card.tsx 2ms (unchanged)
+src/components/ui/input-otp.tsx 3ms (unchanged)
+src/components/ui/input.tsx 1ms (unchanged)
+src/components/ui/label.tsx 1ms (unchanged)
+src/components/ui/menubar.tsx 5ms (unchanged)
+src/components/ui/navigation-menu.tsx 4ms (unchanged)
+src/components/ui/pagination.tsx 4ms (unchanged)
+src/components/ui/popover.tsx 5ms (unchanged)
+src/components/ui/progress.tsx 1ms (unchanged)
+src/components/ui/radio-group.tsx 2ms (unchanged)
+src/components/ui/resizable.tsx 15ms (unchanged)
+src/components/ui/scroll-area.tsx 2ms (unchanged)
+src/components/ui/select.tsx 8ms (unchanged)
+src/components/ui/separator.tsx 1ms (unchanged)
+src/components/ui/sheet.tsx 5ms (unchanged)
+[error] src/components/ui/sidebar.tsx: SyntaxError: Expression expected. (96:3)
+[error]   94 |   const toggleSidebar = React.useCallback(() => {
+[error]   95 |     return isMobile ? setOpenMobile((open: any) => // auto: implicit any !open) : setOpen((open: any) => // auto: implicit any !open);
+[error] > 96 |   }, [isMobile, setOpen, setOpenMobile]);
+[error]      |   ^
+[error]   97 |
+[error]   98 |   // Adds a keyboard shortcut to toggle the sidebar.
+[error]   99 |   React.useEffect(() => {
+src/components/ui/skeleton.tsx 1ms (unchanged)
+src/components/ui/slider.tsx 2ms (unchanged)
+src/components/ui/sonner.tsx 1ms (unchanged)
+src/components/ui/switch.tsx 4ms (unchanged)
+src/components/ui/table.tsx 2ms (unchanged)
+src/components/ui/tabs.tsx 2ms (unchanged)
+src/components/ui/textarea.tsx 1ms (unchanged)
+src/components/ui/toggle-group.tsx 2ms (unchanged)
+src/components/ui/toggle.tsx 2ms (unchanged)
+src/components/ui/tooltip.tsx 2ms (unchanged)
+src/components/UpgradePrompt.tsx 10ms (unchanged)
+src/components/user-testing/ABTestWrapper.tsx 5ms (unchanged)
+[error] src/components/user-testing/BetaTestingProgram.tsx: SyntaxError: ',' expected. (209:19)
+[error]   207 |       currentParticipants: 0,
+[error]   208 |       features: newProgram.features.filter((f: any) => // auto: implicit any f.trim()),
+[error] > 209 |       requirements: newProgram.requirements.filter((r: any) => // auto: implicit any r.trim()),
+[error]       |                   ^
+[error]   210 |       rewards: newProgram.rewards.filter((r: any) => // auto: implicit any r.trim()),
+[error]   211 |     };
+[error]   212 |
+[error] src/components/user-testing/BugReportModal.tsx: SyntaxError: Expression expected. (156:3)
+[error]   154 |   const removeTag = (tagToRemove: string) => {
+[error]   155 |     setTags(tags.filter((tag: any) => // auto: implicit any tag !== tagToRemove));
+[error] > 156 |   };
+[error]       |   ^
+[error]   157 |
+[error]   158 |   const handleSubmit = async (e: React.FormEvent) => {
+[error]   159 |     e.preventDefault();
+[error] src/components/user-testing/FeedbackModal.tsx: SyntaxError: '}' expected. (274:19)
+[error]   272 |                   onChange={(e: any) => // auto: implicit any setTitle(e.target.value)}
+[error]   273 |                   placeholder="Brief summary of your feedback"
+[error] > 274 |                   className="mt-1"
+[error]       |                   ^
+[error]   275 |                   required
+[error]   276 |                 />
+[error]   277 |               </div>
+src/components/user-testing/FeedbackWidget.tsx 7ms (unchanged)
+src/components/user-testing/index.ts 1ms (unchanged)
+[error] src/components/user-testing/RedesignedFeedbackModal.tsx: SyntaxError: ')' expected. (214:58)
+[error]   212 |         setFeedbackData((prev: any) => // auto: implicit any ({ ...prev, screenshot: screenshotData }));
+[error]   213 |
+[error] > 214 |         stream.getTracks().forEach(track => track.stop());
+[error]       |                                                          ^
+[error]   215 |       });
+[error]   216 |     } catch (error) {
+[error]   217 |       console.error('Failed to take screenshot:', error);
+[error] src/components/user-testing/RedesignedFeedbackWidget.tsx: SyntaxError: Expression expected. (155:5)
+[error]   153 |       setCurrentPoints((prev: any) => // auto: implicit any prev + rewardPoints);
+[error]   154 |       setRecentFeedbackCount((prev: any) => // auto: implicit any prev + 1);
+[error] > 155 |     }
+[error]       |     ^
+[error]   156 |   };
+[error]   157 |
+[error]   158 |   const getLevelProgress = () => {
+[error] src/components/user-testing/UsabilityAnalyticsDashboard.tsx: SyntaxError: ',' expected. (130:17)
+[error]   128 |         sessions.length > 0 ? events.length / sessions.length : 0,
+[error]   129 |       uniqueUsers: new Set(sessions.map((s: any) => // auto: implicit any s.userId)).size,
+[error] > 130 |       bounceRate: 0.15, // Mock value
+[error]       |                 ^
+[error]   131 |     };
+[error]   132 |   };
+[error]   133 |
+[error] src/components/UserProfile.tsx: SyntaxError: Expression expected. (46:5)
+[error]   44 |     if (field === 'name') {
+[error]   45 |       setEditForm((prev: any) => // auto: implicit any ({ ...prev, name: value }));
+[error] > 46 |     } else {
+[error]      |     ^
+[error]   47 |       setEditForm((prev: any) => // auto: implicit any ({
+[error]   48 |         ...prev,
+[error]   49 |         preferences: { ...prev.preferences, [field]: value },
+[error] src/components/VirtualScroll.tsx: SyntaxError: Expression expected. (49:5)
+[error]   47 |       0,
+[error]   48 |       cumulativeHeights.findIndex((height: any) => // auto: implicit any height >= scrollTop) - 1
+[error] > 49 |     );
+[error]      |     ^
+[error]   50 |
+[error]   51 |     const endIndex = Math.min(
+[error]   52 |       items.length - 1,
+[error] src/components/VisualAlarmDisplay.tsx: SyntaxError: '{' expected. (137:9)
+[error]   135 |     setParticles((prevParticles: any) => // auto: implicit any
+[error]   136 |       prevParticles.map((particle: any) => // auto: implicit any {
+[error] > 137 |         const newParticle = { ...particle };
+[error]       |         ^
+[error]   138 |
+[error]   139 |         // Update position
+[error]   140 |         newParticle.x += newParticle.vx;
+[error] src/components/VoiceAnalyticsDashboard.tsx: SyntaxError: JSX expressions must have one parent element. (264:17)
+[error]   262 |                 className="bg-white border border-slate-200 rounded-xl px-4 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+[error]   263 |               >
+[error] > 264 |                 <option value="7d">Last 7 days</option>
+[error]       |                 ^
+[error]   265 |                 <option value="30d">Last 30 days</option>
+[error]   266 |                 <option value="90d">Last 90 days</option>
+[error]   267 |                 <option value="all">All time</option>
+[error] src/components/VoiceCloning.tsx: SyntaxError: ')' expected. (88:58)
+[error]   86 |
+[error]   87 |         setSamples((prev: any) => // auto: implicit any [...prev, newSample]);
+[error] > 88 |         stream.getTracks().forEach(track => track.stop());
+[error]      |                                                          ^
+[error]   89 |       };
+[error]   90 |
+[error]   91 |       mediaRecorderRef.current = mediaRecorder;
+[error] src/components/VoicePersonalitySelector.tsx: SyntaxError: '}' expected. (300:36)
+[error]   298 |             <button
+[error]   299 |               onClick={(e: any) => // auto: implicit any {
+[error] > 300 |                 e.stopPropagation();
+[error]       |                                    ^
+[error]   301 |                 playPreview(personality.id as VoiceMood);
+[error]   302 |               }}
+[error]   303 |               className="p-2 bg-black/30 hover:bg-black/50 rounded-full transition-colors"
+[error] src/components/VoiceSelector.tsx: SyntaxError: '}' expected. (133:16)
+[error]   131 |                   {characteristic}
+[error]   132 |                 </span>
+[error] > 133 |               ))}
+[error]       |                ^
+[error]   134 |               {personality.characteristics.length > 3 && (
+[error]   135 |                 <span className="px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+[error]   136 |                   +{personality.characteristics.length - 3} more
+[error] src/components/VoiceSettings.tsx: SyntaxError: Expression expected. (103:7)
+[error]   101 |   const handleVoiceMoodChange = (mood: VoiceMood, voiceId: string) => {
+[error]   102 |     setVoiceMappings((prev: any) => // auto: implicit any ({
+[error] > 103 |       ...prev,
+[error]       |       ^
+[error]   104 |       [mood]: voiceId,
+[error]   105 |     }));
+[error]   106 |   };
+[error] src/components/WakeUpFeedbackModal.tsx: SyntaxError: Expression expected. (105:3)
+[error]   103 |   const updateFeedback = (updates: Partial<WakeUpFeedback>) => {
+[error]   104 |     setFeedback((prev: any) => // auto: implicit any ({ ...prev, ...updates }));
+[error] > 105 |   };
+[error]       |   ^
+[error]   106 |
+[error]   107 |   if (!isOpen) return null;
+[error]   108 |
+src/config/convertkit-config.ts 20ms (unchanged)
+src/config/convertkit-generated.ts 2ms (unchanged)
+src/config/environment.ts 11ms (unchanged)
+src/config/i18n.ts 26ms (unchanged)
+src/config/initializeApp.ts 2ms (unchanged)
+src/config/stripe.ts 5ms (unchanged)
+src/config/themes.ts 23ms (unchanged)
+src/constants/initialState.ts 9ms (unchanged)
+src/contexts/FeatureAccessContext.tsx 16ms
+src/contexts/LanguageContext.tsx 11ms (unchanged)
+src/contexts/StrugglingsamContext.tsx 22ms (unchanged)
+src/data/emotional-message-templates.ts 7ms (unchanged)
+src/hooks/__tests__/edge-cases/useAdvancedAlarms.edge.test.ts 4ms (unchanged)
+src/hooks/__tests__/edge-cases/useAuth.edge.test.ts 25ms (unchanged)
+src/hooks/__tests__/edge-cases/usePWA.edge.test.ts 8ms (unchanged)
+src/hooks/__tests__/edge-cases/useSubscription.edge.test.ts 19ms (unchanged)
+src/hooks/__tests__/integration/cross-hook.integration.test.tsx 19ms (unchanged)
+src/hooks/__tests__/integration/useAdvancedAlarms.integration.test.tsx 4ms (unchanged)
+src/hooks/__tests__/integration/useAuth.integration.test.tsx 20ms (unchanged)
+src/hooks/__tests__/integration/useFeatureGate.integration.test.tsx 13ms (unchanged)
+src/hooks/__tests__/integration/usePWA.integration.test.tsx 21ms (unchanged)
+src/hooks/__tests__/useABTesting.test.tsx 12ms (unchanged)
+src/hooks/__tests__/useAccessibilityPreferences.test.ts 8ms (unchanged)
+[error] src/hooks/__tests__/useAdvancedAlarms.test.ts: SyntaxError: Declaration or statement expected. (195:1)
+[error]   193 |   });
+[error]   194 | })
+[error] > 195 | });
+[error]       | ^
+[error]   196 |
+src/hooks/__tests__/useAlarmRingingAnnouncements.test.ts 10ms (unchanged)
+src/hooks/__tests__/useAuth.test.ts 24ms (unchanged)
+src/hooks/__tests__/useCapacitor.test.ts 11ms (unchanged)
+src/hooks/__tests__/useEnhancedSmartAlarms.test.ts 16ms (unchanged)
+src/hooks/__tests__/useErrorLoadingAnnouncements.test.ts 14ms (unchanged)
+src/hooks/__tests__/useFeatureGate.test.ts 20ms (unchanged)
+src/hooks/__tests__/useFormAnnouncements.test.ts 11ms (unchanged)
+src/hooks/__tests__/useMobileTouch.test.ts 18ms (unchanged)
+src/hooks/__tests__/usePushNotifications.test.ts 15ms (unchanged)
+src/hooks/__tests__/usePWA.test.ts 27ms (unchanged)
+src/hooks/__tests__/useSubscription.test.ts 29ms (unchanged)
+src/hooks/__tests__/useTheme.test.tsx 14ms (unchanged)
+src/hooks/use-mobile.ts 2ms (unchanged)
+[error] src/hooks/useABTesting.tsx: SyntaxError: '{' expected. (79:5)
+[error]   77 |     setState((prev: any) => // auto: implicit any ({ ...prev, loading: true, error: null }));
+[error]   78 |
+[error] > 79 |     try {
+[error]      |     ^
+[error]   80 |       // Check if user already has an A/B test assignment
+[error]   81 |       let userAssignment =
+[error]   82 |         await StrugglingSamApiService.getUserABTestAssignment(userId);
+[error] src/hooks/useAccessibility.ts: SyntaxError: ')' expected. (40:31)
+[error]   38 |     // Subscribe to changes
+[error]   39 |     const unsubscribe = accessibilityService.current.subscribe((newPrefs: any) => // auto: implicit any {
+[error] > 40 |       setPreferences(newPrefs);
+[error]      |                               ^
+[error]   41 |       setState(accessibilityService.current!.getState());
+[error]   42 |     });
+[error]   43 |
+src/hooks/useAccessibilityPreferences.ts 5ms (unchanged)
+[error] src/hooks/useAdvancedAlarms.ts: SyntaxError: ')' expected. (47:21)
+[error]   45 |       const newAlarm = await AlarmService.createAlarm(alarmData);
+[error]   46 |       setAlarms((prev: any) => // auto: implicit any [...prev, newAlarm]);
+[error] > 47 |       setError(null);
+[error]      |                     ^
+[error]   48 |       return newAlarm;
+[error]   49 |     } catch (error) {
+[error]   50 |       console.error('Error creating alarm:', error);
+src/hooks/useAlarmRingingAnnouncements.ts 10ms (unchanged)
+src/hooks/useAnalytics.ts 9ms (unchanged)
+src/hooks/useAnimations.ts 22ms (unchanged)
+[error] src/hooks/useAudioLazyLoading.ts: SyntaxError: '{' expected. (36:5)
+[error]   34 |     setState((prev: any) => // auto: implicit any ({ ...prev, state: 'loading', error: null }));
+[error]   35 |
+[error] > 36 |     try {
+[error]      |     ^
+[error]   37 |       const entry = await lazyAudioLoader.queueSound(sound, priority, {
+[error]   38 |         onProgress: (progress: AudioLoadProgress) => {
+[error]   39 |           setState((prev: any) => // auto: implicit any ({
+[error] src/hooks/useAuth.ts: SyntaxError: Expression expected. (62:11)
+[error]   60 |
+[error]   61 |         setAuthState((prev: any) => // auto: implicit any ({
+[error] > 62 |           ...prev,
+[error]      |           ^
+[error]   63 |           user,
+[error]   64 |           isInitialized: true,
+[error]   65 |           csrfToken,
+src/hooks/useAuthAnnouncements.ts 10ms (unchanged)
+[error] src/hooks/useCapacitor.ts: SyntaxError: Expression expected. (253:5)
+[error]   251 |     const handleAlarmSnoozed = (data: any) => {
+[error]   252 |       setNotificationActions((prev: any) => // auto: implicit any [...prev, `snoozed-${data.alarmId}`]);
+[error] > 253 |     };
+[error]       |     ^
+[error]   254 |
+[error]   255 |     const handleAlarmDismissed = (data: any) => {
+[error]   256 |       setNotificationActions((prev: any) => // auto: implicit any [...prev, `dismissed-${data.alarmId}`]);
+[error] src/hooks/useCriticalPreloading.ts: SyntaxError: '{' expected. (48:5)
+[error]   46 |     setState((prev: any) => // auto: implicit any ({ ...prev, isAnalyzing: true }));
+[error]   47 |
+[error] > 48 |     try {
+[error]      |     ^
+[error]   49 |       const criticalAssets = await criticalPreloader.analyzeCriticalAssets(alarms);
+[error]   50 |
+[error]   51 |       // Verify readiness for all alarms
+src/hooks/useCulturalTheme.tsx 8ms (unchanged)
+[error] src/hooks/useDeviceCapabilities.tsx: SyntaxError: '{' expected. (118:9)
+[error]   116 |     const unsubscribeAlerts = performanceBudgetManager.onAlert(alert => {
+[error]   117 |       setActiveAlerts((prev: any) => // auto: implicit any {
+[error] > 118 |         const existing = prev.find((a: any) => // auto: implicit any a.id === alert.id);
+[error]       |         ^
+[error]   119 |         if (existing) {
+[error]   120 |           // Update existing alert
+[error]   121 |           return prev.map((a: any) => // auto: implicit any (a.id === alert.id ? alert : a));
+src/hooks/useDynamicFocus.ts 10ms (unchanged)
+[error] src/hooks/useEmotionalNotifications.ts: SyntaxError: '{' expected. (61:7)
+[error]   59 |       setState((prev: any) => // auto: implicit any ({ ...prev, isLoading: true, error: null }));
+[error]   60 |
+[error] > 61 |       try {
+[error]      |       ^
+[error]   62 |         const notification =
+[error]   63 |           await emotionalIntelligenceService.generateEmotionalNotification(userId);
+[error]   64 |
+[error] src/hooks/useEnhancedCaching.ts: SyntaxError: Expression expected. (52:7)
+[error]   50 |
+[error]   51 |     setCacheState((prev: any) => // auto: implicit any ({
+[error] > 52 |       ...prev,
+[error]      |       ^
+[error]   53 |       stats,
+[error]   54 |       memoryPressure,
+[error]   55 |     }));
+[error] src/hooks/useEnhancedServiceWorker.ts: SyntaxError: '{' expected. (29:7)
+[error]   27 |       setState((prev: any) => // auto: implicit any ({ ...prev, error: null }));
+[error]   28 |
+[error] > 29 |       const success = await ServiceWorkerManager.initialize();
+[error]      |       ^
+[error]   30 |
+[error]   31 |       if (success) {
+[error]   32 |         const permission = await ServiceWorkerManager.requestNotificationPermission();
+[error] src/hooks/useEnhancedSmartAlarms.ts: SyntaxError: '{' expected. (82:11)
+[error]   80 |
+[error]   81 |           // Start monitoring if enabled
+[error] > 82 |           if (newAlarm.enabled && newAlarm.realTimeAdaptation) {
+[error]      |           ^
+[error]   83 |             await RealTimeSmartAdapter.startMonitoringAlarm(newAlarm);
+[error]   84 |           }
+[error]   85 |
+src/hooks/useErrorLoadingAnnouncements.ts 25ms (unchanged)
+[error] src/hooks/useFeatureGate.ts: SyntaxError: Expression expected. (177:11)
+[error]   175 |       if (!subscription.featureAccess) {
+[error]   176 |         setGateResult((prev: any) => // auto: implicit any ({
+[error] > 177 |           ...prev,
+[error]       |           ^
+[error]   178 |           hasAccess: false,
+[error]   179 |           isGated: true,
+[error]   180 |           upgradeMessage: 'Loading subscription data...',
+src/hooks/useFocusRestoration.ts 11ms (unchanged)
+[error] src/hooks/useFocusTrap.ts: SyntaxError: '{' expected. (248:5)
+[error]   246 |
+[error]   247 |     // Create start sentinel
+[error] > 248 |     const startSentinel = document.createElement('div');
+[error]       |     ^
+[error]   249 |     startSentinel.setAttribute('tabindex', '0');
+[error]   250 |     startSentinel.setAttribute('data-focus-sentinel', 'start');
+[error]   251 |     startSentinel.setAttribute('aria-hidden', 'true');
+src/hooks/useFormAnnouncements.ts 7ms (unchanged)
+src/hooks/useGamingAnnouncements.ts 29ms (unchanged)
+src/hooks/useI18n.ts 12ms (unchanged)
+src/hooks/useKeyboardNavigation.ts 16ms (unchanged)
+src/hooks/useMediaContentAnnouncements.ts 13ms (unchanged)
+[error] src/hooks/useMobilePerformance.ts: SyntaxError: Expression expected. (54:13)
+[error]   52 |         (navigator as any).getBattery().then((battery: any) => {
+[error]   53 |           setMetrics((prev: any) => // auto: implicit any ({
+[error] > 54 |             ...prev,
+[error]      |             ^
+[error]   55 |             batteryLevel: battery.level,
+[error]   56 |             batteryCharging: battery.charging,
+[error]   57 |           }));
+src/hooks/useMobileTouch.ts 7ms (unchanged)
+src/hooks/useNavigationAnnouncements.ts 9ms (unchanged)
+src/hooks/useProfileAnnouncements.ts 7ms (unchanged)
+[error] src/hooks/usePushNotifications.ts: SyntaxError: Expression expected. (53:9)
+[error]   51 |     try {
+[error]   52 |       setStatus((prev: any) => // auto: implicit any ({
+[error] > 53 |         ...prev,
+[error]      |         ^
+[error]   54 |         hasPermission: PushNotificationService.hasPermission(),
+[error]   55 |         currentToken: PushNotificationService.getCurrentToken(),
+[error]   56 |         settings: PushNotificationService.getSettings(),
+[error] src/hooks/usePWA.ts: SyntaxError: ')' expected. (273:7)
+[error]   271 |       type: 'QUEUE_SYNC',
+[error]   272 |       data: item,
+[error] > 273 |     });
+[error]       |       ^
+[error]   274 |   }, []);
+[error]   275 |
+[error]   276 |   const clearQueue = useCallback(() => {
+src/hooks/useRTL.ts 9ms (unchanged)
+src/hooks/useScreenReaderAnnouncements.ts 10ms (unchanged)
+src/hooks/useSettingsAnnouncements.ts 8ms (unchanged)
+src/hooks/useSmartFeaturesAnnouncements.ts 11ms (unchanged)
+src/hooks/useSoundEffects.tsx 15ms (unchanged)
+[error] src/hooks/useSubscription.ts: SyntaxError: '{' expected. (159:7)
+[error]   157 |       setState((prev: any) => // auto: implicit any ({ ...prev, isLoading: true, error: null }));
+[error]   158 |
+[error] > 159 |       try {
+[error]       |       ^
+[error]   160 |         const dashboardData =
+[error]   161 |           await subscriptionService.current.getSubscriptionDashboard(userId);
+[error]   162 |         const featureAccess =
+src/hooks/useTabProtectionAnnouncements.ts 12ms (unchanged)
+src/hooks/useTabProtectionSettings.ts 8ms (unchanged)
+[error] src/hooks/useTheme.tsx: SyntaxError: ')' expected. (2200:33)
+[error]   2198 |     // Listen for sync status changes
+[error]   2199 |     const unsubscribe = syncService.onStatusChange((status: any) => // auto: implicit any {
+[error] > 2200 |       setCloudSyncStatus(status);
+[error]        |                                 ^
+[error]   2201 |       // Notify all registered listeners
+[error]   2202 |       syncListenersRef.current.forEach((listener: any) => // auto: implicit any listener(status));
+[error]   2203 |     });
+src/index.css 17ms (unchanged)
+src/lib/utils.ts 1ms (unchanged)
+src/main.tsx 3ms (unchanged)
+src/services/__tests__/alarm.test.ts 44ms (unchanged)
+src/services/__tests__/analytics.test.ts 11ms (unchanged)
+src/services/__tests__/error-handler.test.ts 29ms (unchanged)
+src/services/__tests__/performance-monitor.test.ts 18ms (unchanged)
+src/services/__tests__/push-notifications.test.ts 17ms (unchanged)
+src/services/__tests__/README.md 56ms (unchanged)
+src/services/__tests__/subscription.test.ts 36ms (unchanged)
+[error] src/services/__tests__/test-setup.ts: SyntaxError: ',' expected. (109:10)
+[error]   107 | // Mock PerformanceObserver
+[error]   108 | global.PerformanceObserver = jest.fn().mockImplementation((callback: any) => // auto: implicit any ({
+[error] > 109 |   observe: jest.fn(),
+[error]       |          ^
+[error]   110 |   disconnect: jest.fn(),
+[error]   111 |   takeRecords: jest.fn(() => []),
+[error]   112 | })) as any;
+src/services/__tests__/theme-accessibility.test.ts 10ms (unchanged)
+src/services/__tests__/theme-persistence.test.ts 10ms (unchanged)
+src/services/__tests__/voice.test.ts 34ms (unchanged)
+src/services/accessibility-preferences.ts 11ms (unchanged)
+src/services/additional-app-specific-test-scenarios.ts 5ms (unchanged)
+src/services/advanced-alarm-scheduler.ts 4ms (unchanged)
+[error] src/services/advanced-analytics.ts: SyntaxError: ',' expected. (527:24)
+[error]   525 |         successfulWakeups:
+[error]   526 |           todayEvents?.filter((e: any) => // auto: implicit any e.dismissed && !e.snoozed).length || 0,
+[error] > 527 |         avgResponseTime: this.calculateAverageResponseTime(todayEvents || []),
+[error]       |                        ^
+[error]   528 |         streak: await this.calculateCurrentStreak(userId),
+[error]   529 |       };
+[error]   530 |
+[error] src/services/advanced-conditions-helper.ts: SyntaxError: '{' expected. (156:5)
+[error]   154 |     const conditions = alarm.conditionBasedAdjustments || [];
+[error]   155 |     const enabledConditions = conditions.filter((c: any) => // auto: implicit any c.isEnabled).length;
+[error] > 156 |     const totalConditions = conditions.length;
+[error]       |     ^
+[error]   157 |
+[error]   158 |     const issues: string[] = [];
+[error]   159 |     const recommendations: string[] = [];
+src/services/ai-rewards.ts 36ms (unchanged)
+src/services/alarm-access-control.ts 13ms (unchanged)
+src/services/alarm-api-security.ts 52ms (unchanged)
+[error] src/services/alarm-backup-redundancy.ts: SyntaxError: Expression expected. (657:9)
+[error]   655 |       const backupKeys = keys
+[error]   656 |         .filter((key: any) => // auto: implicit any key.startsWith(AlarmBackupRedundancyService.BACKUP_PREFIX))
+[error] > 657 |         .sort()
+[error]       |         ^
+[error]   658 |         .reverse();
+[error]   659 |
+[error]   660 |       if (backupKeys.length <= AlarmBackupRedundancyService.MAX_LOCAL_BACKUPS) {
+src/services/alarm-battle-integration.ts 15ms (unchanged)
+src/services/alarm-enhanced.ts 21ms (unchanged)
+src/services/alarm-executor.ts 17ms (unchanged)
+[error] src/services/alarm-integrity-monitor.ts: SyntaxError: ')' expected. (95:49)
+[error]   93 |     const secureStorage = SecureAlarmStorageService.getInstance();
+[error]   94 |     secureStorage.onTamperDetected((details: any) => // auto: implicit any {
+[error] > 95 |       this.handleStorageTamperDetection(details);
+[error]      |                                                 ^
+[error]   96 |     });
+[error]   97 |
+[error]   98 |     // Register for general security events
+src/services/alarm-parser.ts 10ms (unchanged)
+src/services/alarm-rate-limiting.ts 32ms (unchanged)
+src/services/alarm-security-integration.ts 23ms (unchanged)
+[error] src/services/alarm.ts: SyntaxError: Expression expected. (30:11)
+[error]   28 |       this.alarms = alarmData
+[error]   29 |         .map((alarm: any) => // auto: implicit any ({
+[error] > 30 |           ...alarm,
+[error]      |           ^
+[error]   31 |           createdAt: new Date(alarm.createdAt),
+[error]   32 |           updatedAt: new Date(alarm.updatedAt),
+[error]   33 |           lastTriggered: alarm.lastTriggered
+src/services/analytics-config.ts 10ms (unchanged)
+src/services/analytics.ts 18ms
+src/services/animation-manager.ts 13ms (unchanged)
+src/services/app-analytics.ts 12ms (unchanged)
+src/services/app-specific-test-scenarios.ts 11ms (unchanged)
+src/services/audio-manager.ts 64ms (unchanged)
+src/services/battle.ts 17ms (unchanged)
+[error] src/services/capacitor-enhanced.ts: SyntaxError: Expression expected. (310:5)
+[error]   308 |       const pending = await LocalNotifications.getPending();
+[error]   309 |       return pending.notifications.filter((n: any) => // auto: implicit any n.extra?.type === 'alarm');
+[error] > 310 |     } catch (error) {
+[error]       |     ^
+[error]   311 |       console.error('[Capacitor] Failed to get pending alarms:', error);
+[error]   312 |       return [];
+[error]   313 |     }
+src/services/capacitor.ts 7ms (unchanged)
+src/services/CloudSyncService.ts 15ms (unchanged)
+src/services/contextual-themes.ts 21ms (unchanged)
+src/services/convertkit-service.ts 18ms (unchanged)
+src/services/critical-preloader.ts 18ms (unchanged)
+src/services/custom-sound-manager.ts 17ms (unchanged)
+src/services/custom-test-scenarios.ts 18ms (unchanged)
+src/services/device-capabilities.ts 26ms (unchanged)
+src/services/email-campaign.ts 20ms (unchanged)
+[error] src/services/email-campaigns.ts: SyntaxError: '{' expected. (487:7)
+[error]   485 |       const sequence = campaignData.sequences.find((seq: any) => // auto: implicit any seq.id === sequenceId);
+[error]   486 |
+[error] > 487 |       if (!sequence) {
+[error]       |       ^
+[error]   488 |         throw new Error(`Sequence ${sequenceId} not found for persona ${persona}`);
+[error]   489 |       }
+[error]   490 |
+src/services/emotional-intelligence.ts 22ms (unchanged)
+src/services/enhanced-cache-manager.ts 32ms (unchanged)
+src/services/enhanced-calendar-service.ts 36ms (unchanged)
+src/services/enhanced-location-service.ts 32ms (unchanged)
+src/services/enhanced-offline-storage.ts 24ms (unchanged)
+src/services/enhanced-smart-alarm-scheduler.ts 27ms (unchanged)
+src/services/error-handler.ts 28ms (unchanged)
+src/services/feature-gate-service.ts 18ms (unchanged)
+src/services/health-tracker-integration.ts 50ms (unchanged)
+src/services/lazy-audio-loader.ts 15ms (unchanged)
+src/services/ml-alarm-optimizer.ts 27ms (unchanged)
+src/services/mobile-performance.ts 18ms (unchanged)
+src/services/mobile-touch.ts 12ms (unchanged)
+src/services/notification.ts 15ms (unchanged)
+src/services/nuclear-mode.ts 23ms (unchanged)
+src/services/offline-analytics.ts 19ms (unchanged)
+src/services/offline-gaming.ts 15ms (unchanged)
+[error] src/services/offline-manager.ts: SyntaxError: Expression expected. (233:9)
+[error]   231 |       return alarms
+[error]   232 |         .filter((alarm: any) => // auto: implicit any alarm.operation !== 'delete')
+[error] > 233 |         .map(({ syncStatus, lastModified, operation, ...alarm }) => alarm as Alarm);
+[error]       |         ^
+[error]   234 |     } catch (error) {
+[error]   235 |       console.error('Failed to get offline alarms:', error);
+[error]   236 |       return [];
+src/services/offline-sleep-tracker.ts 34ms (unchanged)
+src/services/offline-storage.ts 16ms (unchanged)
+src/services/performance-analytics.ts 20ms (unchanged)
+src/services/performance-budget-manager.ts 29ms (unchanged)
+src/services/performance-monitor.ts 29ms (unchanged)
+[error] src/services/predictive-analytics-service.ts: SyntaxError: '{' expected. (767:5)
+[error]   765 |     // Analyze alarm frequency and distribution
+[error]   766 |     const activeAlarms = alarms.filter((a: any) => // auto: implicit any a.enabled);
+[error] > 767 |     if (activeAlarms.length > 5) {
+[error]       |     ^
+[error]   768 |       insights.push({
+[error]   769 |         id: this.generateInsightId(),
+[error]   770 |         userId,
+src/services/premium-theme-animations.ts 10ms (unchanged)
+src/services/premium-voice.ts 13ms (unchanged)
+[error] src/services/premium.ts: SyntaxError: ',' expected. (429:23)
+[error]   427 |         },
+[error]   428 |         featuresUnlocked: unlockedFeatures.map((f: any) => // auto: implicit any f.id),
+[error] > 429 |         featuresLocked: lockedFeatures.map(f => f.id),
+[error]       |                       ^
+[error]   430 |       },
+[error]   431 |     };
+[error]   432 |   }
+src/services/privacy-compliance.ts 14ms (unchanged)
+src/services/push-notifications.ts 26ms (unchanged)
+src/services/pwa-manager.ts 10ms (unchanged)
+src/services/pwa-service.ts 15ms (unchanged)
+src/services/real-time-smart-adapter.ts 18ms (unchanged)
+[error] src/services/realtime-service.ts: SyntaxError: Expression expected. (626:5)
+[error]   624 |
+[error]   625 |       return alarms?.map((a: any) => // auto: implicit any a.id).join(',') || '';
+[error] > 626 |     } catch (error) {
+[error]       |     ^
+[error]   627 |       console.error('Failed to get user alarm IDs:', error);
+[error]   628 |       return '';
+[error]   629 |     }
+[error] src/services/revenue-analytics.ts: SyntaxError: '{' expected. (151:7)
+[error]   149 |     let totalMRR = 0;
+[error]   150 |     data?.forEach((subscription: any) => // auto: implicit any {
+[error] > 151 |       const monthlyAmount =
+[error]       |       ^
+[error]   152 |         subscription.billingInterval === 'year'
+[error]   153 |           ? subscription.amount / 12
+[error]   154 |           : subscription.amount;
+src/services/scheduler-core.ts 29ms (unchanged)
+[error] src/services/secure-alarm-storage.ts: SyntaxError: Expression expected. (339:9)
+[error]   337 |       const backupKeys = keys
+[error]   338 |         .filter((key: any) => // auto: implicit any key.startsWith(SecureAlarmStorageService.BACKUP_KEY_PREFIX))
+[error] > 339 |         .sort()
+[error]       |         ^
+[error]   340 |         .reverse(); // Most recent first
+[error]   341 |
+[error]   342 |       for (const backupKey of backupKeys) {
+src/services/secure-push-notification.ts 30ms (unchanged)
+src/services/security-monitoring-forensics.ts 59ms (unchanged)
+src/services/security.ts 14ms (unchanged)
+[error] src/services/sentry.ts: SyntaxError: '{' expected. (162:7)
+[error]   160 |     return Sentry.withScope((scope: any) => // auto: implicit any {
+[error]   161 |       // Set error level
+[error] > 162 |       if (context.level) {
+[error]       |       ^
+[error]   163 |         scope.setLevel(context.level);
+[error]   164 |       }
+[error]   165 |
+src/services/service-worker-manager.ts 10ms (unchanged)
+src/services/sleep-analysis.ts 26ms (unchanged)
+[error] src/services/smart-alarm-scheduler.ts: SyntaxError: ',' expected. (611:16)
+[error]   609 |
+[error]   610 |       return data.map((item: any) => // auto: implicit any ({
+[error] > 611 |         alarmId: item.alarm_id,
+[error]       |                ^
+[error]   612 |         optimizationType: item.optimization_type,
+[error]   613 |         oldTime: item.old_time,
+[error]   614 |         newTime: item.new_time,
+src/services/smart-notification-service.ts 30ms (unchanged)
+src/services/sound-effects.ts 63ms (unchanged)
+src/services/stripe-service.ts 33ms (unchanged)
+src/services/struggling-sam-api.ts 11ms (unchanged)
+[error] src/services/subscription-service.ts: SyntaxError: '{' expected. (515:9)
+[error]   513 |       // Map feature usage to billing format
+[error]   514 |       usageData?.forEach((item: any) => // auto: implicit any {
+[error] > 515 |         const limit = (limits as any)[item.feature] || item.limit_count;
+[error]       |         ^
+[error]   516 |         usage[item.feature] = {
+[error]   517 |           used: item.usage_count,
+[error]   518 |           limit,
+src/services/subscription.ts 13ms (unchanged)
+[error] src/services/supabase.ts: SyntaxError: ',' expected. (588:13)
+[error]   586 |
+[error]   587 |         const alarms: Alarm[] = (data || []).map((row: any) => // auto: implicit any ({
+[error] > 588 |           id: row.id,
+[error]       |             ^
+[error]   589 |           userId: row.user_id,
+[error]   590 |           time: row.time,
+[error]   591 |           label: row.label,
+src/services/theme-accessibility.ts 19ms (unchanged)
+src/services/theme-combinations.ts 37ms (unchanged)
+src/services/theme-performance.ts 12ms (unchanged)
+src/services/theme-persistence.ts 24ms (unchanged)
+src/services/types/media.ts 6ms (unchanged)
+src/services/types/performance.ts 8ms (unchanged)
+src/services/user-testing.ts 26ms (unchanged)
+src/services/visual-alarm-themes.ts 22ms (unchanged)
+[error] src/services/voice-ai-enhanced.ts: SyntaxError: ',' expected. (1032:17)
+[error]   1030 |       const learningData =
+[error]   1031 |         data?.map((row: any) => // auto: implicit any ({
+[error] > 1032 |           userId: row.user_id,
+[error]        |                 ^
+[error]   1033 |           voiceMood: row.voice_mood,
+[error]   1034 |           context: row.context,
+[error]   1035 |           userResponse: row.user_response,
+src/services/voice-biometrics.ts 30ms (unchanged)
+src/services/voice-enhanced.ts 11ms (unchanged)
+src/services/voice-pro.ts 26ms (unchanged)
+src/services/voice-recognition-enhanced.ts 29ms (unchanged)
+src/services/voice-recognition.ts 20ms (unchanged)
+src/services/voice-smart-integration.ts 28ms (unchanged)
+src/services/voice.ts 8ms (unchanged)
+src/stories/button.css 2ms (unchanged)
+src/stories/Button.stories.ts 2ms (unchanged)
+src/stories/Button.tsx 2ms (unchanged)
+src/stories/components/AlarmForm.stories.tsx 7ms (unchanged)
+src/stories/components/Dashboard.stories.tsx 7ms (unchanged)
+src/stories/Configure.mdx 10ms (unchanged)
+src/stories/header.css 2ms (unchanged)
+src/stories/Header.stories.ts 1ms (unchanged)
+src/stories/Header.tsx 3ms (unchanged)
+src/stories/page.css 2ms (unchanged)
+src/stories/Page.stories.ts 2ms (unchanged)
+src/stories/Page.tsx 3ms (unchanged)
+src/stories/ui/Button.stories.tsx 10ms (unchanged)
+src/stories/ui/Card.stories.tsx 9ms (unchanged)
+src/templates/email-templates.ts 9ms (unchanged)
+[error] src/test-setup.ts: SyntaxError: ',' expected. (45:14)
+[error]   43 |   if (!global.matchMedia) {
+[error]   44 |     global.matchMedia = vi.fn().mockImplementation((query: any) => // auto: implicit any ({
+[error] > 45 |       matches: false,
+[error]      |              ^
+[error]   46 |       media: query,
+[error]   47 |       onchange: null,
+[error]   48 |       addListener: vi.fn(),
+src/tests/alarm-themes-integration.test.ts 21ms (unchanged)
+src/themes/premium-themes.ts 20ms (unchanged)
+src/types/alarm.d.ts 2ms (unchanged)
+src/types/analytics.d.ts 5ms (unchanged)
+src/types/browser-apis.d.ts 11ms (unchanged)
+src/types/cloudflare-runtime.d.ts 2ms (unchanged)
+src/types/custom-sound-themes.ts 23ms (unchanged)
+src/types/email-campaigns.ts 18ms (unchanged)
+src/types/email.ts 3ms (unchanged)
+src/types/emotional.ts 5ms (unchanged)
+src/types/global.d.ts 3ms (unchanged)
+src/types/helpers.d.ts 1ms
+src/types/index.ts 105ms (unchanged)
+src/types/premium.ts 19ms (unchanged)
+src/types/struggling-sam.ts 8ms (unchanged)
+src/types/subscription.d.ts 4ms (unchanged)
+src/types/tabProtection.ts 5ms (unchanged)
+src/types/timers.ts 1ms (unchanged)
+src/types/user.ts 3ms (unchanged)
+src/types/utils.ts 11ms (unchanged)
+src/types/wake-up-mood.ts 2ms (unchanged)
+src/utils/accessibility.ts 22ms (unchanged)
+src/utils/advancedTranslationValidator.ts 28ms (unchanged)
+src/utils/alarm-conversion.ts 9ms (unchanged)
+src/utils/analysis-worker.ts 8ms (unchanged)
+src/utils/css-optimization.ts 6ms (unchanged)
+src/utils/enhanced-focus.ts 16ms (unchanged)
+src/utils/fallback-strategies.tsx 9ms (unchanged)
+src/utils/frame-rate-manager.tsx 26ms (unchanged)
+src/utils/image-optimization.tsx 19ms (unchanged)
+src/utils/index.ts 8ms (unchanged)
+src/utils/keyboard-navigation.ts 33ms (unchanged)
+src/utils/lazy-loading.tsx 7ms (unchanged)
+src/utils/mobile-accessibility.ts 19ms (unchanged)
+src/utils/network-optimization.tsx 21ms (unchanged)
+[error] src/utils/performance-alerts.tsx: SyntaxError: '{' expected. (910:3)
+[error]   908 |   const criticalAlerts = alerts.filter((alert: any) => // auto: implicit any alert.severity >= 4);
+[error]   909 |
+[error] > 910 |   if (displayAlerts.length === 0 && (!showSuggestions || suggestions.length === 0)) {
+[error]       |   ^
+[error]   911 |     return null;
+[error]   912 |   }
+[error]   913 |
+src/utils/performance-profiler.ts 11ms (unchanged)
+src/utils/premium-testing.ts 11ms (unchanged)
+[error] src/utils/progressive-loading.tsx: SyntaxError: '{' expected. (430:5)
+[error]   428 |     setState((prev: any) => // auto: implicit any ({ ...prev, isLoading: true, isError: false }));
+[error]   429 |
+[error] > 430 |     try {
+[error]       |     ^
+[error]   431 |       const result = await progressiveLoader.loadComponent(id, loader, config);
+[error]   432 |       setData(result);
+[error]   433 |       setState((prev: any) => // auto: implicit any ({ ...prev, isLoading: false, isLoaded: true }));
+src/utils/pwa.ts 6ms (unchanged)
+[error] src/utils/rtl-testing.tsx: SyntaxError: ',' expected. (232:22)
+[error]   230 |             writable: true,
+[error]   231 |             value: vi.fn().mockImplementation((query: any) => // auto: implicit any ({
+[error] > 232 |               matches: query.includes(breakpoint),
+[error]       |                      ^
+[error]   233 |               media: query,
+[error]   234 |               onchange: null,
+[error]   235 |               addListener: vi.fn(),
+src/utils/rtl-utilities.ts 6ms (unchanged)
+src/utils/screen-reader.ts 24ms (unchanged)
+src/utils/service-worker-manager.ts 9ms (unchanged)
+src/utils/translationValidation.ts 10ms (unchanged)
+src/utils/validation.ts 13ms (unchanged)
+src/utils/voice-accessibility.ts 29ms (unchanged)
+src/vite-env.d.ts 1ms (unchanged)
+STRUGGLING_SAM_OPTIMIZATION_PLAN.md 35ms (unchanged)
+tailwind.config.js 14ms (unchanged)
+TEST_INFRASTRUCTURE_FIXES.md 16ms (unchanged)
+tests/__examples__/mobile-plugin-tests.spec.ts 14ms (unchanged)
+tests/e2e/a11y/alarm-management.a11y.spec.ts 20ms (unchanged)
+tests/e2e/a11y/homepage.a11y.spec.ts 10ms (unchanged)
+tests/e2e/a11y/playwright-a11y-utils.ts 16ms (unchanged)
+tests/e2e/alarm-basic.e2e.ts 1ms (unchanged)
+tests/e2e/alarm-functionality.e2e.ts 13ms (unchanged)
+tests/e2e/fixtures/test-data.ts 7ms (unchanged)
+tests/e2e/jest.config.js 1ms (unchanged)
+tests/e2e/page-objects/alarm-form-page.ts 7ms (unchanged)
+tests/e2e/page-objects/auth-page.ts 8ms (unchanged)
+tests/e2e/page-objects/base-page.ts 3ms (unchanged)
+tests/e2e/page-objects/dashboard-page.ts 4ms (unchanged)
+tests/e2e/page-objects/index.ts 1ms (unchanged)
+tests/e2e/page-objects/settings-page.ts 21ms (unchanged)
+tests/e2e/setup.ts 8ms (unchanged)
+tests/e2e/specs/alarm-management.spec.ts 18ms (unchanged)
+tests/e2e/specs/authentication.spec.ts 12ms (unchanged)
+tests/e2e/specs/dashboard.spec.ts 11ms (unchanged)
+tests/e2e/specs/infrastructure-validation.spec.ts 3ms (unchanged)
+tests/e2e/specs/mobile-experience.spec.ts 25ms (unchanged)
+tests/e2e/specs/settings.spec.ts 15ms (unchanged)
+tests/e2e/specs/smoke.test.ts 2ms (unchanged)
+tests/e2e/utils/test-helpers.ts 9ms (unchanged)
+tests/integration/ADVANCED_FEATURES.md 54ms (unchanged)
+tests/integration/advanced-sleep-tracking.integration.test.tsx 32ms (unchanged)
+tests/integration/ai-voice-cloning.integration.test.tsx 57ms (unchanged)
+tests/integration/alarm-lifecycle.integration.test.tsx 32ms (unchanged)
+tests/integration/alarm-plugin.integration.test.tsx 16ms (unchanged)
+tests/integration/alarm-plugin.test.tsx 3ms (unchanged)
+tests/integration/analytics-logging-flow.integration.test.tsx 23ms (unchanged)
+tests/integration/comprehensive-alarm-lifecycle.integration.test.tsx 26ms (unchanged)
+tests/integration/enhanced-alarm-lifecycle.integration.test.tsx 26ms (unchanged)
+tests/integration/enhanced-voice-commands.integration.test.tsx 27ms (unchanged)
+tests/integration/gaming-rewards.integration.test.tsx 4ms (unchanged)
+tests/integration/mobile-capacitor-comprehensive.integration.test.tsx 36ms (unchanged)
+tests/integration/mobile-functionality.integration.test.tsx 5ms (unchanged)
+tests/integration/notification-service-worker-comprehensive.integration.test.tsx 4ms (unchanged)
+tests/integration/notification-service-worker.integration.test.tsx 29ms (unchanged)
+tests/integration/offline-sync.integration.test.tsx 25ms (unchanged)
+tests/integration/premium-purchase-flow.integration.test.tsx 19ms (unchanged)
+tests/integration/premium-subscription-flow.integration.test.tsx 8ms (unchanged)
+tests/integration/premium-upgrade.integration.test.tsx 27ms (unchanged)
+tests/integration/README.md 59ms (unchanged)
+tests/integration/social-battles.integration.test.tsx 39ms (unchanged)
+tests/integration/TEST_SUMMARY.md 26ms (unchanged)
+tests/integration/user-authentication-flow.integration.test.tsx 26ms (unchanged)
+tests/integration/voice-commands-flow.integration.test.tsx 17ms (unchanged)
+tests/mobile-setup-validation.test.ts 4ms (unchanged)
+tests/README.md 8ms (unchanged)
+tests/smoke/capacitor-integration.test.ts 23ms (unchanged)
+[error] tests/utils/a11y-testing-utils.js: SyntaxError: Unexpected token, expected "," (21:5)
+[error]   19 |  */
+[error]   20 | export async function axeRender(
+[error] > 21 |   ui: React.ReactElement,
+[error]      |     ^
+[error]   22 |   options?: RenderOptions & {
+[error]   23 |     /**
+[error]   24 |      * Axe configuration options
+[error] tests/utils/a11y-testing-utils.ts: SyntaxError: Unterminated regular expression literal. (45:6)
+[error]   43 |     <TestProviders>
+[error]   44 |       {ui}
+[error] > 45 |     </TestProviders>
+[error]      |      ^
+[error]   46 |   );
+[error]   47 |
+[error]   48 |   const renderResult = render(<WrappedComponent />, options);
+tests/utils/a11y-testing-utils.tsx 10ms (unchanged)
+tests/utils/enhanced-browser-api-mocks.ts 22ms (unchanged)
+tests/utils/enhanced-msw-handlers.ts 40ms (unchanged)
+tests/utils/enhanced-test-utilities.ts 23ms (unchanged)
+tests/utils/integration-test-setup.ts 18ms (unchanged)
+tests/utils/mobile-test-helpers.ts 12ms (unchanged)
+tests/utils/test-mocks.ts 41ms (unchanged)
+THEME_CREATOR_GUIDE.md 31ms (unchanged)
+TRANSLATION_GUIDELINES.md 37ms (unchanged)
+tsconfig.app.json 1ms (unchanged)
+tsconfig.ci.json 0ms (unchanged)
+tsconfig.e2e.json 1ms (unchanged)
+tsconfig.json 0ms (unchanged)
+tsconfig.node.json 1ms (unchanged)
+tsconfig.strict.json 1ms (unchanged)
+tsconfig.test.json 1ms (unchanged)
+TypeScript-Errors-Fixed-Summary.md 8ms (unchanged)
+USER_PERSONAS_PRICING_STRATEGY.md 39ms (unchanged)
+violation_analysis.md 6ms (unchanged)
+VISUAL_TESTING_SETUP.md 13ms (unchanged)
+vite.config.ts 4ms (unchanged)
+vitest.config.ts 2ms (unchanged)
+vitest.integration.config.ts 3ms (unchanged)

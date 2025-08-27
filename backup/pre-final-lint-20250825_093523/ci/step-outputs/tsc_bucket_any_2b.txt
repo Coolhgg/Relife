@@ -1,0 +1,1 @@
+vite.config.ts(99,25): error TS7006: Parameter 'assetInfo' implicitly has an 'any' type.
