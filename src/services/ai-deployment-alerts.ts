@@ -76,20 +76,16 @@ export class AIDeploymentAlerting {
       channels: {
         email: {
           enabled: process.env.EMAIL_ALERTS_ENABLED === 'true',
-          recipients: (process.env.ALERT_EMAIL_RECIPIENTS || '')
-            .split(',')
-            .filter(Boolean),
-          smtpConfig: process.env.SMTP_HOST
-            ? {
-                host: process.env.SMTP_HOST,
-                port: parseInt(process.env.SMTP_PORT || '587'),
-                secure: process.env.SMTP_SECURE === 'true',
-                auth: {
-                  user: process.env.SMTP_USER || '',
-                  pass: process.env.SMTP_PASS || '',
-                },
-              }
-            : undefined,
+          recipients: (process.env.ALERT_EMAIL_RECIPIENTS || '').split(',').filter(Boolean),
+          smtpConfig: process.env.SMTP_HOST ? {
+            host: process.env.SMTP_HOST,
+            port: parseInt(process.env.SMTP_PORT || '587'),
+            secure: process.env.SMTP_SECURE === 'true',
+            auth: {
+              user: process.env.SMTP_USER || '',
+              pass: process.env.SMTP_PASS || '',
+            },
+          } : undefined,
         },
         slack: {
           enabled: !!process.env.SLACK_WEBHOOK_URL,
@@ -187,12 +183,10 @@ export class AIDeploymentAlerting {
 
     try {
       // Mock email sending - in production, use nodemailer or similar
-      console.log(
-        `[Alerting] Email sent to ${this.config.channels.email.recipients.join(', ')}`
-      );
+      console.log(`[Alerting] Email sent to ${this.config.channels.email.recipients.join(', ')}`);
       console.log(`Subject: ${subject}`);
       console.log(`Body: ${body}`);
-
+      
       // Simulate email sending
       await new Promise(resolve => setTimeout(resolve, 100));
     } catch (error) {
@@ -239,11 +233,9 @@ export class AIDeploymentAlerting {
 
     try {
       // Mock Slack webhook - in production, use actual HTTP request
-      console.log(
-        `[Alerting] Slack alert sent to ${this.config.channels.slack.channel}`
-      );
+      console.log(`[Alerting] Slack alert sent to ${this.config.channels.slack.channel}`);
       console.log('Payload:', JSON.stringify(payload, null, 2));
-
+      
       // Simulate Slack webhook
       await new Promise(resolve => setTimeout(resolve, 100));
     } catch (error) {
@@ -266,12 +258,12 @@ export class AIDeploymentAlerting {
       data: alert.data,
     };
 
-    const promises = this.config.channels.webhook.urls.map(async url => {
+    const promises = this.config.channels.webhook.urls.map(async (url) => {
       try {
         // Mock webhook - in production, use actual HTTP request
         console.log(`[Alerting] Webhook alert sent to ${url}`);
         console.log('Payload:', JSON.stringify(payload, null, 2));
-
+        
         // Simulate webhook
         await new Promise(resolve => setTimeout(resolve, 100));
       } catch (error) {
@@ -289,11 +281,11 @@ export class AIDeploymentAlerting {
   private async sendInAppAlert(alert: AlertMessage): Promise<void> {
     // In production, this would push to a real-time system like WebSocket or Server-Sent Events
     console.log(`[Alerting] In-app alert: ${alert.title}`);
-
+    
     // Store for dashboard to pick up
     global.aiDeploymentAlerts = global.aiDeploymentAlerts || [];
     global.aiDeploymentAlerts.push(alert);
-
+    
     // Keep only last 50 alerts
     if (global.aiDeploymentAlerts.length > 50) {
       global.aiDeploymentAlerts = global.aiDeploymentAlerts.slice(-50);
@@ -322,9 +314,7 @@ export class AIDeploymentAlerting {
     }
 
     // Check service health
-    const unhealthyServices = serviceHealth.filter(
-      (s: any) => s.status === 'unhealthy'
-    );
+    const unhealthyServices = serviceHealth.filter((s: any) => s.status === 'unhealthy');
     for (const service of unhealthyServices) {
       const alertId = `service_down_${service.serviceName}`;
       if (!this.activeAlerts.has(alertId)) {
@@ -333,22 +323,17 @@ export class AIDeploymentAlerting {
           `Service Down: ${service.serviceName}`,
           `Service ${service.serviceName} is unhealthy with ${service.errorRate}% error rate and ${service.uptime}% uptime.`,
           'service_monitor',
-          {
-            service: service.serviceName,
-            errorRate: service.errorRate,
-            uptime: service.uptime,
-          }
+          { service: service.serviceName, errorRate: service.errorRate, uptime: service.uptime }
         );
       }
     }
 
     // Check for degraded services
-    const degradedServices = serviceHealth.filter(
-      (s: any) =>
-        s.status === 'degraded' ||
-        s.errorRate > this.config.thresholds.highErrorRate ||
-        s.responseTime > this.config.thresholds.slowResponse ||
-        s.uptime < this.config.thresholds.lowUptime
+    const degradedServices = serviceHealth.filter((s: any) => 
+      s.status === 'degraded' || 
+      s.errorRate > this.config.thresholds.highErrorRate ||
+      s.responseTime > this.config.thresholds.slowResponse ||
+      s.uptime < this.config.thresholds.lowUptime
     );
 
     for (const service of degradedServices) {
@@ -359,11 +344,7 @@ export class AIDeploymentAlerting {
           `Service Degraded: ${service.serviceName}`,
           `Service ${service.serviceName} is experiencing performance issues. Response time: ${service.responseTime}ms, Error rate: ${service.errorRate}%, Uptime: ${service.uptime}%`,
           'service_monitor',
-          {
-            service: service.serviceName,
-            responseTime: service.responseTime,
-            errorRate: service.errorRate,
-          }
+          { service: service.serviceName, responseTime: service.responseTime, errorRate: service.errorRate }
         );
       }
     }
@@ -391,11 +372,9 @@ export class AIDeploymentAlerting {
     if (alert) {
       alert.resolved = true;
       this.activeAlerts.delete(alertId);
-
-      console.log(
-        `[Alerting] Alert ${alertId} resolved: ${resolution || 'No resolution provided'}`
-      );
-
+      
+      console.log(`[Alerting] Alert ${alertId} resolved: ${resolution || 'No resolution provided'}`);
+      
       // Send resolution notification
       await this.sendAlert(
         'low',
@@ -429,10 +408,10 @@ export class AIDeploymentAlerting {
   private getPhaseNameById(phase: number): string {
     const names: Record<number, string> = {
       1: 'Core Services',
-      2: 'Cross-Platform Integration',
+      2: 'Cross-Platform Integration', 
       3: 'Recommendation Engine',
       4: 'Dashboard & UI',
-      5: 'Optimization & Scaling',
+      5: 'Optimization & Scaling'
     };
     return names[phase] || `Phase ${phase}`;
   }
@@ -442,7 +421,7 @@ export class AIDeploymentAlerting {
       low: ':information_source:',
       medium: ':warning:',
       high: ':exclamation:',
-      critical: ':rotating_light:',
+      critical: ':rotating_light:'
     };
     return emojis[severity] || ':question:';
   }
@@ -452,7 +431,7 @@ export class AIDeploymentAlerting {
       low: '#36a64f',
       medium: '#ff9900',
       high: '#ff6600',
-      critical: '#ff0000',
+      critical: '#ff0000'
     };
     return colors[severity] || '#cccccc';
   }

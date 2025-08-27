@@ -8,9 +8,7 @@ import { Route } from 'react-router-dom';
 
 // Lazy load the AI deployment components for better performance
 const AIDeploymentDashboard = lazy(() => import('../components/AIDeploymentDashboard'));
-const EnhancedBehavioralIntelligenceDashboard = lazy(
-  () => import('../components/EnhancedBehavioralIntelligenceDashboard')
-);
+const EnhancedBehavioralIntelligenceDashboard = lazy(() => import('../components/EnhancedBehavioralIntelligenceDashboard'));
 
 // Loading component for lazy-loaded routes
 const LoadingSpinner: React.FC = () => (
@@ -40,9 +38,9 @@ export const aiDeploymentRoutes = [
       description: 'Monitor and control AI behavior analysis system deployment',
       requiresAuth: true,
       requiresAdmin: true,
-    },
+    }
   },
-
+  
   // Enhanced behavioral intelligence dashboard (for end users)
   {
     path: '/dashboard/ai-insights',
@@ -56,8 +54,8 @@ export const aiDeploymentRoutes = [
       description: 'View your personalized behavioral insights and recommendations',
       requiresAuth: true,
       requiresAdmin: false,
-    },
-  },
+    }
+  }
 ];
 
 /**
@@ -81,7 +79,7 @@ export const aiDeploymentNavItems = [
     description: 'View behavioral insights',
     badge: 'NEW',
     requiresAdmin: false,
-  },
+  }
 ];
 
 /**
@@ -92,7 +90,7 @@ export const useAIDeploymentAccess = () => {
   // For now, we'll use environment variables or mock data
   const isDev = process.env.NODE_ENV === 'development';
   const isAdmin = process.env.REACT_APP_ENABLE_ADMIN === 'true' || isDev;
-
+  
   return {
     canAccessDeploymentDashboard: isAdmin,
     canAccessInsightsDashboard: true, // Available to all authenticated users
@@ -117,7 +115,7 @@ export const aiDeploymentFeatures = {
  */
 export const defaultAIRouteProps = {
   className: 'min-h-screen bg-gray-50',
-  'data-testid': 'ai-deployment-route',
+  'data-testid': 'ai-deployment-route'
 };
 
 export default {
@@ -125,5 +123,5 @@ export default {
   navItems: aiDeploymentNavItems,
   useAccess: useAIDeploymentAccess,
   features: aiDeploymentFeatures,
-  defaultProps: defaultAIRouteProps,
+  defaultProps: defaultAIRouteProps
 };

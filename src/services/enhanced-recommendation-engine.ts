@@ -565,11 +565,7 @@ export class EnhancedRecommendationEngine {
   /**
    * Extract behavioral features from user data
    */
-  private extractBehavioralFeatures(
-    userId: string,
-    alarms: Alarm[],
-    alarmEvents: AlarmEvent[]
-  ): Partial<UserVector['features']> {
+  private extractBehavioralFeatures(userId: string, alarms: Alarm[], alarmEvents: AlarmEvent[]): Partial<UserVector['features']> {
     if (alarmEvents.length === 0) return {};
 
     const dismissedEvents = alarmEvents.filter(e => e.dismissed);
