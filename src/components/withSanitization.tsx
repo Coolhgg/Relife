@@ -4,10 +4,7 @@
  */
 
 import React, { forwardRef } from 'react';
-import InputSanitizationService, {
-  InputType,
-  SanitizationOptions,
-} from '../services/input-sanitization';
+import InputSanitizationService, { InputType, SanitizationOptions } from '../services/input-sanitization';
 
 export interface SanitizationConfig {
   inputType?: InputType;
@@ -37,25 +34,25 @@ export function withSanitization<P extends Record<string, any>>(
     // Create sanitized props
     const sanitizedProps = React.useMemo(() => {
       const newProps = { ...props };
-
+      
       // Sanitize specified props
       sanitizeProps.forEach(propName => {
         if (newProps[propName] && typeof newProps[propName] === 'string') {
           const fieldConfig = fieldMapping[propName];
           const type = fieldConfig?.type || inputType;
           const opts = { ...options, ...fieldConfig?.options };
-
+          
           const result = sanitizationService.sanitize(newProps[propName], type, opts);
-
+          
           // Report violations if callback provided
           if (result.violations.length > 0 && onViolation) {
             onViolation(result.violations, propName);
           }
-
+          
           newProps[propName] = result.sanitized;
         }
       });
-
+      
       return newProps;
     }, [props, inputType, options, fieldMapping, sanitizeProps, onViolation]);
 
@@ -63,7 +60,7 @@ export function withSanitization<P extends Record<string, any>>(
   });
 
   SanitizedComponent.displayName = `withSanitization(${WrappedComponent.displayName || WrappedComponent.name})`;
-
+  
   return SanitizedComponent;
 }
 
@@ -75,22 +72,10 @@ export function withFormSanitization<P extends Record<string, any>>(
   fieldTypes: Record<string, InputType> = {},
   globalOptions: SanitizationOptions = {}
 ) {
-  const FormSanitizedComponent = forwardRef<
-    any,
-    P & {
-      onSubmit?: (
-        sanitizedData: any,
-        originalData: any,
-        violations: Record<string, string[]>
-      ) => void;
-      onFieldChange?: (
-        field: string,
-        sanitizedValue: string,
-        originalValue: string,
-        violations: string[]
-      ) => void;
-    }
-  >((props, ref) => {
+  const FormSanitizedComponent = forwardRef<any, P & {
+    onSubmit?: (sanitizedData: any, originalData: any, violations: Record<string, string[]>) => void;
+    onFieldChange?: (field: string, sanitizedValue: string, originalValue: string, violations: string[]) => void;
+  }>((props, ref) => {
     const sanitizationService = InputSanitizationService.getInstance();
     const { onSubmit: originalOnSubmit, onFieldChange, ...otherProps } = props;
 
@@ -107,7 +92,7 @@ export function withFormSanitization<P extends Record<string, any>>(
         for (const [field, value] of Object.entries(data)) {
           const fieldType = fieldTypes[field] || 'text';
           const result = sanitizationService.sanitize(value, fieldType, globalOptions);
-
+          
           sanitizedData[field] = result.sanitized;
           allViolations[field] = result.violations;
         }
@@ -133,7 +118,7 @@ export function withFormSanitization<P extends Record<string, any>>(
   });
 
   FormSanitizedComponent.displayName = `withFormSanitization(${WrappedComponent.displayName || WrappedComponent.name})`;
-
+  
   return FormSanitizedComponent;
 }
 
@@ -153,11 +138,7 @@ export function useSanitizedProps<T extends Record<string, any>>(
     for (const [key, rule] of Object.entries(sanitizationRules)) {
       const typedKey = key as keyof T;
       if (props[typedKey] !== undefined && typeof props[typedKey] === 'string') {
-        const result = sanitizationService.sanitize(
-          props[typedKey],
-          rule.type,
-          rule.options
-        );
+        const result = sanitizationService.sanitize(props[typedKey], rule.type, rule.options);
         sanitizedProps[typedKey] = result.sanitized as T[keyof T];
         violations[typedKey] = result.violations;
       }
@@ -224,12 +205,8 @@ export function withContextSanitization<P extends Record<string, any>>(
         const value = props[key];
         if (typeof value === 'string' && value.length > 0) {
           const fieldType = context.fieldTypes[key] || 'text';
-          const result = sanitizationService.sanitize(
-            value,
-            fieldType,
-            context.globalConfig
-          );
-
+          const result = sanitizationService.sanitize(value, fieldType, context.globalConfig);
+          
           if (result.wasModified) {
             newProps[key] = result.sanitized;
             violations.push(...result.violations);
@@ -254,7 +231,7 @@ export function withContextSanitization<P extends Record<string, any>>(
   });
 
   ContextSanitizedComponent.displayName = `withContextSanitization(${WrappedComponent.displayName || WrappedComponent.name})`;
-
+  
   return ContextSanitizedComponent;
 }
 
@@ -273,9 +250,7 @@ export const SanitizationStatus: React.FC<{
   return (
     <div className={`text-xs text-muted-foreground ${className}`}>
       <span className="font-medium">
-        {violations.length === 1
-          ? '1 issue sanitized'
-          : `${violations.length} issues sanitized`}
+        {violations.length === 1 ? '1 issue sanitized' : `${violations.length} issues sanitized`}
       </span>
       {showDetails && (
         <ul className="mt-1 space-y-1">

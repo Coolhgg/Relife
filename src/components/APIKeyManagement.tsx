@@ -11,7 +11,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from './ui/dialog';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -26,25 +32,25 @@ import {
   SelectValue,
 } from './ui/select';
 import { Checkbox } from './ui/checkbox';
-import {
-  Copy,
-  Eye,
-  EyeOff,
-  Key,
-  Plus,
-  Trash2,
+import { 
+  Copy, 
+  Eye, 
+  EyeOff, 
+  Key, 
+  Plus, 
+  Trash2, 
   RefreshCw,
   Activity,
   Shield,
   Calendar,
   Globe,
-  Zap,
+  Zap
 } from 'lucide-react';
 import { format } from 'date-fns';
-import APIKeyManagementService, {
-  APIKey,
-  CreateAPIKeyRequest,
-  APIKeyScope,
+import APIKeyManagementService, { 
+  APIKey, 
+  CreateAPIKeyRequest, 
+  APIKeyScope 
 } from '../services/api-key-management';
 import { useAuth } from '../hooks/useAuth';
 import { createClient } from '@supabase/supabase-js';
@@ -76,7 +82,7 @@ const APIKeyManagement: React.FC<APIKeyManagementProps> = ({ className }) => {
   const [error, setError] = useState<string | null>(null);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [newKeyVisible, setNewKeyVisible] = useState<string | null>(null);
-
+  
   // Form state
   const [formData, setFormData] = useState<CreateAPIKeyRequest>({
     name: '',
@@ -93,11 +99,11 @@ const APIKeyManagement: React.FC<APIKeyManagementProps> = ({ className }) => {
   const apiKeyService = React.useMemo(() => {
     const supabaseUrl = process.env.VITE_SUPABASE_URL;
     const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
-
+    
     if (!supabaseUrl || !supabaseKey) {
       return null;
     }
-
+    
     const supabase = createClient(supabaseUrl, supabaseKey);
     return APIKeyManagementService.getInstance(supabase);
   }, []);
@@ -105,7 +111,7 @@ const APIKeyManagement: React.FC<APIKeyManagementProps> = ({ className }) => {
   // Load API keys
   const loadAPIKeys = useCallback(async () => {
     if (!user?.id || !apiKeyService) return;
-
+    
     try {
       setLoading(true);
       const keys = await apiKeyService.listAPIKeys(user.id);
@@ -146,7 +152,7 @@ const APIKeyManagement: React.FC<APIKeyManagementProps> = ({ className }) => {
       const { apiKey, key } = await apiKeyService.createAPIKey(user.id, formData);
       setNewKeyVisible(key);
       setShowCreateDialog(false);
-
+      
       // Reset form
       setFormData({
         name: '',
@@ -158,7 +164,7 @@ const APIKeyManagement: React.FC<APIKeyManagementProps> = ({ className }) => {
         rateLimitPerDay: 10000,
       });
       setFormErrors({});
-
+      
       // Reload keys
       await loadAPIKeys();
     } catch (err) {
@@ -169,12 +175,8 @@ const APIKeyManagement: React.FC<APIKeyManagementProps> = ({ className }) => {
   // Revoke API key
   const handleRevokeKey = async (keyId: string) => {
     if (!user?.id || !apiKeyService) return;
-
-    if (
-      !confirm(
-        'Are you sure you want to revoke this API key? This action cannot be undone.'
-      )
-    ) {
+    
+    if (!confirm('Are you sure you want to revoke this API key? This action cannot be undone.')) {
       return;
     }
 
@@ -189,12 +191,8 @@ const APIKeyManagement: React.FC<APIKeyManagementProps> = ({ className }) => {
   // Rotate API key
   const handleRotateKey = async (keyId: string) => {
     if (!user?.id || !apiKeyService) return;
-
-    if (
-      !confirm(
-        'Are you sure you want to rotate this API key? The old key will be revoked.'
-      )
-    ) {
+    
+    if (!confirm('Are you sure you want to rotate this API key? The old key will be revoked.')) {
       return;
     }
 
@@ -249,7 +247,7 @@ const APIKeyManagement: React.FC<APIKeyManagementProps> = ({ className }) => {
             Manage API keys to access your account programmatically
           </p>
         </div>
-
+        
         <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
           <DialogTrigger asChild>
             <Button>
@@ -257,12 +255,12 @@ const APIKeyManagement: React.FC<APIKeyManagementProps> = ({ className }) => {
               Create API Key
             </Button>
           </DialogTrigger>
-
+          
           <DialogContent className="max-w-2xl">
             <DialogHeader>
               <DialogTitle>Create New API Key</DialogTitle>
             </DialogHeader>
-
+            
             <div className="space-y-4">
               {/* Name */}
               <div>
@@ -270,7 +268,7 @@ const APIKeyManagement: React.FC<APIKeyManagementProps> = ({ className }) => {
                 <Input
                   id="keyName"
                   value={formData.name}
-                  onChange={e => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="My API Key"
                 />
                 {formErrors.name && (
@@ -284,7 +282,7 @@ const APIKeyManagement: React.FC<APIKeyManagementProps> = ({ className }) => {
                 <Textarea
                   id="purpose"
                   value={formData.purpose || ''}
-                  onChange={e => setFormData({ ...formData, purpose: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, purpose: e.target.value })}
                   placeholder="Describe what this API key will be used for..."
                   rows={2}
                 />
@@ -295,9 +293,7 @@ const APIKeyManagement: React.FC<APIKeyManagementProps> = ({ className }) => {
                 <Label htmlFor="environment">Environment</Label>
                 <Select
                   value={formData.environment}
-                  onValueChange={(value: any) =>
-                    setFormData({ ...formData, environment: value })
-                  }
+                  onValueChange={(value: any) => setFormData({ ...formData, environment: value })}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -324,7 +320,7 @@ const APIKeyManagement: React.FC<APIKeyManagementProps> = ({ className }) => {
                       <Checkbox
                         id={scope}
                         checked={formData.scopes.includes(scope as APIKeyScope)}
-                        onCheckedChange={checked => {
+                        onCheckedChange={(checked) => {
                           if (checked) {
                             setFormData({
                               ...formData,
@@ -333,18 +329,14 @@ const APIKeyManagement: React.FC<APIKeyManagementProps> = ({ className }) => {
                           } else {
                             setFormData({
                               ...formData,
-                              scopes: formData.scopes.filter(s => s !== scope),
+                              scopes: formData.scopes.filter((s) => s !== scope),
                             });
                           }
                         }}
                       />
                       <Label htmlFor={scope} className="flex flex-col">
-                        <span className="font-medium capitalize">
-                          {scope.replace('_', ' ')}
-                        </span>
-                        <span className="text-sm text-muted-foreground">
-                          {description}
-                        </span>
+                        <span className="font-medium capitalize">{scope.replace('_', ' ')}</span>
+                        <span className="text-sm text-muted-foreground">{description}</span>
                       </Label>
                     </div>
                   ))}
@@ -362,7 +354,7 @@ const APIKeyManagement: React.FC<APIKeyManagementProps> = ({ className }) => {
                     id="rateLimitMinute"
                     type="number"
                     value={formData.rateLimitPerMinute}
-                    onChange={e =>
+                    onChange={(e) =>
                       setFormData({
                         ...formData,
                         rateLimitPerMinute: parseInt(e.target.value) || 0,
@@ -377,7 +369,7 @@ const APIKeyManagement: React.FC<APIKeyManagementProps> = ({ className }) => {
                     id="rateLimitHour"
                     type="number"
                     value={formData.rateLimitPerHour}
-                    onChange={e =>
+                    onChange={(e) =>
                       setFormData({
                         ...formData,
                         rateLimitPerHour: parseInt(e.target.value) || 0,
@@ -392,7 +384,7 @@ const APIKeyManagement: React.FC<APIKeyManagementProps> = ({ className }) => {
                     id="rateLimitDay"
                     type="number"
                     value={formData.rateLimitPerDay}
-                    onChange={e =>
+                    onChange={(e) =>
                       setFormData({
                         ...formData,
                         rateLimitPerDay: parseInt(e.target.value) || 0,
@@ -405,10 +397,15 @@ const APIKeyManagement: React.FC<APIKeyManagementProps> = ({ className }) => {
 
               {/* Actions */}
               <div className="flex justify-end space-x-2 pt-4">
-                <Button variant="outline" onClick={() => setShowCreateDialog(false)}>
+                <Button
+                  variant="outline"
+                  onClick={() => setShowCreateDialog(false)}
+                >
                   Cancel
                 </Button>
-                <Button onClick={handleCreateKey}>Create API Key</Button>
+                <Button onClick={handleCreateKey}>
+                  Create API Key
+                </Button>
               </div>
             </div>
           </DialogContent>
@@ -423,8 +420,7 @@ const APIKeyManagement: React.FC<APIKeyManagementProps> = ({ className }) => {
             <div className="space-y-3">
               <p className="font-medium">API Key Created Successfully!</p>
               <p className="text-sm">
-                Please copy your API key now. You won't be able to see it again for
-                security reasons.
+                Please copy your API key now. You won't be able to see it again for security reasons.
               </p>
               <div className="flex items-center space-x-2 font-mono text-sm bg-white p-3 rounded border">
                 <code className="flex-1 break-all">{newKeyVisible}</code>
@@ -481,7 +477,7 @@ const APIKeyManagement: React.FC<APIKeyManagementProps> = ({ className }) => {
               </CardContent>
             </Card>
           ) : (
-            apiKeys.map(key => (
+            apiKeys.map((key) => (
               <Card key={key.id}>
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
@@ -518,7 +514,7 @@ const APIKeyManagement: React.FC<APIKeyManagementProps> = ({ className }) => {
                     </div>
                   </div>
                 </CardHeader>
-
+                
                 <CardContent className="space-y-4">
                   {/* Purpose */}
                   {key.purpose && (
@@ -532,7 +528,7 @@ const APIKeyManagement: React.FC<APIKeyManagementProps> = ({ className }) => {
                   <div>
                     <h4 className="text-sm font-medium mb-2">Permissions</h4>
                     <div className="flex flex-wrap gap-1">
-                      {key.scopes.map(scope => (
+                      {key.scopes.map((scope) => (
                         <Badge key={scope} variant="secondary" className="text-xs">
                           {scope.replace('_', ' ')}
                         </Badge>
@@ -578,10 +574,9 @@ const APIKeyManagement: React.FC<APIKeyManagementProps> = ({ className }) => {
                         className={
                           key.expiresAt < new Date()
                             ? 'text-destructive'
-                            : key.expiresAt <
-                                new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-                              ? 'text-yellow-600'
-                              : 'text-muted-foreground'
+                            : key.expiresAt < new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+                            ? 'text-yellow-600'
+                            : 'text-muted-foreground'
                         }
                       >
                         {format(key.expiresAt, 'MMM d, yyyy HH:mm')}

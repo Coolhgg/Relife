@@ -313,7 +313,32 @@ function useAuth(): AuthHook {
       const analytics = AnalyticsService.getInstance();
       const startTime = performance.now();
 
-      const { user, error } = await SupabaseService.signIn(email, password);
+        if (user) {
+          setAuthState((prev: AuthState) => ({
+            ...prev,
+            user,
+            isLoading: false,
+            _error: null,
+          }));
+
+          const duration = performance.now() - startTime;
+          analytics.current.trackFeatureUsage('user_sign_in_success', duration, {
+            userId: user.id,
+            method: 'email_password',
+          });
+        } else {
+          setAuthState((prev: AuthState) => ({
+            ...prev,
+            isLoading: false,
+            _error: 'Sign in failed. Please try again.',
+          }));
+        }
+      } catch (error) {
+        // Using cached analytics service instance
+        analytics.current.trackError(
+          error instanceof Error ? error : new Error(String(error)),
+          'sign_in_error'
+        );
 
       if (error) {
         

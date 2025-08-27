@@ -30,13 +30,13 @@ export interface APIKey {
   updatedAt: Date;
 }
 
-export type APIKeyScope =
-  | 'read'
-  | 'write'
-  | 'admin'
-  | 'parameter_read'
-  | 'parameter_write'
-  | 'analytics_read'
+export type APIKeyScope = 
+  | 'read' 
+  | 'write' 
+  | 'admin' 
+  | 'parameter_read' 
+  | 'parameter_write' 
+  | 'analytics_read' 
   | 'user_management';
 
 export interface CreateAPIKeyRequest {
@@ -80,7 +80,7 @@ class APIKeyManagementService {
   private static instance: APIKeyManagementService;
   private supabase: SupabaseClient;
   private securityService: SecurityService;
-
+  
   // Key generation constants
   private readonly KEY_LENGTH = 32; // bytes
   private readonly PREFIX_LENGTH = 8;
@@ -115,18 +115,18 @@ class APIKeyManagementService {
     // Generate random bytes for the key
     const keyBytes = crypto.randomBytes(this.KEY_LENGTH);
     const keyString = keyBytes.toString('hex');
-
+    
     // Create the formatted key with environment prefix
     const prefix = this.KEY_PREFIXES[environment] || this.KEY_PREFIXES.production;
     const key = `${prefix}${keyString}`;
-
+    
     // Extract prefix and suffix for storage
     const displayPrefix = key.substring(0, this.PREFIX_LENGTH);
     const displaySuffix = key.substring(key.length - this.SUFFIX_LENGTH);
-
+    
     // Create secure hash for storage
     const hash = crypto.createHash('sha256').update(key).digest('hex');
-
+    
     return {
       key,
       prefix: displayPrefix,
@@ -281,8 +281,8 @@ class APIKeyManagementService {
 
       // Check IP restrictions
       if (apiKey.allowedIps && clientIp) {
-        const ipAllowed = apiKey.allowedIps.some(
-          allowedIp => clientIp.includes(allowedIp) || allowedIp === clientIp
+        const ipAllowed = apiKey.allowedIps.some(allowedIp => 
+          clientIp.includes(allowedIp) || allowedIp === clientIp
         );
         if (!ipAllowed) {
           return { valid: false, error: 'IP address not allowed' };
@@ -299,13 +299,13 @@ class APIKeyManagementService {
 
       // Check required scopes
       if (requiredScopes.length > 0) {
-        const hasRequiredScopes = requiredScopes.every(scope =>
+        const hasRequiredScopes = requiredScopes.every(scope => 
           apiKey.scopes.includes(scope)
         );
         if (!hasRequiredScopes) {
-          return {
-            valid: false,
-            error: `Missing required scopes: ${requiredScopes.join(', ')}`,
+          return { 
+            valid: false, 
+            error: `Missing required scopes: ${requiredScopes.join(', ')}` 
           };
         }
       }
@@ -313,10 +313,10 @@ class APIKeyManagementService {
       // Check rate limits
       const rateLimitInfo = await this.checkRateLimit(apiKey.id);
       if (!rateLimitInfo.allowed) {
-        return {
-          valid: false,
+        return { 
+          valid: false, 
           error: 'Rate limit exceeded',
-          rateLimitInfo,
+          rateLimitInfo 
         };
       }
 
@@ -386,7 +386,7 @@ class APIKeyManagementService {
       const minuteRemaining = keyData.rate_limit_per_minute - minuteCount;
       const hourRemaining = keyData.rate_limit_per_hour - hourCount;
       const dayRemaining = keyData.rate_limit_per_day - dayCount;
-
+      
       const remaining = Math.min(minuteRemaining, hourRemaining, dayRemaining);
 
       return {
@@ -437,20 +437,22 @@ class APIKeyManagementService {
     } = {}
   ): Promise<void> {
     try {
-      await this.supabase.from('api_key_usage_logs').insert({
-        api_key_id: apiKeyId,
-        method,
-        endpoint,
-        status_code: statusCode,
-        ip_address: options.ipAddress,
-        user_agent: options.userAgent,
-        origin: options.origin,
-        response_time_ms: options.responseTimeMs,
-        rate_limit_remaining: options.rateLimitRemaining,
-        error_message: options.errorMessage,
-        security_violation: options.securityViolation || false,
-        violation_type: options.violationType,
-      });
+      await this.supabase
+        .from('api_key_usage_logs')
+        .insert({
+          api_key_id: apiKeyId,
+          method,
+          endpoint,
+          status_code: statusCode,
+          ip_address: options.ipAddress,
+          user_agent: options.userAgent,
+          origin: options.origin,
+          response_time_ms: options.responseTimeMs,
+          rate_limit_remaining: options.rateLimitRemaining,
+          error_message: options.errorMessage,
+          security_violation: options.securityViolation || false,
+          violation_type: options.violationType,
+        });
     } catch (error) {
       // Don't throw - logging failures shouldn't break the API
       console.error('Failed to log API key usage:', error);
@@ -513,10 +515,7 @@ class APIKeyManagementService {
   /**
    * Rotate an API key (create new one and revoke old)
    */
-  async rotateAPIKey(
-    userId: string,
-    keyId: string
-  ): Promise<{ apiKey: APIKey; key: string }> {
+  async rotateAPIKey(userId: string, keyId: string): Promise<{ apiKey: APIKey; key: string }> {
     // Get existing key details
     const { data: existingKey, error } = await this.supabase
       .from('api_keys')
@@ -543,10 +542,7 @@ class APIKeyManagementService {
       allowedOrigins: existingKey.allowed_origins,
     };
 
-    const { apiKey: newAPIKey, key: newKey } = await this.createAPIKey(
-      userId,
-      newKeyRequest
-    );
+    const { apiKey: newAPIKey, key: newKey } = await this.createAPIKey(userId, newKeyRequest);
 
     // Revoke the old key
     await this.revokeAPIKey(userId, keyId);
@@ -586,14 +582,10 @@ class APIKeyManagementService {
 
     // Calculate metrics
     const totalRequests = logs.length;
-    const successfulRequests = logs.filter(
-      log => log.status_code >= 200 && log.status_code < 300
-    ).length;
+    const successfulRequests = logs.filter(log => log.status_code >= 200 && log.status_code < 300).length;
     const errorRequests = logs.filter(log => log.status_code >= 400).length;
     const securityViolations = logs.filter(log => log.security_violation).length;
-    const averageResponseTime =
-      logs.reduce((sum, log) => sum + (log.response_time_ms || 0), 0) / totalRequests ||
-      0;
+    const averageResponseTime = logs.reduce((sum, log) => sum + (log.response_time_ms || 0), 0) / totalRequests || 0;
 
     // Group by day
     const requestsByDay: Record<string, number> = {};
@@ -619,10 +611,7 @@ class APIKeyManagementService {
       errorRequests,
       securityViolations,
       averageResponseTime,
-      requestsByDay: Object.entries(requestsByDay).map(([date, count]) => ({
-        date,
-        count,
-      })),
+      requestsByDay: Object.entries(requestsByDay).map(([date, count]) => ({ date, count })),
       topEndpoints,
     };
   }
