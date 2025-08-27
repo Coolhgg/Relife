@@ -1,0 +1,735 @@
+Starting branch merging process...
+----
+Processing branch: auto/cleanup-backups
+Skipping potentially problematic branch: auto/cleanup-backups
+----
+Processing branch: auto/cleanup-unused
+Skipping potentially problematic branch: auto/cleanup-unused
+----
+Processing branch: auto/final-lint-pass
+Using standard strategy for auto/final-lint-pass
+Merge failed for auto/final-lint-pass. Attempting recovery...
+Found conflicts in: ci/step-outputs/eslint_final_after.json
+ci/step-outputs/eslint_final_report.md
+relife-campaign-dashboard/src/components/analytics/TimeSeriesChart.tsx
+scripts/enhanced-commit-validator.js
+src/components/Dashboard.tsx
+src/components/ui/__auto_icon_stubs.tsx
+src/utils/__auto_stubs.ts
+Auto-resolving conflicts by preferring theirs...
+auto/final-lint-pass -> merged with auto-resolve (theirs)
+====
+RESUMING branch merging process...
+----
+Processing branch: auto/cleanup-backups
+Skipping potentially problematic branch: auto/cleanup-backups
+----
+Processing branch: auto/cleanup-unused
+Skipping potentially problematic branch: auto/cleanup-unused
+----
+Processing branch: auto/final-validation-2
+Using standard strategy for auto/final-validation-2
+auto/final-validation-2 -> merged successfully (standard)
+----
+Processing branch: auto/final-validation-report
+Using standard strategy for auto/final-validation-report
+auto/final-validation-report -> merged successfully (standard)
+----
+Processing branch: auto/fix-eslint-config
+Using standard strategy for auto/fix-eslint-config
+auto/fix-eslint-config -> merged successfully (standard)
+----
+Processing branch: auto/fix-scout-manual-1
+Skipping potentially problematic branch: auto/fix-scout-manual-1
+----
+Processing branch: auto/fix-scout-tests-1
+Skipping potentially problematic branch: auto/fix-scout-tests-1
+----
+Processing branch: auto/fix-syntax-8
+Using standard strategy for auto/fix-syntax-8
+auto/fix-syntax-8 -> merged successfully (standard)
+----
+Processing branch: auto/fix-test-stubs
+Using standard strategy for auto/fix-test-stubs
+Merge failed for auto/fix-test-stubs. Attempting recovery...
+Found conflicts in: src/hooks/__tests__/integration/useAdvancedAlarms.integration.test.tsx
+src/hooks/__tests__/useAdvancedAlarms.test.ts
+Auto-resolving conflicts by preferring theirs...
+auto/fix-test-stubs -> merged with auto-resolve (theirs)
+----
+Processing branch: auto/fix-ts-2a
+Using standard strategy for auto/fix-ts-2a
+Merge failed for auto/fix-ts-2a. Attempting recovery...
+Found conflicts in: src/services/smart-alarm-scheduler.ts
+src/services/sound-effects.ts
+src/types/cloudflare-runtime.d.ts
+src/types/index.ts
+src/vite-env.d.ts
+Auto-resolving conflicts by preferring theirs...
+auto/fix-ts-2a -> merged with auto-resolve (theirs)
+----
+Processing branch: auto/fix-ts-2b
+Using standard strategy for auto/fix-ts-2b
+auto/fix-ts-2b -> merged successfully (standard)
+----
+Processing branch: auto/fix-ts-2c
+Using standard strategy for auto/fix-ts-2c
+Merge failed for auto/fix-ts-2c. Attempting recovery...
+Found conflicts in: src/__tests__/utils/hook-testing-utils.tsx
+src/components/AccessibilityDashboard.tsx
+src/components/CommunityHub.tsx
+src/components/ConsentBanner.tsx
+src/components/EmotionalNudgeModal.tsx
+src/components/FeatureLockOverlay.tsx
+src/components/OnboardingFlow.tsx
+src/components/PremiumFeatureCard.tsx
+src/components/PremiumFeatureTest.tsx
+src/components/SoundPreviewSystem.tsx
+src/components/VisualAlarmDisplay.tsx
+src/components/VoicePersonalitySelector.tsx
+src/components/ui/chart.tsx
+src/services/__tests__/test-setup.ts
+src/services/alarm-integrity-monitor.ts
+src/services/alarm.ts
+src/services/sentry.ts
+src/services/supabase.ts
+src/services/voice-ai-enhanced.ts
+src/utils/rtl-testing.tsx
+Auto-resolving conflicts by preferring theirs...
+auto/fix-ts-2c -> merged with auto-resolve (theirs)
+----
+Processing branch: auto/fix-ts-syntax-1
+Using standard strategy for auto/fix-ts-syntax-1
+Merge failed for auto/fix-ts-syntax-1. Attempting recovery...
+Found conflicts in: src/App.tsx
+src/components/AchievementBadges.tsx
+src/components/AdaptiveAlarmList.tsx
+src/components/AdaptiveImage.tsx
+src/components/AdaptiveModal.tsx
+src/components/AdvancedAlarmScheduling.tsx
+src/components/AlarmForm.tsx
+src/components/AlarmList.tsx
+src/components/AlarmManagement.tsx
+src/components/AlarmTester.tsx
+src/components/AlarmThemeBrowser.tsx
+src/components/AlarmThemeSelector.tsx
+src/components/CommunityChallenge.tsx
+src/components/CompleteThemeSystemDemo.tsx
+src/components/ComprehensiveSecurityDashboard.tsx
+src/components/CustomSoundThemeCreator.tsx
+src/components/CustomThemeManager.tsx
+src/components/Dashboard.tsx
+src/components/EnhancedBattles.tsx
+src/components/EnhancedDashboard.tsx
+src/components/EnhancedMediaContent.tsx
+src/components/EnhancedSmartAlarmSettings.tsx
+src/components/ExtendedScreenReaderTester.tsx
+src/components/FriendsManager.tsx
+src/components/HabitCelebration.tsx
+src/components/MobileAlarmCard.tsx
+src/components/MobileNavigation.tsx
+src/components/MobileTester.tsx
+src/components/NuclearModeBattle.tsx
+src/components/NuclearModeChallenge.tsx
+src/components/NuclearModeSelector.tsx
+src/components/OfflineDiagnostics.tsx
+src/components/PerformanceDashboard.tsx
+src/components/PerformanceProfilerWrapper.tsx
+src/components/PersonaAnalyticsDashboard.tsx
+src/components/PersonaFocusDashboard.tsx
+src/components/PremiumDashboard.tsx
+src/components/PremiumThemeSettings.tsx
+src/components/PremiumThemeShowcase.tsx
+src/components/PremiumUsageTracker.tsx
+src/components/PushNotificationTester.tsx
+src/components/RewardsDashboard.tsx
+src/components/SettingsPage.tsx
+src/components/SignUpForm.tsx
+src/components/SleepTracker.tsx
+src/components/SmartAlarmDashboard.tsx
+src/components/SmartAlarmSettings.tsx
+src/components/SoundPicker.tsx
+src/components/SoundSettings.tsx
+src/components/SoundThemeDemo.tsx
+src/components/SoundUploader.tsx
+src/components/SyncStatus.tsx
+src/components/TabProtectionWarning.tsx
+src/components/ThemeCreator.tsx
+src/components/ThemeCustomizationStudio.tsx
+src/components/ThemeGallery.tsx
+src/components/ThemeManager.tsx
+src/components/TranslationDashboard.tsx
+src/components/UserProfile.tsx
+src/components/VirtualScroll.tsx
+src/components/VoiceAnalyticsDashboard.tsx
+src/components/VoiceCloning.tsx
+src/components/VoiceSelector.tsx
+src/components/VoiceSettings.tsx
+src/components/WakeUpFeedbackModal.tsx
+src/components/animations/MicroInteractions.tsx
+src/components/premium/PaymentFlow.tsx
+src/components/premium/PremiumAlarmFeatures.tsx
+src/components/premium/PremiumTeamFeatures.tsx
+src/components/premium/PremiumVoiceFeatures.tsx
+src/components/premium/PsychologyDrivenCTA.tsx
+src/components/premium/SubscriptionManagement.tsx
+src/components/ui/sidebar.tsx
+src/components/user-testing/BetaTestingProgram.tsx
+src/components/user-testing/BugReportModal.tsx
+src/components/user-testing/RedesignedFeedbackModal.tsx
+src/components/user-testing/UsabilityAnalyticsDashboard.tsx
+src/hooks/useABTesting.tsx
+src/hooks/useAccessibility.ts
+src/hooks/useAdvancedAlarms.ts
+src/hooks/useAudioLazyLoading.ts
+src/hooks/useAuth.ts
+src/hooks/useCapacitor.ts
+src/hooks/useCriticalPreloading.ts
+src/hooks/useDeviceCapabilities.tsx
+src/hooks/useEmotionalNotifications.ts
+src/hooks/useEnhancedCaching.ts
+src/hooks/useEnhancedServiceWorker.ts
+src/hooks/useEnhancedSmartAlarms.ts
+src/hooks/useFeatureGate.ts
+src/hooks/useMobilePerformance.ts
+src/hooks/usePushNotifications.ts
+src/hooks/useSubscription.ts
+src/hooks/useTheme.tsx
+src/services/advanced-analytics.ts
+src/services/advanced-conditions-helper.ts
+src/services/capacitor-enhanced.ts
+src/services/offline-manager.ts
+src/services/predictive-analytics-service.ts
+src/services/realtime-service.ts
+src/services/revenue-analytics.ts
+src/services/subscription-service.ts
+src/test-setup.ts
+src/utils/performance-alerts.tsx
+src/utils/progressive-loading.tsx
+Auto-resolving conflicts by preferring theirs...
+auto/fix-ts-syntax-1 -> merged with auto-resolve (theirs)
+----
+Processing branch: auto/fix-ts-types-1
+Using standard strategy for auto/fix-ts-types-1
+Merge failed for auto/fix-ts-types-1. Attempting recovery...
+Found conflicts in: ci/step-outputs/tsc_before.txt
+ci/step-outputs/tsc_buckets.json
+ci/step-outputs/tsc_buckets_report.md
+fix_timeout_types.py
+node_modules/esprima/README.md
+node_modules/esprima/bin/esparse.js
+node_modules/esprima/bin/esvalidate.js
+node_modules/esprima/package.json
+node_modules/js-yaml/CHANGELOG.md
+node_modules/js-yaml/README.md
+node_modules/js-yaml/bin/js-yaml.js
+node_modules/js-yaml/dist/js-yaml.js
+node_modules/js-yaml/dist/js-yaml.min.js
+node_modules/js-yaml/index.js
+node_modules/js-yaml/package.json
+node_modules/lru-cache/README.md
+node_modules/lru-cache/package.json
+src/analytics/PersonaAnalytics.tsx
+src/components/AdvancedSchedulingDashboard.tsx
+src/components/AlarmRinging.tsx
+src/components/PricingPage.tsx
+src/components/UpgradePrompt.tsx
+src/components/premium/FeatureUtils.tsx
+src/hooks/useAuth.ts
+src/hooks/useDynamicFocus.ts
+src/hooks/useFormAnnouncements.ts
+src/types/cloudflare-runtime.d.ts
+src/types/index.ts
+src/types/timers.ts
+src/types/user.ts
+src/types/wake-up-mood.ts
+Auto-resolving conflicts by preferring theirs...
+auto/fix-ts-types-1 -> merged with auto-resolve (theirs)
+----
+Processing branch: auto/fix-unsafe-fn-types
+Using standard strategy for auto/fix-unsafe-fn-types
+Merge failed for auto/fix-unsafe-fn-types. Attempting recovery...
+Found conflicts in: backup/pre-fix-unsafe-fn-20250825_214002/src/App.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/backend/ai-deployment-api.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/backend/ai-deployment-routes.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/backend/ai-parameters-endpoints.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/backend/ai-parameters-routes-secured.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/backend/ai-parameters-routes.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/backend/webhook-management-api.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/AIDeploymentDashboard.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/AIModelParametersCustomizer.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/AIParametersDemo.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/AIPerformanceDashboard.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/AIPerformanceDashboardDemo.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/AdminAIDashboard.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/AlarmFormExample.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/CelebrationEffects.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/Dashboard.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/DevToolsProvider.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/DeveloperDashboard.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/EnhancedBehavioralIntelligenceDashboard.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/GiftCatalog.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/GiftInventory.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/GiftShop.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/MobileAlarmManager.css
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/MobileAlarmManager.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/ReduxDevToolsTest.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/RewardManager.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/RewardNotificationSystem.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/SleepQualityChart.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/VoiceCloning.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/WebhookManagementDashboard.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/devtools/APIMonitorPanel.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/devtools/AccessibilityPanel.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/devtools/ComponentInspectorPanel.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/devtools/ErrorTrackerPanel.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/devtools/PerformanceMonitorPanel.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/premium/EnhancedUpgradePrompt.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/premium/PaymentMethodManager.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/premium/PremiumAnalytics.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/premium/PremiumTeamFeatures.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/components/premium/PremiumVoiceFeatures.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/config/ai-deployment-config.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/config/ai-deployment-routes.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/config/enhancedInitializeApp.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/hooks/useAnalytics.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/hooks/useAuth.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/hooks/useEnhancedSmartAlarms.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/hooks/useTheme.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/main.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/middleware/ai-parameters-security.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/reducers/rootReducer.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/scripts/validate-ai-deployment.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/MigrationGuide.md
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/ServiceBootstrap.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/__tests__/DependencyInjectionIntegration.test.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/__tests__/EnhancedServices.test.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/__tests__/ServiceBootstrap.test.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/__tests__/setup.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/advanced-behavioral-intelligence.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/ai-deployment-alerts.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/ai-deployment-orchestrator-config.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/ai-deployment-orchestrator.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/ai-parameters-api.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/ai-parameters-security.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/ai-performance-monitor.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/ai-rewards.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/analytics.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/cross-platform-integration.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/emotional-intelligence.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/enhanced-recommendation-engine.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/enhanced/EnhancedAlarmService.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/enhanced/EnhancedAnalyticsService.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/enhanced/EnhancedStorageService.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/factories/EnhancedServiceFactories.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/factories/EnhancedServiceRegistry.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/factories/ServiceFactories.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/factories/ServiceRegistry.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/mobile-storage.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/offline-manager.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/performance-budget-manager.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/predictive-analytics-service.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/reward-service.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/smart-notification-service.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/validateDI.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/services/voice-ai-enhanced.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/store/hooks.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/store/index.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/stories/ui/Button.stories.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/tests/integration/ai-deployment-integration.test.tsx
+backup/pre-fix-unsafe-fn-20250825_214002/src/types/app-state.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/types/domain-service-interfaces.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/types/reward-system.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/types/service-interfaces.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/utils/__auto_stubs.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/utils/keyboard-navigation.ts
+backup/pre-fix-unsafe-fn-20250825_214002/src/utils/lazy-loading.tsx
+src/__tests__/integration/e2e-testing-utilities.ts
+src/__tests__/mocks/capacitor.mock.ts
+src/__tests__/mocks/sentry.mock.ts
+src/__tests__/realtime/realtime-testing-utilities.ts
+src/services/capacitor-enhanced.ts
+src/services/pwa-manager.ts
+src/services/realtime-service.ts
+src/types/utility-types.ts
+Auto-resolving conflicts by preferring theirs...
+auto/fix-unsafe-fn-types -> merged with auto-resolve (theirs)
+----
+Processing branch: auto/fix-unused-small
+Using standard strategy for auto/fix-unused-small
+auto/fix-unused-small -> merged successfully (standard)
+----
+Processing branch: auto/fix-workflows-yaml
+Using standard strategy for auto/fix-workflows-yaml
+auto/fix-workflows-yaml -> merged successfully (standard)
+Progress: Processed 20 branches (14 merged, 6 failed/skipped)
+----
+Processing branch: auto/lint-format-cleanup
+Using standard strategy for auto/lint-format-cleanup
+Merge failed for auto/lint-format-cleanup. Attempting recovery...
+Found conflicts in: auto-fix-unused.js
+ci/step-outputs/eslint_after.json
+ci/step-outputs/eslint_after_var_fixes.json
+relife-campaign-dashboard/src/components/ai/ContentOptimization.tsx
+relife-campaign-dashboard/src/components/ai/PersonaPrediction.tsx
+relife-campaign-dashboard/src/components/ui/carousel.tsx
+relife-campaign-dashboard/src/components/ui/chart.tsx
+relife-campaign-dashboard/src/components/ui/form.tsx
+relife-campaign-dashboard/src/components/ui/input-otp.tsx
+relife-campaign-dashboard/src/components/ui/sidebar.tsx
+src/App.tsx
+src/components/AchievementBadges.tsx
+src/components/AlarmForm.tsx
+src/components/CustomThemeManager.tsx
+src/components/Dashboard.tsx
+src/components/MobileAlarmCard.tsx
+src/components/NuclearModeBattle.tsx
+src/components/SmartAlarmDashboard.tsx
+src/components/SoundUploader.tsx
+src/components/VoiceCloning.tsx
+src/components/VoiceSelector.tsx
+src/components/animations/MicroInteractions.tsx
+src/components/premium/PremiumVoiceFeatures.tsx
+src/hooks/useAdvancedAlarms.ts
+src/hooks/useDeviceCapabilities.tsx
+src/hooks/useEnhancedSmartAlarms.ts
+src/services/alarm-stub.ts
+src/utils/performance-alerts.tsx
+Auto-resolving conflicts by preferring theirs...
+auto/lint-format-cleanup -> merged with auto-resolve (theirs)
+----
+Processing branch: auto/security-performance-1
+Using standard strategy for auto/security-performance-1
+Merge failed for auto/security-performance-1. Attempting recovery...
+Found conflicts in: ci/step-outputs/npm_audit_after.json
+ci/step-outputs/npm_audit_raw.json
+package-lock.json
+src/utils/lazy-loading.tsx
+Auto-resolving conflicts by preferring theirs...
+auto/security-performance-1 -> merged with auto-resolve (theirs)
+----
+Processing branch: auto/syntax-fix-2
+Using standard strategy for auto/syntax-fix-2
+Merge failed for auto/syntax-fix-2. Attempting recovery...
+Found conflicts in: src/components/AlarmThemeBrowser.tsx
+src/components/CompleteThemeSystemDemo.tsx
+src/components/EnhancedDashboard.tsx
+src/components/EnhancedMediaContent.tsx
+src/components/MobileNavigation.tsx
+src/components/PersonaAnalyticsDashboard.tsx
+src/hooks/useAudioLazyLoading.ts
+src/hooks/useCriticalPreloading.ts
+src/hooks/useEnhancedCaching.ts
+test-syntax.js
+Auto-resolving conflicts by preferring theirs...
+auto/syntax-fix-2 -> merged with auto-resolve (theirs)
+----
+Processing branch: auto/syntax-locale-sweep
+Using standard strategy for auto/syntax-locale-sweep
+auto/syntax-locale-sweep -> merged successfully (standard)
+----
+Processing branch: auto/type-coverage-expansion
+Using standard strategy for auto/type-coverage-expansion
+Merge failed for auto/type-coverage-expansion. Attempting recovery...
+Found conflicts in: ci/step-outputs/type_coverage_expansion_summary.md
+src/App.tsx
+src/components/AccessibilityDashboard.tsx
+src/components/ActiveAlarm.tsx
+src/components/AdvancedAlarmScheduling.tsx
+src/components/AlarmManagement.tsx
+src/components/AlarmTester.tsx
+src/components/AlarmThemeBrowser.tsx
+src/components/BattleSystem.tsx
+src/components/CompleteThemeSystemDemo.tsx
+src/components/ComprehensiveSecurityDashboard.tsx
+src/components/CustomSoundThemeCreator.tsx
+src/components/OnboardingFlow.tsx
+src/hooks/useAuth.ts
+src/types/utility-types.ts
+Auto-resolving conflicts by preferring theirs...
+auto/type-coverage-expansion -> merged with auto-resolve (theirs)
+----
+Processing branch: auto/type-coverage-expansion-2
+Using standard strategy for auto/type-coverage-expansion-2
+Merge failed for auto/type-coverage-expansion-2. Attempting recovery...
+Found conflicts in: src/App.tsx
+src/backend/subscription-api.ts
+src/components/AlarmThemeBrowser.tsx
+src/components/CommunityChallenge.tsx
+src/components/EnhancedSmartAlarmSettings.tsx
+src/components/ExtendedScreenReaderTester.tsx
+src/components/ForgotPasswordForm.tsx
+src/components/LoginForm.tsx
+src/components/MediaContent.tsx
+src/components/NuclearModeChallenge.tsx
+src/components/PerformanceProfilerWrapper.tsx
+src/components/PersonaFocusDashboard.tsx
+src/components/PersonalizationSettings.tsx
+src/components/PushNotificationSettings.tsx
+src/components/QuickAlarmSetup.tsx
+src/components/SettingsPage.tsx
+src/components/SignUpForm.tsx
+src/components/SmartAlarmSettings.tsx
+src/components/SoundPicker.tsx
+src/components/TabProtectionSettings.tsx
+src/components/ThemeCreator.tsx
+src/components/ThemeCustomizationStudio.tsx
+src/components/VoiceAnalyticsDashboard.tsx
+src/components/VoiceSettings.tsx
+src/components/WakeUpFeedbackModal.tsx
+src/components/animations/AnimationLibrary.tsx
+src/components/premium/PaymentFlow.tsx
+src/components/user-testing/ABTestWrapper.tsx
+src/components/user-testing/BetaTestingProgram.tsx
+src/components/user-testing/BugReportModal.tsx
+src/components/user-testing/FeedbackModal.tsx
+Auto-resolving conflicts by preferring theirs...
+auto/type-coverage-expansion-2 -> merged with auto-resolve (theirs)
+----
+Processing branch: backup/pre-cleanup-unused-2-20250825_155400
+Skipping potentially problematic branch: backup/pre-cleanup-unused-2-20250825_155400
+----
+Processing branch: backup/pre-cleanup-unused-2-20250825_163406
+Skipping potentially problematic branch: backup/pre-cleanup-unused-2-20250825_163406
+----
+Processing branch: backup/pre-fix-no-undef-20250825_084932
+Skipping potentially problematic branch: backup/pre-fix-no-undef-20250825_084932
+----
+Processing branch: backup/pre-fix-syntax8-20250822-130510
+Skipping potentially problematic branch: backup/pre-fix-syntax8-20250822-130510
+----
+Processing branch: backup/pre-lint-cleanup-20250824_143423
+Skipping potentially problematic branch: backup/pre-lint-cleanup-20250824_143423
+----
+Processing branch: backup/pre-ts-2a-20250824_122126
+Skipping potentially problematic branch: backup/pre-ts-2a-20250824_122126
+----
+Processing branch: backup/pre-ts-2b-20250824_124655
+Skipping potentially problematic branch: backup/pre-ts-2b-20250824_124655
+----
+Processing branch: backup/pre-ts-fixes-20250824_094843
+Skipping potentially problematic branch: backup/pre-ts-fixes-20250824_094843
+----
+Processing branch: backup/pre-ts-fixes-20250824_105914
+Skipping potentially problematic branch: backup/pre-ts-fixes-20250824_105914
+----
+Processing branch: ci/fix-typescript-errors
+Using standard strategy for ci/fix-typescript-errors
+Merge failed for ci/fix-typescript-errors. Attempting recovery...
+Found conflicts in: src/services/premium.ts
+src/services/subscription.ts
+src/types/email-campaigns.ts
+src/types/email.ts
+src/types/index.ts
+src/utils/alarm-conversion.ts
+src/utils/premium-testing.ts
+Auto-resolving conflicts by preferring theirs...
+ci/fix-typescript-errors -> merged with auto-resolve (theirs)
+----
+Processing branch: docs/vulnerability-fix-summary
+Using standard strategy for docs/vulnerability-fix-summary
+Merge failed for docs/vulnerability-fix-summary. Attempting recovery...
+Found conflicts in: VULNERABILITY_FIX_SUMMARY.md
+Auto-resolving conflicts by preferring theirs...
+docs/vulnerability-fix-summary -> merged with auto-resolve (theirs)
+----
+Processing branch: feature/comprehensive-formatting-fixes
+Using cautious strategy for feature/comprehensive-formatting-fixes
+feature/comprehensive-formatting-fixes -> merged successfully (cautious)
+----
+Processing branch: feature/update-ignore-patterns
+Using cautious strategy for feature/update-ignore-patterns
+feature/update-ignore-patterns -> merged successfully (cautious)
+----
+Processing branch: feature/webhook-notifications-system
+Using cautious strategy for feature/webhook-notifications-system
+feature/webhook-notifications-system -> merged successfully (cautious)
+Progress: Processed 40 branches (25 merged, 15 failed/skipped)
+----
+Processing branch: fix/remaining-typescript-errors
+Using cautious strategy for fix/remaining-typescript-errors
+fix/remaining-typescript-errors -> merged successfully (cautious)
+----
+Processing branch: fix/test-infrastructure-setup
+Using cautious strategy for fix/test-infrastructure-setup
+fix/test-infrastructure-setup -> merged successfully (cautious)
+----
+Processing branch: fix/types-advanced-alarm-scheduler
+Using cautious strategy for fix/types-advanced-alarm-scheduler
+fix/types-advanced-alarm-scheduler -> merged successfully (cautious)
+----
+Processing branch: scout/additional-syntax-fixes
+Using cautious strategy for scout/additional-syntax-fixes
+scout/additional-syntax-fixes -> merged successfully (cautious)
+----
+Processing branch: scout/advanced-developer-tools
+Using cautious strategy for scout/advanced-developer-tools
+scout/advanced-developer-tools -> merged successfully (cautious)
+----
+Processing branch: scout/ai-deployment-phase1-5
+Using cautious strategy for scout/ai-deployment-phase1-5
+scout/ai-deployment-phase1-5 -> merged successfully (cautious)
+----
+Processing branch: scout/ci-optimization-consolidation
+Using cautious strategy for scout/ci-optimization-consolidation
+scout/ci-optimization-consolidation -> merged successfully (cautious)
+----
+Processing branch: scout/comprehensive-monitoring-alerts
+Using cautious strategy for scout/comprehensive-monitoring-alerts
+scout/comprehensive-monitoring-alerts -> merged successfully (cautious)
+----
+Processing branch: scout/comprehensive-security-improvements
+Using cautious strategy for scout/comprehensive-security-improvements
+Merge failed for scout/comprehensive-security-improvements. Attempting recovery...
+Found conflicts in: package-lock.json
+Auto-resolving conflicts by preferring theirs...
+scout/comprehensive-security-improvements -> merged with auto-resolve (theirs)
+----
+Processing branch: scout/comprehensive-testing-framework
+Using cautious strategy for scout/comprehensive-testing-framework
+scout/comprehensive-testing-framework -> merged successfully (cautious)
+Progress: Processed 50 branches (35 merged, 15 failed/skipped)
+----
+Processing branch: scout/enhanced-ai-behavior-analysis
+Using cautious strategy for scout/enhanced-ai-behavior-analysis
+scout/enhanced-ai-behavior-analysis -> merged successfully (cautious)
+----
+Processing branch: scout/enhanced-quality-system
+Using cautious strategy for scout/enhanced-quality-system
+scout/enhanced-quality-system -> merged successfully (cautious)
+----
+Processing branch: scout/final-validation-report
+Using cautious strategy for scout/final-validation-report
+scout/final-validation-report -> merged successfully (cautious)
+----
+Processing branch: scout/fix-advanced-alarm-scheduler-parsing-error
+Using cautious strategy for scout/fix-advanced-alarm-scheduler-parsing-error
+scout/fix-advanced-alarm-scheduler-parsing-error -> merged successfully (cautious)
+----
+Processing branch: scout/fix-browser-api-types
+Using cautious strategy for scout/fix-browser-api-types
+scout/fix-browser-api-types -> merged successfully (cautious)
+----
+Processing branch: scout/fix-critical-eslint-issues
+Using cautious strategy for scout/fix-critical-eslint-issues
+scout/fix-critical-eslint-issues -> merged successfully (cautious)
+----
+Processing branch: scout/fix-eslint-configuration
+Using cautious strategy for scout/fix-eslint-configuration
+scout/fix-eslint-configuration -> merged successfully (cautious)
+----
+Processing branch: scout/fix-lint-warnings
+Using cautious strategy for scout/fix-lint-warnings
+scout/fix-lint-warnings -> merged successfully (cautious)
+----
+Processing branch: scout/fix-types-advanced-alarm-scheduler
+Using cautious strategy for scout/fix-types-advanced-alarm-scheduler
+scout/fix-types-advanced-alarm-scheduler -> merged successfully (cautious)
+----
+Processing branch: scout/fix-typescript-semantic-errors
+Using cautious strategy for scout/fix-typescript-semantic-errors
+Merge failed for scout/fix-typescript-semantic-errors. Attempting recovery...
+Found conflicts in: node_modules/esprima/README.md
+node_modules/esprima/bin/esparse.js
+node_modules/esprima/bin/esvalidate.js
+node_modules/esprima/package.json
+node_modules/js-yaml/CHANGELOG.md
+node_modules/js-yaml/README.md
+node_modules/js-yaml/bin/js-yaml.js
+node_modules/js-yaml/dist/js-yaml.js
+node_modules/js-yaml/dist/js-yaml.min.js
+node_modules/js-yaml/index.js
+node_modules/js-yaml/package.json
+Auto-resolving conflicts by preferring theirs...
+scout/fix-typescript-semantic-errors -> merged with auto-resolve (theirs)
+Progress: Processed 60 branches (45 merged, 15 failed/skipped)
+----
+Processing branch: scout/fix-workflow-syntax-errors
+Using cautious strategy for scout/fix-workflow-syntax-errors
+scout/fix-workflow-syntax-errors -> merged successfully (cautious)
+----
+Processing branch: scout/implement-proper-stub-logic
+Using cautious strategy for scout/implement-proper-stub-logic
+scout/implement-proper-stub-logic -> merged successfully (cautious)
+----
+Processing branch: scout/improved-cleanup-system
+Using cautious strategy for scout/improved-cleanup-system
+scout/improved-cleanup-system -> merged successfully (cautious)
+----
+Processing branch: scout/integration-tests-advanced-features
+Using cautious strategy for scout/integration-tests-advanced-features
+scout/integration-tests-advanced-features -> merged successfully (cautious)
+----
+Processing branch: scout/manual-eslint-fixes
+Using cautious strategy for scout/manual-eslint-fixes
+scout/manual-eslint-fixes -> merged successfully (cautious)
+----
+Processing branch: scout/perfect-eslint-quality
+Using cautious strategy for scout/perfect-eslint-quality
+scout/perfect-eslint-quality -> merged successfully (cautious)
+----
+Processing branch: scout/realtime-websocket-types
+Using cautious strategy for scout/realtime-websocket-types
+scout/realtime-websocket-types -> merged successfully (cautious)
+----
+Processing branch: scout/service-architecture-enhancement
+Using cautious strategy for scout/service-architecture-enhancement
+scout/service-architecture-enhancement -> merged successfully (cautious)
+----
+Processing branch: scout/sync-latest-changes
+Using cautious strategy for scout/sync-latest-changes
+scout/sync-latest-changes -> merged successfully (cautious)
+----
+Processing branch: scout/type-integration-validation
+Using cautious strategy for scout/type-integration-validation
+scout/type-integration-validation -> merged successfully (cautious)
+Progress: Processed 70 branches (55 merged, 15 failed/skipped)
+----
+Processing branch: scout/typescript-compliance-fixes
+Using cautious strategy for scout/typescript-compliance-fixes
+scout/typescript-compliance-fixes -> merged successfully (cautious)
+----
+Processing branch: scout/typescript-compliance-phase2
+Using cautious strategy for scout/typescript-compliance-phase2
+Merge failed for scout/typescript-compliance-phase2. Attempting recovery...
+Found conflicts in: backup/pre-final-lint-20250825_093523/src/universal_template.egg-info/dependency_links.txt
+node_modules/argparse/CHANGELOG.md
+node_modules/argparse/LICENSE
+node_modules/argparse/README.md
+node_modules/argparse/package.json
+node_modules/esprima/README.md
+node_modules/esprima/bin/esparse.js
+node_modules/esprima/bin/esvalidate.js
+node_modules/esprima/package.json
+node_modules/js-yaml/CHANGELOG.md
+node_modules/js-yaml/README.md
+node_modules/js-yaml/bin/js-yaml.js
+node_modules/js-yaml/dist/js-yaml.js
+node_modules/js-yaml/dist/js-yaml.min.js
+node_modules/js-yaml/index.js
+node_modules/js-yaml/package.json
+node_modules/lru-cache/README.md
+node_modules/lru-cache/package.json
+package-lock.json
+Auto-resolving conflicts by preferring theirs...
+scout/typescript-compliance-phase2 -> merged with auto-resolve (theirs)
+----
+Processing branch: scout/typescript-strict-mode
+Using cautious strategy for scout/typescript-strict-mode
+scout/typescript-strict-mode -> merged successfully (cautious)
+----
+Processing branch: test-globals-shim-clean
+Using standard strategy for test-globals-shim-clean
+test-globals-shim-clean -> merged successfully (standard)
+----
+Processing branch: test/integration-critical-flows
+Using standard strategy for test/integration-critical-flows
+test/integration-critical-flows -> merged successfully (standard)
+====
+Final Merge Summary:
+Successfully merged: 60 branches
+Failed merges: 15 branches
+Total processed: 75 branches
+====
+Moving secondary apps to backup...
+Found root directories: android api artifacts backup ci config database docker docs email-campaigns ios monitoring node_modules performance public relife-campaign-dashboard reports scripts src tests test-setup

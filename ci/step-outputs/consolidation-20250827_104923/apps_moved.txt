@@ -1,0 +1,21 @@
+
+Moving android -> backup/apps_backup_20250827_104923/android
+Moving api -> backup/apps_backup_20250827_104923/api
+Moving artifacts -> backup/apps_backup_20250827_104923/artifacts
+Keeping backup
+Keeping ci
+Keeping config
+Keeping database
+Moving docker -> backup/apps_backup_20250827_104923/docker
+Keeping docs
+Moving email-campaigns -> backup/apps_backup_20250827_104923/email-campaigns
+Moving ios -> backup/apps_backup_20250827_104923/ios
+Moving monitoring -> backup/apps_backup_20250827_104923/monitoring
+Moving performance -> backup/apps_backup_20250827_104923/performance
+Keeping public
+Keeping relife-campaign-dashboard
+Moving reports -> backup/apps_backup_20250827_104923/reports
+Keeping scripts
+Keeping src
+Moving tests -> backup/apps_backup_20250827_104923/tests
+Moving test-setup -> backup/apps_backup_20250827_104923/test-setup
