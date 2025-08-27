@@ -179,7 +179,7 @@ export function CommunityHub({
   // Track leaderboard changes
   useEffect(() => {
     const userEntry = MOCK_GLOBAL_RANKINGS.find(
-      entry => entry._user.id === currentUser.id
+      entry => entry.user.id === currentUser.id
     );
     if (userEntry) {
       const previousUserRank = previousValues.current.userRank;
@@ -287,12 +287,12 @@ export function CommunityHub({
                     <div
                       key={entry.user.id}
                       className={`flex items-center justify-between p-3 rounded-lg cursor-pointer hover:bg-muted/70 transition-colors ${
-                        entry._user.id === currentUser.id
+                        entry.user.id === currentUser.id
                           ? 'bg-primary/10 border border-primary/20'
                           : 'bg-muted/50'
                       }`}
                       onClick={() => {
-                        if (entry._user.id === currentUser.id) {
+                        if (entry.user.id === currentUser.id) {
                           announceGaming({
                             type: 'leaderboard',
                             customMessage: `Your current rank: ${entry.rank}. Score: ${entry.score.toLocaleString()} points. ${entry.change > 0 ? `Up ${entry.change} positions` : entry.change < 0 ? `Down ${Math.abs(entry.change)} positions` : 'No change'}.`,
@@ -301,7 +301,7 @@ export function CommunityHub({
                         } else {
                           announceGaming({
                             type: 'leaderboard',
-                            customMessage: `${entry.user.displayName} rank ${entry.rank}. Level ${entry._user.level}. Score: ${entry.score.toLocaleString()} points.`,
+                            customMessage: `${entry.user.displayName} rank ${entry.rank}. Level ${entry.user.level}. Score: ${entry.score.toLocaleString()} points.`,
                             priority: 'polite',
                           });
                         }
@@ -365,16 +365,16 @@ export function CommunityHub({
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2">
-                      {MOCK_GLOBAL_RANKINGS.slice(0, 3).map((entry, _index) => (
+                      {MOCK_GLOBAL_RANKINGS.slice(0, 3).map((entry, index) => (
                         <div key={entry.user.id} className="flex items-center gap-2">
-                          <span className="text-sm font-medium w-4">#{_index + 1}</span>
+                          <span className="text-sm font-medium w-4">#{index + 1}</span>
                           <Avatar className="h-6 w-6">
                             <AvatarFallback className="text-xs">
                               {entry.user.displayName[0]}
                             </AvatarFallback>
                           </Avatar>
                           <span className="text-sm truncate">
-                            {entry._user.displayName}
+                            {entry.user.displayName}
                           </span>
                         </div>
                       ))}
@@ -577,7 +577,8 @@ export function CommunityHub({
                         <Button
                           size="sm"
                           className="w-full"
-                          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                          onClick={(e: any) => {
+                            // auto: implicit any
                             e.stopPropagation();
                             announceRewardEvent('claimed', {
                               title: `${quest.reward.experience} XP${quest.reward.title ? ` + ${quest.reward.title}` : ''}${quest.reward.badge ? ` + ${quest.reward.badge}` : ''}`,

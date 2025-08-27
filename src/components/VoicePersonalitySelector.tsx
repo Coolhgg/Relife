@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import useAuth from '../hooks/useAuth';
 import {
   Volume2,
   Crown,
@@ -147,7 +146,7 @@ const getPersonalityIcon = (mood: VoiceMood) => {
 export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> = ({
   selectedMood,
   onMoodChange,
-  _user,
+  user,
   showPreview = true,
 }) => {
   const [hasPreviewAccess, setHasPreviewAccess] = useState(false);
@@ -160,13 +159,13 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
 
   const checkPremiumAccess = async () => {
     const access = await SubscriptionService.hasFeatureAccess(
-      _user.id,
+      user.id,
       'premiumPersonalities'
     );
     setHasPremiumPersonalities(access);
 
     const previewAccess = await SubscriptionService.hasFeatureAccess(
-      _user.id,
+      user.id,
       'elevenlabsVoices'
     );
     setHasPreviewAccess(previewAccess);
@@ -297,7 +296,8 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
         {showPreview && hasPreviewAccess && !isLocked && (
           <div className="absolute bottom-2 right-2">
             <button
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+              onClick={(e: any) => {
+                // auto: implicit any
                 e.stopPropagation();
                 playPreview(personality.id as VoiceMood);
               }}
@@ -349,7 +349,7 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
         ) : (
           <PremiumGate
             feature="premiumPersonalities"
-            userId={_user.id}
+            userId={user.id}
             title="🎭 Premium Voice Personalities"
             description="Unlock Demon Lord, AI Bot, Comedian, and Philosopher personalities with Pro subscription."
             mode="overlay"

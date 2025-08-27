@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Heart, Clock, Star, MessageCircle } from 'lucide-react';
+import { X, Heart, Zap, Clock, Star, MessageCircle } from 'lucide-react';
 import type {
   EmotionalNotificationPayload,
   EmotionalResponse,
@@ -18,10 +18,10 @@ interface EmotionalNudgeModalProps {
 }
 
 // Lottie animation component (placeholder - would use actual Lottie React)
-const EmotionalAnimation: React.FC<{
-  emotion: EmotionType;
-  className?: string;
-}> = ({ emotion, className = 'w-24 h-24' }) => {
+const EmotionalAnimation: React.FC<{ emotion: EmotionType; className?: string }> = ({
+  emotion,
+  className = 'w-24 h-24',
+}) => {
   const animations = {
     happy: '😊',
     excited: '🎉',
@@ -174,7 +174,8 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+          onClick={(e: any) => {
+            // auto: implicit any
             if (e.target === e.currentTarget) {
               handleDismiss();
             }
@@ -209,11 +210,7 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                transition={{
-                  delay: 0.2,
-                  type: 'spring' as const,
-                  stiffness: 200,
-                }}
+                transition={{ delay: 0.2, type: 'spring' as const, stiffness: 200 }}
                 className="mb-4"
               >
                 <EmotionalAnimation emotion={emotion} className="w-20 h-20 mx-auto" />
@@ -251,7 +248,7 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
                   transition={{ delay: 0.5 }}
                   className="flex items-center justify-center gap-1 text-sm opacity-75 mb-4"
                 >
-                  {escalationLevel === 'strong_emotional' && <Clock size={16} />}
+                  {escalationLevel === 'strong_emotional' && <Zap size={16} />}
                   {escalationLevel === 'social_pressure' && <Heart size={16} />}
                   {escalationLevel === 'major_reset' && <Star size={16} />}
                   <span className="capitalize">
@@ -407,16 +404,8 @@ export const EmotionalNotificationSettings: React.FC<{
               label: '😊 Encouraging friend',
               desc: 'Supportive and caring',
             },
-            {
-              value: 'playful',
-              label: '🎮 Playful buddy',
-              desc: 'Fun and energetic',
-            },
-            {
-              value: 'firm',
-              label: '💪 Firm coach',
-              desc: 'Direct and motivating',
-            },
+            { value: 'playful', label: '🎮 Playful buddy', desc: 'Fun and energetic' },
+            { value: 'firm', label: '💪 Firm coach', desc: 'Direct and motivating' },
             {
               value: 'roast',
               label: '😈 Savage roast',

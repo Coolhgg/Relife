@@ -8,7 +8,6 @@ import SecureAlarmStorageService from './secure-alarm-storage';
 import SecurityService from './security';
 import { ErrorHandler } from './error-handler';
 import { TimeoutHandle } from '../types/timers';
-// Note: User data should be passed as parameters or retrieved from auth context
 
 export class AlarmService {
   private static alarms: Alarm[] = [];
@@ -27,8 +26,8 @@ export class AlarmService {
 
       // Convert date strings back to Date objects and validate
       this.alarms = alarmData
-
-        .map((alarm: unknown) => ({
+        .map((alarm: any) => ({
+          // auto: implicit any{
           ...alarm,
           createdAt: new Date(alarm.createdAt),
           updatedAt: new Date(alarm.updatedAt),
@@ -36,7 +35,8 @@ export class AlarmService {
             ? new Date(alarm.lastTriggered)
             : undefined,
         }))
-        .filter((alarm: unknown) => {
+        .filter((alarm: any) => {
+          // auto: implicit any
           // Additional validation for loaded alarms
           return (
             alarm.id &&
@@ -133,11 +133,11 @@ export class AlarmService {
             'thursday',
             'friday',
             'saturday',
-          ][d] as unknown
+          ][d] as any
       ),
       voiceMood: data.voiceMood,
       sound: data.sound || 'default',
-      difficulty: data.difficulty || ('medium' as unknown),
+      difficulty: data.difficulty || ('medium' as any),
       snoozeEnabled: data.snoozeEnabled ?? true,
       snoozeInterval: data.snoozeInterval || 5,
       snoozeCount: 0,
@@ -203,11 +203,11 @@ export class AlarmService {
             'thursday',
             'friday',
             'saturday',
-          ][d] as unknown
+          ][d] as any
       ),
       voiceMood: data.voiceMood,
       sound: data.sound || this.alarms[alarmIndex].sound,
-      difficulty: (data.difficulty || this.alarms[alarmIndex].difficulty) as unknown,
+      difficulty: (data.difficulty || this.alarms[alarmIndex].difficulty) as any,
       snoozeEnabled: data.snoozeEnabled ?? this.alarms[alarmIndex].snoozeEnabled,
       snoozeInterval: data.snoozeInterval || this.alarms[alarmIndex].snoozeInterval,
       maxSnoozes: data.maxSnoozes ?? this.alarms[alarmIndex].maxSnoozes,
@@ -335,7 +335,7 @@ export class AlarmService {
     }
 
     // Handle battle integration
-    if (_user && alarm.battleId) {
+    if (user && alarm.battleId) {
       const alarmInstance: AlarmInstance = {
         id: `instance_${Date.now()}`,
         alarmId: alarm.id,
@@ -419,7 +419,7 @@ export class AlarmService {
     }
 
     // Handle battle integration
-    if (_user && alarm.battleId) {
+    if (user && alarm.battleId) {
       const alarmInstance: AlarmInstance = {
         id: `instance_${Date.now()}`,
         alarmId: alarm.id,
@@ -566,7 +566,7 @@ export class AlarmService {
             experience: 0,
             joinDate: new Date().toISOString(),
             lastActive: new Date().toISOString(),
-            preferences: {} as unknown,
+            preferences: {} as any,
             createdAt: new Date().toISOString(),
           };
 
@@ -619,11 +619,11 @@ export class AlarmService {
               'thursday',
               'friday',
               'saturday',
-            ][d] as unknown
+            ][d] as any
         ),
         voiceMood: data.voiceMood,
         sound: 'default',
-        difficulty: (data.difficulty || 'medium') as unknown,
+        difficulty: (data.difficulty || 'medium') as any,
         snoozeEnabled: false,
         snoozeInterval: 5,
         snoozeCount: 0,
@@ -638,7 +638,7 @@ export class AlarmService {
         experience: 0,
         joinDate: new Date().toISOString(),
         lastActive: new Date().toISOString(),
-        preferences: {} as unknown,
+        preferences: {} as any,
         createdAt: new Date().toISOString(),
       }
     );
@@ -762,7 +762,7 @@ export class AlarmService {
   /**
    * Log security events for audit trail
    */
-  private static logSecurityEvent(event: string, details: unknown): void {
+  private static logSecurityEvent(event: string, details: any): void {
     const logEntry = {
       event,
       details,

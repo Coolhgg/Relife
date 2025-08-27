@@ -79,8 +79,8 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
     setIsLoading(true);
     try {
       const granted = await requestNotificationPermissions();
-
-      setAppState((prev: AppState) => ({
+      setAppState((prev: any) => ({
+        // auto: implicit any{
         ...prev,
         permissions: {
           ...prev.permissions,
@@ -97,8 +97,8 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
         // Still proceed to next step even if denied
         moveToStep('microphone');
       }
-    } catch (_error) {
-      console._error('Error requesting notification permission:', _error);
+    } catch (error) {
+      console.error('Error requesting notification permission:', error);
       moveToStep('microphone');
     } finally {
       setIsLoading(false);
@@ -113,7 +113,8 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       // Stop the stream immediately
       stream.getTracks().forEach(track => track.stop());
 
-      setAppState((prev: AppState) => ({
+      setAppState((prev: any) => ({
+        // auto: implicit any{
         ...prev,
         permissions: {
           ...prev.permissions,
@@ -125,10 +126,10 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       }));
 
       moveToStep('complete');
-    } catch (_error) {
-      console._error('Microphone permission denied:', _error);
-
-      setAppState((prev: AppState) => ({
+    } catch (error) {
+      console.error('Microphone permission denied:', error);
+      setAppState((prev: any) => ({
+        // auto: implicit any{
         ...prev,
         permissions: {
           ...prev.permissions,
@@ -619,7 +620,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
         >
           <ol className="flex items-center gap-2" role="list">
             {['welcome', 'notifications', 'microphone', 'quick-setup', 'complete'].map(
-              (step, _index) => {
+              (step, index) => {
                 const stepNames = [
                   'Welcome',
                   'Notifications',
@@ -635,7 +636,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                   'complete',
                 ].indexOf(currentStep);
                 const isActive = currentStep === step;
-                const isCompleted = _index < currentIndex;
+                const isCompleted = index < currentIndex;
 
                 return (
                   <li key={step} className="flex items-center" role="listitem">
@@ -648,12 +649,12 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                             : 'bg-gray-300 dark:bg-gray-600'
                       }`}
                       role="img"
-                      aria-label={`Step ${_index + 1}: ${stepNames[_index]} - ${isActive ? 'current' : isCompleted ? 'completed' : 'pending'}`}
+                      aria-label={`Step ${index + 1}: ${stepNames[index]} - ${isActive ? 'current' : isCompleted ? 'completed' : 'pending'}`}
                     />
-                    {_index < 4 && (
+                    {index < 4 && (
                       <div
                         className={`w-8 h-0.5 mx-1 ${
-                          _index < currentIndex
+                          index < currentIndex
                             ? 'bg-green-500'
                             : 'bg-gray-300 dark:bg-gray-600'
                         }`}

@@ -28,7 +28,7 @@ interface IntegrityIssue {
   affectedAlarmIds: string[];
   severity: 'low' | 'medium' | 'high' | 'critical';
   timestamp: Date;
-  metadata?: unknown;
+  metadata?: any;
 }
 
 interface TamperDetectionEvent {
@@ -71,8 +71,8 @@ export class AlarmIntegrityMonitor {
     successfulRecoveries: 0,
   };
 
-  private alertCallbacks: Array<(_event: TamperDetectionEvent) => void> = [];
-  private recoveryCallbacks: Array<(result: unknown) => void> = [];
+  private alertCallbacks: Array<(event: TamperDetectionEvent) => void> = [];
+  private recoveryCallbacks: Array<(result: any) => void> = [];
 
   private constructor() {
     this.initializeMonitoring();
@@ -91,13 +91,14 @@ export class AlarmIntegrityMonitor {
   private initializeMonitoring(): void {
     // Register for storage tamper detection events
     const secureStorage = SecureAlarmStorageService.getInstance();
-    secureStorage.onTamperDetected((details: unknown) => {
+    secureStorage.onTamperDetected((details: any) => {
+      // auto: implicit any
       this.handleStorageTamperDetection(details);
     });
 
     // Register for general security events
-    window.addEventListener('alarm-security-event', (_event: CustomEvent) => {
-      this.handleSecurityEvent(_event.detail);
+    window.addEventListener('alarm-security-event', (event: CustomEvent) => {
+      this.handleSecurityEvent(event.detail);
     });
 
     // Register for visibility changes to perform integrity checks
@@ -163,14 +164,14 @@ export class AlarmIntegrityMonitor {
       // 1. Check storage integrity
       const storageStatus =
         await SecureAlarmStorageService.getInstance().getStorageStatus();
-      if (storageStatus._error) {
+      if (storageStatus.error) {
         issues.push({
           type: 'data_corruption',
           description: 'Storage integrity check failed',
           affectedAlarmIds: [],
           severity: 'high',
           timestamp: new Date(),
-          metadata: { error: storageStatus._error },
+          metadata: { error: storageStatus.error },
         });
       }
 
@@ -180,14 +181,14 @@ export class AlarmIntegrityMonitor {
 
       try {
         alarms = await secureStorage.retrieveAlarms(userId);
-      } catch (_error) {
+      } catch (error) {
         issues.push({
           type: 'data_corruption',
           description: 'Failed to retrieve alarms for integrity check',
           affectedAlarmIds: [],
           severity: 'critical',
           timestamp: new Date(),
-          metadata: { error: _error.message },
+          metadata: { error: error.message },
         });
       }
 
@@ -233,7 +234,7 @@ export class AlarmIntegrityMonitor {
         `[AlarmIntegrityMonitor] Integrity check completed: ${issues.length} issues found`
       );
       return result;
-    } catch (_error) {
+    } catch (error) {
       const duration = performance.now() - startTime;
       this.updateMetrics(duration, true);
 
@@ -243,7 +244,7 @@ export class AlarmIntegrityMonitor {
         affectedAlarmIds: [],
         severity: 'critical',
         timestamp: new Date(),
-        metadata: { error: _error.message },
+        metadata: { error: error.message },
       };
 
       const result: IntegrityCheckResult = {
@@ -256,7 +257,7 @@ export class AlarmIntegrityMonitor {
 
       await this.handleIntegrityIssues(result);
 
-      console.error('[AlarmIntegrityMonitor] Integrity check failed:', _error);
+      console.error('[AlarmIntegrityMonitor] Integrity check failed:', error);
       return result;
     }
   }
@@ -311,14 +312,14 @@ export class AlarmIntegrityMonitor {
           timestamp: new Date(),
         });
       }
-    } catch (_error) {
+    } catch (error) {
       issues.push({
         type: 'data_corruption',
         description: 'Failed to validate alarm integrity',
         affectedAlarmIds: [alarm.id],
         severity: 'high',
         timestamp: new Date(),
-        metadata: { error: _error.message },
+        metadata: { error: error.message },
       });
     }
 
@@ -371,14 +372,14 @@ export class AlarmIntegrityMonitor {
           });
         }
       }
-    } catch (_error) {
+    } catch (error) {
       issues.push({
         type: 'data_corruption',
         description: 'Failed to detect unauthorized modifications',
         affectedAlarmIds: [],
         severity: 'medium',
         timestamp: new Date(),
-        metadata: { error: _error.message },
+        metadata: { error: error.message },
       });
     }
 
@@ -417,14 +418,14 @@ export class AlarmIntegrityMonitor {
           });
         }
       }
-    } catch (_error) {
+    } catch (error) {
       issues.push({
         type: 'data_corruption',
         description: 'Failed to validate scheduling integrity',
         affectedAlarmIds: [],
         severity: 'medium',
         timestamp: new Date(),
-        metadata: { error: _error.message },
+        metadata: { error: error.message },
       });
     }
 
@@ -454,8 +455,8 @@ export class AlarmIntegrityMonitor {
     this.alertCallbacks.forEach(callback => {
       try {
         callback(tamperEvent);
-      } catch (_error) {
-        console.error('[AlarmIntegrityMonitor] Alert callback _error:', _error);
+      } catch (error) {
+        console.error('[AlarmIntegrityMonitor] Alert callback error:', error);
       }
     });
 
@@ -506,8 +507,8 @@ export class AlarmIntegrityMonitor {
         this.recoveryCallbacks.forEach(callback => {
           try {
             callback({ success: true, recoveredAlarms });
-          } catch (_error) {
-            console.error('[AlarmIntegrityMonitor] Recovery callback _error:', _error);
+          } catch (error) {
+            console.error('[AlarmIntegrityMonitor] Recovery callback error:', error);
           }
         });
 
@@ -518,16 +519,16 @@ export class AlarmIntegrityMonitor {
           })
         );
       }
-    } catch (_error) {
-      console.error('[AlarmIntegrityMonitor] Recovery attempt failed:', _error);
+    } catch (error) {
+      console.error('[AlarmIntegrityMonitor] Recovery attempt failed:', error);
 
       // Notify recovery callbacks of failure
       this.recoveryCallbacks.forEach(callback => {
         try {
-          callback({ success: false, _error: _error.message });
+          callback({ success: false, error: error.message });
         } catch (callbackError) {
-          console._error(
-            '[AlarmIntegrityMonitor] Recovery callback _error:',
+          console.error(
+            '[AlarmIntegrityMonitor] Recovery callback error:',
             callbackError
           );
         }
@@ -538,10 +539,10 @@ export class AlarmIntegrityMonitor {
   /**
    * Handle storage tamper detection from SecureAlarmStorageService
    */
-  private handleStorageTamperDetection(details: unknown): void {
+  private handleStorageTamperDetection(details: any): void {
     const tamperEvent: TamperDetectionEvent = {
       type: details.type,
-      description: details.details?._error || 'Storage tamper detected',
+      description: details.details?.error || 'Storage tamper detected',
       severity: 'high',
       timestamp: new Date(),
       affectedData: details.details?.alarmIds || [],
@@ -555,8 +556,8 @@ export class AlarmIntegrityMonitor {
     this.alertCallbacks.forEach(callback => {
       try {
         callback(tamperEvent);
-      } catch (_error) {
-        console.error('[AlarmIntegrityMonitor] Alert callback _error:', _error);
+      } catch (error) {
+        console.error('[AlarmIntegrityMonitor] Alert callback error:', error);
       }
     });
 
@@ -567,7 +568,7 @@ export class AlarmIntegrityMonitor {
   /**
    * Handle general security events
    */
-  private handleSecurityEvent(eventDetail: unknown): void {
+  private handleSecurityEvent(eventDetail: any): void {
     // Log and analyze security events for patterns
     this.logSecurityEvent('security_event_received', eventDetail);
 
@@ -687,11 +688,11 @@ export class AlarmIntegrityMonitor {
     return 'low';
   }
 
-  private detectSuspiciousPatterns(eventDetail: unknown): boolean {
+  private detectSuspiciousPatterns(eventDetail: any): boolean {
     // Simple pattern detection - could be enhanced with ML
     const suspiciousEvents = ['alarm_deleted', 'alarm_updated', 'alarm_toggled'];
 
-    if (!suspiciousEvents.includes(eventDetail._event)) return false;
+    if (!suspiciousEvents.includes(eventDetail.event)) return false;
 
     // Check for rapid successive events
     const recentEvents = this.integrityHistory.filter(
@@ -725,7 +726,7 @@ export class AlarmIntegrityMonitor {
     }
   }
 
-  private logSecurityEvent(_event: string, details: unknown): void {
+  private logSecurityEvent(event: string, details: any): void {
     const logEntry = {
       event,
       details,
@@ -744,11 +745,11 @@ export class AlarmIntegrityMonitor {
   }
 
   // Public API methods
-  onTamperDetected(callback: (_event: TamperDetectionEvent) => void): void {
+  onTamperDetected(callback: (event: TamperDetectionEvent) => void): void {
     this.alertCallbacks.push(callback);
   }
 
-  onRecoveryAttempt(callback: (result: unknown) => void): void {
+  onRecoveryAttempt(callback: (result: any) => void): void {
     this.recoveryCallbacks.push(callback);
   }
 

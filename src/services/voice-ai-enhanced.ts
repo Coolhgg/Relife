@@ -5,7 +5,6 @@ import type { Alarm, VoiceMood, User } from '../types';
 import { ErrorHandler } from './error-handler';
 import PerformanceMonitor from './performance-monitor';
 import { SupabaseService } from './supabase';
-import { ErrorHandler } from './error-handler';
 
 export interface VoicePersonality {
   mood: VoiceMood;
@@ -47,7 +46,7 @@ export interface VoiceLearningData {
     dayOfWeek: number;
     sleepQuality: number;
     responsiveness: number;
-    environmentalFactors: unknown;
+    environmentalFactors: any;
   };
   userResponse: {
     responseTime: number;
@@ -63,7 +62,7 @@ class VoiceAIEnhancedService {
   private performanceMonitor = PerformanceMonitor.getInstance();
   private personalities = new Map<VoiceMood, VoicePersonality>();
   private userLearningData = new Map<string, VoiceLearningData[]>();
-  private contextualMemory = new Map<string, unknown>();
+  private contextualMemory = new Map<string, any>();
   private elevenlabsApiKey: string | null = null;
   private openaiApiKey: string | null = null;
 
@@ -553,20 +552,20 @@ class VoiceAIEnhancedService {
    */
   async generateContextualMessage(
     alarm: Alarm,
-    _user: User,
+    user: User,
     context: {
       sleepQuality?: number;
       timeOfDay: number;
-      weather?: unknown;
-      calendar?: unknown;
-      previousResponses?: unknown[];
+      weather?: any;
+      calendar?: any;
+      previousResponses?: any[];
     }
   ): Promise<ContextualResponse> {
     try {
       const startTime = performance.now();
 
       // Get user's learning data
-      const learningData = await this.getUserLearningData(_user.id);
+      const learningData = await this.getUserLearningData(user.id);
       const personality =
         this.personalities.get(alarm.voiceMood) ||
         this.personalities.get('motivational')!;
@@ -574,7 +573,7 @@ class VoiceAIEnhancedService {
       // Generate base message using personality
       let baseMessage = await this.generatePersonalizedMessage(
         alarm,
-        _user,
+        user,
         personality,
         context,
         learningData
@@ -584,7 +583,7 @@ class VoiceAIEnhancedService {
       if (this.openaiApiKey && learningData.length > 5) {
         baseMessage = await this.enhanceWithAI(
           baseMessage,
-          _user,
+          user,
           context,
           learningData
         );
@@ -592,7 +591,7 @@ class VoiceAIEnhancedService {
 
       // Add contextual personalizations
       const personalizations = this.generatePersonalizations(
-        _user,
+        user,
         context,
         learningData
       );
@@ -606,8 +605,8 @@ class VoiceAIEnhancedService {
 
       // Generate audio if premium service available
       let audioUrl: string | undefined;
-      if (this.elevenlabsApiKey && _user.preferences?.subscription_tier !== 'free') {
-        audioUrl = await this.generatePremiumAudio(baseMessage, personality, _user.id);
+      if (this.elevenlabsApiKey && user.preferences?.subscription_tier !== 'free') {
+        audioUrl = await this.generatePremiumAudio(baseMessage, personality, user.id);
       }
 
       const duration = performance.now() - startTime;
@@ -623,11 +622,11 @@ class VoiceAIEnhancedService {
         personalizations,
         effectiveness_prediction: effectivenessPrediction,
       };
-    } catch (_error) {
+    } catch (error) {
       ErrorHandler.handleError(
-        _error as Error,
+        error as Error,
         'Failed to generate contextual message',
-        { userId: _user.id, alarmId: alarm.id }
+        { userId: user.id, alarmId: alarm.id }
       );
 
       // Fallback to simple message
@@ -645,9 +644,9 @@ class VoiceAIEnhancedService {
    */
   private async generatePersonalizedMessage(
     alarm: Alarm,
-    _user: User,
+    user: User,
     personality: VoicePersonality,
-    context: unknown,
+    context: any,
     learningData: VoiceLearningData[]
   ): Promise<string> {
     const timeOfDay = context.timeOfDay;
@@ -720,8 +719,8 @@ class VoiceAIEnhancedService {
    */
   private async enhanceWithAI(
     baseMessage: string,
-    _user: User,
-    context: unknown,
+    user: User,
+    context: any,
     learningData: VoiceLearningData[]
   ): Promise<string> {
     try {
@@ -764,7 +763,7 @@ class VoiceAIEnhancedService {
         },
         body: JSON.stringify({
           model: 'gpt-3.5-turbo',
-          messages: [{ role: '_user', content: prompt }],
+          messages: [{ role: 'user', content: prompt }],
           max_tokens: 150,
           temperature: 0.8,
         }),
@@ -778,8 +777,8 @@ class VoiceAIEnhancedService {
       const enhancedMessage = data.choices?.[0]?.message?.content?.trim();
 
       return enhancedMessage || baseMessage;
-    } catch (_error) {
-      console._error('AI enhancement failed:', _error);
+    } catch (error) {
+      console.error('AI enhancement failed:', error);
       return baseMessage;
     }
   }
@@ -836,8 +835,8 @@ class VoiceAIEnhancedService {
       this.performanceMonitor.trackCustomMetric('premium_audio_generated', 1);
 
       return audioUrl;
-    } catch (_error) {
-      console._error('Premium audio generation failed:', _error);
+    } catch (error) {
+      console.error('Premium audio generation failed:', error);
       return undefined;
     }
   }
@@ -865,8 +864,8 @@ class VoiceAIEnhancedService {
       await this.updateVoicePreferencesIfNeeded(learningData.userId);
 
       this.performanceMonitor.trackCustomMetric('voice_learning_data_stored', 1);
-    } catch (_error) {
-      console._error('Failed to learn from interaction:', _error);
+    } catch (error) {
+      console.error('Failed to learn from interaction:', error);
     }
   }
 
@@ -875,7 +874,7 @@ class VoiceAIEnhancedService {
    */
   private predictEffectiveness(
     voiceMood: VoiceMood,
-    context: unknown,
+    context: any,
     learningData: VoiceLearningData[]
   ): number {
     if (learningData.length === 0) {
@@ -942,10 +941,7 @@ class VoiceAIEnhancedService {
     return greeting;
   }
 
-  private generateWeatherContext(
-    weather: unknown,
-    personality: VoicePersonality
-  ): string {
+  private generateWeatherContext(weather: any, personality: VoicePersonality): string {
     if (!weather) return '';
 
     if (weather.condition === 'sunny') {
@@ -1022,17 +1018,18 @@ class VoiceAIEnhancedService {
 
     // Load from database
     try {
-      const { data, _error } = await SupabaseService.getInstance()
+      const { data, error } = await SupabaseService.getInstance()
         .client.from('voice_learning_data')
         .select('*')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
         .limit(50);
 
-      if (_error) throw error;
+      if (error) throw error;
 
       const learningData =
-        data?.map((row: unknown) => ({
+        data?.map((row: any) => ({
+          // auto: implicit any{
           userId: row.user_id,
           voiceMood: row.voice_mood,
           context: row.context,
@@ -1042,8 +1039,8 @@ class VoiceAIEnhancedService {
 
       this.userLearningData.set(userId, learningData);
       return learningData;
-    } catch (_error) {
-      console._error('Failed to load learning data:', _error);
+    } catch (error) {
+      console.error('Failed to load learning data:', error);
       return [];
     }
   }
@@ -1052,7 +1049,7 @@ class VoiceAIEnhancedService {
     learningData: VoiceLearningData
   ): Promise<void> {
     try {
-      const { _error } = await SupabaseService.getInstance()
+      const { error } = await SupabaseService.getInstance()
         .client.from('voice_learning_data')
         .insert({
           user_id: learningData.userId,
@@ -1063,9 +1060,9 @@ class VoiceAIEnhancedService {
           created_at: new Date().toISOString(),
         });
 
-      if (_error) throw error;
-    } catch (_error) {
-      console._error('Failed to store learning data:', _error);
+      if (error) throw error;
+    } catch (error) {
+      console.error('Failed to store learning data:', error);
     }
   }
 
@@ -1104,7 +1101,7 @@ class VoiceAIEnhancedService {
     // Update user preferences if there's a clear winner
     if (bestMood && bestRate > 0.8) {
       try {
-        const { _error } = await SupabaseService.getInstance()
+        const { error } = await SupabaseService.getInstance()
           .client.from('users')
           .update({
             preferences: {
@@ -1113,11 +1110,11 @@ class VoiceAIEnhancedService {
           })
           .eq('id', userId);
 
-        if (!_error) {
-          console.info(`Updated _user ${userId} preferred voice mood to ${bestMood}`);
+        if (!error) {
+          console.info(`Updated user ${userId} preferred voice mood to ${bestMood}`);
         }
-      } catch (_error) {
-        console._error('Failed to update voice preferences:', _error);
+      } catch (error) {
+        console.error('Failed to update voice preferences:', error);
       }
     }
   }
@@ -1170,7 +1167,7 @@ class VoiceAIEnhancedService {
     return mostSuccessful ? mostSuccessful[0] : 'motivational';
   }
 
-  private summarizeContext(context: unknown): string {
+  private summarizeContext(context: any): string {
     const parts = [];
     if (context.timeOfDay < 6) parts.push('Very early morning');
     else if (context.timeOfDay < 9) parts.push('Early morning');
@@ -1189,15 +1186,15 @@ class VoiceAIEnhancedService {
   }
 
   private generatePersonalizations(
-    _user: User,
-    context: unknown,
+    user: User,
+    context: any,
     learningData: VoiceLearningData[]
   ): string[] {
     const personalizations = [];
 
     // Add user name if available
-    if (_user.name) {
-      personalizations.push(`Addressed as ${_user.name}`);
+    if (user.name) {
+      personalizations.push(`Addressed as ${user.name}`);
     }
 
     // Add context-based personalizations
@@ -1241,253 +1238,6 @@ class VoiceAIEnhancedService {
       hash = hash & hash; // Convert to 32bit integer
     }
     return Math.abs(hash).toString();
-  }
-
-  // Parameter configuration methods for live updates
-  private parameters = {
-    personalityAdaptation: 0.7,
-    responseComplexity: 'moderate' as 'simple' | 'moderate' | 'complex' | 'adaptive',
-    emotionalIntelligence: 0.8,
-    voiceLearningRate: 0.4,
-    contextualAwareness: 0.75,
-    energyAdaptation: true,
-    formalityFlexibility: 0.6,
-    humorLevel: 'moderate' as 'none' | 'light' | 'moderate' | 'heavy',
-    empathyLevel: 'high' as 'low' | 'medium' | 'high',
-    motivationStyle: 'encouraging' as
-      | 'gentle'
-      | 'encouraging'
-      | 'assertive'
-      | 'aggressive',
-    speechRate: 1.0, // 0.5 to 2.0
-    pitchVariation: 0.5, // 0 to 1
-    pauseDuration: 0.3, // seconds
-    vocabularyRichness: 'standard' as 'simple' | 'standard' | 'rich' | 'dynamic',
-    culturalSensitivity: true,
-    timeOfDayAdaptation: true,
-    moodSynchronization: 0.8,
-    responsePersonalization: true,
-    voiceCloning: false,
-    realTimeAdjustment: true,
-  };
-
-  /**
-   * Get current parameter configuration
-   */
-  async getCurrentConfiguration(): Promise<Record<string, unknown>> {
-    return { ...this.parameters };
-  }
-
-  /**
-   * Update voice AI configuration with validation
-   */
-  async updateConfiguration(newParameters: Record<string, unknown>): Promise<boolean> {
-    try {
-      for (const [key, value] of Object.entries(newParameters)) {
-        if (key in this.parameters) {
-          switch (key) {
-            case 'personalityAdaptation':
-            case 'emotionalIntelligence':
-            case 'voiceLearningRate':
-            case 'contextualAwareness':
-            case 'formalityFlexibility':
-            case 'pitchVariation':
-            case 'moodSynchronization':
-              if (typeof value === 'number' && value >= 0 && value <= 1) {
-                this.parameters[key] = value;
-              }
-              break;
-            case 'responseComplexity':
-              if (['simple', 'moderate', 'complex', 'adaptive'].includes(value)) {
-                this.parameters.responseComplexity = value;
-              }
-              break;
-            case 'humorLevel':
-              if (['none', 'light', 'moderate', 'heavy'].includes(value)) {
-                this.parameters.humorLevel = value;
-              }
-              break;
-            case 'empathyLevel':
-              if (['low', 'medium', 'high'].includes(value)) {
-                this.parameters.empathyLevel = value;
-              }
-              break;
-            case 'motivationStyle':
-              if (
-                ['gentle', 'encouraging', 'assertive', 'aggressive'].includes(value)
-              ) {
-                this.parameters.motivationStyle = value;
-              }
-              break;
-            case 'speechRate':
-              if (typeof value === 'number' && value >= 0.5 && value <= 2.0) {
-                this.parameters.speechRate = value;
-              }
-              break;
-            case 'pauseDuration':
-              if (typeof value === 'number' && value >= 0.1 && value <= 2.0) {
-                this.parameters.pauseDuration = value;
-              }
-              break;
-            case 'vocabularyRichness':
-              if (['simple', 'standard', 'rich', 'dynamic'].includes(value)) {
-                this.parameters.vocabularyRichness = value;
-              }
-              break;
-            default:
-              if (
-                typeof this.parameters[key] === 'boolean' &&
-                typeof value === 'boolean'
-              ) {
-                this.parameters[key] = value;
-              } else if (typeof this.parameters[key] === typeof value) {
-                this.parameters[key] = value;
-              }
-          }
-        }
-      }
-
-      console.log('[VoiceAI] Configuration updated:', this.parameters);
-      return true;
-    } catch (error) {
-      console.error('[VoiceAI] Error updating configuration:', error);
-      return false;
-    }
-  }
-
-  /**
-   * Reset configuration to defaults
-   */
-  async resetConfiguration(): Promise<void> {
-    this.parameters = {
-      personalityAdaptation: 0.7,
-      responseComplexity: 'moderate',
-      emotionalIntelligence: 0.8,
-      voiceLearningRate: 0.4,
-      contextualAwareness: 0.75,
-      energyAdaptation: true,
-      formalityFlexibility: 0.6,
-      humorLevel: 'moderate',
-      empathyLevel: 'high',
-      motivationStyle: 'encouraging',
-      speechRate: 1.0,
-      pitchVariation: 0.5,
-      pauseDuration: 0.3,
-      vocabularyRichness: 'standard',
-      culturalSensitivity: true,
-      timeOfDayAdaptation: true,
-      moodSynchronization: 0.8,
-      responsePersonalization: true,
-      voiceCloning: false,
-      realTimeAdjustment: true,
-    };
-  }
-
-  /**
-   * Get voice AI parameter metadata for UI configuration
-   */
-  getConfigurationMetadata(): Record<string, unknown> {
-    return {
-      personalityAdaptation: {
-        type: 'slider',
-        min: 0,
-        max: 1,
-        step: 0.1,
-        description: 'How much the voice adapts to user personality',
-        impact: 'user_experience',
-      },
-      responseComplexity: {
-        type: 'select',
-        options: ['simple', 'moderate', 'complex', 'adaptive'],
-        description: 'Complexity level of voice responses',
-        impact: 'comprehension',
-      },
-      emotionalIntelligence: {
-        type: 'slider',
-        min: 0,
-        max: 1,
-        step: 0.1,
-        description: 'Emotional awareness and response capability',
-        impact: 'empathy',
-      },
-      voiceLearningRate: {
-        type: 'slider',
-        min: 0.1,
-        max: 1,
-        step: 0.05,
-        description: 'Rate at which voice adapts to user preferences',
-        impact: 'adaptation',
-      },
-      contextualAwareness: {
-        type: 'slider',
-        min: 0,
-        max: 1,
-        step: 0.05,
-        description: 'Awareness of situational context',
-        impact: 'relevance',
-      },
-      energyAdaptation: {
-        type: 'boolean',
-        description: 'Adapt voice energy to time of day and user state',
-        impact: 'engagement',
-      },
-      humorLevel: {
-        type: 'select',
-        options: ['none', 'light', 'moderate', 'heavy'],
-        description: 'Amount of humor in voice responses',
-        impact: 'personality',
-      },
-      empathyLevel: {
-        type: 'select',
-        options: ['low', 'medium', 'high'],
-        description: 'Level of empathetic responses',
-        impact: 'emotional_support',
-      },
-      motivationStyle: {
-        type: 'select',
-        options: ['gentle', 'encouraging', 'assertive', 'aggressive'],
-        description: 'Style of motivational messaging',
-        impact: 'motivation',
-      },
-      speechRate: {
-        type: 'slider',
-        min: 0.5,
-        max: 2.0,
-        step: 0.1,
-        description: 'Speed of voice delivery',
-        impact: 'comprehension',
-      },
-      pitchVariation: {
-        type: 'slider',
-        min: 0,
-        max: 1,
-        step: 0.1,
-        description: 'Amount of pitch variation for expressiveness',
-        impact: 'engagement',
-      },
-      vocabularyRichness: {
-        type: 'select',
-        options: ['simple', 'standard', 'rich', 'dynamic'],
-        description: 'Complexity of vocabulary used',
-        impact: 'comprehension',
-      },
-      culturalSensitivity: {
-        type: 'boolean',
-        description: 'Adapt language and references to cultural context',
-        impact: 'inclusivity',
-      },
-      voiceCloning: {
-        type: 'boolean',
-        description: 'Enable voice cloning for personalization',
-        impact: 'privacy',
-        requiresConsent: true,
-      },
-      realTimeAdjustment: {
-        type: 'boolean',
-        description: 'Allow real-time voice parameter adjustments',
-        impact: 'performance',
-      },
-    };
   }
 }
 

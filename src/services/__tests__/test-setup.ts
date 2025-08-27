@@ -9,15 +9,18 @@ import '@testing-library/jest-dom';
 // Extend Jest matchers
 expect.extend({
   toHaveBeenCalledWithObjectContaining(received: jest.Mock, expected: object) {
-    const pass = received.mock.calls.some((call: any) =>
-      call.some(
-        arg =>
-          typeof arg === 'object' &&
-          arg !== null &&
-          Object.keys(expected).every(
-            key => arg.hasOwnProperty(key) && arg[key] === expected[key]
-          )
-      )
+    const pass = received.mock.calls.some(
+      (
+        call: any // auto: implicit any
+      ) =>
+        call.some(
+          arg =>
+            typeof arg === 'object' &&
+            arg !== null &&
+            Object.keys(expected).every(
+              key => arg.hasOwnProperty(key) && arg[key] === expected[key]
+            )
+        )
     );
 
     if (pass) {
@@ -106,6 +109,7 @@ Object.defineProperty(global, 'performance', {
 
 // Mock PerformanceObserver
 global.PerformanceObserver = jest.fn().mockImplementation((callback: any) => ({
+  // auto: implicit any{
   observe: jest.fn(),
   disconnect: jest.fn(),
   takeRecords: jest.fn(() => []),
@@ -113,6 +117,7 @@ global.PerformanceObserver = jest.fn().mockImplementation((callback: any) => ({
 
 // Mock IntersectionObserver
 global.IntersectionObserver = jest.fn().mockImplementation((callback: any) => ({
+  // auto: implicit any{
   observe: jest.fn(),
   unobserve: jest.fn(),
   disconnect: jest.fn(),
@@ -246,7 +251,7 @@ const originalConsoleLog = console.log;
 
 // Store original methods for tests that need them
 (global as any).originalConsole = {
-  _error: originalConsoleError,
+  error: originalConsoleError,
   warn: originalConsoleWarn,
   info: originalConsoleInfo,
   log: originalConsoleLog,
@@ -260,7 +265,7 @@ console.log = jest.fn();
 
 // Utility function to restore console methods
 (global as any).restoreConsole = () => {
-  console._error = originalConsoleError;
+  console.error = originalConsoleError;
   console.warn = originalConsoleWarn;
   console.info = originalConsoleInfo;
   console.log = originalConsoleLog;
@@ -303,7 +308,7 @@ global.fetch = jest.fn(() =>
 
   // Create mock user data
   createMockUser: (overrides = {}) => ({
-    id: 'test-_user-123',
+    id: 'test-user-123',
     email: 'test@example.com',
     name: 'Test User',
     username: 'testuser123',
@@ -381,7 +386,7 @@ afterEach(() => {
   (global.localStorage.setItem as jest.Mock).mockClear();
 
   // Reset console mocks
-  (console._error as jest.Mock).mockClear();
+  (console.error as jest.Mock).mockClear();
   (console.warn as jest.Mock).mockClear();
   (console.info as jest.Mock).mockClear();
   (console.log as jest.Mock).mockClear();

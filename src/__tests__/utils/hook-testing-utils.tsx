@@ -42,7 +42,7 @@ const MockLanguageContext = React.createContext({
 });
 
 const MockAuthContext = React.createContext({
-  _user: null,
+  user: null,
   isLoading: false,
   signIn: vi.fn(),
   signOut: vi.fn(),
@@ -64,7 +64,7 @@ export const AllTheProviders: React.FC<AllTheProvidersProps> = ({
   queryClient,
   theme = 'light',
   language = 'en',
-  _user = null,
+  user = null,
   initialEntries = ['/'],
 }) => {
   const defaultQueryClient = new QueryClient({
@@ -156,7 +156,7 @@ export function renderHookWithProviders<TResult, TProps>(
             queryClient={queryClient}
             theme={theme}
             language={language}
-            user={_user}
+            user={user}
             initialEntries={initialEntries}
           >
             {children}
@@ -170,7 +170,7 @@ export function renderHookWithProviders<TResult, TProps>(
         queryClient={queryClient}
         theme={theme}
         language={language}
-        user={_user}
+        user={user}
         initialEntries={initialEntries}
       >
         {children}
@@ -347,6 +347,7 @@ export const setupGlobalMocks = () => {
   // Setup matchMedia mock
   Object.defineProperty(window, 'matchMedia', {
     value: vi.fn().mockImplementation((query: any) => ({
+      // auto: implicit any{
       matches: false,
       media: query,
       onchange: null,
@@ -415,7 +416,7 @@ export const createMockUser = (overrides: Record<string, any> = {}) => ({
   id: 'test-user-123',
   email: 'test@example.com',
   name: 'Test User',
-  role: '_user',
+  role: 'user',
   preferences: {},
   created_at: new Date().toISOString(),
   updated_at: new Date().toISOString(),
@@ -424,7 +425,7 @@ export const createMockUser = (overrides: Record<string, any> = {}) => ({
 
 export const createMockAlarm = (overrides: Record<string, any> = {}) => ({
   id: 'test-alarm-123',
-  userId: 'test-_user-123',
+  userId: 'test-user-123',
   time: '07:00',
   label: 'Test Alarm',
   isActive: true,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'; // auto: added missing React import
 // Consent Banner Component for GDPR/CCPA Compliance
 // Provides a user-friendly way to collect privacy consent
 
@@ -70,6 +70,7 @@ export default function ConsentBanner({
 
   const handleConsentChange = (type: keyof ConsentSettings, value: boolean) => {
     setConsents((prev: any) => ({
+      // auto: implicit any{
       ...prev,
       [type]: value,
     }));
@@ -180,7 +181,7 @@ export default function ConsentBanner({
             // Detailed consent options
             <div className="space-y-6">
               <div className="grid gap-4">
-                {Object.entries(consentDescriptions).map(([key, _config]) => (
+                {Object.entries(consentDescriptions).map(([key, config]) => (
                   <div
                     key={key}
                     className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-dark-700 rounded-lg"
@@ -190,8 +191,10 @@ export default function ConsentBanner({
                         id={`consent-${key}`}
                         type="checkbox"
                         checked={consents[key as keyof ConsentSettings]}
-                        disabled={_config.required}
-                        onChange={(e: any) =>
+                        disabled={config.required}
+                        onChange={(
+                          e: any // auto: implicit any
+                        ) =>
                           handleConsentChange(
                             key as keyof ConsentSettings,
                             e.target.checked
@@ -206,8 +209,8 @@ export default function ConsentBanner({
                         htmlFor={`consent-${key}`}
                         className="flex items-center gap-2 font-medium text-gray-900 dark:text-white mb-1 cursor-pointer"
                       >
-                        {_config.title}
-                        {_config.required && (
+                        {config.title}
+                        {config.required && (
                           <span className="text-xs bg-primary-100 text-primary-800 dark:bg-primary-900/30 dark:text-primary-400 px-2 py-0.5 rounded">
                             Required
                           </span>
@@ -217,7 +220,7 @@ export default function ConsentBanner({
                         id={`consent-${key}-description`}
                         className="text-sm text-gray-600 dark:text-gray-300"
                       >
-                        {_config.description}
+                        {config.description}
                       </p>
                     </div>
                   </div>

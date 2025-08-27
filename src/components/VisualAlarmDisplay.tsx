@@ -97,7 +97,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
     }
 
     setParticles(newParticles);
-  }, [theme]);
+  }, [theme, createParticle]);
 
   const createParticle = (id: number): ParticleEffect => {
     if (!theme) {
@@ -132,35 +132,39 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
   };
 
   const updateParticles = useCallback(() => {
-    setParticles((prevParticles: any) =>
-      prevParticles.map((particle: any) => {
-        const newParticle = { ...particle };
+    setParticles(
+      (
+        prevParticles: any // auto: implicit any
+      ) =>
+        prevParticles.map((particle: any) => {
+          // auto: implicit any
+          const newParticle = { ...particle };
 
-        // Update position
-        newParticle.x += newParticle.vx;
-        newParticle.y += newParticle.vy;
+          // Update position
+          newParticle.x += newParticle.vx;
+          newParticle.y += newParticle.vy;
 
-        // Update life
-        newParticle.life += 1;
+          // Update life
+          newParticle.life += 1;
 
-        // Bounce off edges
-        const canvas = canvasRef.current;
-        if (canvas) {
-          if (newParticle.x < 0 || newParticle.x > canvas.width) {
-            newParticle.vx *= -1;
+          // Bounce off edges
+          const canvas = canvasRef.current;
+          if (canvas) {
+            if (newParticle.x < 0 || newParticle.x > canvas.width) {
+              newParticle.vx *= -1;
+            }
+            if (newParticle.y < 0 || newParticle.y > canvas.height) {
+              newParticle.vy *= -1;
+            }
           }
-          if (newParticle.y < 0 || newParticle.y > canvas.height) {
-            newParticle.vy *= -1;
+
+          // Reset particle if life exceeded
+          if (newParticle.life > newParticle.maxLife) {
+            return createParticle(newParticle.id);
           }
-        }
 
-        // Reset particle if life exceeded
-        if (newParticle.life > newParticle.maxLife) {
-          return createParticle(newParticle.id);
-        }
-
-        return newParticle;
-      })
+          return newParticle;
+        })
     );
   }, [theme, createParticle]);
 
@@ -175,6 +179,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
 
     // Draw particles
     particles.forEach((particle: any) => {
+      // auto: implicit any
       const alpha = 1 - particle.life / particle.maxLife;
       ctx.fillStyle = `${particle.color}${Math.floor(alpha * 255)
         .toString(16)
