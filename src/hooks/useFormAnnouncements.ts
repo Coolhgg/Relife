@@ -16,7 +16,7 @@ export interface FormFieldChange {
 export function useFormAnnouncements() {
   const { announce, announceFormValidation } = useScreenReaderAnnouncements();
   const fieldValues = useRef<Record<string, any>>({});
-  const announcementTimer = useRef<TimeoutHandle | undefined>(undefined);
+  const announcementTimer = useRef<TimeoutHandle | undefined>(undefined); // auto: changed from number | null to TimeoutHandle
 
   // Announce form field changes with debouncing
   const announceFieldChange = useCallback(
@@ -149,7 +149,7 @@ export function useFormAnnouncements() {
       errorMessage += errorDescriptions.join(', ');
 
       announce({
-        type: '_error',
+        type: 'error',
         message: errorMessage,
         priority: 'assertive',
       });

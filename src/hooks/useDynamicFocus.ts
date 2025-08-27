@@ -36,7 +36,7 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
   } = options;
 
   const liveRegionRef = useRef<HTMLDivElement | null>(null);
-  const announcementTimeoutRef = useRef<TimeoutHandle | undefined>(undefined);
+  const announcementTimeoutRef = useRef<TimeoutHandle | undefined>(undefined); // auto: changed from number | null to TimeoutHandle
   const pendingAnnouncementsRef = useRef<string[]>([]);
   const lastFocusedRef = useRef<HTMLElement | null>(null);
 
@@ -78,7 +78,7 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
 
     if (announcementTimeoutRef.current) {
       clearTimeout(announcementTimeoutRef.current);
-      announcementTimeoutRef.current = undefined;
+      announcementTimeoutRef.current = undefined; // auto: changed from null to undefined
     }
   }, []);
 
@@ -206,8 +206,8 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
               }
 
               element.focus({ preventScroll: false });
-            } catch (_error) {
-              console.warn('Failed to focus dynamic content:', _error);
+            } catch (error) {
+              console.warn('Failed to focus dynamic content:', error);
             }
           }
         }, 100);
@@ -271,7 +271,7 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
         }
       } else {
         const errorMessage = message || 'Invalid input';
-        announce(`${fieldLabel} _error: ${errorMessage}`, 'assertive');
+        announce(`${fieldLabel} error: ${errorMessage}`, 'assertive');
 
         // Also set aria-invalid and aria-describedby if not already set
         field.setAttribute('aria-invalid', 'true');
@@ -307,13 +307,13 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
 
-    const handleKeyDown = (_event: KeyboardEvent) => {
-      if (_event.key !== 'Tab') return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Tab') return;
 
-      if (_event.shiftKey && document.activeElement === firstElement) {
+      if (event.shiftKey && document.activeElement === firstElement) {
         event.preventDefault();
         lastElement.focus();
-      } else if (!_event.shiftKey && document.activeElement === lastElement) {
+      } else if (!event.shiftKey && document.activeElement === lastElement) {
         event.preventDefault();
         firstElement.focus();
       }
@@ -333,8 +333,8 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
     if (lastFocusedRef.current && document.body.contains(lastFocusedRef.current)) {
       try {
         lastFocusedRef.current.focus({ preventScroll: false });
-      } catch (_error) {
-        console.warn('Failed to restore previous focus:', _error);
+      } catch (error) {
+        console.warn('Failed to restore previous focus:', error);
       }
     }
   }, []);

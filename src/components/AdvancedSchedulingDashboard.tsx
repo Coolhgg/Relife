@@ -1,28 +1,27 @@
 // Advanced Scheduling Dashboard - Simplified Version
 import React, { useState } from 'react';
-import { Calendar, Clock, Settings } from 'lucide-react';
-import type { Alarm } from '../types';
+import { Calendar, Clock, Settings, TrendingUp } from 'lucide-react';
 
 interface AdvancedSchedulingDashboardProps {
   userId?: string;
   onScheduleAlarm?: (alarmData: any) => void;
   className?: string;
-  alarms?: Alarm[];
+  alarms?: unknown; // auto: widened to satisfy usage
 }
 
 const AdvancedSchedulingDashboard: React.FC<AdvancedSchedulingDashboardProps> = ({
   userId,
   onScheduleAlarm,
   className = '',
-  alarms, // auto: added for prop compatibility
+  alarms // auto: added for prop compatibility
 }) => {
   const [activeTab, setActiveTab] = useState('overview');
 
   const tabs = [
-    { id: 'overview', label: 'Overview', icon: Calendar },
+    { id: 'overview', label: 'Overview', icon: TrendingUp },
     { id: 'calendar', label: 'Calendar', icon: Calendar },
     { id: 'smart-alarms', label: 'Smart Alarms', icon: Clock },
-    { id: 'settings', label: 'Settings', icon: Settings },
+    { id: 'settings', label: 'Settings', icon: Settings }
   ];
 
   const renderTabContent = () => {
@@ -30,9 +29,7 @@ const AdvancedSchedulingDashboard: React.FC<AdvancedSchedulingDashboardProps> = 
       case 'overview':
         return (
           <div className="p-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              Scheduling Overview
-            </h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Scheduling Overview</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="bg-white rounded-lg p-6 border">
                 <h3 className="text-lg font-semibold mb-2">Active Alarms</h3>
@@ -53,13 +50,8 @@ const AdvancedSchedulingDashboard: React.FC<AdvancedSchedulingDashboardProps> = 
       case 'calendar':
         return (
           <div className="p-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              Calendar Integration
-            </h2>
-            <p className="text-gray-600 mb-4">
-              Connect your calendar to automatically schedule alarms based on your
-              events.
-            </p>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Calendar Integration</h2>
+            <p className="text-gray-600 mb-4">Connect your calendar to automatically schedule alarms based on your events.</p>
             <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
               Connect Calendar
             </button>
@@ -70,9 +62,7 @@ const AdvancedSchedulingDashboard: React.FC<AdvancedSchedulingDashboardProps> = 
         return (
           <div className="p-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Smart Alarms</h2>
-            <p className="text-gray-600 mb-4">
-              AI-powered alarms that adapt to your sleep patterns and schedule.
-            </p>
+            <p className="text-gray-600 mb-4">AI-powered alarms that adapt to your sleep patterns and schedule.</p>
             <button
               onClick={() => onScheduleAlarm?.({ type: 'smart', enabled: true })}
               className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
@@ -102,9 +92,7 @@ const AdvancedSchedulingDashboard: React.FC<AdvancedSchedulingDashboardProps> = 
               <div>
                 <label className="flex items-center">
                   <input type="checkbox" className="mr-2" defaultChecked />
-                  <span className="text-sm text-gray-700">
-                    Enable adaptive difficulty
-                  </span>
+                  <span className="text-sm text-gray-700">Enable adaptive difficulty</span>
                 </label>
               </div>
             </div>
@@ -117,23 +105,19 @@ const AdvancedSchedulingDashboard: React.FC<AdvancedSchedulingDashboardProps> = 
   };
 
   return (
-    <div
-      className={`advanced-scheduling-dashboard bg-gray-50 min-h-screen ${className}`}
-    >
+    <div className={`advanced-scheduling-dashboard bg-gray-50 min-h-screen ${className}`}>
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="bg-white shadow-sm border-b">
           <div className="px-6 py-4">
             <h1 className="text-3xl font-bold text-gray-900">Advanced Scheduling</h1>
-            <p className="text-gray-600 mt-2">
-              Intelligent alarm management with AI-powered optimization
-            </p>
+            <p className="text-gray-600 mt-2">Intelligent alarm management with AI-powered optimization</p>
           </div>
 
           {/* Tabs */}
           <div className="px-6">
             <nav className="flex space-x-8">
-              {tabs.map(tab => {
+              {tabs.map((tab) => {
                 const Icon = tab.icon;
                 return (
                   <button
@@ -155,7 +139,9 @@ const AdvancedSchedulingDashboard: React.FC<AdvancedSchedulingDashboardProps> = 
         </div>
 
         {/* Content */}
-        <div className="min-h-screen">{renderTabContent()}</div>
+        <div className="min-h-screen">
+          {renderTabContent()}
+        </div>
       </div>
     </div>
   );

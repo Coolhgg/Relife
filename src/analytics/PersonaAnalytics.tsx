@@ -1,16 +1,8 @@
-/* eslint-disable react-refresh/only-export-components */
 /// <reference types="node" />
 /// <reference lib="dom" />
 import React, { useEffect, useCallback, useRef } from 'react';
-import AnalyticsService from '../services/analytics';
-// Note: persona should be derived from user context or analytics service
-import {
-  PersonaType,
-  PersonaDetectionFactor,
-  PersonaDetectionResult,
-} from '../types/index';
+import { PersonaType, PersonaDetectionFactor } from '../types/index';
 import { TimeoutHandle } from '../types/timers';
-import type { Metadata } from '../types/utility-types';
 
 // Define missing types based on what the component needs
 type UserPersona = {
@@ -19,8 +11,11 @@ type UserPersona = {
   traits: string[];
 };
 
-interface PersonaDetectionData extends PersonaDetectionResult {
-  // Extended fields for analytics
+type PersonaDetectionData = {
+  factors: PersonaDetectionFactor[];
+  confidence: number;
+  primaryPersona: PersonaType;
+  // auto: from usage
   subscriptionTier?: string;
   ageRange?: string;
   usagePatterns?: Record<string, unknown>;
@@ -28,7 +23,7 @@ interface PersonaDetectionData extends PersonaDetectionResult {
   featurePreferences?: Record<string, unknown>;
   deviceType?: string;
   timeOfDay?: string;
-}
+};
 
 // Analytics Events for Persona Tracking
 export type PersonaAnalyticsEvent =
@@ -55,7 +50,7 @@ export interface PersonaAnalyticsData {
   previousPersona?: UserPersona;
   conversionStep?: 'awareness' | 'consideration' | 'trial' | 'conversion' | 'retention';
   campaignSource?: 'email' | 'social' | 'organic' | 'paid' | 'referral';
-  metadata?: Metadata;
+  metadata?: Record<string, any>;
 }
 
 export interface CampaignPerformanceData {
@@ -82,7 +77,7 @@ class PersonaAnalyticsTracker {
     event: PersonaAnalyticsEvent;
     data: PersonaAnalyticsData | CampaignPerformanceData;
   }> = [];
-  private flushInterval: TimeoutHandle | undefined = undefined;
+  private flushInterval: TimeoutHandle | undefined = undefined; // auto: changed from number | null to TimeoutHandle
 
   private constructor() {
     this.sessionId = this.generateSessionId();
@@ -118,7 +113,7 @@ class PersonaAnalyticsTracker {
 
   // Core Analytics Methods
   trackPersonaDetection(
-    _persona: UserPersona,
+    persona: UserPersona,
     detectionData: PersonaDetectionData,
     confidence: number
   ): void {
@@ -145,7 +140,7 @@ class PersonaAnalyticsTracker {
     this.queueEvent('persona_detected', analyticsData);
     console.log(
       '[PersonaAnalytics] Persona detected:',
-      _persona,
+      persona,
       'confidence:',
       confidence
     );
@@ -182,7 +177,7 @@ class PersonaAnalyticsTracker {
   }
 
   trackPersonaPricingInteraction(
-    _persona: UserPersona,
+    persona: UserPersona,
     action: 'view' | 'click' | 'hover',
     tier?: string
   ): void {
@@ -205,7 +200,7 @@ class PersonaAnalyticsTracker {
   }
 
   trackPersonaCTAClick(
-    _persona: UserPersona,
+    persona: UserPersona,
     ctaText: string,
     tier: string,
     position: string
@@ -230,7 +225,7 @@ class PersonaAnalyticsTracker {
   }
 
   trackOnboardingProgress(
-    _persona: UserPersona,
+    persona: UserPersona,
     step: number,
     completed: boolean
   ): void {
@@ -252,11 +247,11 @@ class PersonaAnalyticsTracker {
       },
     };
 
-    this.queueEvent(_event, analyticsData);
+    this.queueEvent(event, analyticsData);
   }
 
   trackSubscriptionConversion(
-    _persona: UserPersona,
+    persona: UserPersona,
     tier: string,
     revenue: number,
     campaignSource?: string
@@ -290,7 +285,7 @@ class PersonaAnalyticsTracker {
   }
 
   trackMarketingEmailInteraction(
-    _persona: UserPersona,
+    persona: UserPersona,
     campaignId: string,
     action: 'opened' | 'clicked',
     linkUrl?: string
@@ -316,7 +311,7 @@ class PersonaAnalyticsTracker {
       },
     };
 
-    this.queueEvent(_event, analyticsData);
+    this.queueEvent(event, analyticsData);
   }
 
   // Helper Methods
@@ -332,10 +327,10 @@ class PersonaAnalyticsTracker {
   }
 
   private queueEvent(
-    _event: PersonaAnalyticsEvent,
+    event: PersonaAnalyticsEvent,
     data: PersonaAnalyticsData | CampaignPerformanceData
   ): void {
-    this.eventQueue.push({ _event, data });
+    this.eventQueue.push({ event, data });
 
     // Auto-flush if queue gets large
     if (this.eventQueue.length >= 10) {
@@ -353,8 +348,8 @@ class PersonaAnalyticsTracker {
       // Send to your analytics endpoint
       await this.sendToAnalyticsEndpoint(events);
       console.log('[PersonaAnalytics] Flushed', events.length, 'events');
-    } catch (_error) {
-      console._error('[PersonaAnalytics] Failed to flush events:', _error);
+    } catch (error) {
+      console.error('[PersonaAnalytics] Failed to flush events:', error);
       // Re-queue events for retry
       this.eventQueue.unshift(...events);
     }
@@ -362,7 +357,7 @@ class PersonaAnalyticsTracker {
 
   private async sendToAnalyticsEndpoint(
     events: Array<{
-      _event: PersonaAnalyticsEvent;
+      event: PersonaAnalyticsEvent;
       data: PersonaAnalyticsData | CampaignPerformanceData;
     }>
   ): Promise<void> {
@@ -388,11 +383,7 @@ class PersonaAnalyticsTracker {
   }
 
   // Public API for getting analytics data
-  getSessionSummary(): {
-    sessionId: string;
-    userId?: string;
-    eventsQueued: number;
-  } {
+  getSessionSummary(): { sessionId: string; userId?: string; eventsQueued: number } {
     return {
       sessionId: this.sessionId,
       userId: this.userId,
@@ -406,12 +397,8 @@ export const usePersonaAnalytics = () => {
   const tracker = useRef(PersonaAnalyticsTracker.getInstance());
 
   const trackPersonaDetection = useCallback(
-    (
-      _persona: UserPersona,
-      detectionData: PersonaDetectionData,
-      confidence: number
-    ) => {
-      tracker.current.trackPersonaDetection(_persona, detectionData, confidence);
+    (persona: UserPersona, detectionData: PersonaDetectionData, confidence: number) => {
+      tracker.current.trackPersonaDetection(persona, detectionData, confidence);
     },
     []
   );
@@ -424,30 +411,30 @@ export const usePersonaAnalytics = () => {
   );
 
   const trackPricingInteraction = useCallback(
-    (_persona: UserPersona, action: 'view' | 'click' | 'hover', tier?: string) => {
-      tracker.current.trackPersonaPricingInteraction(_persona, action, tier);
+    (persona: UserPersona, action: 'view' | 'click' | 'hover', tier?: string) => {
+      tracker.current.trackPersonaPricingInteraction(persona, action, tier);
     },
     []
   );
 
   const trackCTAClick = useCallback(
-    (_persona: UserPersona, ctaText: string, tier: string, position: string) => {
-      tracker.current.trackPersonaCTAClick(_persona, ctaText, tier, position);
+    (persona: UserPersona, ctaText: string, tier: string, position: string) => {
+      tracker.current.trackPersonaCTAClick(persona, ctaText, tier, position);
     },
     []
   );
 
   const trackOnboardingProgress = useCallback(
-    (_persona: UserPersona, step: number, completed: boolean) => {
-      tracker.current.trackOnboardingProgress(_persona, step, completed);
+    (persona: UserPersona, step: number, completed: boolean) => {
+      tracker.current.trackOnboardingProgress(persona, step, completed);
     },
     []
   );
 
   const trackSubscriptionConversion = useCallback(
-    (_persona: UserPersona, tier: string, revenue: number, campaignSource?: string) => {
+    (persona: UserPersona, tier: string, revenue: number, campaignSource?: string) => {
       tracker.current.trackSubscriptionConversion(
-        _persona,
+        persona,
         tier,
         revenue,
         campaignSource
@@ -465,13 +452,13 @@ export const usePersonaAnalytics = () => {
 
   const trackEmailInteraction = useCallback(
     (
-      _persona: UserPersona,
+      persona: UserPersona,
       campaignId: string,
       action: 'opened' | 'clicked',
       linkUrl?: string
     ) => {
       tracker.current.trackMarketingEmailInteraction(
-        _persona,
+        persona,
         campaignId,
         action,
         linkUrl
@@ -503,9 +490,9 @@ export const usePersonaAnalytics = () => {
 };
 
 // Analytics Provider Component
-export const PersonaAnalyticsProvider: React.FC<{
-  children: React.ReactNode;
-}> = ({ children }) => {
+export const PersonaAnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const analytics = usePersonaAnalytics();
 
   useEffect(() => {

@@ -1,7 +1,41 @@
-src/__tests__/utils/hook-testing-utils.tsx(6,17): error TS2724: '"react"' has no exported member named '_ReactElement'. Did you mean 'ReactElement'?
-src/__tests__/utils/hook-testing-utils.tsx(68,3): error TS2339: Property '_initialEntries' does not exist on type 'AllTheProvidersProps'.
-src/backend/cloudflare-functions.ts(881,45): error TS2339: Property 'list' does not exist on type 'KVNamespace'.
+src/App.tsx(514,24): error TS2448: Block-scoped variable 'handleServiceWorkerAlarmTrigger' used before its declaration.
+src/App.tsx(514,24): error TS2454: Variable 'handleServiceWorkerAlarmTrigger' is used before being assigned.
+src/App.tsx(780,7): error TS2448: Block-scoped variable 'handleServiceWorkerMessage' used before its declaration.
+src/App.tsx(780,7): error TS2454: Variable 'handleServiceWorkerMessage' is used before being assigned.
+src/App.tsx(902,7): error TS2448: Block-scoped variable 'handleAlarmSnooze' used before its declaration.
+src/App.tsx(902,7): error TS2454: Variable 'handleAlarmSnooze' is used before being assigned.
+src/App.tsx(1841,42): error TS2322: Type '{ alarms: any[]; }' is not assignable to type 'IntrinsicAttributes & AdvancedSchedulingDashboardProps'.
+  Property 'alarms' does not exist on type 'IntrinsicAttributes & AdvancedSchedulingDashboardProps'.
+src/App.tsx(1945,15): error TS2322: Type '{ user: User; onUpgrade: (plan: any) => void; onManageSubscription: () => void; }' is not assignable to type 'IntrinsicAttributes & PricingPageProps'.
+  Property 'user' does not exist on type 'IntrinsicAttributes & PricingPageProps'.
+src/App.tsx(1946,26): error TS7006: Parameter 'plan' implicitly has an 'any' type.
+src/__tests__/utils/hook-testing-utils.tsx(259,15): error TS2345: Argument of type '{ coords: { latitude: number; longitude: number; accuracy: number; altitude: null; altitudeAccuracy: null; heading: null; speed: null; toJSON: () => {}; }; timestamp: number; }' is not assignable to parameter of type 'GeolocationPosition'.
+  Property 'toJSON' is missing in type '{ coords: { latitude: number; longitude: number; accuracy: number; altitude: null; altitudeAccuracy: null; heading: null; speed: null; toJSON: () => {}; }; timestamp: number; }' but required in type 'GeolocationPosition'.
+src/analytics/PersonaAnalytics.tsx(91,5): error TS2322: Type 'Timeout' is not assignable to type 'number'.
+src/analytics/PersonaAnalytics.tsx(120,41): error TS2339: Property 'subscriptionTier' does not exist on type 'PersonaDetectionData'.
+src/analytics/PersonaAnalytics.tsx(121,33): error TS2339: Property 'ageRange' does not exist on type 'PersonaDetectionData'.
+src/analytics/PersonaAnalytics.tsx(122,38): error TS2339: Property 'usagePatterns' does not exist on type 'PersonaDetectionData'.
+src/analytics/PersonaAnalytics.tsx(123,41): error TS2339: Property 'priceInteraction' does not exist on type 'PersonaDetectionData'.
+src/analytics/PersonaAnalytics.tsx(124,43): error TS2339: Property 'featurePreferences' does not exist on type 'PersonaDetectionData'.
+src/analytics/PersonaAnalytics.tsx(125,35): error TS2339: Property 'deviceType' does not exist on type 'PersonaDetectionData'.
+src/analytics/PersonaAnalytics.tsx(126,34): error TS2339: Property 'timeOfDay' does not exist on type 'PersonaDetectionData'.
+src/backend/api.ts(174,5): error TS2561: Object literal may only specify known properties, but 'subscriptionTier' does not exist in type 'User'. Did you mean to write 'subscription'?
+src/backend/api.ts(203,5): error TS2561: Object literal may only specify known properties, but 'subscriptionTier' does not exist in type 'User'. Did you mean to write 'subscription'?
+src/backend/api.ts(389,11): error TS2561: Object literal may only specify known properties, but 'subscriptionTier' does not exist in type 'User'. Did you mean to write 'subscription'?
+src/backend/cloudflare-functions.ts(33,7): error TS2304: Cannot find name 'D1Database'.
+src/backend/cloudflare-functions.ts(34,7): error TS2304: Cannot find name 'KVNamespace'.
+src/backend/cloudflare-functions.ts(35,20): error TS2304: Cannot find name 'DurableObjectNamespace'.
+src/components/AIAutomation.tsx(312,5): error TS2322: Type '"good"' is not assignable to type 'WakeUpMood'.
+src/components/AccessibilityTester.tsx(344,19): error TS2783: 'style' is specified more than once, so this usage will be overwritten.
+src/components/AccessibilityTester.tsx(353,19): error TS2783: 'style' is specified more than once, so this usage will be overwritten.
+src/components/AccessibilityTester.tsx(362,19): error TS2783: 'style' is specified more than once, so this usage will be overwritten.
+src/components/AchievementBadges.tsx(187,13): error TS2353: Object literal may only specify known properties, and 'ringColor' does not exist in type 'Properties<string | number, string & {}>'.
+src/components/AchievementBadges.tsx(347,34): error TS7006: Parameter 'e' implicitly has an 'any' type.
 src/components/AdaptiveButton.tsx(161,11): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+src/components/AdaptiveImage.tsx(110,8): error TS2448: Block-scoped variable 'supportsWebP' used before its declaration.
+src/components/AdaptiveImage.tsx(110,8): error TS2454: Variable 'supportsWebP' is used before being assigned.
+src/components/AdaptiveImage.tsx(129,27): error TS2448: Block-scoped variable 'supportsWebP' used before its declaration.
+src/components/AdaptiveImage.tsx(129,27): error TS2454: Variable 'supportsWebP' is used before being assigned.
 src/components/AdvancedAlarmScheduling.tsx(236,58): error TS7006: Parameter 'o' implicitly has an 'any' type.
 src/components/AdvancedAlarmScheduling.tsx(246,56): error TS7006: Parameter 'r' implicitly has an 'any' type.
 src/components/AdvancedAlarmScheduling.tsx(256,56): error TS7006: Parameter 't' implicitly has an 'any' type.
@@ -25,23 +59,37 @@ src/components/AdvancedAlarmScheduling.tsx(599,36): error TS2339: Property 'smar
 src/components/AdvancedAlarmScheduling.tsx(600,29): error TS7006: Parameter 'o' implicitly has an 'any' type.
 src/components/AdvancedAlarmScheduling.tsx(605,38): error TS2339: Property 'smartOptimizations' does not exist on type '{ time: string; label: string; scheduleType: string; isActive: boolean; days: number[]; sound: string; difficulty: string; snoozeEnabled: boolean; snoozeInterval: number; voiceMood: string; }'.
 src/components/AdvancedAlarmScheduling.tsx(607,29): error TS7006: Parameter 'o' implicitly has an 'any' type.
-src/components/AdvancedAnalytics.tsx(381,7): error TS7053: Element implicitly has an 'any' type because expression of type 'WakeUpMood' can't be used to index type 'Record<WakeUpMood, number>'.
-src/components/AdvancedAnalytics.tsx(381,22): error TS7053: Element implicitly has an 'any' type because expression of type 'WakeUpMood' can't be used to index type 'Record<WakeUpMood, number>'.
-src/components/AlarmForm.tsx(26,34): error TS2307: Cannot find module './_NuclearModeSelector' or its corresponding type declarations.
+src/components/AdvancedAnalytics.tsx(84,5): error TS2322: Type '"good"' is not assignable to type 'WakeUpMood'.
+src/components/AdvancedAnalytics.tsx(103,5): error TS2322: Type '"okay"' is not assignable to type 'WakeUpMood'.
+src/components/AdvancedAnalytics.tsx(122,5): error TS2322: Type '"excellent"' is not assignable to type 'WakeUpMood'.
+src/components/AdvancedAnalytics.tsx(147,5): error TS2322: Type '"good"' is not assignable to type 'WakeUpMood'.
+src/components/AdvancedAnalytics.tsx(179,5): error TS2322: Type '"excellent"' is not assignable to type 'WakeUpMood'.
+src/components/AdvancedAnalytics.tsx(242,5): error TS2322: Type '"good"' is not assignable to type 'WakeUpMood'.
+src/components/AdvancedAnalytics.tsx(260,5): error TS2322: Type '"excellent"' is not assignable to type 'WakeUpMood'.
+src/components/AdvancedAnalytics.tsx(291,10): error TS2678: Type '"excellent"' is not comparable to type 'WakeUpMood'.
+src/components/AdvancedAnalytics.tsx(293,10): error TS2678: Type '"good"' is not comparable to type 'WakeUpMood'.
+src/components/AdvancedAnalytics.tsx(295,10): error TS2678: Type '"neutral"' is not comparable to type 'WakeUpMood'.
+src/components/AdvancedAnalytics.tsx(299,10): error TS2678: Type '"grumpy"' is not comparable to type 'WakeUpMood'.
+src/components/AdvancedAnalytics.tsx(308,10): error TS2678: Type '"excellent"' is not comparable to type 'WakeUpMood'.
+src/components/AdvancedAnalytics.tsx(310,10): error TS2678: Type '"good"' is not comparable to type 'WakeUpMood'.
+src/components/AdvancedAnalytics.tsx(312,10): error TS2678: Type '"neutral"' is not comparable to type 'WakeUpMood'.
+src/components/AdvancedAnalytics.tsx(316,10): error TS2678: Type '"grumpy"' is not comparable to type 'WakeUpMood'.
 src/components/AlarmForm.tsx(98,9): error TS2345: Argument of type 'string' is not assignable to parameter of type 'SubscriptionTier'.
-src/components/AlarmForm.tsx(133,11): error TS2339: Property '_announceEnter' does not exist on type '{ announceFocus: (elementType: string, elementLabel: string, additionalContext?: string | undefined) => void; announceEnter: (description?: string | undefined) => void; announceExit: (description?: string | undefined) => void; }'.
-src/components/AlarmManagement.tsx(3,29): error TS2724: '"@/components/ui/card"' has no exported member named '_CardHeader'. Did you mean 'CardHeader'?
-src/components/AlarmManagement.tsx(3,42): error TS2724: '"@/components/ui/card"' has no exported member named '_CardTitle'. Did you mean 'CardTitle'?
-src/components/AlarmTester.tsx(4,10): error TS2724: '"@/components/ui/badge"' has no exported member named '_Badge'. Did you mean 'Badge'?
-src/components/AlarmTester.tsx(18,3): error TS2724: '"../types/index"' has no exported member named '_VoiceMood'. Did you mean 'VoiceMood'?
-src/components/AlarmThemeBrowser.tsx(31,3): error TS2724: '"lucide-react"' has no exported member named '_Zap'. Did you mean 'Zap'?
-src/components/AlarmThemeBrowser.tsx(36,3): error TS2724: '"lucide-react"' has no exported member named '_Settings'. Did you mean 'Settings'?
-src/components/AlarmThemeBrowser.tsx(37,3): error TS2724: '"lucide-react"' has no exported member named '_Download'. Did you mean 'Download'?
-src/components/AlarmThemeBrowser.tsx(38,3): error TS2724: '"lucide-react"' has no exported member named '_Upload'. Did you mean 'Upload'?
-src/components/AlarmThemeBrowser.tsx(40,3): error TS2305: Module '"lucide-react"' has no exported member '_X'.
-src/components/AlarmThemeBrowser.tsx(43,3): error TS2724: '"lucide-react"' has no exported member named '_Moon'. Did you mean 'Moon'?
+src/components/AlarmForm.tsx(137,19): error TS2345: Argument of type '{ time: string; label: string; days: number[]; voiceMood: VoiceMood; soundType: "built-in" | "custom" | "voice-only"; customSoundId: string; snoozeEnabled: boolean; snoozeInterval: number; maxSnoozes: number; }' is not assignable to parameter of type 'SetStateAction<{ time: string; label: string; days: number[]; voiceMood: VoiceMood; difficulty: AlarmDifficulty; nuclearChallenges: string[]; soundType: "built-in" | "custom" | "voice-only"; customSoundId: string; snoozeEnabled: boolean; snoozeInterval: number; maxSnoozes: number; }>'.
+  Type '{ time: string; label: string; days: number[]; voiceMood: VoiceMood; soundType: "built-in" | "custom" | "voice-only"; customSoundId: string; snoozeEnabled: boolean; snoozeInterval: number; maxSnoozes: number; }' is missing the following properties from type '{ time: string; label: string; days: number[]; voiceMood: VoiceMood; difficulty: AlarmDifficulty; nuclearChallenges: string[]; soundType: "built-in" | "custom" | "voice-only"; customSoundId: string; snoozeEnabled: boolean; snoozeInterval: number; maxSnoozes: number; }': difficulty, nuclearChallenges
+src/components/AlarmForm.tsx(1373,11): error TS2322: Type '{ feature: string; onUpgrade: (tier: any) => void; onDismiss: () => void; }' is not assignable to type 'IntrinsicAttributes & UpgradePromptProps'.
+  Property 'onUpgrade' does not exist on type 'IntrinsicAttributes & UpgradePromptProps'.
+src/components/AlarmForm.tsx(1373,22): error TS7006: Parameter 'tier' implicitly has an 'any' type.
+src/components/AlarmList.tsx(54,15): error TS2448: Block-scoped variable 'loadAlarmOptimizations' used before its declaration.
+src/components/AlarmList.tsx(69,34): error TS2304: Cannot find name 'useCallback'.
+src/components/AlarmManagement.tsx(34,10): error TS2614: Module '"./PremiumGate"' has no exported member 'PremiumGate'. Did you mean to use 'import PremiumGate from "./PremiumGate"' instead?
+src/components/AlarmRinging.tsx(174,5): error TS2322: Type 'Timeout' is not assignable to type 'number'.
+src/components/AlarmRinging.tsx(390,7): error TS2322: Type 'Timeout' is not assignable to type 'number'.
+src/components/AlarmTester.tsx(21,10): error TS2614: Module '"./PremiumGate"' has no exported member 'PremiumGate'. Did you mean to use 'import PremiumGate from "./PremiumGate"' instead?
+src/components/AlarmThemeBrowser.tsx(724,16): error TS2304: Cannot find name 'getWeatherIcon'.
 src/components/AnalyticsProvider.tsx(226,29): error TS2554: Expected 1 arguments, but got 0.
-src/components/AuthenticationFlow.tsx(20,3): error TS2339: Property '_onAuthSuccess' does not exist on type 'AuthenticationFlowProps'.
+src/components/AuthenticationFlow.tsx(19,25): error TS2528: A module cannot have multiple default exports.
+src/components/AuthenticationFlow.tsx(95,16): error TS2528: A module cannot have multiple default exports.
 src/components/BattleSystem.tsx(103,5): error TS2741: Property 'personalization' is missing in type '{ theme: "system"; soundEnabled: true; notificationsEnabled: true; voiceDismissalSensitivity: number; defaultVoiceMood: "motivational"; hapticFeedback: true; snoozeMinutes: number; maxSnoozes: number; rewardsEnabled: true; aiInsightsEnabled: true; personalizedMessagesEnabled: true; shareAchievements: true; }' but required in type 'UserPreferences'.
 src/components/BattleSystem.tsx(128,5): error TS2741: Property 'personalization' is missing in type '{ theme: "system"; soundEnabled: true; notificationsEnabled: true; voiceDismissalSensitivity: number; defaultVoiceMood: "motivational"; hapticFeedback: true; snoozeMinutes: number; maxSnoozes: number; rewardsEnabled: true; aiInsightsEnabled: true; personalizedMessagesEnabled: true; shareAchievements: true; }' but required in type 'UserPreferences'.
 src/components/BattleSystem.tsx(153,5): error TS2741: Property 'personalization' is missing in type '{ theme: "system"; soundEnabled: true; notificationsEnabled: true; voiceDismissalSensitivity: number; defaultVoiceMood: "motivational"; hapticFeedback: true; snoozeMinutes: number; maxSnoozes: number; rewardsEnabled: true; aiInsightsEnabled: true; personalizedMessagesEnabled: true; shareAchievements: true; }' but required in type 'UserPreferences'.
@@ -58,29 +106,18 @@ src/components/CSRFProtection.tsx(63,12): error TS2769: No overload matches this
         'PropsWithoutRef<P> & { csrfToken: string; ref: ForwardedRef<any>; }' is assignable to the constraint of type 'P', but 'P' could be instantiated with a different subtype of constraint 'object'.
 src/components/CloudSyncControls.tsx(26,23): error TS2345: Argument of type 'Date | null | undefined' is not assignable to parameter of type 'SetStateAction<Date | null>'.
   Type 'undefined' is not assignable to type 'SetStateAction<Date | null>'.
-src/components/CommunityChallenge.tsx(7,34): error TS2724: '"./ui/avatar"' has no exported member named '_AvatarImage'. Did you mean 'AvatarImage'?
-src/components/CommunityChallenge.tsx(17,3): error TS2724: '"lucide-react"' has no exported member named '_Star'. Did you mean 'Star'?
-src/components/CommunityChallenge.tsx(21,3): error TS2724: '"lucide-react"' has no exported member named '_Award'. Did you mean 'Award'?
-src/components/CommunityChallenge.tsx(22,3): error TS2724: '"lucide-react"' has no exported member named '_ChevronRight'. Did you mean 'ChevronRight'?
-src/components/CommunityChallenge.tsx(28,3): error TS2724: '"../types/struggling-sam"' has no exported member named '_ChallengeParticipant'. Did you mean 'ChallengeParticipant'?
-src/components/CommunityChallenge.tsx(29,3): error TS2724: '"../types/struggling-sam"' has no exported member named '_ChallengeLeaderboard'. Did you mean 'ChallengeLeaderboard'?
+src/components/CommunityChallenge.tsx(292,30): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/components/CommunityChallenge.tsx(303,30): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/components/CommunityChallenge.tsx(315,28): error TS7006: Parameter 'e' implicitly has an 'any' type.
 src/components/CommunityHub.tsx(580,36): error TS7006: Parameter 'e' implicitly has an 'any' type.
 src/components/CompleteThemeSystemDemo.tsx(743,12): error TS2322: Type 'string' is not assignable to type 'number'.
 src/components/CompleteThemeSystemDemo.tsx(743,22): error TS2322: Type 'string' is not assignable to type 'number'.
 src/components/CompleteThemeSystemDemo.tsx(743,33): error TS2322: Type 'string' is not assignable to type 'number'.
 src/components/CompleteThemeSystemDemo.tsx(743,46): error TS2322: Type 'string' is not assignable to type 'number'.
 src/components/CompleteThemeSystemDemo.tsx(743,58): error TS2322: Type 'string' is not assignable to type 'number'.
-src/components/CustomSoundThemeCreator.tsx(9,3): error TS2724: '"lucide-react"' has no exported member named '_Eye'. Did you mean 'Eye'?
-src/components/CustomSoundThemeCreator.tsx(37,10): error TS2724: '"./ui/separator"' has no exported member named '_Separator'. Did you mean 'Separator'?
-src/components/CustomSoundThemeCreator.tsx(48,3): error TS2724: '"../types/custom-sound-themes"' has no exported member named '_CustomSoundAssignment'. Did you mean 'CustomSoundAssignment'?
-src/components/CustomSoundThemeCreator.tsx(698,9): error TS2339: Property '_theme' does not exist on type '{ theme: Partial<CustomSoundTheme>; availableSounds: CustomSound[]; onUpdate: (field: keyof CustomSoundTheme, value: any) => void; }'.
-src/components/CustomSoundThemeCreator.tsx(698,17): error TS2339: Property '_availableSounds' does not exist on type '{ theme: Partial<CustomSoundTheme>; availableSounds: CustomSound[]; onUpdate: (field: keyof CustomSoundTheme, value: any) => void; }'.
-src/components/CustomSoundThemeCreator.tsx(698,35): error TS2339: Property '_onUpdate' does not exist on type '{ theme: Partial<CustomSoundTheme>; availableSounds: CustomSound[]; onUpdate: (field: keyof CustomSoundTheme, value: any) => void; }'.
-src/components/CustomSoundThemeCreator.tsx(753,9): error TS2339: Property '_theme' does not exist on type '{ theme: Partial<CustomSoundTheme>; onUpdate: (field: keyof CustomSoundTheme, value: any) => void; }'.
-src/components/CustomSoundThemeCreator.tsx(753,17): error TS2339: Property '_onUpdate' does not exist on type '{ theme: Partial<CustomSoundTheme>; onUpdate: (field: keyof CustomSoundTheme, value: any) => void; }'.
-src/components/CustomSoundThemeCreator.tsx(765,9): error TS2339: Property '_theme' does not exist on type '{ theme: Partial<CustomSoundTheme>; }'.
-src/components/CustomSoundThemeCreator.tsx(804,9): error TS2339: Property '_theme' does not exist on type '{ theme: Partial<CustomSoundTheme>; onUpdate: (field: keyof CustomSoundTheme, value: any) => void; }'.
-src/components/CustomSoundThemeCreator.tsx(804,17): error TS2339: Property '_onUpdate' does not exist on type '{ theme: Partial<CustomSoundTheme>; onUpdate: (field: keyof CustomSoundTheme, value: any) => void; }'.
+src/components/ComprehensiveSecurityDashboard.tsx(745,31): error TS2339: Property 'h7' does not exist on type 'JSX.IntrinsicElements'.
+src/components/ComprehensiveSecurityDashboard.tsx(747,31): error TS2339: Property 'h7' does not exist on type 'JSX.IntrinsicElements'.
+src/components/CustomSoundThemeCreator.tsx(12,3): error TS2305: Module '"lucide-react"' has no exported member 'Publish'.
 src/components/CustomThemeManager.tsx(124,54): error TS2339: Property 'getCommunityThemes' does not exist on type 'SoundEffectsService'.
 src/components/CustomThemeManager.tsx(186,76): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
   Type 'undefined' is not assignable to type 'string'.
@@ -128,6 +165,11 @@ src/components/ExtendedScreenReaderTester.tsx(430,19): error TS2322: Type '{ cla
   Property 'title' does not exist on type 'IntrinsicAttributes & Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>'.
 src/components/FeatureLockOverlay.tsx(86,17): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
   Type 'undefined' is not assignable to type 'string'.
+src/components/FeatureLockOverlay.tsx(276,11): error TS2322: Type '{ feature: string; onUpgrade: (tier: any) => void; onDismiss: () => void; }' is not assignable to type 'IntrinsicAttributes & UpgradePromptProps'.
+  Property 'onUpgrade' does not exist on type 'IntrinsicAttributes & UpgradePromptProps'.
+src/components/FeatureLockOverlay.tsx(276,22): error TS7006: Parameter 'tier' implicitly has an 'any' type.
+src/components/ForgotPasswordForm.tsx(13,25): error TS2528: A module cannot have multiple default exports.
+src/components/ForgotPasswordForm.tsx(220,16): error TS2528: A module cannot have multiple default exports.
 src/components/Gamification.tsx(270,28): error TS2339: Property 'status' does not exist on type 'DailyChallenge'.
 src/components/Gamification.tsx(273,28): error TS2339: Property 'status' does not exist on type 'DailyChallenge'.
 src/components/Gamification.tsx(331,9): error TS2322: Type '"activity"' is not assignable to type 'ExperienceSource'.
@@ -135,6 +177,8 @@ src/components/Gamification.tsx(352,11): error TS2561: Object literal may only s
 src/components/GamingHub.tsx(71,19): error TS2322: Type '() => void' is not assignable to type '() => Promise<void>'.
   Type 'void' is not assignable to type 'Promise<void>'.
 src/components/HabitCelebration.tsx(98,24): error TS2554: Expected 1 arguments, but got 0.
+src/components/LoginForm.tsx(13,25): error TS2528: A module cannot have multiple default exports.
+src/components/LoginForm.tsx(245,16): error TS2528: A module cannot have multiple default exports.
 src/components/MediaContent.tsx(212,5): error TS2353: Object literal may only specify known properties, and 'percentage' does not exist in type 'StorageInfo'.
 src/components/MediaContent.tsx(217,3): error TS2353: Object literal may only specify known properties, and 'defaultSoundCategory' does not exist in type 'ContentPreferences'.
 src/components/MediaContent.tsx(347,9): error TS2322: Type 'string | number | undefined' is not assignable to type 'number | undefined'.
@@ -149,26 +193,32 @@ src/components/MobileNavigation.tsx(182,9): error TS2322: Type 'RefObject<HTMLEl
   Type 'RefObject<HTMLElement | null>' is not assignable to type 'RefObject<HTMLDivElement | null>'.
     Type 'HTMLElement | null' is not assignable to type 'HTMLDivElement | null'.
       Property 'align' is missing in type 'HTMLElement' but required in type 'HTMLDivElement'.
-src/components/MobileTester.tsx(30,11): error TS2339: Property '_isTouchDevice' does not exist on type '{ isTouchDevice: boolean; triggerHaptic: (type?: "medium" | "light" | "success" | "error" | "warning" | "heavy") => Promise<void>; }'.
-src/components/MobileTester.tsx(30,27): error TS2339: Property '_triggerHaptic' does not exist on type '{ isTouchDevice: boolean; triggerHaptic: (type?: "medium" | "light" | "success" | "error" | "warning" | "heavy") => Promise<void>; }'.
-src/components/MobileTester.tsx(33,5): error TS2339: Property 'isInstallable' does not exist on type '{ capabilities: PWACapabilities; state: PWAInstallationState; isOnline: boolean; isOffline: boolean; showInstallPrompt: () => Promise<boolean>; updateServiceWorker: () => Promise<...>; shouldShowInstallPrompt: boolean; }'.
-src/components/MobileTester.tsx(34,5): error TS2339: Property 'isInstalled' does not exist on type '{ capabilities: PWACapabilities; state: PWAInstallationState; isOnline: boolean; isOffline: boolean; showInstallPrompt: () => Promise<boolean>; updateServiceWorker: () => Promise<...>; shouldShowInstallPrompt: boolean; }'.
-src/components/MobileTester.tsx(36,5): error TS2339: Property 'updateAvailable' does not exist on type '{ capabilities: PWACapabilities; state: PWAInstallationState; isOnline: boolean; isOffline: boolean; showInstallPrompt: () => Promise<boolean>; updateServiceWorker: () => Promise<...>; shouldShowInstallPrompt: boolean; }'.
-src/components/MobileTester.tsx(37,5): error TS2339: Property 'canInstall' does not exist on type '{ capabilities: PWACapabilities; state: PWAInstallationState; isOnline: boolean; isOffline: boolean; showInstallPrompt: () => Promise<boolean>; updateServiceWorker: () => Promise<...>; shouldShowInstallPrompt: boolean; }'.
-src/components/MobileTester.tsx(38,5): error TS2339: Property '_install' does not exist on type '{ capabilities: PWACapabilities; state: PWAInstallationState; isOnline: boolean; isOffline: boolean; showInstallPrompt: () => Promise<boolean>; updateServiceWorker: () => Promise<...>; shouldShowInstallPrompt: boolean; }'.
-src/components/MobileTester.tsx(41,5): error TS2339: Property 'isCapacitorAvailable' does not exist on type '{ isInitialized: boolean; deviceFeatures: DeviceFeatures | null; isNative: boolean; platform: "web" | "android" | "ios"; }'.
-src/components/MobileTester.tsx(42,5): error TS2339: Property 'deviceInfo' does not exist on type '{ isInitialized: boolean; deviceFeatures: DeviceFeatures | null; isNative: boolean; platform: "web" | "android" | "ios"; }'.
-src/components/MobileTester.tsx(43,5): error TS2339: Property 'scheduleNotification' does not exist on type '{ isInitialized: boolean; deviceFeatures: DeviceFeatures | null; isNative: boolean; platform: "web" | "android" | "ios"; }'.
-src/components/MobileTester.tsx(44,5): error TS2339: Property 'hapticImpact' does not exist on type '{ isInitialized: boolean; deviceFeatures: DeviceFeatures | null; isNative: boolean; platform: "web" | "android" | "ios"; }'.
-src/components/MobileTester.tsx(45,5): error TS2339: Property 'networkStatus' does not exist on type '{ isInitialized: boolean; deviceFeatures: DeviceFeatures | null; isNative: boolean; platform: "web" | "android" | "ios"; }'.
-src/components/NuclearModeBattle.tsx(13,3): error TS2305: Module '"lucide-react"' has no exported member 'Explosion'.
-src/components/NuclearModeBattle.tsx(16,10): error TS2614: Module '"./PremiumGate"' has no exported member 'PremiumGate'. Did you mean to use 'import PremiumGate from "./PremiumGate"' instead?
-src/components/NuclearModeBattle.tsx(18,30): error TS2307: Cannot find module '../services/sound' or its corresponding type declarations.
-src/components/NuclearModeBattle.tsx(244,32): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'Error'.
+src/components/MobileTester.tsx(3,10): error TS2305: Module '"../hooks/useMobileTouch"' has no exported member 'useMobileTouch'.
+src/components/MobileTester.tsx(31,11): error TS2339: Property 'isInstallable' does not exist on type '{ capabilities: PWACapabilities; state: PWAInstallationState; isOnline: boolean; isOffline: boolean; showInstallPrompt: () => Promise<boolean>; updateServiceWorker: () => Promise<...>; shouldShowInstallPrompt: boolean; }'.
+src/components/MobileTester.tsx(31,26): error TS2339: Property 'isInstalled' does not exist on type '{ capabilities: PWACapabilities; state: PWAInstallationState; isOnline: boolean; isOffline: boolean; showInstallPrompt: () => Promise<boolean>; updateServiceWorker: () => Promise<...>; shouldShowInstallPrompt: boolean; }'.
+src/components/MobileTester.tsx(31,49): error TS2339: Property 'updateAvailable' does not exist on type '{ capabilities: PWACapabilities; state: PWAInstallationState; isOnline: boolean; isOffline: boolean; showInstallPrompt: () => Promise<boolean>; updateServiceWorker: () => Promise<...>; shouldShowInstallPrompt: boolean; }'.
+src/components/MobileTester.tsx(31,66): error TS2339: Property 'canInstall' does not exist on type '{ capabilities: PWACapabilities; state: PWAInstallationState; isOnline: boolean; isOffline: boolean; showInstallPrompt: () => Promise<boolean>; updateServiceWorker: () => Promise<...>; shouldShowInstallPrompt: boolean; }'.
+src/components/MobileTester.tsx(31,78): error TS2339: Property 'install' does not exist on type '{ capabilities: PWACapabilities; state: PWAInstallationState; isOnline: boolean; isOffline: boolean; showInstallPrompt: () => Promise<boolean>; updateServiceWorker: () => Promise<...>; shouldShowInstallPrompt: boolean; }'.
+src/components/MobileTester.tsx(34,5): error TS2339: Property 'isCapacitorAvailable' does not exist on type '{ isInitialized: boolean; deviceFeatures: DeviceFeatures | null; isNative: boolean; platform: "web" | "android" | "ios"; }'.
+src/components/MobileTester.tsx(35,5): error TS2339: Property 'deviceInfo' does not exist on type '{ isInitialized: boolean; deviceFeatures: DeviceFeatures | null; isNative: boolean; platform: "web" | "android" | "ios"; }'.
+src/components/MobileTester.tsx(36,5): error TS2339: Property 'scheduleNotification' does not exist on type '{ isInitialized: boolean; deviceFeatures: DeviceFeatures | null; isNative: boolean; platform: "web" | "android" | "ios"; }'.
+src/components/MobileTester.tsx(37,5): error TS2339: Property 'hapticImpact' does not exist on type '{ isInitialized: boolean; deviceFeatures: DeviceFeatures | null; isNative: boolean; platform: "web" | "android" | "ios"; }'.
+src/components/MobileTester.tsx(38,5): error TS2339: Property 'networkStatus' does not exist on type '{ isInitialized: boolean; deviceFeatures: DeviceFeatures | null; isNative: boolean; platform: "web" | "android" | "ios"; }'.
+src/components/NuclearModeBattle.tsx(12,3): error TS2305: Module '"lucide-react"' has no exported member 'Explosion'.
+src/components/NuclearModeBattle.tsx(15,10): error TS2614: Module '"./PremiumGate"' has no exported member 'PremiumGate'. Did you mean to use 'import PremiumGate from "./PremiumGate"' instead?
+src/components/NuclearModeBattle.tsx(17,30): error TS2307: Cannot find module '../services/sound' or its corresponding type declarations.
+src/components/NuclearModeBattle.tsx(147,5): error TS2322: Type 'Timeout' is not assignable to type 'number'.
+src/components/NuclearModeBattle.tsx(243,32): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'Error'.
 src/components/NuclearModeChallenge.tsx(32,3): error TS2395: Individual declarations in merged declaration 'NuclearModeChallenge' must be all exported or all local.
 src/components/NuclearModeChallenge.tsx(574,14): error TS2395: Individual declarations in merged declaration 'NuclearModeChallenge' must be all exported or all local.
-src/components/NuclearModeSelector.tsx(9,35): error TS2724: '"./ui/alert"' has no exported member named 'AlertTriangle'. Did you mean 'AlertTitle'?
-src/components/NuclearModeSelector.tsx(102,28): error TS2339: Property 'userTier' does not exist on type '{ hasAccess: boolean; upgradeUrl?: string | undefined; }'.
+src/components/NuclearModeSelector.tsx(8,35): error TS2724: '"./ui/alert"' has no exported member named 'AlertTriangle'. Did you mean 'AlertTitle'?
+src/components/NuclearModeSelector.tsx(41,23): error TS2304: Cannot find name 'NuclearChallengeType'.
+src/components/NuclearModeSelector.tsx(44,36): error TS2304: Cannot find name 'NuclearChallengeType'.
+src/components/NuclearModeSelector.tsx(50,30): error TS2304: Cannot find name 'NuclearChallengeType'.
+src/components/NuclearModeSelector.tsx(83,13): error TS2304: Cannot find name 'NuclearChallengeType'.
+src/components/NuclearModeSelector.tsx(100,9): error TS2304: Cannot find name 'setUserTier'.
+src/components/NuclearModeSelector.tsx(100,28): error TS2339: Property 'userTier' does not exist on type '{ hasAccess: boolean; upgradeUrl?: string | undefined; }'.
+src/components/NuclearModeSelector.tsx(114,20): error TS2304: Cannot find name 'NuclearChallengeType'.
 src/components/OfflineDiagnostics.tsx(175,50): error TS18046: 'error' is of type 'unknown'.
 src/components/OfflineDiagnostics.tsx(249,41): error TS18046: 'error' is of type 'unknown'.
 src/components/OfflineDiagnostics.tsx(295,45): error TS18046: 'error' is of type 'unknown'.
@@ -219,10 +269,9 @@ src/components/PremiumFeatureTest.tsx(54,13): error TS7053: Element implicitly h
   No index signature with a parameter of type 'string' was found on type '{ free: number; basic: number; premium: number; pro: number; ultimate: number; }'.
 src/components/PremiumFeatureTest.tsx(54,47): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ free: number; basic: number; premium: number; pro: number; ultimate: number; }'.
   No index signature with a parameter of type 'string' was found on type '{ free: number; basic: number; premium: number; pro: number; ultimate: number; }'.
-src/components/PremiumGate.tsx(22,3): error TS2339: Property '_mode' does not exist on type 'PremiumGateProps'.
-src/components/PremiumGate.tsx(38,6): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ free: number; basic: number; premium: number; pro: number; ultimate: number; }'.
+src/components/PremiumGate.tsx(35,22): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ free: number; basic: number; premium: number; pro: number; ultimate: number; }'.
   No index signature with a parameter of type 'string' was found on type '{ free: number; basic: number; premium: number; pro: number; ultimate: number; }'.
-src/components/PremiumGate.tsx(38,40): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ free: number; basic: number; premium: number; pro: number; ultimate: number; }'.
+src/components/PremiumGate.tsx(35,56): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ free: number; basic: number; premium: number; pro: number; ultimate: number; }'.
   No index signature with a parameter of type 'string' was found on type '{ free: number; basic: number; premium: number; pro: number; ultimate: number; }'.
 src/components/PremiumThemeSettings.tsx(15,10): error TS2614: Module '"./PremiumGate"' has no exported member 'PremiumGate'. Did you mean to use 'import PremiumGate from "./PremiumGate"' instead?
 src/components/PremiumThemeSettings.tsx(41,5): error TS2322: Type '"dark"' is not assignable to type 'ThemeCategory'.
@@ -368,6 +417,7 @@ src/components/SpecializedErrorBoundaries.tsx(61,9): error TS2322: Type 'string 
   Type 'null' is not assignable to type 'string | undefined'.
 src/components/SubscriptionStatus.tsx(37,3): error TS2339: Property 'onUpgrade' does not exist on type 'SubscriptionStatusProps'.
 src/components/SubscriptionStatus.tsx(52,29): error TS2345: Argument of type '{ tier: SubscriptionTier; plan: PremiumFeature; limits: { alarmCount: { current: number; max: number | null; }; voicesAccess: { basic: boolean; premium: boolean; ultimate: boolean; }; featuresUnlocked: string[]; featuresLocked: string[]; }; }' is not assignable to parameter of type 'SetStateAction<SubscriptionStatus | null>'.
+src/components/SubscriptionStatus.tsx(61,18): error TS2551: Property 'subscriptionTier' does not exist on type 'User'. Did you mean 'subscription'?
 src/components/SubscriptionStatus.tsx(101,28): error TS2339: Property 'status' does not exist on type 'SubscriptionStatus'.
   Property 'status' does not exist on type '"active"'.
 src/components/SubscriptionStatus.tsx(102,50): error TS2339: Property 'currentPeriodEnd' does not exist on type 'SubscriptionStatus'.
@@ -382,6 +432,7 @@ src/components/SubscriptionStatus.tsx(140,28): error TS2339: Property 'status' d
   Property 'status' does not exist on type '"active"'.
 src/components/SubscriptionStatus.tsx(141,53): error TS2551: Property 'trialEnd' does not exist on type 'SubscriptionStatus'. Did you mean 'trimEnd'?
   Property 'trialEnd' does not exist on type '"active"'.
+src/components/SubscriptionStatus.tsx(209,17): error TS2551: Property 'subscriptionTier' does not exist on type 'User'. Did you mean 'subscription'?
 src/components/SubscriptionStatus.tsx(253,39): error TS2339: Property 'status' does not exist on type 'SubscriptionStatus'.
   Property 'status' does not exist on type '"active"'.
 src/components/SubscriptionStatus.tsx(258,39): error TS2339: Property 'status' does not exist on type 'SubscriptionStatus'.
@@ -390,6 +441,9 @@ src/components/SubscriptionStatus.tsx(263,39): error TS2339: Property 'currentPe
   Property 'currentPeriodEnd' does not exist on type '"active"'.
 src/components/SubscriptionStatus.tsx(264,49): error TS2339: Property 'currentPeriodEnd' does not exist on type 'SubscriptionStatus'.
   Property 'currentPeriodEnd' does not exist on type '"active"'.
+src/components/SubscriptionStatus.tsx(272,17): error TS2551: Property 'subscriptionTier' does not exist on type 'User'. Did you mean 'subscription'?
+src/components/SubscriptionStatus.tsx(282,17): error TS2551: Property 'subscriptionTier' does not exist on type 'User'. Did you mean 'subscription'?
+src/components/SubscriptionStatus.tsx(292,17): error TS2551: Property 'subscriptionTier' does not exist on type 'User'. Did you mean 'subscription'?
 src/components/SubscriptionStatus.tsx(350,37): error TS2339: Property 'status' does not exist on type 'SubscriptionStatus'.
   Property 'status' does not exist on type '"active"'.
 src/components/SubscriptionStatus.tsx(356,37): error TS2339: Property 'status' does not exist on type 'SubscriptionStatus'.
@@ -412,6 +466,9 @@ src/components/SubscriptionStatus.tsx(382,39): error TS2339: Property 'usage' do
   Property 'usage' does not exist on type '"active"'.
 src/components/SubscriptionStatus.tsx(384,42): error TS2339: Property 'usage' does not exist on type 'SubscriptionStatus'.
   Property 'usage' does not exist on type '"active"'.
+src/components/SubscriptionStatus.tsx(430,15): error TS2551: Property 'subscriptionTier' does not exist on type 'User'. Did you mean 'subscription'?
+src/components/SubscriptionStatus.tsx(440,15): error TS2551: Property 'subscriptionTier' does not exist on type 'User'. Did you mean 'subscription'?
+src/components/SubscriptionStatus.tsx(450,15): error TS2551: Property 'subscriptionTier' does not exist on type 'User'. Did you mean 'subscription'?
 src/components/TabProtectionWarning.tsx(65,22): error TS2345: Argument of type 'boolean | Alarm' is not assignable to parameter of type 'SetStateAction<boolean>'.
   Type 'Alarm' is not assignable to type 'SetStateAction<boolean>'.
 src/components/ThemeCustomizationStudio.tsx(95,22): error TS2345: Argument of type '(prev: Partial<ThemeConfig>) => { colors: { primary?: ColorPalette | undefined; secondary?: ColorPalette | undefined; accent?: ColorPalette | undefined; ... 8 more ...; surface?: { ...; } | undefined; }; ... 16 more ...; rating?: number | undefined; }' is not assignable to parameter of type 'SetStateAction<Partial<ThemeConfig>>'.
@@ -448,26 +505,24 @@ src/components/ThemeCustomizationStudio.tsx(613,14): error TS2322: Type '{ child
 src/components/ThemeGallery.tsx(314,11): error TS2739: Type '{ primary: string; secondary: string; accent: string; background: string; surface: string; }' is missing the following properties from type 'ThemePreview': primaryColor, backgroundColor, textColor, cardColor, accentColor
 src/components/ThemeStudio.tsx(4,3): error TS2305: Module '"lucide-react"' has no exported member 'Gallery'.
 src/components/UpgradePrompt.tsx(19,12): error TS2304: Cannot find name 'PremiumFeature'.
-src/components/UpgradePrompt.tsx(200,36): error TS2339: Property 'tier' does not exist on type '{ name: string; price: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; color: string; textColor: string; bgColor: string; features: string[]; }'.
-src/components/UpgradePrompt.tsx(200,57): error TS2339: Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; } | { title: string; description: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<...>>; benefits: string[]; }'.
+src/components/UpgradePrompt.tsx(37,3): error TS2339: Property 'onUpgrade' does not exist on type 'UpgradePromptProps'.
+src/components/UpgradePrompt.tsx(42,3): error TS2339: Property 'currentTier' does not exist on type 'UpgradePromptProps'.
+src/components/UpgradePrompt.tsx(198,36): error TS2339: Property 'tier' does not exist on type '{ name: string; price: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; color: string; textColor: string; bgColor: string; features: string[]; }'.
+src/components/UpgradePrompt.tsx(198,57): error TS2339: Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; } | { title: string; description: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<...>>; benefits: string[]; }'.
   Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; }'.
-src/components/UpgradePrompt.tsx(222,30): error TS2722: Cannot invoke an object which is possibly 'undefined'.
-src/components/UpgradePrompt.tsx(222,52): error TS2339: Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; } | { title: string; description: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<...>>; benefits: string[]; }'.
+src/components/UpgradePrompt.tsx(220,52): error TS2339: Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; } | { title: string; description: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<...>>; benefits: string[]; }'.
   Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; }'.
-src/components/UpgradePrompt.tsx(269,28): error TS2722: Cannot invoke an object which is possibly 'undefined'.
-src/components/UpgradePrompt.tsx(269,50): error TS2339: Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; } | { title: string; description: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<...>>; benefits: string[]; }'.
+src/components/UpgradePrompt.tsx(267,50): error TS2339: Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; } | { title: string; description: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<...>>; benefits: string[]; }'.
   Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; }'.
-src/components/UpgradePrompt.tsx(337,43): error TS2339: Property 'tier' does not exist on type '{ name: string; price: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; color: string; textColor: string; bgColor: string; features: string[]; }'.
-src/components/UpgradePrompt.tsx(337,64): error TS2339: Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; } | { title: string; description: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<...>>; benefits: string[]; }'.
+src/components/UpgradePrompt.tsx(335,43): error TS2339: Property 'tier' does not exist on type '{ name: string; price: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; color: string; textColor: string; bgColor: string; features: string[]; }'.
+src/components/UpgradePrompt.tsx(335,64): error TS2339: Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; } | { title: string; description: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<...>>; benefits: string[]; }'.
   Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; }'.
-src/components/UpgradePrompt.tsx(339,26): error TS2339: Property 'tier' does not exist on type '{ name: string; price: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; color: string; textColor: string; bgColor: string; features: string[]; }'.
-src/components/UpgradePrompt.tsx(339,61): error TS2339: Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; } | { title: string; description: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<...>>; benefits: string[]; }'.
+src/components/UpgradePrompt.tsx(337,26): error TS2339: Property 'tier' does not exist on type '{ name: string; price: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; color: string; textColor: string; bgColor: string; features: string[]; }'.
+src/components/UpgradePrompt.tsx(337,61): error TS2339: Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; } | { title: string; description: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<...>>; benefits: string[]; }'.
   Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; }'.
-src/components/UpgradePrompt.tsx(346,33): error TS2339: Property 'tier' does not exist on type '{ name: string; price: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; color: string; textColor: string; bgColor: string; features: string[]; }'.
-src/components/UpgradePrompt.tsx(385,42): error TS2722: Cannot invoke an object which is possibly 'undefined'.
-src/components/UpgradePrompt.tsx(385,57): error TS2339: Property 'tier' does not exist on type '{ name: string; price: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; color: string; textColor: string; bgColor: string; features: string[]; }'.
-src/components/UpgradePrompt.tsx(408,32): error TS2722: Cannot invoke an object which is possibly 'undefined'.
-src/components/UpgradePrompt.tsx(408,54): error TS2339: Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; } | { title: string; description: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<...>>; benefits: string[]; }'.
+src/components/UpgradePrompt.tsx(344,33): error TS2339: Property 'tier' does not exist on type '{ name: string; price: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; color: string; textColor: string; bgColor: string; features: string[]; }'.
+src/components/UpgradePrompt.tsx(383,57): error TS2339: Property 'tier' does not exist on type '{ name: string; price: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; color: string; textColor: string; bgColor: string; features: string[]; }'.
+src/components/UpgradePrompt.tsx(406,54): error TS2339: Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; } | { title: string; description: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<...>>; benefits: string[]; }'.
   Property 'tier' does not exist on type '{ title: string; description: string; icon: ComponentType<any>; benefits: string[]; }'.
 src/components/UserProfile.tsx(27,25): error TS2528: A module cannot have multiple default exports.
 src/components/UserProfile.tsx(145,16): error TS2528: A module cannot have multiple default exports.
@@ -504,6 +559,7 @@ src/components/VoiceSelector.tsx(222,33): error TS2339: Property 'testPremiumVoi
 src/components/VoiceSelector.tsx(238,47): error TS2339: Property 'getVoicePersonality' does not exist on type 'typeof PremiumVoiceService'.
 src/components/VoiceSelector.tsx(251,47): error TS2339: Property 'getVoicePersonality' does not exist on type 'typeof PremiumVoiceService'.
 src/components/VoiceSelector.tsx(347,57): error TS2339: Property 'getVoicePersonality' does not exist on type 'typeof PremiumVoiceService'.
+src/components/VoiceSelector.tsx(370,13): error TS2551: Property 'subscriptionTier' does not exist on type 'User'. Did you mean 'subscription'?
 src/components/WakeUpFeedbackModal.tsx(56,5): error TS2353: Object literal may only specify known properties, and 'wouldPreferEarlier' does not exist in type 'Partial<WakeUpFeedback> | (() => Partial<WakeUpFeedback>)'.
 src/components/WakeUpFeedbackModal.tsx(75,9): error TS2353: Object literal may only specify known properties, and 'wouldPreferEarlier' does not exist in type 'SetStateAction<Partial<WakeUpFeedback>>'.
 src/components/WakeUpFeedbackModal.tsx(290,37): error TS2551: Property 'wouldPreferEarlier' does not exist on type 'Partial<WakeUpFeedback>'. Did you mean 'wouldPreferearlier'?
@@ -529,15 +585,22 @@ src/components/premium/EnhancedUpgradePrompt.tsx(432,64): error TS2339: Property
 src/components/premium/EnhancedUpgradePrompt.tsx(432,70): error TS2554: Expected 0-1 arguments, but got 2.
 src/components/premium/EnhancedUpgradePrompt.tsx(467,64): error TS2339: Property 'tier' does not exist on type '{ title: string; description: string; icon: ReactNode; benefits: string[]; color: string; gradient: string; }'.
 src/components/premium/EnhancedUpgradePrompt.tsx(467,70): error TS2554: Expected 0-1 arguments, but got 2.
-src/components/premium/FeatureUtils.tsx(104,27): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
-  Type 'undefined' is not assignable to type 'string'.
-src/components/premium/FeatureUtils.tsx(104,63): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
-  Type 'undefined' is not assignable to type 'string'.
-src/components/premium/FeatureUtils.tsx(119,27): error TS2538: Type 'undefined' cannot be used as an index type.
-src/components/premium/FeatureUtils.tsx(145,31): error TS7006: Parameter 'feature' implicitly has an 'any' type.
-src/components/premium/FeatureUtils.tsx(145,40): error TS7006: Parameter 'index' implicitly has an 'any' type.
-src/components/premium/FeatureUtils.tsx(233,3): error TS2339: Property 'tier' does not exist on type 'FeatureHighlightProps'.
-src/components/premium/FeatureUtils.tsx(327,11): error TS2339: Property 'getUpgradeRequirement' does not exist on type 'FeatureAccessContextValue'.
+src/components/premium/FeatureUtils.tsx(16,3): error TS2339: Property 'tier' does not exist on type 'FeatureBadgeProps'.
+src/components/premium/FeatureUtils.tsx(94,3): error TS2339: Property 'currentTier' does not exist on type 'TierComparisonProps'.
+src/components/premium/FeatureUtils.tsx(95,3): error TS2339: Property 'targetTier' does not exist on type 'TierComparisonProps'.
+src/components/premium/FeatureUtils.tsx(116,12): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ basic: string[]; premium: string[]; pro: string[]; }'.
+src/components/premium/FeatureUtils.tsx(125,25): error TS2322: Type '{ tier: any; size: "sm"; }' is not assignable to type 'IntrinsicAttributes & FeatureBadgeProps'.
+  Property 'tier' does not exist on type 'IntrinsicAttributes & FeatureBadgeProps'.
+src/components/premium/FeatureUtils.tsx(127,25): error TS2322: Type '{ tier: any; size: "sm"; variant: "prominent"; }' is not assignable to type 'IntrinsicAttributes & FeatureBadgeProps'.
+  Property 'tier' does not exist on type 'IntrinsicAttributes & FeatureBadgeProps'.
+src/components/premium/FeatureUtils.tsx(142,31): error TS7006: Parameter 'feature' implicitly has an 'any' type.
+src/components/premium/FeatureUtils.tsx(142,40): error TS7006: Parameter 'index' implicitly has an 'any' type.
+src/components/premium/FeatureUtils.tsx(230,3): error TS2339: Property 'tier' does not exist on type 'FeatureHighlightProps'.
+src/components/premium/FeatureUtils.tsx(251,23): error TS2322: Type '{ tier: any; size: "sm"; }' is not assignable to type 'IntrinsicAttributes & FeatureBadgeProps'.
+  Property 'tier' does not exist on type 'IntrinsicAttributes & FeatureBadgeProps'.
+src/components/premium/FeatureUtils.tsx(324,11): error TS2339: Property 'getUpgradeRequirement' does not exist on type 'FeatureAccessContextValue'.
+src/components/premium/FeatureUtils.tsx(371,23): error TS2322: Type '{ tier: any; variant: "prominent"; }' is not assignable to type 'IntrinsicAttributes & FeatureBadgeProps'.
+  Property 'tier' does not exist on type 'IntrinsicAttributes & FeatureBadgeProps'.
 src/components/premium/PaymentFlow.tsx(223,9): error TS2353: Object literal may only specify known properties, and 'billingDetails' does not exist in type 'CreateSubscriptionRequest'.
 src/components/premium/PaymentFlow.tsx(418,41): error TS2339: Property 'cardData' does not exist on type 'PaymentMethod'.
 src/components/premium/PaymentFlow.tsx(418,70): error TS2339: Property 'cardData' does not exist on type 'PaymentMethod'.
@@ -552,13 +615,21 @@ src/components/premium/PaymentMethodManager.tsx(242,55): error TS2339: Property 
 src/components/premium/PaymentMethodManager.tsx(244,41): error TS2339: Property 'cardData' does not exist on type 'PaymentMethod'.
 src/components/premium/PaymentMethodManager.tsx(245,33): error TS2339: Property 'cardData' does not exist on type 'PaymentMethod'.
 src/components/premium/PremiumAlarmFeatures.tsx(19,10): error TS2614: Module '"./FeatureGate"' has no exported member 'FeatureGate'. Did you mean to use 'import FeatureGate from "./FeatureGate"' instead?
+src/components/premium/PremiumAlarmFeatures.tsx(51,27): error TS2322: Type '{ tier: string; size: "sm"; }' is not assignable to type 'IntrinsicAttributes & FeatureBadgeProps'.
+  Property 'tier' does not exist on type 'IntrinsicAttributes & FeatureBadgeProps'.
 src/components/premium/PremiumAlarmFeatures.tsx(106,17): error TS2353: Object literal may only specify known properties, and 'smartWakeup' does not exist in type 'Partial<Alarm>'.
+src/components/premium/PremiumAlarmFeatures.tsx(149,27): error TS2322: Type '{ tier: string; size: "sm"; }' is not assignable to type 'IntrinsicAttributes & FeatureBadgeProps'.
+  Property 'tier' does not exist on type 'IntrinsicAttributes & FeatureBadgeProps'.
 src/components/premium/PremiumAlarmFeatures.tsx(155,42): error TS2322: Type 'Dispatch<SetStateAction<"conditional" | "dynamic" | "complex">>' is not assignable to type '(value: string) => void'.
   Types of parameters 'value' and 'value' are incompatible.
     Type 'string' is not assignable to type 'SetStateAction<"conditional" | "dynamic" | "complex">'.
 src/components/premium/PremiumAlarmFeatures.tsx(238,17): error TS2353: Object literal may only specify known properties, and 'advancedScheduling' does not exist in type 'Partial<Alarm>'.
+src/components/premium/PremiumAlarmFeatures.tsx(282,27): error TS2322: Type '{ tier: string; size: "sm"; }' is not assignable to type 'IntrinsicAttributes & FeatureBadgeProps'.
+  Property 'tier' does not exist on type 'IntrinsicAttributes & FeatureBadgeProps'.
 src/components/premium/PremiumAlarmFeatures.tsx(310,45): error TS2561: Object literal may only specify known properties, but 'customSound' does not exist in type 'Partial<Alarm>'. Did you mean to write 'customSoundId'?
 src/components/premium/PremiumAlarmFeatures.tsx(332,42): error TS2322: Type '"xs"' is not assignable to type '"sm" | "lg" | "md" | undefined'.
+src/components/premium/PremiumAlarmFeatures.tsx(369,27): error TS2322: Type '{ tier: string; size: "sm"; }' is not assignable to type 'IntrinsicAttributes & FeatureBadgeProps'.
+  Property 'tier' does not exist on type 'IntrinsicAttributes & FeatureBadgeProps'.
 src/components/premium/PremiumAlarmFeatures.tsx(375,40): error TS2322: Type 'Dispatch<SetStateAction<"ai" | "tournament" | "team">>' is not assignable to type '(value: string) => void'.
   Types of parameters 'value' and 'value' are incompatible.
     Type 'string' is not assignable to type 'SetStateAction<"ai" | "tournament" | "team">'.
@@ -566,6 +637,8 @@ src/components/premium/PremiumAlarmFeatures.tsx(389,40): error TS2322: Type 'Dis
   Types of parameters 'value' and 'value' are incompatible.
     Type 'string' is not assignable to type 'SetStateAction<"extreme" | "adaptive" | "impossible">'.
 src/components/premium/PremiumAlarmFeatures.tsx(472,17): error TS2353: Object literal may only specify known properties, and 'enhancedBattles' does not exist in type 'Partial<Alarm>'.
+src/components/premium/PremiumAlarmFeatures.tsx(510,27): error TS2322: Type '{ tier: string; size: "sm"; }' is not assignable to type 'IntrinsicAttributes & FeatureBadgeProps'.
+  Property 'tier' does not exist on type 'IntrinsicAttributes & FeatureBadgeProps'.
 src/components/premium/PremiumAlarmFeatures.tsx(516,37): error TS2322: Type 'Dispatch<SetStateAction<"both" | "leave" | "arrive">>' is not assignable to type '(value: string) => void'.
   Types of parameters 'value' and 'value' are incompatible.
     Type 'string' is not assignable to type 'SetStateAction<"both" | "leave" | "arrive">'.
@@ -577,18 +650,46 @@ src/components/premium/PremiumAlarmFeatures.tsx(641,30): error TS2339: Property 
 src/components/premium/PremiumAlarmFeatures.tsx(647,30): error TS2339: Property 'getFeatureAccess' does not exist on type 'FeatureGateResult & FeatureGateActions'.
 src/components/premium/PremiumAlarmFeatures.tsx(653,30): error TS2339: Property 'getFeatureAccess' does not exist on type 'FeatureGateResult & FeatureGateActions'.
 src/components/premium/PremiumAnalytics.tsx(27,10): error TS2614: Module '"./FeatureGate"' has no exported member 'FeatureGate'. Did you mean to use 'import FeatureGate from "./FeatureGate"' instead?
+src/components/premium/PremiumAnalytics.tsx(74,25): error TS2322: Type '{ tier: string; size: "sm"; }' is not assignable to type 'IntrinsicAttributes & FeatureBadgeProps'.
+  Property 'tier' does not exist on type 'IntrinsicAttributes & FeatureBadgeProps'.
+src/components/premium/PremiumAnalytics.tsx(135,25): error TS2322: Type '{ tier: string; size: "sm"; }' is not assignable to type 'IntrinsicAttributes & FeatureBadgeProps'.
+  Property 'tier' does not exist on type 'IntrinsicAttributes & FeatureBadgeProps'.
+src/components/premium/PremiumAnalytics.tsx(197,25): error TS2322: Type '{ tier: string; size: "sm"; }' is not assignable to type 'IntrinsicAttributes & FeatureBadgeProps'.
+  Property 'tier' does not exist on type 'IntrinsicAttributes & FeatureBadgeProps'.
+src/components/premium/PremiumAnalytics.tsx(272,25): error TS2322: Type '{ tier: string; size: "sm"; }' is not assignable to type 'IntrinsicAttributes & FeatureBadgeProps'.
+  Property 'tier' does not exist on type 'IntrinsicAttributes & FeatureBadgeProps'.
+src/components/premium/PremiumAnalytics.tsx(311,25): error TS2322: Type '{ tier: string; size: "sm"; }' is not assignable to type 'IntrinsicAttributes & FeatureBadgeProps'.
+  Property 'tier' does not exist on type 'IntrinsicAttributes & FeatureBadgeProps'.
 src/components/premium/PremiumFeaturePreview.tsx(10,3): error TS2724: '"lucide-react"' has no exported member named 'Robot'. Did you mean 'Bot'?
 src/components/premium/PremiumTeamFeatures.tsx(25,10): error TS2614: Module '"./FeatureGate"' has no exported member 'FeatureGate'. Did you mean to use 'import FeatureGate from "./FeatureGate"' instead?
+src/components/premium/PremiumTeamFeatures.tsx(258,25): error TS2322: Type '{ tier: string; size: "sm"; }' is not assignable to type 'IntrinsicAttributes & FeatureBadgeProps'.
+  Property 'tier' does not exist on type 'IntrinsicAttributes & FeatureBadgeProps'.
+src/components/premium/PremiumTeamFeatures.tsx(360,25): error TS2322: Type '{ tier: string; size: "sm"; }' is not assignable to type 'IntrinsicAttributes & FeatureBadgeProps'.
+  Property 'tier' does not exist on type 'IntrinsicAttributes & FeatureBadgeProps'.
 src/components/premium/PremiumTeamFeatures.tsx(434,23): error TS2322: Type '{ size: string; }' is not assignable to type 'IntrinsicAttributes & SwitchProps & RefAttributes<HTMLButtonElement>'.
   Property 'size' does not exist on type 'IntrinsicAttributes & SwitchProps & RefAttributes<HTMLButtonElement>'.
 src/components/premium/PremiumTeamFeatures.tsx(438,23): error TS2322: Type '{ size: string; }' is not assignable to type 'IntrinsicAttributes & SwitchProps & RefAttributes<HTMLButtonElement>'.
   Property 'size' does not exist on type 'IntrinsicAttributes & SwitchProps & RefAttributes<HTMLButtonElement>'.
 src/components/premium/PremiumTeamFeatures.tsx(442,23): error TS2322: Type '{ size: string; }' is not assignable to type 'IntrinsicAttributes & SwitchProps & RefAttributes<HTMLButtonElement>'.
   Property 'size' does not exist on type 'IntrinsicAttributes & SwitchProps & RefAttributes<HTMLButtonElement>'.
+src/components/premium/PremiumTeamFeatures.tsx(479,25): error TS2322: Type '{ tier: string; size: "sm"; }' is not assignable to type 'IntrinsicAttributes & FeatureBadgeProps'.
+  Property 'tier' does not exist on type 'IntrinsicAttributes & FeatureBadgeProps'.
+src/components/premium/PremiumTeamFeatures.tsx(539,25): error TS2322: Type '{ tier: string; size: "sm"; }' is not assignable to type 'IntrinsicAttributes & FeatureBadgeProps'.
+  Property 'tier' does not exist on type 'IntrinsicAttributes & FeatureBadgeProps'.
 src/components/premium/PremiumVoiceFeatures.tsx(31,10): error TS2614: Module '"./FeatureGate"' has no exported member 'FeatureGate'. Did you mean to use 'import FeatureGate from "./FeatureGate"' instead?
+src/components/premium/PremiumVoiceFeatures.tsx(84,25): error TS2322: Type '{ tier: string; size: "sm"; }' is not assignable to type 'IntrinsicAttributes & FeatureBadgeProps'.
+  Property 'tier' does not exist on type 'IntrinsicAttributes & FeatureBadgeProps'.
 src/components/premium/PremiumVoiceFeatures.tsx(90,44): error TS2322: Type 'Dispatch<SetStateAction<"drill-sergeant" | "motivational" | "gentle" | "zen">>' is not assignable to type '(value: string) => void'.
   Types of parameters 'value' and 'value' are incompatible.
     Type 'string' is not assignable to type 'SetStateAction<"drill-sergeant" | "motivational" | "gentle" | "zen">'.
+src/components/premium/PremiumVoiceFeatures.tsx(228,25): error TS2322: Type '{ tier: string; size: "sm"; }' is not assignable to type 'IntrinsicAttributes & FeatureBadgeProps'.
+  Property 'tier' does not exist on type 'IntrinsicAttributes & FeatureBadgeProps'.
+src/components/premium/PremiumVoiceFeatures.tsx(335,25): error TS2322: Type '{ tier: string; size: "sm"; }' is not assignable to type 'IntrinsicAttributes & FeatureBadgeProps'.
+  Property 'tier' does not exist on type 'IntrinsicAttributes & FeatureBadgeProps'.
+src/components/premium/PremiumVoiceFeatures.tsx(452,25): error TS2322: Type '{ tier: string; size: "sm"; }' is not assignable to type 'IntrinsicAttributes & FeatureBadgeProps'.
+  Property 'tier' does not exist on type 'IntrinsicAttributes & FeatureBadgeProps'.
+src/components/premium/PremiumVoiceFeatures.tsx(545,25): error TS2322: Type '{ tier: string; size: "sm"; }' is not assignable to type 'IntrinsicAttributes & FeatureBadgeProps'.
+  Property 'tier' does not exist on type 'IntrinsicAttributes & FeatureBadgeProps'.
 src/components/premium/PsychologyDrivenCTA.tsx(15,3): error TS2305: Module '"lucide-react"' has no exported member 'Fire'.
 src/components/premium/PsychologyDrivenCTA.tsx(46,3): error TS2339: Property 'targetTier' does not exist on type 'PsychologyDrivenCTAProps'.
 src/components/premium/PsychologyDrivenCTA.tsx(47,3): error TS2339: Property 'onUpgrade' does not exist on type 'PsychologyDrivenCTAProps'.
@@ -740,24 +841,23 @@ src/hooks/useAudioLazyLoading.ts(322,11): error TS2322: Type '{ favoriteCategori
   Types of property 'favoriteCategories' are incompatible.
     Type 'string[] | undefined' is not assignable to type 'string[]'.
       Type 'undefined' is not assignable to type 'string[]'.
-src/hooks/useAuth.ts(9,10): error TS2300: Duplicate identifier 'TimeoutHandle'.
-src/hooks/useAuth.ts(10,10): error TS2300: Duplicate identifier 'TimeoutHandle'.
-src/hooks/useAuth.ts(76,64): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
-src/hooks/useAuth.ts(118,55): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
-src/hooks/useAuth.ts(133,19): error TS2554: Expected 2-3 arguments, but got 1.
-src/hooks/useAuth.ts(288,48): error TS2345: Argument of type 'string' is not assignable to parameter of type 'EventProperties'.
-src/hooks/useAuth.ts(301,61): error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
-src/hooks/useAuth.ts(316,9): error TS2345: Argument of type 'string' is not assignable to parameter of type 'EventProperties'.
-src/hooks/useAuth.ts(364,48): error TS2345: Argument of type 'string' is not assignable to parameter of type 'EventProperties'.
-src/hooks/useAuth.ts(377,61): error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
-src/hooks/useAuth.ts(392,9): error TS2345: Argument of type 'string' is not assignable to parameter of type 'EventProperties'.
-src/hooks/useAuth.ts(430,60): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
-src/hooks/useAuth.ts(435,9): error TS2345: Argument of type 'string' is not assignable to parameter of type 'EventProperties'.
-src/hooks/useAuth.ts(480,56): error TS2345: Argument of type 'string' is not assignable to parameter of type 'EventProperties'.
-src/hooks/useAuth.ts(491,63): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
-src/hooks/useAuth.ts(496,9): error TS2345: Argument of type 'string' is not assignable to parameter of type 'EventProperties'.
-src/hooks/useAuth.ts(555,59): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
-src/hooks/useAuth.ts(563,9): error TS2345: Argument of type 'string' is not assignable to parameter of type 'EventProperties'.
+src/hooks/useAuth.ts(74,64): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/hooks/useAuth.ts(116,55): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/hooks/useAuth.ts(131,19): error TS2554: Expected 2-3 arguments, but got 1.
+src/hooks/useAuth.ts(145,5): error TS2322: Type 'Timeout' is not assignable to type 'number'.
+src/hooks/useAuth.ts(286,48): error TS2345: Argument of type 'string' is not assignable to parameter of type 'EventProperties'.
+src/hooks/useAuth.ts(299,61): error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+src/hooks/useAuth.ts(314,9): error TS2345: Argument of type 'string' is not assignable to parameter of type 'EventProperties'.
+src/hooks/useAuth.ts(362,48): error TS2345: Argument of type 'string' is not assignable to parameter of type 'EventProperties'.
+src/hooks/useAuth.ts(375,61): error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+src/hooks/useAuth.ts(390,9): error TS2345: Argument of type 'string' is not assignable to parameter of type 'EventProperties'.
+src/hooks/useAuth.ts(428,60): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/hooks/useAuth.ts(433,9): error TS2345: Argument of type 'string' is not assignable to parameter of type 'EventProperties'.
+src/hooks/useAuth.ts(478,56): error TS2345: Argument of type 'string' is not assignable to parameter of type 'EventProperties'.
+src/hooks/useAuth.ts(489,63): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/hooks/useAuth.ts(494,9): error TS2345: Argument of type 'string' is not assignable to parameter of type 'EventProperties'.
+src/hooks/useAuth.ts(553,59): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/hooks/useAuth.ts(561,9): error TS2345: Argument of type 'string' is not assignable to parameter of type 'EventProperties'.
 src/hooks/useAuthAnnouncements.ts(16,74): error TS2554: Expected 1 arguments, but got 2.
 src/hooks/useAuthAnnouncements.ts(28,25): error TS2554: Expected 1 arguments, but got 2.
 src/hooks/useAuthAnnouncements.ts(39,25): error TS2554: Expected 1 arguments, but got 2.
@@ -806,6 +906,7 @@ src/hooks/useCulturalTheme.tsx(196,13): error TS2769: No overload matches this c
 src/hooks/useDeviceCapabilities.tsx(12,3): error TS2459: Module '"../services/performance-budget-manager"' declares 'PerformanceSnapshot' locally, but it is not exported.
 src/hooks/useDeviceCapabilities.tsx(13,3): error TS2459: Module '"../services/performance-budget-manager"' declares 'PerformanceAlert' locally, but it is not exported.
 src/hooks/useDeviceCapabilities.tsx(14,3): error TS2459: Module '"../services/performance-budget-manager"' declares 'DeviceAdaptation' locally, but it is not exported.
+src/hooks/useDynamicFocus.ts(108,9): error TS2322: Type 'Timeout' is not assignable to type 'number'.
 src/hooks/useEmotionalNotifications.ts(3,10): error TS2614: Module '"../services/analytics"' has no exported member 'AnalyticsService'. Did you mean to use 'import AnalyticsService from "../services/analytics"' instead?
 src/hooks/useEmotionalNotifications.ts(85,18): error TS18046: 'error' is of type 'unknown'.
 src/hooks/useEmotionalNotifications.ts(90,18): error TS18046: 'error' is of type 'unknown'.
@@ -891,6 +992,7 @@ src/hooks/useFocusTrap.ts(342,50): error TS2769: No overload matches this call.
       Type '(event: MouseEvent) => void' is not assignable to type 'EventListener'.
         Types of parameters 'event' and 'evt' are incompatible.
           Type 'Event' is missing the following properties from type 'MouseEvent': altKey, button, buttons, clientX, and 23 more.
+src/hooks/useFormAnnouncements.ts(39,9): error TS2322: Type 'Timeout' is not assignable to type 'number'.
 src/hooks/useGamingAnnouncements.ts(266,9): error TS2741: Property 'team' is missing in type '{ speed: string; consistency: string; tasks: string; bragging: string; group: string; tournament: string; }' but required in type 'Record<BattleType, string>'.
 src/hooks/useGamingAnnouncements.ts(329,74): error TS2339: Property 'reason' does not exist on type 'ExperienceGain'.
 src/hooks/useGamingAnnouncements.ts(422,64): error TS2339: Property 'reason' does not exist on type 'ExperienceGain'.
@@ -917,7 +1019,8 @@ src/hooks/useMediaContentAnnouncements.ts(309,25): error TS2554: Expected 1 argu
 src/hooks/useMediaContentAnnouncements.ts(340,25): error TS2554: Expected 1 arguments, but got 2.
 src/hooks/useMediaContentAnnouncements.ts(359,25): error TS2554: Expected 1 arguments, but got 2.
 src/hooks/useMediaContentAnnouncements.ts(381,25): error TS2554: Expected 1 arguments, but got 2.
-src/hooks/useMobilePerformance.ts(216,23): error TS2554: Expected 1 arguments, but got 0.
+src/hooks/useMobilePerformance.ts(215,23): error TS2554: Expected 1 arguments, but got 0.
+src/hooks/useMobilePerformance.ts(234,5): error TS2322: Type 'Timeout' is not assignable to type 'number'.
 src/hooks/useMobileTouch.ts(96,25): error TS2554: Expected 1 arguments, but got 0.
 src/hooks/useMobileTouch.ts(126,25): error TS2339: Property 'webkitTapHighlightColor' does not exist on type 'CSSStyleDeclaration'.
 src/hooks/useNavigationAnnouncements.ts(14,25): error TS2554: Expected 1 arguments, but got 2.
@@ -1704,6 +1807,7 @@ src/services/capacitor-enhanced.ts(334,63): error TS2551: Property 'SUCCESS' doe
 src/services/capacitor-enhanced.ts(337,63): error TS2551: Property 'WARNING' does not exist on type 'typeof NotificationType'. Did you mean 'Warning'?
 src/services/capacitor-enhanced.ts(340,63): error TS2551: Property 'ERROR' does not exist on type 'typeof NotificationType'. Did you mean 'Error'?
 src/services/capacitor.ts(175,7): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+src/services/convertkit-service.ts(210,35): error TS2551: Property 'subscriptionTier' does not exist on type 'User'. Did you mean 'subscription'?
 src/services/convertkit-service.ts(211,40): error TS2551: Property 'toISOString' does not exist on type 'string | Date'. Did you mean 'toString'?
   Property 'toISOString' does not exist on type 'string'.
 src/services/critical-preloader.ts(270,27): error TS2339: Property 'loadAudioFile' does not exist on type 'LazyAudioLoader'.
@@ -1725,8 +1829,10 @@ src/services/device-capabilities.ts(345,25): error TS2339: Property 'getParamete
   Property 'getParameter' does not exist on type 'CanvasRenderingContext2D'.
 src/services/device-capabilities.ts(345,41): error TS2339: Property 'VENDOR' does not exist on type 'RenderingContext'.
   Property 'VENDOR' does not exist on type 'CanvasRenderingContext2D'.
+src/services/email-campaign.ts(80,25): error TS2551: Property 'subscriptionTier' does not exist on type 'User'. Did you mean 'subscription'?
 src/services/email-campaigns.ts(17,8): error TS7016: Could not find a declaration file for module '../../email-campaigns/automation-config.js'. '/project/workspace/Coolhgg/Relife/email-campaigns/automation-config.js' implicitly has an 'any' type.
 src/services/email-campaigns.ts(67,42): error TS2353: Object literal may only specify known properties, and 'platform' does not exist in type 'ErrorContext'.
+src/services/email-campaigns.ts(151,37): error TS2551: Property 'subscriptionTier' does not exist on type 'User'. Did you mean 'subscription'?
 src/services/email-campaigns.ts(348,11): error TS2353: Object literal may only specify known properties, and 'persona' does not exist in type 'ErrorContext'.
 src/services/email-campaigns.ts(485,52): error TS7006: Parameter 'seq' implicitly has an 'any' type.
 src/services/email-campaigns.ts(528,48): error TS2353: Object literal may only specify known properties, and 'persona' does not exist in type 'ErrorContext'.
@@ -2132,8 +2238,10 @@ src/services/supabase.ts(158,25): error TS2345: Argument of type 'string | undef
   Type 'undefined' is not assignable to type 'string'.
 src/services/supabase.ts(320,7): error TS2739: Type '{ elevenlabsVoices: false; customVoiceMessages: false; voiceCloning: false; advancedAIInsights: false; personalizedChallenges: false; smartRecommendations: false; behaviorAnalysis: false; ... 15 more ...; prioritySupport: false; }' is missing the following properties from type 'PremiumFeatureAccess': premiumPersonalities, nuclearMode
 src/services/supabase.ts(347,11): error TS2322: Type '{ mode: string; primaryColor: string; accentColor: string; backgroundColor: string; cardColor: string; borderColor: string; }' is not assignable to type 'Theme'.
+src/services/supabase.ts(417,42): error TS2551: Property 'subscriptionTier' does not exist on type 'User'. Did you mean 'subscription'?
 src/services/supabase.ts(420,45): error TS2551: Property 'toISOString' does not exist on type 'string | Date'. Did you mean 'toString'?
   Property 'toISOString' does not exist on type 'string'.
+src/services/supabase.ts(470,11): error TS2561: Object literal may only specify known properties, but 'subscriptionTier' does not exist in type 'User'. Did you mean to write 'subscription'?
 src/services/supabase.ts(534,43): error TS2551: Property 'toISOString' does not exist on type 'string | Date'. Did you mean 'toString'?
   Property 'toISOString' does not exist on type 'string'.
 src/services/supabase.ts(535,43): error TS2551: Property 'toISOString' does not exist on type 'string | Date'. Did you mean 'toString'?
@@ -2157,7 +2265,7 @@ src/services/user-testing.ts(432,7): error TS2322: Type '"conversion"' is not as
 src/services/voice-ai-enhanced.ts(62,51): error TS2576: Property 'getInstance' does not exist on type 'PerformanceMonitor'. Did you mean to access the static member 'PerformanceMonitor.getInstance' instead?
 src/services/voice-ai-enhanced.ts(608,54): error TS2339: Property 'subscription_tier' does not exist on type 'UserPreferences'.
 src/services/voice-ai-enhanced.ts(629,28): error TS2353: Object literal may only specify known properties, and 'alarmId' does not exist in type 'ErrorContext'.
-src/services/voice-ai-enhanced.ts(1001,11): error TS2739: Type '{ 'drill-sergeant': "urgent"; 'sweet-angel': "calm"; 'anime-hero': "energetic"; 'savage-roast': "neutral"; motivational: "motivational"; gentle: "calm"; }' is missing the following properties from type 'Record<VoiceMood, "calm" | "energetic" | "neutral" | "urgent" | "motivational" | "happy">': "demon-lord", "ai-robot", comedian, philosopher
+src/services/voice-ai-enhanced.ts(1001,11): error TS2739: Type '{ 'drill-sergeant': "urgent"; 'sweet-angel': "calm"; 'anime-hero': "energetic"; 'savage-roast': "neutral"; motivational: "motivational"; gentle: "calm"; }' is missing the following properties from type 'Record<VoiceMood, "urgent" | "motivational" | "energetic" | "neutral" | "calm" | "happy">': "demon-lord", "ai-robot", comedian, philosopher
 src/services/voice-ai-enhanced.ts(1021,53): error TS2339: Property 'getInstance' does not exist on type 'typeof SupabaseService'.
 src/services/voice-ai-enhanced.ts(1031,19): error TS7006: Parameter 'row' implicitly has an 'any' type.
 src/services/voice-ai-enhanced.ts(1051,47): error TS2339: Property 'getInstance' does not exist on type 'typeof SupabaseService'.
@@ -2228,8 +2336,8 @@ src/stories/components/Dashboard.stories.tsx(120,7): error TS2322: Type '{ enabl
 src/stories/components/Dashboard.stories.tsx(131,7): error TS2322: Type '{ id: string; time: string; label: string; days: number[]; voiceMood: "motivational"; enabled: boolean; soundType: "voice-only"; snoozeEnabled: boolean; userId: string; createdAt: string; updatedAt: string; } | { ...; } | { ...; }' is not assignable to type 'Alarm'.
   Type '{ id: string; time: string; label: string; days: number[]; voiceMood: "motivational"; enabled: boolean; soundType: "voice-only"; snoozeEnabled: boolean; userId: string; createdAt: string; updatedAt: string; }' is missing the following properties from type 'Alarm': isActive, dayNames, sound, difficulty, and 2 more.
 src/stories/components/Dashboard.stories.tsx(137,9): error TS2322: Type '"energetic"' is not assignable to type 'VoiceMood'.
-src/stories/components/Dashboard.stories.tsx(151,9): error TS2322: Type '"calm" | "energetic" | "professional" | "motivational" | "gentle"' is not assignable to type 'VoiceMood'.
-  Type '"calm"' is not assignable to type 'VoiceMood'.
+src/stories/components/Dashboard.stories.tsx(151,9): error TS2322: Type '"professional" | "motivational" | "gentle" | "energetic" | "calm"' is not assignable to type 'VoiceMood'.
+  Type '"professional"' is not assignable to type 'VoiceMood'.
 src/stories/components/Dashboard.stories.tsx(164,9): error TS2322: Type '"calm"' is not assignable to type 'VoiceMood'.
 src/stories/components/Dashboard.stories.tsx(200,5): error TS2322: Type '({ id: string; time: string; label: string; days: number[]; voiceMood: "motivational"; enabled: boolean; soundType: "voice-only"; snoozeEnabled: boolean; userId: string; createdAt: string; updatedAt: string; } | { ...; } | { ...; })[]' is not assignable to type 'Alarm[]'.
   Type '{ id: string; time: string; label: string; days: number[]; voiceMood: "motivational"; enabled: boolean; soundType: "voice-only"; snoozeEnabled: boolean; userId: string; createdAt: string; updatedAt: string; } | { ...; } | { ...; }' is not assignable to type 'Alarm'.
@@ -2299,22 +2407,20 @@ src/types/email-campaigns.ts(592,3): error TS2741: Property 'targetPlan' is miss
 src/types/email-campaigns.ts(602,3): error TS2741: Property 'targetPlan' is missing in type '{ id: "student_sarah"; displayName: string; description: string; primaryColor: string; messagingTone: "casual"; ctaStyle: "youthful"; conversionGoals: string[]; preferredChannels: ("email" | "push" | "sms")[]; }' but required in type 'PersonaProfile'.
 src/types/email-campaigns.ts(612,3): error TS2741: Property 'targetPlan' is missing in type '{ id: "lifetime_larry"; displayName: string; description: string; primaryColor: string; messagingTone: "value_focused"; ctaStyle: "exclusive"; conversionGoals: string[]; preferredChannels: ("email" | "in_app")[]; }' but required in type 'PersonaProfile'.
 src/types/index.ts(210,24): error TS2552: Cannot find name 'SubscriptionStatus'. Did you mean 'Subscription'?
-src/types/index.ts(1318,9): error TS2304: Cannot find name 'WakeUpMood'.
-src/types/index.ts(2381,3): error TS2687: All declarations of 'priority' must have identical modifiers.
-src/types/index.ts(2610,3): error TS2717: Subsequent property declarations must have the same type.  Property 'metadata' must be of type '{ totalAlarms: number; timezone: string; }', but here has type 'Record<string, any>'.
-src/types/index.ts(2616,3): error TS2717: Subsequent property declarations must have the same type.  Property 'options' must be of type '{ overwriteExisting: boolean; preserveIds: boolean; adjustTimeZones: boolean; }', but here has type 'ImportOptions'.
-src/types/index.ts(2662,3): error TS2717: Subsequent property declarations must have the same type.  Property 'action' must be of type 'AlarmAction', but here has type '{ type: "adjust_time" | "change_sound" | "change_difficulty" | "enable_alarm" | "disable_alarm"; parameters?: any; }'.
-src/types/index.ts(2672,3): error TS2687: All declarations of 'priority' must have identical modifiers.
-src/types/index.ts(2672,3): error TS2717: Subsequent property declarations must have the same type.  Property 'priority' must be of type 'number', but here has type 'number | undefined'.
-src/types/index.ts(3174,9): error TS2304: Cannot find name 'WakeUpMood'.
-src/types/index.ts(3247,9): error TS2304: Cannot find name 'WakeUpMood'.
-src/types/index.ts(3302,9): error TS2304: Cannot find name 'WakeUpMood'.
-src/types/index.ts(3745,11): error TS2552: Cannot find name 'SubscriptionStatus'. Did you mean 'Subscription'?
-src/types/index.ts(3847,45): error TS2552: Cannot find name 'SubscriptionTier'. Did you mean 'Subscription'?
-src/types/index.ts(3894,5): error TS2353: Object literal may only specify known properties, and 'tier' does not exist in type 'SubscriptionPlan'.
-src/types/index.ts(3936,5): error TS2353: Object literal may only specify known properties, and 'tier' does not exist in type 'SubscriptionPlan'.
-src/types/index.ts(3999,5): error TS2741: Property 'premiumPersonalities' is missing in type '{ elevenlabsVoices: true; customVoiceMessages: true; voiceCloning: true; advancedAIInsights: true; personalizedChallenges: true; smartRecommendations: true; behaviorAnalysis: true; premiumThemes: true; ... 15 more ...; prioritySupport: true; }' but required in type 'PremiumFeatureAccess'.
-src/types/index.ts(4042,5): error TS2741: Property 'premiumPersonalities' is missing in type '{ elevenlabsVoices: true; customVoiceMessages: true; voiceCloning: true; advancedAIInsights: true; personalizedChallenges: true; smartRecommendations: true; behaviorAnalysis: true; premiumThemes: true; ... 15 more ...; prioritySupport: true; }' but required in type 'PremiumFeatureAccess'.
+src/types/index.ts(2380,3): error TS2687: All declarations of 'priority' must have identical modifiers.
+src/types/index.ts(2609,3): error TS2717: Subsequent property declarations must have the same type.  Property 'metadata' must be of type '{ totalAlarms: number; timezone: string; }', but here has type 'Record<string, any>'.
+src/types/index.ts(2615,3): error TS2717: Subsequent property declarations must have the same type.  Property 'options' must be of type '{ overwriteExisting: boolean; preserveIds: boolean; adjustTimeZones: boolean; }', but here has type 'ImportOptions'.
+src/types/index.ts(2661,3): error TS2717: Subsequent property declarations must have the same type.  Property 'action' must be of type 'AlarmAction', but here has type '{ type: "adjust_time" | "change_sound" | "change_difficulty" | "enable_alarm" | "disable_alarm"; parameters?: any; }'.
+src/types/index.ts(2671,3): error TS2687: All declarations of 'priority' must have identical modifiers.
+src/types/index.ts(2671,3): error TS2717: Subsequent property declarations must have the same type.  Property 'priority' must be of type 'number', but here has type 'number | undefined'.
+src/types/index.ts(2675,13): error TS2300: Duplicate identifier 'WakeUpMood'.
+src/types/index.ts(3289,13): error TS2300: Duplicate identifier 'WakeUpMood'.
+src/types/index.ts(3762,11): error TS2552: Cannot find name 'SubscriptionStatus'. Did you mean 'Subscription'?
+src/types/index.ts(3864,45): error TS2552: Cannot find name 'SubscriptionTier'. Did you mean 'Subscription'?
+src/types/index.ts(3911,5): error TS2353: Object literal may only specify known properties, and 'tier' does not exist in type 'SubscriptionPlan'.
+src/types/index.ts(3953,5): error TS2353: Object literal may only specify known properties, and 'tier' does not exist in type 'SubscriptionPlan'.
+src/types/index.ts(4016,5): error TS2741: Property 'premiumPersonalities' is missing in type '{ elevenlabsVoices: true; customVoiceMessages: true; voiceCloning: true; advancedAIInsights: true; personalizedChallenges: true; smartRecommendations: true; behaviorAnalysis: true; premiumThemes: true; ... 15 more ...; prioritySupport: true; }' but required in type 'PremiumFeatureAccess'.
+src/types/index.ts(4059,5): error TS2741: Property 'premiumPersonalities' is missing in type '{ elevenlabsVoices: true; customVoiceMessages: true; voiceCloning: true; advancedAIInsights: true; personalizedChallenges: true; smartRecommendations: true; behaviorAnalysis: true; premiumThemes: true; ... 15 more ...; prioritySupport: true; }' but required in type 'PremiumFeatureAccess'.
 src/utils/alarm-conversion.ts(31,25): error TS2339: Property 'id' does not exist on type 'AdvancedAlarm'.
 src/utils/alarm-conversion.ts(32,29): error TS2339: Property 'userId' does not exist on type 'AdvancedAlarm'.
 src/utils/alarm-conversion.ts(33,27): error TS2339: Property 'time' does not exist on type 'AdvancedAlarm'.

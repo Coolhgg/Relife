@@ -4,9 +4,6 @@ export * from './premium';
 // Import browser API types
 export * from './browser-apis';
 
-// Import wake-up mood enum - needed early for type definitions
-export { WakeUpMood, type Mood } from './wake-up-mood';
-
 // Email Campaign Types
 export type PersonaType =
   | 'struggling_sam' // Free-focused users
@@ -238,7 +235,7 @@ export interface UserStats {
 // Enhanced User Preferences combining both apps
 export interface UserPreferences {
   // Enhanced Theme & Personalization
-  personalization?: PersonalizationSettings; // auto: made optional to satisfy usage
+  personalization: PersonalizationSettings;
 
   // Smart Alarm App preferences
   notificationsEnabled: boolean;
@@ -2344,7 +2341,7 @@ export type ScheduleType =
 // Advanced Recurrence Patterns
 export interface RecurrencePattern {
   type: RecurrenceType;
-  interval: TimeoutHandle; // every N days/weeks/months
+  interval: number; // every N days/weeks/months
   daysOfWeek?: number[]; // 0-6 for weekly patterns
   daysOfMonth?: number[]; // 1-31 for monthly patterns
   weeksOfMonth?: number[]; // 1-5 for monthly patterns (first week, second week, etc.)
@@ -2486,16 +2483,7 @@ export interface SeasonalAdjustment {
   isActive: boolean;
 }
 
-// auto: changed Season from string union to interface to satisfy usage
-export interface Season {
-  id: string; // auto: added to satisfy usage
-  name?: string; // auto: added to satisfy usage
-  description?: string; // auto: added to satisfy usage
-  rewards?: unknown[]; // auto: added to satisfy usage
-}
-
-// Legacy season type for backwards compatibility
-export type SeasonType = 'spring' | 'summer' | 'fall' | 'winter';
+export type Season = 'spring' | 'summer' | 'fall' | 'winter';
 
 // Smart Optimizations
 export interface SmartOptimization {
@@ -2685,7 +2673,7 @@ export interface ConditionalRule {
 }
 
 // WakeUpMood is now centralized in wake-up-mood.ts
-// (exported at top of file)
+export { WakeUpMood } from './wake-up-mood';
 
 export interface LocationProgress {
   currentLocation?: Location;

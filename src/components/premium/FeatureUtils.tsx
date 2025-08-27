@@ -2,25 +2,12 @@
 // Additional utility components for feature gating and premium features
 
 import React, { ReactNode } from 'react';
-import { Shield, Star, LockZap } from 'lucide-react';
+import { Shield, Star, Lock, TrendingUp, Users, Zap } from 'lucide-react';
 import { useFeatureAccessContext } from '../../contexts/FeatureAccessContext';
-// auto: restored by scout - verify import path
-import { Users } from 'lucide-react';
-// auto: restored by scout - verify import path
-import { Zap } from 'lucide-react';
-// auto: restored by scout - verify import path
-import { TrendingUp } from 'lucide-react';
-// auto: restored by scout - verify import path
-import { Zap } from 'lucide-react';
-// auto: restored by scout - verify import path
-import { Users } from 'lucide-react';
-// auto: restored by scout - verify import path
-import { TrendingUp } from 'lucide-react';
 
 // Feature Badge Component
-import { config } from '../config/environment';
 interface FeatureBadgeProps {
-  tier?: string;
+  tier?: string; // auto: added for prop compatibility
   size?: 'sm' | 'md' | 'lg';
   variant?: 'subtle' | 'prominent';
   className?: string;
@@ -90,10 +77,10 @@ export function FeatureBadge({
 
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-full border font-medium ${_config.colors} ${sizeClasses[size]} ${className}`}
+      className={`inline-flex items-center gap-1 rounded-full border font-medium ${config.colors} ${sizeClasses[size]} ${className}`}
     >
       <Icon className={iconSizes[size]} />
-      {_config.label}
+      {config.label}
     </span>
   );
 }
@@ -102,8 +89,8 @@ export function FeatureBadge({
 interface TierComparisonProps {
   features?: string[];
   className?: string;
-  currentTier?: string;
-  targetTier?: string;
+  currentTier?: string; // auto: added for prop compatibility
+  targetTier?: string; // auto: added for prop compatibility
 }
 
 export function TierComparison({
@@ -155,11 +142,8 @@ export function TierComparison({
             {isUpgrade ? "New features you'll get:" : "Features you'll lose:"}
           </h4>
           <ul className="space-y-1">
-            {newFeatures.map((feature, _index) => (
-              <li
-                key={_index}
-                className="flex items-center gap-2 text-sm text-gray-600"
-              >
+            {newFeatures.map((feature, index) => (
+              <li key={index} className="flex items-center gap-2 text-sm text-gray-600">
                 <div
                   className={`w-1.5 h-1.5 rounded-full ${isUpgrade ? 'bg-green-500' : 'bg-red-500'}`}
                 />

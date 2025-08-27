@@ -6,11 +6,11 @@
 
 export enum WakeUpMood {
   Calm = 'calm',
-  Focused = 'focused',
+  Focused = 'focused', 
   Energetic = 'energetic',
   Groggy = 'groggy',
   Stressed = 'stressed',
-
+  
   // Additional moods from usage analysis
   Excellent = 'excellent',
   Good = 'good',
@@ -22,7 +22,7 @@ export enum WakeUpMood {
   Refreshed = 'refreshed',
   Tired = 'tired',
   Irritated = 'irritated',
-  Anxious = 'anxious',
+  Anxious = 'anxious'
 }
 
 // Type alias for compatibility
@@ -33,12 +33,12 @@ export function isValidWakeUpMood(mood: string): mood is keyof typeof WakeUpMood
   return Object.values(WakeUpMood).includes(mood as WakeUpMood);
 }
 
-// Helper function to normalize mood strings to enum values
+// Helper function to normalize mood strings to enum values  
 export function normalizeWakeUpMood(mood: string): WakeUpMood {
   if (isValidWakeUpMood(mood)) {
     return WakeUpMood[mood as keyof typeof WakeUpMood];
   }
-
+  
   // Fallback for invalid moods
   return WakeUpMood.Neutral;
 }

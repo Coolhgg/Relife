@@ -1,6 +1,4 @@
 import React from 'react';
-import path from 'path';
-import { PremiumFeature } from '@/types';
 import {
   Crown,
   Star,
@@ -22,7 +20,7 @@ interface UpgradePromptProps {
   /** Whether to show as modal or inline */
   variant?: 'modal' | 'inline' | 'banner';
   /** Callback when user clicks upgrade */
-  onUpgrade?: ((...args: any[]) => void) | undefined;
+  onUpgrade?: ((...args: any[]) => void) | undefined; // auto: widened function prop
   /** Callback when user dismisses prompt */
   onDismiss?: () => void;
   /** Custom title override */
@@ -32,7 +30,7 @@ interface UpgradePromptProps {
   /** Whether to show pricing */
   showPricing?: boolean;
   /** Current user tier for comparison */
-  currentTier?: string;
+  currentTier?: string; // auto: added for prop compatibility
 }
 
 const UpgradePrompt: React.FC<UpgradePromptProps> = ({
@@ -53,7 +51,6 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
         description: string;
         icon: React.ComponentType<any>;
         benefits: string[];
-        tier: string;
       }
     > = {
       nuclear_mode: {
@@ -67,7 +64,6 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           'Photo proof requirements',
           'Voice recognition tasks',
         ],
-        tier: 'premium',
       },
       custom_voices: {
         title: 'Premium Voices',
@@ -76,11 +72,10 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
         benefits: [
           'Celebrity chef motivation',
           'Zen master mindfulness',
-          'Bot companion efficiency',
+          'Robot companion efficiency',
           'Pirate captain adventure',
           'And 16+ more personalities',
         ],
-        tier: 'premium',
       },
       voice_cloning: {
         title: 'Voice Cloning',
@@ -93,7 +88,6 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           'Share with family members',
           'High-quality speech synthesis',
         ],
-        tier: 'ultimate',
       },
       unlimited_alarms: {
         title: 'Unlimited Alarms',
@@ -106,7 +100,6 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           'Backup alarms',
           'Event-specific alarms',
         ],
-        tier: 'premium',
       },
       advanced_analytics: {
         title: 'Advanced Analytics',
@@ -119,7 +112,6 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           'Personalized insights',
           'Export data reports',
         ],
-        tier: 'premium',
       },
       priority_support: {
         title: 'Priority Support',
@@ -132,7 +124,6 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           'Feature request priority',
           '24/7 availability',
         ],
-        tier: 'premium',
       },
       theme_store: {
         title: 'Premium Themes',
@@ -145,7 +136,6 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           'Dark mode variants',
           'Seasonal themes',
         ],
-        tier: 'premium',
       },
     };
 
@@ -155,7 +145,6 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
         description: 'This feature requires a premium subscription',
         icon: Crown,
         benefits: ['Enhanced functionality', 'Premium experience', 'Advanced features'],
-        tier: 'premium',
       }
     );
   };
@@ -168,7 +157,6 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           description: 'This feature requires a premium subscription',
           icon: Crown,
           benefits: ['Enhanced functionality'],
-          tier: 'premium',
         };
 
   const Icon = featureInfo.icon;
@@ -176,7 +164,6 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
   const plans = [
     {
       name: 'Premium',
-      tier: 'premium',
       price: '$9.99/month',
       icon: Crown,
       color: 'from-orange-500 to-red-500',
@@ -193,7 +180,6 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
     },
     {
       name: 'Ultimate',
-      tier: 'ultimate',
       price: '$19.99/month',
       icon: Star,
       color: 'from-purple-500 to-pink-500',
@@ -268,9 +254,9 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           <div className="mb-6">
             <div className="text-sm text-gray-500 mb-2">What you'll get:</div>
             <div className="space-y-1">
-              {featureInfo.benefits.slice(0, 3).map((benefit, _index) => (
+              {featureInfo.benefits.slice(0, 3).map((benefit, index) => (
                 <div
-                  key={_index}
+                  key={index}
                   className="flex items-center gap-2 text-sm text-gray-700"
                 >
                   <Check className="h-4 w-4 text-green-500" />
@@ -329,8 +315,8 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
               What you'll get with {featureInfo.title}:
             </h3>
             <div className="grid gap-3">
-              {featureInfo.benefits.map((benefit, _index) => (
-                <div key={_index} className="flex items-center gap-3">
+              {featureInfo.benefits.map((benefit, index) => (
+                <div key={index} className="flex items-center gap-3">
                   <div className="bg-green-100 text-green-600 p-1 rounded-full">
                     <Check className="h-4 w-4" />
                   </div>
@@ -384,9 +370,9 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
                         </div>
 
                         <div className="space-y-2 mb-6">
-                          {plan.features.map((feature, _index) => (
+                          {plan.features.map((feature, index) => (
                             <div
-                              key={_index}
+                              key={index}
                               className="flex items-center gap-2 text-sm text-gray-600"
                             >
                               <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
