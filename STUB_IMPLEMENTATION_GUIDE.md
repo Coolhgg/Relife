@@ -1,54 +1,44 @@
 # Stub Implementation Guide
 
 ## Overview
-
-The auto-generated stubs in `src/utils/__auto_stubs.ts` have been replaced with proper
-implementations. This guide explains what was implemented and what steps you should take next.
+The auto-generated stubs in `src/utils/__auto_stubs.ts` have been replaced with proper implementations. This guide explains what was implemented and what steps you should take next.
 
 ## ✅ What Was Implemented
 
 ### 1. Web API Types
-
 - **Before**: Throwing error stubs for DOM types
 - **After**: Proper type exports from `globalThis`
 - **Types**: `AddEventListenerOptions`, `BlobPart`, `BufferSource`, `IDBDatabaseEventMap`, etc.
 
 ### 2. IndexedDB Support
-
 - **Before**: Stubbed `openDB` and `IDBPDatabase`
 - **After**: Basic IndexedDB wrapper implementation
 - **Recommendation**: Install `idb` package for better TypeScript support
-
 ```bash
 bun add idb
 ```
 
 ### 3. Service Stubs (Avoiding Circular Dependencies)
-
 - **soundEffectsService**: Basic interface with play, preload, setVolume methods
 - **analytics**: Basic interface with track, identify, page methods
 - **Recommendation**: Use dependency injection to provide actual service instances
 
 ### 4. User/Subscription Management
-
 - **getUserTier()**: Returns user's subscription tier
 - **setUserTier()**: Updates user's subscription tier
 - **currentTier, userTier, newTier**: Aliases for tier functions
 
 ### 5. Type Definitions
-
 - **Award Interface**: Achievement/reward system
 - **Gift Interface**: Gift/reward system
 - **WebSocket Types**: Re-exported from existing types
 - **Subscription Types**: Re-exported from existing types
 
 ### 6. UI Components
-
 - **Lucide Icons**: Replaced stubs with actual Lucide React imports
 - **Component Stubs**: Safe placeholder components for missing React components
 
 ### 7. Utility Functions
-
 - **ID Generation**: `generateId()`, `getRippleId()`
 - **Configuration**: Environment-aware config object
 - **Error Handling**: `AppError` class and error instances
@@ -57,17 +47,13 @@ bun add idb
 ## ⚠️ Important Notes
 
 ### Circular Dependencies
-
 The original services had circular import issues. Current implementation uses:
-
 - **Type-only imports** where possible
 - **Stub interfaces** for services to break circular dependencies
 - **Dependency injection pattern** recommendations
 
 ### Missing Dependencies
-
 Consider installing these packages for better type support:
-
 ```bash
 # For better IndexedDB types
 bun add idb
@@ -79,7 +65,6 @@ bun add @types/web
 ## 🔄 Next Steps
 
 ### 1. Replace Service Stubs
-
 Instead of importing from `__auto_stubs.ts`, inject actual service instances:
 
 ```typescript
@@ -92,25 +77,24 @@ const soundEffectsService = SoundEffectsService.getInstance();
 ```
 
 ### 2. Implement Proper Dependency Injection
-
 Create a service container or use React context:
 
 ```typescript
 // services/ServiceContainer.ts
 export class ServiceContainer {
   private static instance: ServiceContainer;
-
+  
   static getInstance(): ServiceContainer {
     if (!ServiceContainer.instance) {
       ServiceContainer.instance = new ServiceContainer();
     }
     return ServiceContainer.instance;
   }
-
+  
   getSoundEffectsService() {
     return SoundEffectsService.getInstance();
   }
-
+  
   getAnalyticsService() {
     return AnalyticsService.getInstance();
   }
@@ -118,7 +102,6 @@ export class ServiceContainer {
 ```
 
 ### 3. Update Service Imports
-
 Remove stub imports from services:
 
 ```typescript
@@ -130,7 +113,6 @@ import { config } from '../config/environment';
 ```
 
 ### 4. Implement Missing Interfaces
-
 The Award and Gift interfaces are defined but need actual implementation:
 
 ```typescript
@@ -139,7 +121,7 @@ export class AchievementService {
   async getAwards(userId: string): Promise<Award[]> {
     // Implement award fetching
   }
-
+  
   async grantAward(userId: string, awardId: string): Promise<void> {
     // Implement award granting
   }
@@ -147,7 +129,6 @@ export class AchievementService {
 ```
 
 ### 5. Context-Specific Variables
-
 Many variables should come from React context or props:
 
 ```typescript
@@ -157,7 +138,6 @@ const { paymentMethodId } = usePayment();
 ```
 
 ## 📝 Testing
-
 After making changes:
 
 1. **Run TypeScript check**: `bun run type-check`
@@ -172,13 +152,10 @@ After making changes:
 3. **Low Priority**: Add comprehensive Award/Gift system
 
 ## 📚 Resources
-
 - [Dependency Injection in TypeScript](https://github.com/microsoft/tsyringe)
 - [IndexedDB with idb](https://github.com/jakearchibald/idb)
 - [React Context for Services](https://reactjs.org/docs/context.html)
 
 ---
 
-This implementation provides a solid foundation while avoiding the circular dependency issues that
-were causing build problems. The next step is to gradually replace these stubs with proper service
-instances and dependency injection.
+This implementation provides a solid foundation while avoiding the circular dependency issues that were causing build problems. The next step is to gradually replace these stubs with proper service instances and dependency injection.
