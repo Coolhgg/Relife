@@ -118,13 +118,13 @@
 //     details?: string
 //
 // ) => {
-//     setTestResults((prev: unknown
+//     setTestResults((prev: any
 // ) => {
 //       // auto
-//       const existing = prev.find((r: unknown
+//       const existing = prev.find((r: any
 // ) => r.name === name);
 //       if (existing) {
-//         return prev.map((r: unknown
+//         return prev.map((r: any
 // ) =>
 //           r.name === name ? { ...r, status, message, details } : r
 //         );
@@ -158,8 +158,9 @@
 //         setTestProgress(((i + 1) / tests.length) * 100);
 //         // Small delay between tests
 //         await new Promise(resolve => setTimeout(resolve, 200));
-//       } catch (_error) { //         console._error(`Test ${tests[i].name } failed:`, _error);
-//         updateTestResult(tests[i].name, 'fail', `Test failed: ${_error}`);
+//       } catch (error) {
+//         console.error(`Test ${tests[i].name} failed:`, error);
+//         updateTestResult(tests[i].name, 'fail', `Test failed: ${error}`);
 //       }
 //     }
 //
@@ -380,7 +381,7 @@
 // ) => {
 //     // Test connection type
 //     if ('connection' in navigator) {
-//       const connection = (navigator as unknown).connection;
+//       const connection = (navigator as any).connection;
 //       updateTestResult(
 //         'Connection Info',
 //         'pass',
@@ -477,7 +478,7 @@
 // ) => {
 //     if ('getBattery' in navigator) {
 //       try {
-//         const battery = await (navigator as unknown).getBattery();
+//         const battery = await (navigator as any).getBattery();
 //         updateTestResult(
 //           'Battery API',
 //           'pass',
@@ -612,9 +613,9 @@
 //             <div className="space-y-4">
 //               <h3 className="text-lg font-medium">Test Results</h3>
 //               <div className="space-y-3">
-//                 {testResults.map((result, _index
+//                 {testResults.map((result, index
 // ) => (
-//                   <div key={_index} className="border rounded-lg p-4">
+//                   <div key={index} className="border rounded-lg p-4">
 //                     <div className="flex items-center justify-between">
 //                       <div className="flex items-center space-x-3">
 //                         <span className="text-xl">{getStatusIcon(result.status)}</span>
@@ -648,28 +649,28 @@
 //                 <div className="grid grid-cols-4 gap-4 text-center text-sm">
 //                   <div>
 //                     <div className="text-green-600 font-medium">
-//                       {testResults.filter((r: unknown
+//                       {testResults.filter((r: any
 // ) => r.status === 'pass').length}
 //                     </div>
 //                     <div className="text-gray-600">Passed</div>
 //                   </div>
 //                   <div>
 //                     <div className="text-red-600 font-medium">
-//                       {testResults.filter((r: unknown
+//                       {testResults.filter((r: any
 // ) => r.status === 'fail').length}
 //                     </div>
 //                     <div className="text-gray-600">Failed</div>
 //                   </div>
 //                   <div>
 //                     <div className="text-yellow-600 font-medium">
-//                       {testResults.filter((r: unknown
+//                       {testResults.filter((r: any
 // ) => r.status === 'warning').length}
 //                     </div>
 //                     <div className="text-gray-600">Warnings</div>
 //                   </div>
 //                   <div>
 //                     <div className="text-blue-600 font-medium">
-//                       {testResults.filter((r: unknown
+//                       {testResults.filter((r: any
 // ) => r.status === 'info').length}
 //                     </div>
 //                     <div className="text-gray-600">Info</div>

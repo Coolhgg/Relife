@@ -2,7 +2,6 @@
 import React from 'react';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { TimeoutHandle } from '../types/timers';
-// Replaced stub import with proper implementation
 import {
   AlertCircle,
   Volume2,
@@ -35,13 +34,13 @@ interface SpeechRecognitionEvent extends Event {
 }
 
 interface SpeechRecognitionErrorEvent extends Event {
-  _error: string;
+  error: string;
   message: string;
 }
 
 interface SpeechRecognitionResult {
   readonly isFinal: boolean;
-  readonly [_index: number]: SpeechRecognitionAlternative;
+  readonly [index: number]: SpeechRecognitionAlternative;
 }
 
 interface SpeechRecognitionAlternative {
@@ -51,8 +50,8 @@ interface SpeechRecognitionAlternative {
 
 interface SpeechRecognitionResultList {
   readonly length: number;
-  item(_index: number): SpeechRecognitionResult;
-  readonly [_index: number]: SpeechRecognitionResult;
+  item(index: number): SpeechRecognitionResult;
+  readonly [index: number]: SpeechRecognitionResult;
 }
 
 interface SpeechRecognition extends EventTarget {
@@ -61,10 +60,10 @@ interface SpeechRecognition extends EventTarget {
   lang: string;
   start(): void;
   stop(): void;
-  onstart: ((_event: Event) => void) | null;
-  onresult: ((_event: SpeechRecognitionEvent) => void) | null;
-  onerror: ((_event: SpeechRecognitionErrorEvent) => void) | null;
-  onend: ((_event: Event) => void) | null;
+  onstart: ((event: Event) => void) | null;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
+  onend: ((event: Event) => void) | null;
 }
 
 declare global {
@@ -87,7 +86,7 @@ interface AlarmRingingProps {
 
 const AlarmRinging: React.FC<AlarmRingingProps> = ({
   alarm,
-  _user,
+  user,
   onDismiss,
   onSnooze,
 }) => {
@@ -116,7 +115,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
   const initializeNuclearMode = useCallback(async () => {
     try {
       // Start nuclear session
-      const session = await nuclearModeService.startNuclearSession(alarm, _user);
+      const session = await nuclearModeService.startNuclearSession(alarm, user);
       setNuclearSession(session);
 
       // Get challenges for this alarm
@@ -131,12 +130,11 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
         // Fallback to regular alarm
         setShowNuclearChallenge(false);
       }
-    } catch (_error) {
-      console._error('Error initializing nuclear mode:', _error);
+    } catch (error) {
+      console.error('Error initializing nuclear mode:', error);
       // Fallback to regular alarm if nuclear mode fails
       setShowNuclearChallenge(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: _user
   }, [alarm, user]);
 
   const stopVoiceRef = useRef<(() => void) | null>(null);
@@ -168,7 +166,6 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
       stopVoiceRecognition();
       stopAllAudio();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: playAlarmSound, showNuclearChallenge, startVibrationPattern, and startVoiceRecognition
   }, [alarm.id]); // Dependencies for the effect
 
   // Functions moved inside useEffect to fix dependency warnings
@@ -204,8 +201,8 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
           await playVoiceOnlySound();
           break;
       }
-    } catch (_error) {
-      console._error('Error playing alarm sound:', _error);
+    } catch (error) {
+      console.error('Error playing alarm sound:', error);
       // Always fallback to voice or beep
       await playVoiceOnlySound();
     }
@@ -249,8 +246,8 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
               }, 3000);
             },
           });
-        } catch (_error) {
-          console._error('Error playing custom sound:', _error);
+        } catch (error) {
+          console.error('Error playing custom sound:', error);
           playFallbackSound();
         }
       };
@@ -276,8 +273,8 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
           stopVoiceRepeating?.();
         };
       }
-    } catch (_error) {
-      console._error('Error with custom sound:', _error);
+    } catch (error) {
+      console.error('Error with custom sound:', error);
       await playVoiceOnlySound();
     }
   };
@@ -306,8 +303,8 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
               }, 3000);
             },
           });
-        } catch (_error) {
-          console._error('Error playing built-in sound:', _error);
+        } catch (error) {
+          console.error('Error playing built-in sound:', error);
           playFallbackSound();
         }
       };
@@ -333,8 +330,8 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
           stopVoiceRepeating?.();
         };
       }
-    } catch (_error) {
-      console._error('Error with built-in sound:', _error);
+    } catch (error) {
+      console.error('Error with built-in sound:', error);
       await playVoiceOnlySound();
     }
   };
@@ -353,8 +350,8 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
         // Fallback to beep sound
         playFallbackSound();
       }
-    } catch (_error) {
-      console._error('Error playing enhanced voice message:', _error);
+    } catch (error) {
+      console.error('Error playing enhanced voice message:', error);
       setVoiceEnabled(false);
       playFallbackSound();
     }
@@ -385,7 +382,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
           oscillator.start();
           oscillator.stop(context.currentTime + 0.5);
         } catch (err) {
-          console._error('Error creating beep:', err);
+          console.error('Error creating beep:', err);
         }
       };
 
@@ -403,8 +400,8 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
           }
         },
       };
-    } catch (_error) {
-      console._error('Error playing fallback sound:', _error);
+    } catch (error) {
+      console.error('Error playing fallback sound:', error);
     }
   };
 
@@ -437,16 +434,16 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
           setInterimTranscript(transcript);
           setRecognitionConfidence(confidence);
         },
-        (_error: string) => {
-          console.error('Enhanced voice recognition _error:', _error);
+        (error: string) => {
+          console.error('Enhanced voice recognition error:', error);
           setIsListening(false);
         }
       );
 
       stopRecognitionRef.current = stopRecognition;
       setIsListening(true);
-    } catch (_error) {
-      console._error('Error starting enhanced voice recognition:', _error);
+    } catch (error) {
+      console.error('Error starting enhanced voice recognition:', error);
     }
   };
 
@@ -538,7 +535,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
   };
 
   // Nuclear mode challenge handlers
-  const handleChallengeComplete = async (successful: boolean, data?: unknown) => {
+  const handleChallengeComplete = async (successful: boolean, data?: any) => {
     if (!nuclearSession || !currentChallenge) return;
 
     try {
@@ -568,8 +565,8 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({
         playAlarmSound();
         startVoiceRecognition();
       }
-    } catch (_error) {
-      console._error('Error processing challenge attempt:', _error);
+    } catch (error) {
+      console.error('Error processing challenge attempt:', error);
       // Fallback to normal alarm
       setShowNuclearChallenge(false);
       setNuclearSessionActive(false);
