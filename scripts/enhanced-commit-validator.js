@@ -254,7 +254,7 @@ class EnhancedCommitValidator {
     
     // Check body line lengths
     const bodyLines = parsed.body.split('\n');
-    bodyLines.forEach((line, index) => {
+    bodyLines.forEach(_(line, _index) => {
       if (line.length > this.options.maxBodyLineLength) {
         issues.push({
           level: 'warning',
@@ -372,8 +372,8 @@ class EnhancedCommitValidator {
   }
 
   printResults(result) {
-    const { parsed, errors, warnings, info, suggestions } = result;
-    
+    const {_parsed, _errors, _warnings, _info, _suggestions} = result;
+
     this.log('\n🔍 Commit Message Analysis', 'cyan');
     this.log(`Subject: ${parsed.subject}`, 'blue');
     
@@ -419,7 +419,7 @@ class EnhancedCommitValidator {
     // Show available types if needed
     if (errors.some(e => e.message.includes('Unknown commit type'))) {
       this.log('\n📋 Available Types:', 'cyan');
-      Object.entries(this.config.types).forEach(([type, config]) => {
+      Object.entries(this.config.types).forEach(_([type, _config]) => {
         this.log(`  ${config.emoji} ${type}: ${config.description}`, 'blue');
       });
     }

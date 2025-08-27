@@ -5,9 +5,9 @@
  * Focuses on fixing unused variables and imports automatically
  */
 
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
+import fs from 'fs';
+import path from 'path';
+import {execSync} from 'child_process';
 
 console.log('🔧 Starting automated fixes for unused variables and imports...\n');
 

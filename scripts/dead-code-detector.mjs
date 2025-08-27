@@ -16,35 +16,19 @@ const __dirname = path.dirname(__filename);
 const DETECTOR_CONFIG = {
   extensions: ['.ts', '.tsx', '.js', '.jsx'],
   ignoreDirectories: [
-    'node_modules',
-    'dist',
-    'build',
-    '.git',
-    'coverage',
-    'android',
-    'ios',
-    '.next',
-    'artifacts',
-    'public',
+    'node_modules', 'dist', 'build', '.git', 'coverage',
+    'android', 'ios', '.next', 'artifacts', 'public',
   ],
-
+  
   // Patterns for code that should never be considered dead
   preservePatterns: {
     // Entry points and critical files
     entryPoints: [
-      'main.tsx',
-      'main.ts',
-      'index.ts',
-      'index.tsx',
-      'App.tsx',
-      'App.ts',
-      '_app.tsx',
-      '_document.tsx',
-      'vite.config.ts',
-      'vitest.config.ts',
-      'eslint.config.js',
+      'main.tsx', 'main.ts', 'index.ts', 'index.tsx',
+      'App.tsx', 'App.ts', '_app.tsx', '_document.tsx',
+      'vite.config.ts', 'vitest.config.ts', 'eslint.config.js',
     ],
-
+    
     // Function patterns to preserve
     functions: [
       /^main$/,
@@ -55,14 +39,14 @@ const DETECTOR_CONFIG = {
       /^configure/,
       /Handler$/,
       /Middleware$/,
-      /^use[A-Z]/, // React hooks
-      /^get[A-Z]/, // Getters
-      /^set[A-Z]/, // Setters
+      /^use[A-Z]/,    // React hooks
+      /^get[A-Z]/,    // Getters
+      /^set[A-Z]/,    // Setters
       /^create[A-Z]/, // Factory functions
       /^generate[A-Z]/, // Generators
       /^validate[A-Z]/, // Validators
     ],
-
+    
     // Variable patterns to preserve
     variables: [
       /^[A-Z_][A-Z0-9_]*$/, // Constants
@@ -71,11 +55,18 @@ const DETECTOR_CONFIG = {
       /types$/i,
       /constants$/i,
     ],
-
+    
     // Exports that should be preserved
-    exports: [/^default$/, /^meta$/, /^config$/, /Types?$/, /Props$/, /Interface$/],
+    exports: [
+      /^default$/,
+      /^meta$/,
+      /^config$/,
+      /Types?$/,
+      /Props$/,
+      /Interface$/,
+    ],
   },
-
+  
   // File patterns to analyze for cross-references
   crossReferencePatterns: [
     // Package.json scripts
@@ -85,8 +76,7 @@ const DETECTOR_CONFIG = {
     // HTML files that might reference JS
     '*.html',
     // Test files
-    '*.test.*',
-    '*.spec.*',
+    '*.test.*', '*.spec.*',
     // Story files
     '*.stories.*',
   ],
@@ -119,7 +109,7 @@ function parseCodeElements(filePath, content) {
     imports: [],
     references: new Set(),
   };
-
+  
   // Extract function declarations
   const functionPatterns = [
     // Regular functions
@@ -129,8 +119,8 @@ function parseCodeElements(filePath, content) {
     // Method definitions in classes/objects
     /(\w+)\s*\([^)]*\)\s*{/g,
   ];
-
-  functionPatterns.forEach((pattern) => {
+  
+  functionPatterns.forEach(pattern => {
     let match;
     while ((match = pattern.exec(content)) !== null) {
       const functionName = match[1];
@@ -144,7 +134,7 @@ function parseCodeElements(filePath, content) {
       }
     }
   });
-
+  
   // Extract variable declarations
   const variablePatterns = [
     // const/let/var declarations
@@ -152,14 +142,14 @@ function parseCodeElements(filePath, content) {
     // Destructuring assignments
     /(?:export\s+)?(?:const|let|var)\s+{\s*([^}]+)\s*}/g,
   ];
-
+  
   variablePatterns.forEach((pattern, index) => {
     let match;
     while ((match = pattern.exec(content)) !== null) {
       if (index === 1) {
         // Handle destructuring
-        const destructured = match[1].split(',').map((v) => v.trim().split(':')[0]);
-        destructured.forEach((varName) => {
+        const destructured = match[1].split(',').map(v => v.trim().split(':')[0]);
+        destructured.forEach(varName => {
           if (varName && /^\w+$/.test(varName)) {
             elements.variables.push({
               name: varName,
@@ -179,7 +169,7 @@ function parseCodeElements(filePath, content) {
       }
     }
   });
-
+  
   // Extract exports
   const exportPatterns = [
     // export { name }
@@ -189,14 +179,14 @@ function parseCodeElements(filePath, content) {
     // export default
     /export\s+default\s+(\w+)/g,
   ];
-
+  
   exportPatterns.forEach((pattern, index) => {
     let match;
     while ((match = pattern.exec(content)) !== null) {
       if (index === 0) {
         // Handle named exports
-        const exported = match[1].split(',').map((e) => e.trim());
-        exported.forEach((expName) => {
+        const exported = match[1].split(',').map(e => e.trim());
+        exported.forEach(expName => {
           if (expName && /^\w+$/.test(expName)) {
             elements.exports.push({
               name: expName,
@@ -214,14 +204,14 @@ function parseCodeElements(filePath, content) {
       }
     }
   });
-
+  
   // Extract all identifiers that could be references
   const identifierPattern = /\b[a-zA-Z_$][a-zA-Z0-9_$]*\b/g;
   let match;
   while ((match = identifierPattern.exec(content)) !== null) {
     elements.references.add(match[0]);
   }
-
+  
   return elements;
 }
 
@@ -230,28 +220,29 @@ function parseCodeElements(filePath, content) {
  */
 function buildCrossReferenceMap(files) {
   const crossRefMap = new Map();
-
+  
   console.log('🔗 Building cross-reference map...');
-
+  
   files.forEach((filePath, index) => {
     if (index % 20 === 0) {
       process.stdout.write(`\r   Processing ${index + 1}/${files.length} files...`);
     }
-
+    
     try {
       const content = fs.readFileSync(filePath, 'utf8');
       const elements = parseCodeElements(filePath, content);
-
+      
       crossRefMap.set(filePath, elements);
       detectionResults.statistics.filesAnalyzed++;
       detectionResults.statistics.functionsAnalyzed += elements.functions.length;
       detectionResults.statistics.variablesAnalyzed += elements.variables.length;
       detectionResults.statistics.exportsAnalyzed += elements.exports.length;
+      
     } catch (error) {
       console.warn(`\nWarning: Could not analyze ${filePath}: ${error.message}`);
     }
   });
-
+  
   console.log(`\n   ✅ Analyzed ${crossRefMap.size} files`);
   return crossRefMap;
 }
@@ -262,16 +253,16 @@ function buildCrossReferenceMap(files) {
 function findUsages(identifier, crossRefMap, excludeFile = null) {
   let usageCount = 0;
   const usageFiles = [];
-
+  
   for (const [filePath, elements] of crossRefMap) {
     if (filePath === excludeFile) continue;
-
+    
     if (elements.references.has(identifier)) {
       usageCount++;
       usageFiles.push(filePath);
     }
   }
-
+  
   return { count: usageCount, files: usageFiles };
 }
 
@@ -280,24 +271,23 @@ function findUsages(identifier, crossRefMap, excludeFile = null) {
  */
 function detectDeadFunctions(crossRefMap) {
   console.log('🔍 Detecting dead functions...');
-
+  
   for (const [filePath, elements] of crossRefMap) {
-    elements.functions.forEach((func) => {
+    elements.functions.forEach(func => {
       // Skip if function should be preserved
       const shouldPreserve = DETECTOR_CONFIG.preservePatterns.functions.some(
-        (pattern) => pattern.test(func.name)
+        pattern => pattern.test(func.name)
       );
-
+      
       if (shouldPreserve) return;
-
+      
       // Check if function is used elsewhere
       const usage = findUsages(func.name, crossRefMap, filePath);
-
+      
       // Consider dead if not exported and not used, or exported but never imported
-      const isDead =
-        (!func.isExported && usage.count === 0) ||
-        (func.isExported && usage.count === 0);
-
+      const isDead = (!func.isExported && usage.count === 0) ||
+                     (func.isExported && usage.count === 0);
+      
       if (isDead) {
         detectionResults.deadFunctions.push({
           name: func.name,
@@ -305,11 +295,11 @@ function detectDeadFunctions(crossRefMap) {
           line: func.line,
           isExported: func.isExported,
           usageCount: usage.count,
-          reason: func.isExported
+          reason: func.isExported 
             ? 'Exported but never imported'
             : 'Not used within file or externally',
         });
-
+        
         detectionResults.statistics.deadCodeFound++;
       }
     });
@@ -321,23 +311,22 @@ function detectDeadFunctions(crossRefMap) {
  */
 function detectDeadVariables(crossRefMap) {
   console.log('🔍 Detecting dead variables...');
-
+  
   for (const [filePath, elements] of crossRefMap) {
-    elements.variables.forEach((variable) => {
+    elements.variables.forEach(variable => {
       // Skip if variable should be preserved
       const shouldPreserve = DETECTOR_CONFIG.preservePatterns.variables.some(
-        (pattern) => pattern.test(variable.name)
+        pattern => pattern.test(variable.name)
       );
-
+      
       if (shouldPreserve) return;
-
+      
       // Check if variable is used
       const usage = findUsages(variable.name, crossRefMap, filePath);
-
-      const isDead =
-        (!variable.isExported && usage.count === 0) ||
-        (variable.isExported && usage.count === 0);
-
+      
+      const isDead = (!variable.isExported && usage.count === 0) ||
+                     (variable.isExported && usage.count === 0);
+      
       if (isDead) {
         detectionResults.deadVariables.push({
           name: variable.name,
@@ -346,11 +335,11 @@ function detectDeadVariables(crossRefMap) {
           type: variable.type,
           isExported: variable.isExported,
           usageCount: usage.count,
-          reason: variable.isExported
+          reason: variable.isExported 
             ? 'Exported but never imported'
             : 'Declared but never used',
         });
-
+        
         detectionResults.statistics.deadCodeFound++;
       }
     });
@@ -362,19 +351,19 @@ function detectDeadVariables(crossRefMap) {
  */
 function detectDeadExports(crossRefMap) {
   console.log('🔍 Detecting dead exports...');
-
+  
   for (const [filePath, elements] of crossRefMap) {
-    elements.exports.forEach((exp) => {
+    elements.exports.forEach(exp => {
       // Skip if export should be preserved
-      const shouldPreserve = DETECTOR_CONFIG.preservePatterns.exports.some((pattern) =>
-        pattern.test(exp.name)
+      const shouldPreserve = DETECTOR_CONFIG.preservePatterns.exports.some(
+        pattern => pattern.test(exp.name)
       );
-
+      
       if (shouldPreserve) return;
-
+      
       // Check if export is imported elsewhere
       const usage = findUsages(exp.name, crossRefMap, filePath);
-
+      
       if (usage.count === 0) {
         detectionResults.deadExports.push({
           name: exp.name,
@@ -384,7 +373,7 @@ function detectDeadExports(crossRefMap) {
           usageCount: usage.count,
           reason: 'Exported but never imported',
         });
-
+        
         detectionResults.statistics.deadCodeFound++;
       }
     });
@@ -396,37 +385,37 @@ function detectDeadExports(crossRefMap) {
  */
 function detectUnusedFiles(crossRefMap, allFiles) {
   console.log('🔍 Detecting unused files...');
-
+  
   const entryPoints = new Set();
   const referenced = new Set();
-
+  
   // Mark entry points
-  allFiles.forEach((filePath) => {
+  allFiles.forEach(filePath => {
     const basename = path.basename(filePath);
     if (DETECTOR_CONFIG.preservePatterns.entryPoints.includes(basename)) {
       entryPoints.add(filePath);
     }
   });
-
+  
   // Find all file references
   for (const [filePath, elements] of crossRefMap) {
     // Mark this file as having content if it has exports
     if (elements.exports.length > 0 || elements.functions.length > 0) {
       referenced.add(filePath);
     }
-
+    
     // Look for import statements to find referenced files
     const content = fs.readFileSync(filePath, 'utf8');
     const importPattern = /import.*?from\s+['"]([^'"]+)['"]/g;
     let match;
-
+    
     while ((match = importPattern.exec(content)) !== null) {
       const importPath = match[1];
-
+      
       // Resolve relative imports to absolute paths
       if (importPath.startsWith('.')) {
         const resolvedPath = path.resolve(path.dirname(filePath), importPath);
-
+        
         // Try different extensions
         for (const ext of DETECTOR_CONFIG.extensions) {
           const fullPath = resolvedPath + ext;
@@ -434,7 +423,7 @@ function detectUnusedFiles(crossRefMap, allFiles) {
             referenced.add(fullPath);
             break;
           }
-
+          
           const indexPath = path.join(resolvedPath, 'index' + ext);
           if (fs.existsSync(indexPath)) {
             referenced.add(indexPath);
@@ -444,26 +433,26 @@ function detectUnusedFiles(crossRefMap, allFiles) {
       }
     }
   }
-
+  
   // Find files that are not referenced and not entry points
-  allFiles.forEach((filePath) => {
+  allFiles.forEach(filePath => {
     const isEntryPoint = entryPoints.has(filePath);
     const isReferenced = referenced.has(filePath);
     const isTestFile = /\.(test|spec)\.(ts|tsx|js|jsx)$/.test(filePath);
     const isConfigFile = /\.(config|setup)\.(ts|tsx|js|jsx)$/.test(filePath);
-
+    
     if (!isEntryPoint && !isReferenced && !isTestFile && !isConfigFile) {
       const elements = crossRefMap.get(filePath);
       const hasExports = elements && elements.exports.length > 0;
-
+      
       detectionResults.unusedFiles.push({
         file: filePath,
         hasExports,
-        reason: hasExports
+        reason: hasExports 
           ? 'Has exports but is never imported'
           : 'No exports and not referenced',
       });
-
+      
       detectionResults.statistics.deadCodeFound++;
     }
   });
@@ -484,28 +473,30 @@ function generateDeadCodeReport() {
       totalDeadCodeItems: detectionResults.statistics.deadCodeFound,
     },
     deadCode: {
-      functions: detectionResults.deadFunctions.sort(
-        (a, b) => b.usageCount - a.usageCount || a.file.localeCompare(b.file)
+      functions: detectionResults.deadFunctions.sort((a, b) => 
+        b.usageCount - a.usageCount || a.file.localeCompare(b.file)
       ),
-      variables: detectionResults.deadVariables.sort(
-        (a, b) => b.usageCount - a.usageCount || a.file.localeCompare(b.file)
+      variables: detectionResults.deadVariables.sort((a, b) => 
+        b.usageCount - a.usageCount || a.file.localeCompare(b.file)
       ),
-      exports: detectionResults.deadExports.sort((a, b) =>
+      exports: detectionResults.deadExports.sort((a, b) => 
         a.file.localeCompare(b.file)
       ),
-      files: detectionResults.unusedFiles.sort((a, b) => a.file.localeCompare(b.file)),
+      files: detectionResults.unusedFiles.sort((a, b) => 
+        a.file.localeCompare(b.file)
+      ),
     },
     recommendations: generateDeadCodeRecommendations(),
   };
-
+  
   // Save report
   const reportPath = './reports/dead-code-report.json';
   const reportsDir = path.dirname(reportPath);
-
+  
   if (!fs.existsSync(reportsDir)) {
     fs.mkdirSync(reportsDir, { recursive: true });
   }
-
+  
   fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
   return report;
 }
@@ -515,14 +506,14 @@ function generateDeadCodeReport() {
  */
 function generateDeadCodeRecommendations() {
   const recommendations = [];
-
+  
   // High-confidence removals
   const safeRemovals = [
-    ...detectionResults.deadFunctions.filter((f) => !f.isExported),
-    ...detectionResults.deadVariables.filter((v) => !v.isExported),
-    ...detectionResults.unusedFiles.filter((f) => !f.hasExports),
+    ...detectionResults.deadFunctions.filter(f => !f.isExported),
+    ...detectionResults.deadVariables.filter(v => !v.isExported),
+    ...detectionResults.unusedFiles.filter(f => !f.hasExports),
   ];
-
+  
   if (safeRemovals.length > 0) {
     recommendations.push({
       type: 'safe-removal',
@@ -532,13 +523,13 @@ function generateDeadCodeRecommendations() {
       action: 'Safe to remove automatically',
     });
   }
-
+  
   // Medium-confidence removals (exported but unused)
   const exportedUnused = [
-    ...detectionResults.deadFunctions.filter((f) => f.isExported),
+    ...detectionResults.deadFunctions.filter(f => f.isExported),
     ...detectionResults.deadExports,
   ];
-
+  
   if (exportedUnused.length > 0) {
     recommendations.push({
       type: 'exported-unused',
@@ -548,7 +539,7 @@ function generateDeadCodeRecommendations() {
       action: 'Review for potential removal - may be used dynamically',
     });
   }
-
+  
   // File-level recommendations
   if (detectionResults.unusedFiles.length > 0) {
     recommendations.push({
@@ -559,7 +550,7 @@ function generateDeadCodeRecommendations() {
       action: 'Verify these files can be deleted',
     });
   }
-
+  
   return recommendations;
 }
 
@@ -568,22 +559,19 @@ function generateDeadCodeRecommendations() {
  */
 function getFilesToAnalyze() {
   const files = [];
-
+  
   function scanDirectory(dir, depth = 0) {
     if (depth > 6) return;
-
+    
     try {
       const items = fs.readdirSync(dir);
-
+      
       for (const item of items) {
         const fullPath = path.join(dir, item);
         const stat = fs.statSync(fullPath);
-
+        
         if (stat.isDirectory()) {
-          if (
-            !DETECTOR_CONFIG.ignoreDirectories.includes(item) &&
-            !item.startsWith('.')
-          ) {
+          if (!DETECTOR_CONFIG.ignoreDirectories.includes(item) && !item.startsWith('.')) {
             scanDirectory(fullPath, depth + 1);
           }
         } else {
@@ -597,7 +585,7 @@ function getFilesToAnalyze() {
       console.warn(`Warning: Could not read directory ${dir}: ${error.message}`);
     }
   }
-
+  
   scanDirectory(process.cwd());
   return files;
 }
@@ -607,27 +595,27 @@ function getFilesToAnalyze() {
  */
 async function main() {
   console.log('💀 Dead Code Detection Starting...\n');
-
+  
   const startTime = Date.now();
   const files = getFilesToAnalyze();
-
+  
   console.log(`📁 Found ${files.length} files to analyze`);
-
+  
   // Build cross-reference map
   const crossRefMap = buildCrossReferenceMap(files);
-
+  
   // Detect different types of dead code
   detectDeadFunctions(crossRefMap);
   detectDeadVariables(crossRefMap);
   detectDeadExports(crossRefMap);
   detectUnusedFiles(crossRefMap, files);
-
+  
   // Generate report
   console.log('\n📊 Generating dead code report...');
   const report = generateDeadCodeReport();
-
+  
   const duration = ((Date.now() - startTime) / 1000).toFixed(2);
-
+  
   console.log('\n' + '='.repeat(60));
   console.log('💀 Dead Code Detection Complete!');
   console.log('='.repeat(60));
@@ -639,7 +627,7 @@ async function main() {
   console.log(`   Unused files: ${report.summary.totalUnusedFiles}`);
   console.log(`   Total dead code items: ${report.summary.totalDeadCodeItems}`);
   console.log(`   Duration: ${duration}s`);
-
+  
   if (report.recommendations.length > 0) {
     console.log('\n🎯 Recommendations:');
     report.recommendations.forEach((rec, i) => {
@@ -647,7 +635,7 @@ async function main() {
       console.log(`      Action: ${rec.action}`);
     });
   }
-
+  
   console.log(`\n💾 Detailed report saved to: reports/dead-code-report.json`);
 }
 

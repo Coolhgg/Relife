@@ -148,17 +148,14 @@
   "lint-staged": {
     "*.{ts,tsx}": [
       "node scripts/intelligent-eslint-fix.js",
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ],
     "*.{js,jsx}": [
       "eslint --fix",
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ],
     "*.{json,css,scss,html,md,yml,yaml}": [
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ],
     "*.py": [
       "python -m black",

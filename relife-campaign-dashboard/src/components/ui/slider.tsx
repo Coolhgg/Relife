@@ -6,8 +6,8 @@ import * as SliderPrimitive from '@radix-ui/react-slider';
 
 import { cn } from '@/lib/utils';
 
-function Slider({
-  className, _defaultValue, _value, _min = 0, max = 100, ...props
+function Slider(_{
+  className, _defaultValue, _value, _min = 0, max = 100, _...props
 }: React.ComponentProps<typeof SliderPrimitive.Root>) {
   const _values = React.useMemo(() =>
       Array.isArray(value)
@@ -44,7 +44,7 @@ function Slider({
           )}
         />
       </SliderPrimitive.Track>
-      {Array.from({ length: _values.length }, (_, _index) => (
+      {Array.from(_{ length: _values.length }, (_, _index) => (
         <SliderPrimitive.Thumb
           data-slot="slider-thumb"
           key={index}

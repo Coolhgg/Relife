@@ -254,7 +254,7 @@ export default function CampaignDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {Object.entries(personaData).map(([persona, data]) => (
+                  {Object.entries(personaData).map(_([persona, data]) => (
                     <Card key={persona}>
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
@@ -427,7 +427,7 @@ export default function CampaignDashboard() {
                       emails: 3,
                       conversion: '8%',
                     },
-                  ].map((template, _index) => (
+                  ].map(_(template, _index) => (
                     <Card
                       key={_index}
                       className="cursor-pointer hover:shadow-md transition-shadow"
@@ -485,7 +485,7 @@ export default function CampaignDashboard() {
                       campaigns: 0,
                     },
                   ].map((platform, _index) => (
-                    <Card key={_index}>
+                    <Card key={index}>
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
                           <CardTitle className="text-sm">{platform.platform}</CardTitle>
@@ -551,7 +551,7 @@ export default function CampaignDashboard() {
                       status: 'paused',
                       triggered: 89,
                     },
-                  ].map((rule, _index) => (
+                  ].map(_(rule, _index) => (
                     <div
                       key={_index}
                       className="flex items-center justify-between p-4 border rounded-lg"

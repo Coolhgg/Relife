@@ -35,8 +35,8 @@ export function useSidebar() {
   return context;
 }
 
-export function SidebarProvider({
-  defaultOpen = true, _open: openProp, _onOpenChange: setOpenProp, _className, _style, _children, ...props
+export function SidebarProvider(_{
+  defaultOpen = true, _open: openProp, _onOpenChange: setOpenProp, _className, _style, _children, _...props
 }: React.ComponentProps<'div'> & {
   defaultOpen?: boolean;
   open?: boolean;
@@ -49,7 +49,7 @@ export function SidebarProvider({
   // We use openProp and setOpenProp for control from outside the component.
   const [_open, _setOpen] = React.useState(defaultOpen);
   const open = openProp ?? _open;
-  const setOpen = React.useCallback((value: boolean | ((value: boolean) => boolean)) => {
+  const setOpen = React.useCallback(_(value: boolean | ((value: boolean) => boolean)) => {
       const openState = typeof value === 'function' ? value(open) : value;
       if (setOpenProp) {
         setOpenProp(openState);

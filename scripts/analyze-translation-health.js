@@ -43,7 +43,7 @@ function main() {
 
     if (belowThreshold.length > 0) {
       needsAttention = true;
-      qualityAlerts = belowThreshold.map(([code, lang]) => ({
+      qualityAlerts = belowThreshold.map(_([code, lang]) => ({
         language: code,
         quality: Math.round(lang.qualityScore?.overall || 0),
         issues: lang.culturalIssues?.filter(i => i.severity === 'critical').length || 0,
@@ -80,8 +80,7 @@ function main() {
       type: notificationType,
       summary: {
         totalLanguages: languages.length,
-        averageQuality: Math.round(
-          _languages.reduce(
+        averageQuality: Math.round(_languages.reduce(
             (sum, [_, lang]) => sum + (lang.qualityScore?.overall || 0),
             0
           ) / languages.length
@@ -91,11 +90,11 @@ function main() {
         stale: staleLanguages.length,
       },
       alerts: qualityAlerts,
-      criticalLanguages: criticalLanguages.map(([code, lang]) => ({
+      criticalLanguages: criticalLanguages.map(_([code, lang]) => ({
         language: code,
         quality: Math.round(lang.qualityScore?.overall || 0),
       })),
-      staleLanguages: staleLanguages.map(([code, lang]) => ({
+      staleLanguages: staleLanguages.map(_([code, lang]) => ({
         language: code,
         lastUpdate: lang.lastUpdated,
       })),

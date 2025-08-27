@@ -33,8 +33,8 @@ const buttonVariants = cva(
   }
 );
 
-function Button({
-  className, _variant, _size, _asChild = false, ...props
+function Button(_{
+  className, _variant, _size, _asChild = false, _...props
 }: React.ComponentProps<'button'> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean;

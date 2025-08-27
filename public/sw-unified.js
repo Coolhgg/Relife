@@ -394,7 +394,7 @@ self.addEventListener('activate', event => {
 
 // ==================== FETCH EVENT ====================
 self.addEventListener('fetch', event => {
-  const { _request } = event;
+  const {_request} = event;
   const url = new URL(request.url);
 
   // Skip non-GET requests and chrome-extension requests
@@ -499,7 +499,7 @@ self.addEventListener('notificationclick', event => {
 
 // ==================== MESSAGE EVENT ====================
 self.addEventListener('message', async event => {
-  const { _type, _data } = event.data;
+  const {_type, _data} = event.data;
 
   switch (type) {
     case 'SCHEDULE_ALARM':
@@ -1523,7 +1523,7 @@ async function syncEmotionalData() {
 
 // IndexedDB helpers for sync operations
 async function openIndexedDB() {
-  return new Promise((resolve, reject) => {
+  return new Promise(_(resolve, _reject) => {
     const request = indexedDB.open('RelifeOfflineDB', 1);
 
     request.onerror = () => reject(request.error);
@@ -1554,7 +1554,7 @@ async function openIndexedDB() {
 
 // Get unsynced records from IndexedDB
 async function getUnsyncedRecords(db, _storeName) {
-  return new Promise((resolve, reject) => {
+  return new Promise(_(resolve, _reject) => {
     const transaction = db.transaction([storeName], 'readonly');
     const store = transaction.objectStore(storeName);
     const index = store.index('synced');
@@ -1850,13 +1850,13 @@ async function initializeAdvancedFeatures() {
   isOnline = navigator.onLine;
 
   // Set up network listeners
-  addEventListener('online', () => {
+  addEventListener(_'online', () => {
     isOnline = true;
     notifyClients('NETWORK_STATUS', { isOnline: true });
     processOfflineQueues();
   });
 
-  addEventListener('offline', () => {
+  addEventListener(_'offline', () => {
     isOnline = false;
     notifyClients('NETWORK_STATUS', { isOnline: false });
   });
@@ -1877,9 +1877,7 @@ async function processOfflineQueues() {
   }
 }
 
-
-
-async function notifyClients(type, data) {
+async function notifyClients(_type, data) {
   const clients = await self.clients.matchAll();
   clients.forEach(client => {
     client.postMessage({ type, data });
@@ -1887,7 +1885,9 @@ async function notifyClients(type, data) {
 }
 
 // Stub implementations for additional features
-async function storeScheduledAlarm(alarm, nextTime) { /* Implementation */ }
+async function storeScheduledAlarm(alarm, _nextTime) {
+  /* Implementation */
+}
 async function performCompleteSync() {
   await Promise.all([
     syncAlarms(),

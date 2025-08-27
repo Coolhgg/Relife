@@ -6,8 +6,8 @@ import { ChevronDownIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
-function NavigationMenu({
-  className, children, _viewport = true, ...props
+function NavigationMenu(_{
+  className, _children, _viewport = true, _...props
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Root> & {
   viewport?: boolean;
 }) {
@@ -27,8 +27,8 @@ function NavigationMenu({
   );
 }
 
-function NavigationMenuList({
-  className, ...props
+function NavigationMenuList(_{
+  className, _...props
 }: React.ComponentProps<typeof NavigationMenuPrimitive.List>) {
   return (
     <NavigationMenuPrimitive.List
@@ -42,8 +42,8 @@ function NavigationMenuList({
   );
 }
 
-function NavigationMenuItem({
-  className, ...props
+function NavigationMenuItem(_{
+  className, _...props
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Item>) {
   return (
     <NavigationMenuPrimitive.Item
@@ -58,8 +58,8 @@ const navigationMenuTriggerStyle = cva(
   'group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 data-[state=open]:hover:bg-accent data-[state=open]:text-accent-foreground data-[state=open]:focus:bg-accent data-[state=open]:bg-accent/50 focus-visible:ring-ring/50 outline-none transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1'
 );
 
-function NavigationMenuTrigger({
-  className, children, ...props
+function NavigationMenuTrigger(_{
+  className, _children, _...props
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Trigger>) {
   return (
     <NavigationMenuPrimitive.Trigger
@@ -76,8 +76,8 @@ function NavigationMenuTrigger({
   );
 }
 
-function NavigationMenuContent({
-  className, ...props
+function NavigationMenuContent(_{
+  className, _...props
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Content>) {
   return (
     <NavigationMenuPrimitive.Content
@@ -92,8 +92,8 @@ function NavigationMenuContent({
   );
 }
 
-function NavigationMenuViewport({
-  className, ...props
+function NavigationMenuViewport(_{
+  className, _...props
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Viewport>) {
   return (
     <div className={cn('absolute top-full left-0 isolate z-50 flex justify-center')}>
@@ -109,8 +109,8 @@ function NavigationMenuViewport({
   );
 }
 
-function NavigationMenuLink({
-  className, ...props
+function NavigationMenuLink(_{
+  className, _...props
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Link>) {
   return (
     <NavigationMenuPrimitive.Link
@@ -124,8 +124,8 @@ function NavigationMenuLink({
   );
 }
 
-function NavigationMenuIndicator({
-  className, ...props
+function NavigationMenuIndicator(_{
+  className, _...props
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Indicator>) {
   return (
     <NavigationMenuPrimitive.Indicator

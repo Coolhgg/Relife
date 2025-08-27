@@ -38,7 +38,7 @@ interface CohortAnalysisProps {
   className?: string;
 }
 
-export function CohortAnalysis({ className }: CohortAnalysisProps) {
+export function CohortAnalysis(_{ className }: CohortAnalysisProps) {
   const [metric, setMetric] = useState<'retention' | 'engagement' | 'conversion'>(
     'retention'
   );
@@ -153,7 +153,7 @@ export function CohortAnalysis({ className }: CohortAnalysisProps) {
     return sum / cohortData.length;
   });
 
-  return (<Card className={className}>
+  return (_<Card className={className}>
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
@@ -175,7 +175,7 @@ export function CohortAnalysis({ className }: CohortAnalysisProps) {
             </Select>
             <Select
               value={timeframe}
-              onValueChange={(value: any) => setTimeframe(value)}
+              onValueChange={(_value: any) => setTimeframe(value)}
             >
               <SelectTrigger className="w-[120px]">
                 <SelectValue />
@@ -222,7 +222,7 @@ export function CohortAnalysis({ className }: CohortAnalysisProps) {
               <tr className="border-b">
                 <th className="text-left p-2 font-medium">Cohort</th>
                 <th className="text-center p-2 font-medium">Size</th>
-                {periods.map((period, index) => (
+                {periods.map(_(period, _index) => (
                   <th key={period} className="text-center p-2 font-medium">
                     {period}
                   </th>
@@ -236,7 +236,7 @@ export function CohortAnalysis({ className }: CohortAnalysisProps) {
                   <td className="p-2 text-center">
                     <Badge variant="secondary">{cohort.size.toLocaleString()}</Badge>
                   </td>
-                  {periodKeys.map((key, _index) => (
+                  {periodKeys.map(_(key, _index) => (
                     <td key={key} className="p-2 text-center">
                       <TooltipProvider>
                         <Tooltip>
@@ -270,8 +270,7 @@ export function CohortAnalysis({ className }: CohortAnalysisProps) {
                 <td className="p-2">Average</td>
                 <td className="p-2 text-center">
                   <Badge variant="outline">
-                    {Math.round(
-                      cohortData.reduce((sum, c) => sum + c.size, 0) / cohortData.length
+                    {Math.round(_cohortData.reduce((sum, c) => sum + c.size, 0) / cohortData.length
                     ).toLocaleString()}
                   </Badge>
                 </td>

@@ -5,7 +5,7 @@ import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from 'lucide-re
 import { cn } from '@/lib/utils';
 import { Button, buttonVariants } from '@/components/ui/button';
 
-function Pagination({ className, ...props }: React.ComponentProps<'nav'>) {
+function Pagination(_{ className, _...props }: React.ComponentProps<'nav'>) {
   return (
     <nav
       role="navigation"
@@ -17,7 +17,7 @@ function Pagination({ className, ...props }: React.ComponentProps<'nav'>) {
   );
 }
 
-function PaginationContent({ className, ...props }: React.ComponentProps<'ul'>) {
+function PaginationContent(_{ className, _...props }: React.ComponentProps<'ul'>) {
   return (
     <ul
       data-slot="pagination-content"
@@ -27,7 +27,7 @@ function PaginationContent({ className, ...props }: React.ComponentProps<'ul'>) 
   );
 }
 
-function PaginationItem({ ...props }: React.ComponentProps<'li'>) {
+function PaginationItem(_{ ...props }: React.ComponentProps<'li'>) {
   return <li data-slot="pagination-item" {...props} />;
 }
 
@@ -36,8 +36,8 @@ type PaginationLinkProps = {
 } & Pick<React.ComponentProps<typeof Button>, 'size'> &
   React.ComponentProps<'a'>;
 
-function PaginationLink({
-  className, _isActive, _size = 'icon', ...props
+function PaginationLink(_{
+  className, _isActive, _size = 'icon', _...props
 }: PaginationLinkProps) {
   return (
     <a
@@ -56,8 +56,8 @@ function PaginationLink({
   );
 }
 
-function PaginationPrevious({
-  className, ...props
+function PaginationPrevious(_{
+  className, _...props
 }: React.ComponentProps<typeof PaginationLink>) {
   return (
     <PaginationLink
@@ -72,8 +72,8 @@ function PaginationPrevious({
   );
 }
 
-function PaginationNext({
-  className, ...props
+function PaginationNext(_{
+  className, _...props
 }: React.ComponentProps<typeof PaginationLink>) {
   return (
     <PaginationLink
@@ -88,7 +88,7 @@ function PaginationNext({
   );
 }
 
-function PaginationEllipsis({ className, ...props }: React.ComponentProps<'span'>) {
+function PaginationEllipsis(_{ className, _...props }: React.ComponentProps<'span'>) {
   return (
     <span
       aria-hidden
