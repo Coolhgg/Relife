@@ -1,7 +1,6 @@
-import React from 'react';
-import * as React from 'react';
-import * as TogglePrimitive from '@radix-ui/react-toggle';
-import { cva } from 'class-variance-authority';
+import * as React from "react"
+import * as TogglePrimitive from "@radix-ui/react-toggle"
+import { cva } from "class-variance-authority"
 
 import { cn } from '@/lib/utils';
 import { VariantProps } from 'class-variance-authority'; // auto: restored by scout - verify

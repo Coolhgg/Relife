@@ -1,20 +1,5 @@
 import React from 'react';
-import {
-  Plus,
-  Clock,
-  Calendar,
-  Volume2,
-  Sunrise,
-  Coffee,
-  Brain,
-  Zap,
-  TrendingUp,
-  MapPin,
-  Bell,
-  ChevronRight,
-  Lightbulb,
-  AlertCircle,
-} from 'lucide-react';
+import { Plus, Clock, Calendar, Volume2, Sunrise, Coffee, Brain, Zap, TrendingUp, MapPin, Bell, ChevronRight, Lightbulb, AlertCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import type { Alarm } from '../types';
 import { formatTime, getTimeUntilNextAlarm, getVoiceMoodConfig } from '../utils';

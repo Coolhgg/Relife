@@ -1,19 +1,6 @@
-import React, { useState } from 'react'; // auto: added missing React import
-import {
-  User,
-  Mail,
-  Settings,
-  Shield,
-  Bell,
-  Mic,
-  Palette,
-  Clock,
-  Save,
-  X,
-  AlertCircle,
-  CheckCircle,
-  LogOut,
-} from 'lucide-react';
+
+import { useState } from 'react';
+import { User, Mail, Settings, Shield, Bell, Mic, Palette, Clock, Save, X, AlertCircle, CheckCircle, LogOut } from 'lucide-react';
 import type { User as AppUser, VoiceMood } from '../types';
 import { TimeoutHandle } from '../types/timers';
 

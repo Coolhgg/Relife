@@ -1,4 +1,4 @@
-import React from 'react'; // auto: added missing React import
+
 import {
   Chart as ChartJS,
   CategoryScale,

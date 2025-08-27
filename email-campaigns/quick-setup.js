@@ -168,7 +168,7 @@ class EmailCampaignSetup {
           subject: email.subject,
           template_name: email.template || `${persona}_email_${index + 1}`,
           html: this.generateEmailHTML(persona, email, personaColor),
-          text: this.generateEmailText(persona, email),
+          text: this.generateEmailText(_persona, _email),
           variables: {
             persona_color: personaColor,
             messaging_tone: messagingTone,

@@ -175,7 +175,7 @@ export function CohortAnalysis({ className }: CohortAnalysisProps) {
             </Select>
             <Select
               value={timeframe}
-              onValueChange={(_value: any) => setTimeframe(value)}
+              onValueChange={(value: any) => setTimeframe(value)}
             >
               <SelectTrigger className="w-[120px]">
                 <SelectValue />
@@ -222,7 +222,7 @@ export function CohortAnalysis({ className }: CohortAnalysisProps) {
               <tr className="border-b">
                 <th className="text-left p-2 font-medium">Cohort</th>
                 <th className="text-center p-2 font-medium">Size</th>
-                {periods.map((period, _index) => (
+                {periods.map((period, index) => (
                   <th key={period} className="text-center p-2 font-medium">
                     {period}
                   </th>
@@ -270,7 +270,8 @@ export function CohortAnalysis({ className }: CohortAnalysisProps) {
                 <td className="p-2">Average</td>
                 <td className="p-2 text-center">
                   <Badge variant="outline">
-                    {Math.round(_cohortData.reduce((sum, c) => sum + c.size, 0) / cohortData.length
+                    {Math.round(
+                      cohortData.reduce((sum, c) => sum + c.size, 0) / cohortData.length
                     ).toLocaleString()}
                   </Badge>
                 </td>

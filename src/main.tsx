@@ -1,15 +1,13 @@
-import React, { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import './index.css';
-import App from './App.tsx';
-import RootErrorBoundary from './components/RootErrorBoundary.tsx';
-import { setupNotificationListeners } from './services/capacitor';
-import { ServiceWorkerManager } from './services/service-worker-manager';
-import {
-  initializeEnhancedApp,
-  isAppInitialized,
-} from './config/enhancedInitializeApp';
-import { initializeStoreWithPersistedState } from './store';
+
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.tsx'
+import RootErrorBoundary from './components/RootErrorBoundary.tsx'
+import { setupNotificationListeners } from './services/capacitor'
+import { ServiceWorkerManager } from './services/service-worker-manager'
+import { initializeApp } from './config/initializeApp'
+
 
 // Show loading screen while app initializes
 const showLoadingScreen = () => {
