@@ -2,14 +2,12 @@
 // Advanced alarm functionality exclusive to premium subscribers
 
 import React, { useState, useEffect } from 'react';
-import { Clock, Brain, Music, MapPin, Cloud } from 'lucide-react';
+import { Clock, Zap, Brain, Music, Users, Calendar, MapPin, Cloud } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Switch } from '../ui/switch';
-import path from 'path';
-import { Zap } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -44,7 +42,7 @@ function SmartWakeUpFeature({
   const [weatherAdaptation, setWeatherAdaptation] = useState(false);
 
   return (
-    <FeatureGate feature="smart_wakeup" userId={_user?.id || ''} showUpgradePrompt>
+    <FeatureGate feature="smart_wakeup" userId={user?.id || ''} showUpgradePrompt>
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -59,7 +57,7 @@ function SmartWakeUpFeature({
             <div className="mt-2">
               <Slider
                 value={[smartWindow]}
-                onValueChange={(value: unknown) => setSmartWindow(value[0])}
+                onValueChange={(value: any) => setSmartWindow(value[0])}
                 max={60}
                 min={5}
                 step={5}
@@ -140,7 +138,7 @@ function AdvancedSchedulingFeature({
   return (
     <FeatureGate
       feature="advanced_scheduling"
-      userId={_user?.id || ''}
+      userId={user?.id || ''}
       showUpgradePrompt
     >
       <Card>
@@ -275,7 +273,7 @@ function CustomSoundLibraryFeature({
   };
 
   return (
-    <FeatureGate feature="custom_sounds" userId={_user?.id || ''} showUpgradePrompt>
+    <FeatureGate feature="custom_sounds" userId={user?.id || ''} showUpgradePrompt>
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -362,7 +360,7 @@ function EnhancedBattleModeFeature({
   );
 
   return (
-    <FeatureGate feature="enhanced_battles" userId={_user?.id || ''} showUpgradePrompt>
+    <FeatureGate feature="enhanced_battles" userId={user?.id || ''} showUpgradePrompt>
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -403,7 +401,7 @@ function EnhancedBattleModeFeature({
           {battleType === 'team' && (
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4" />
+                <Users className="w-4 h-4" />
                 <Label>Team Features</Label>
               </div>
               <div className="space-y-2">
@@ -503,7 +501,7 @@ function LocationBasedAlarmsFeature({
   const [trigger, setTrigger] = useState<'arrive' | 'leave' | 'both'>('arrive');
 
   return (
-    <FeatureGate feature="location_alarms" userId={_user?.id || ''} showUpgradePrompt>
+    <FeatureGate feature="location_alarms" userId={user?.id || ''} showUpgradePrompt>
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -539,9 +537,9 @@ function LocationBasedAlarmsFeature({
               </div>
             ) : (
               <div className="space-y-2">
-                {locations.map((location, _index) => (
+                {locations.map((location, index) => (
                   <div
-                    key={_index}
+                    key={index}
                     className="flex items-center justify-between p-3 border rounded-lg"
                   >
                     <div>
@@ -598,9 +596,9 @@ export function PremiumAlarmFeatures({
   className = '',
 }: PremiumAlarmFeaturesProps) {
   const { user } = useAuth();
-  const featureGate = useFeatureGate({ userId: _user?.id || '' });
+  const featureGate = useFeatureGate({ userId: user?.id || '' });
 
-  if (!_user) {
+  if (!user) {
     return (
       <div className={`text-center py-8 ${className}`}>
         <p className="text-gray-600">Sign in to access premium alarm features</p>

@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 /// <reference lib="dom" />
 import React from 'react';
 import {
@@ -44,18 +43,18 @@ export interface ThemeContextValue {
 
   // Personalization
   updatePersonalization: (updates: Partial<PersonalizationSettings>) => void;
-  updateColorPreference: (property: string, value: unknown) => void;
-  updateTypographyPreference: (property: string, value: unknown) => void;
-  updateMotionPreference: (property: string, value: unknown) => void;
-  updateSoundPreference: (property: string, value: unknown) => void;
-  updateLayoutPreference: (property: string, value: unknown) => void;
-  updateAccessibilityPreference: (property: string, value: unknown) => void;
+  updateColorPreference: (property: string, value: any) => void;
+  updateTypographyPreference: (property: string, value: any) => void;
+  updateMotionPreference: (property: string, value: any) => void;
+  updateSoundPreference: (property: string, value: any) => void;
+  updateLayoutPreference: (property: string, value: any) => void;
+  updateAccessibilityPreference: (property: string, value: any) => void;
 
   // Theme presets and customization
   availableThemes: ThemePreset[];
   createCustomTheme: (
     baseTheme: Theme,
-    customizations: unknown
+    customizations: any
   ) => Promise<CustomThemeConfig>;
   saveThemePreset: (preset: ThemePreset) => Promise<void>;
   loadThemePreset: (presetId: string) => Promise<void>;
@@ -122,86 +121,6 @@ export interface ThemeContextValue {
 }
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
-
-// Default available themes constant to prevent recreation on renders
-const DEFAULT_AVAILABLE_THEMES: ThemePreset[] = [
-  {
-    id: 'light',
-    name: 'Light',
-    description: 'Clean and bright interface',
-    theme: 'light',
-    personalization: {},
-    preview: {
-      primaryColor: '#0ea5e9',
-      backgroundColor: '#ffffff',
-      textColor: '#0f172a',
-      cardColor: '#ffffff',
-      accentColor: '#ef4444',
-    },
-    tags: ['system', 'default'],
-    isDefault: true,
-    isPremium: false,
-    popularityScore: 100,
-  },
-  {
-    id: 'dark',
-    name: 'Dark',
-    description: 'Easy on the eyes dark interface',
-    theme: 'dark',
-    personalization: {},
-    preview: {
-      primaryColor: '#38bdf8',
-      backgroundColor: '#0f172a',
-      textColor: '#f8fafc',
-      cardColor: '#1e293b',
-      accentColor: '#f87171',
-    },
-    tags: ['system', 'default'],
-    isDefault: true,
-    isPremium: false,
-    popularityScore: 95,
-  },
-  {
-    id: 'high-contrast',
-    name: 'High Contrast',
-    description: 'Maximum contrast for accessibility',
-    theme: 'high-contrast',
-    personalization: {},
-    preview: {
-      primaryColor: '#000000',
-      backgroundColor: '#ffffff',
-      textColor: '#000000',
-      cardColor: '#ffffff',
-      accentColor: '#ff0000',
-    },
-    tags: ['accessibility'],
-    isDefault: false,
-    isPremium: false,
-    popularityScore: 60,
-  },
-  // Include premium themes
-  ...PREMIUM_THEME_PRESETS,
-];
-
-// Default theme analytics constant to prevent recreation on renders
-const DEFAULT_THEME_ANALYTICS: ThemeUsageAnalytics = {
-  mostUsedThemes: [],
-  timeSpentPerTheme: [],
-  switchFrequency: 0,
-  favoriteColors: [],
-  accessibilityFeatureUsage: [],
-  customizationActivity: [],
-};
-
-// Default cloud sync status factory function to get fresh state
-const getDefaultCloudSyncStatus = (): CloudSyncStatus => ({
-  isOnline: navigator.onLine,
-  isSyncing: false,
-  lastSyncTime: null,
-  hasConflicts: false,
-  pendingChanges: 0,
-  _error: null,
-});
 
 // Default theme configurations
 const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
@@ -763,81 +682,12 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
     category: 'system',
     isCustom: false,
     isPremium: false,
-    // Auto theme uses system CSS to automatically switch between light and dark
-    colors: {
-      // Colors will be determined by CSS based on prefers-color-scheme
-      primary: {
-        50: 'rgb(240 249 255)',
-        100: 'rgb(224 242 254)',
-        200: 'rgb(186 230 253)',
-        300: 'rgb(125 211 252)',
-        400: 'rgb(56 189 248)',
-        500: 'rgb(14 165 233)',
-        600: 'rgb(2 132 199)',
-        700: 'rgb(3 105 161)',
-        800: 'rgb(7 89 133)',
-        900: 'rgb(12 74 110)',
-        950: 'rgb(8 47 73)',
-      },
-      secondary: {
-        50: 'rgb(248 250 252)',
-        100: 'rgb(241 245 249)',
-        200: 'rgb(226 232 240)',
-        300: 'rgb(203 213 225)',
-        400: 'rgb(148 163 184)',
-        500: 'rgb(100 116 139)',
-        600: 'rgb(71 85 105)',
-        700: 'rgb(51 65 85)',
-        800: 'rgb(30 41 59)',
-        900: 'rgb(15 23 42)',
-        950: 'rgb(2 6 23)',
-      },
-      accent: {
-        50: 'rgb(254 242 242)',
-        100: 'rgb(254 226 226)',
-        200: 'rgb(254 202 202)',
-        300: 'rgb(252 165 165)',
-        400: 'rgb(248 113 113)',
-        500: 'rgb(239 68 68)',
-        600: 'rgb(220 38 38)',
-        700: 'rgb(185 28 28)',
-        800: 'rgb(153 27 27)',
-        900: 'rgb(127 29 29)',
-        950: 'rgb(69 10 10)',
-      },
-      neutral: {
-        50: 'rgb(250 250 250)',
-        100: 'rgb(245 245 245)',
-        200: 'rgb(229 229 229)',
-        300: 'rgb(212 212 212)',
-        400: 'rgb(163 163 163)',
-        500: 'rgb(115 115 115)',
-        600: 'rgb(82 82 82)',
-        700: 'rgb(64 64 64)',
-        800: 'rgb(38 38 38)',
-        900: 'rgb(23 23 23)',
-        950: 'rgb(10 10 10)',
-      },
-      background: {
-        primary: 'rgb(255 255 255)',
-        secondary: 'rgb(248 250 252)',
-        tertiary: 'rgb(241 245 249)',
-      },
-      foreground: {
-        primary: 'rgb(15 23 42)',
-        secondary: 'rgb(51 65 85)',
-        tertiary: 'rgb(100 116 139)',
-      },
-      border: {
-        primary: 'rgb(226 232 240)',
-        secondary: 'rgb(203 213 225)',
-      },
-    },
-    accessibility: {
-      highContrast: false,
-      focusVisible: true,
-      reducedTransparency: false,
-    },
+    // Auto theme uses light theme as base, actual theme switching happens in CSS
+    ...(DEFAULT_THEMES?.light || ({} as ThemeConfig)),
+    id: 'auto',
+    name: 'auto',
+    displayName: 'Auto',
+    description: 'Follows system preference',
   },
   system: {
     id: 'system',
@@ -847,81 +697,12 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
     category: 'system',
     isCustom: false,
     isPremium: false,
-    // System theme uses CSS to follow system prefers-color-scheme
-    colors: {
-      // Colors adapt to system preference automatically
-      primary: {
-        50: 'rgb(240 249 255)',
-        100: 'rgb(224 242 254)',
-        200: 'rgb(186 230 253)',
-        300: 'rgb(125 211 252)',
-        400: 'rgb(56 189 248)',
-        500: 'rgb(14 165 233)',
-        600: 'rgb(2 132 199)',
-        700: 'rgb(3 105 161)',
-        800: 'rgb(7 89 133)',
-        900: 'rgb(12 74 110)',
-        950: 'rgb(8 47 73)',
-      },
-      secondary: {
-        50: 'rgb(248 250 252)',
-        100: 'rgb(241 245 249)',
-        200: 'rgb(226 232 240)',
-        300: 'rgb(203 213 225)',
-        400: 'rgb(148 163 184)',
-        500: 'rgb(100 116 139)',
-        600: 'rgb(71 85 105)',
-        700: 'rgb(51 65 85)',
-        800: 'rgb(30 41 59)',
-        900: 'rgb(15 23 42)',
-        950: 'rgb(2 6 23)',
-      },
-      accent: {
-        50: 'rgb(254 242 242)',
-        100: 'rgb(254 226 226)',
-        200: 'rgb(254 202 202)',
-        300: 'rgb(252 165 165)',
-        400: 'rgb(248 113 113)',
-        500: 'rgb(239 68 68)',
-        600: 'rgb(220 38 38)',
-        700: 'rgb(185 28 28)',
-        800: 'rgb(153 27 27)',
-        900: 'rgb(127 29 29)',
-        950: 'rgb(69 10 10)',
-      },
-      neutral: {
-        50: 'rgb(250 250 250)',
-        100: 'rgb(245 245 245)',
-        200: 'rgb(229 229 229)',
-        300: 'rgb(212 212 212)',
-        400: 'rgb(163 163 163)',
-        500: 'rgb(115 115 115)',
-        600: 'rgb(82 82 82)',
-        700: 'rgb(64 64 64)',
-        800: 'rgb(38 38 38)',
-        900: 'rgb(23 23 23)',
-        950: 'rgb(10 10 10)',
-      },
-      background: {
-        primary: 'rgb(255 255 255)',
-        secondary: 'rgb(248 250 252)',
-        tertiary: 'rgb(241 245 249)',
-      },
-      foreground: {
-        primary: 'rgb(15 23 42)',
-        secondary: 'rgb(51 65 85)',
-        tertiary: 'rgb(100 116 139)',
-      },
-      border: {
-        primary: 'rgb(226 232 240)',
-        secondary: 'rgb(203 213 225)',
-      },
-    },
-    accessibility: {
-      highContrast: false,
-      focusVisible: true,
-      reducedTransparency: false,
-    },
+    // System theme uses light theme as base, actual theme switching happens in CSS
+    ...(DEFAULT_THEMES?.light || ({} as ThemeConfig)),
+    id: 'system',
+    name: 'system',
+    displayName: 'System',
+    description: 'Follows system preference',
   },
   'high-contrast': {
     id: 'high-contrast',
@@ -1198,14 +979,19 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
     },
   },
   minimalist: {
-    // Spread base light theme first
-    ...DEFAULT_THEMES.light,
-    // Override with unique properties for minimalist theme
     id: 'minimalist',
     name: 'minimalist',
     displayName: 'Minimalist',
     description: 'Clean and simple design',
     category: 'abstract',
+    isCustom: false,
+    isPremium: false,
+    // Minimalist uses a very clean, neutral palette
+    ...DEFAULT_THEMES.light,
+    id: 'minimalist',
+    name: 'minimalist',
+    displayName: 'Minimalist',
+    description: 'Clean and simple design',
     colors: {
       ...DEFAULT_THEMES.light.colors,
       primary: {
@@ -1224,14 +1010,18 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
     },
   },
   colorful: {
-    // Spread base light theme first
-    ...DEFAULT_THEMES.light,
-    // Override with unique properties for colorful theme
     id: 'colorful',
     name: 'colorful',
     displayName: 'Colorful',
     description: 'Vibrant and energetic design',
     category: 'abstract',
+    isCustom: false,
+    isPremium: false,
+    ...DEFAULT_THEMES.light,
+    id: 'colorful',
+    name: 'colorful',
+    displayName: 'Colorful',
+    description: 'Vibrant and energetic design',
     colors: {
       ...DEFAULT_THEMES.light.colors,
       primary: {
@@ -1272,14 +1062,18 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
     },
   },
   nature: {
-    // Spread base light theme first
-    ...DEFAULT_THEMES.light,
-    // Override with unique properties for nature theme
     id: 'nature',
     name: 'nature',
     displayName: 'Nature',
     description: 'Earth tones and natural colors',
     category: 'nature',
+    isCustom: false,
+    isPremium: false,
+    ...DEFAULT_THEMES.light,
+    id: 'nature',
+    name: 'nature',
+    displayName: 'Nature',
+    description: 'Earth tones and natural colors',
     colors: {
       ...DEFAULT_THEMES.light.colors,
       primary: {
@@ -1311,15 +1105,18 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
     },
   },
   ocean: {
-    // Spread base light theme first
-    ...DEFAULT_THEMES.light,
-    // Override with unique properties for ocean theme
     id: 'ocean',
     name: 'ocean',
     displayName: 'Ocean',
     description: 'Deep blue ocean-inspired theme',
     category: 'nature',
+    isCustom: false,
     isPremium: true,
+    ...DEFAULT_THEMES.light,
+    id: 'ocean',
+    name: 'ocean',
+    displayName: 'Ocean',
+    description: 'Deep blue ocean-inspired theme',
     colors: {
       ...DEFAULT_THEMES.light.colors,
       primary: {
@@ -1338,15 +1135,18 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
     },
   },
   sunset: {
-    // Spread base light theme first
-    ...DEFAULT_THEMES.light,
-    // Override with unique properties for sunset theme
     id: 'sunset',
     name: 'sunset',
     displayName: 'Sunset',
     description: 'Warm sunset gradient colors',
     category: 'gradient',
+    isCustom: false,
     isPremium: true,
+    ...DEFAULT_THEMES.light,
+    id: 'sunset',
+    name: 'sunset',
+    displayName: 'Sunset',
+    description: 'Warm sunset gradient colors',
     effects: {
       ...DEFAULT_THEMES.light.effects,
       gradients: {
@@ -1358,15 +1158,18 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
     },
   },
   forest: {
-    // Spread base dark theme first
-    ...DEFAULT_THEMES.dark,
-    // Override with unique properties for forest theme
     id: 'forest',
     name: 'forest',
     displayName: 'Forest',
     description: 'Deep forest greens',
     category: 'nature',
+    isCustom: false,
     isPremium: true,
+    ...DEFAULT_THEMES.dark,
+    id: 'forest',
+    name: 'forest',
+    displayName: 'Forest',
+    description: 'Deep forest greens',
     colors: {
       ...DEFAULT_THEMES.dark.colors,
       background: {
@@ -1380,15 +1183,18 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
     },
   },
   cosmic: {
-    // Spread base dark theme first
-    ...DEFAULT_THEMES.dark,
-    // Override with unique properties for cosmic theme
     id: 'cosmic',
     name: 'cosmic',
     displayName: 'Cosmic',
     description: 'Deep space purple theme',
     category: 'gradient',
+    isCustom: false,
     isPremium: true,
+    ...DEFAULT_THEMES.dark,
+    id: 'cosmic',
+    name: 'cosmic',
+    displayName: 'Cosmic',
+    description: 'Deep space purple theme',
     effects: {
       ...DEFAULT_THEMES.dark.effects,
       gradients: {
@@ -1400,15 +1206,18 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
     },
   },
   gradient: {
-    // Spread base light theme first
-    ...DEFAULT_THEMES.light,
-    // Override with unique properties for gradient theme
     id: 'gradient',
     name: 'gradient',
     displayName: 'Gradient',
     description: 'Dynamic gradient theme',
     category: 'gradient',
+    isCustom: false,
     isPremium: true,
+    ...DEFAULT_THEMES.light,
+    id: 'gradient',
+    name: 'gradient',
+    displayName: 'Gradient',
+    description: 'Dynamic gradient theme',
     effects: {
       ...DEFAULT_THEMES.light.effects,
       gradients: {
@@ -1420,15 +1229,18 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
     },
   },
   neon: {
-    // Spread base dark theme first
-    ...DEFAULT_THEMES.dark,
-    // Override with unique properties for neon theme
     id: 'neon',
     name: 'neon',
     displayName: 'Neon',
     description: 'Electric neon colors',
     category: 'abstract',
+    isCustom: false,
     isPremium: true,
+    ...DEFAULT_THEMES.dark,
+    id: 'neon',
+    name: 'neon',
+    displayName: 'Neon',
+    description: 'Electric neon colors',
     colors: {
       ...DEFAULT_THEMES.dark.colors,
       accent: {
@@ -1447,14 +1259,18 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
     },
   },
   pastel: {
-    // Spread base light theme first
-    ...DEFAULT_THEMES.light,
-    // Override with unique properties for pastel theme
     id: 'pastel',
     name: 'pastel',
     displayName: 'Pastel',
     description: 'Soft pastel colors',
     category: 'abstract',
+    isCustom: false,
+    isPremium: false,
+    ...DEFAULT_THEMES.light,
+    id: 'pastel',
+    name: 'pastel',
+    displayName: 'Pastel',
+    description: 'Soft pastel colors',
     colors: {
       ...DEFAULT_THEMES.light.colors,
       primary: {
@@ -1473,14 +1289,18 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
     },
   },
   monochrome: {
-    // Spread base light theme first
-    ...DEFAULT_THEMES.light,
-    // Override with unique properties for monochrome theme
     id: 'monochrome',
     name: 'monochrome',
     displayName: 'Monochrome',
     description: 'Black and white only',
     category: 'abstract',
+    isCustom: false,
+    isPremium: false,
+    ...DEFAULT_THEMES.light,
+    id: 'monochrome',
+    name: 'monochrome',
+    displayName: 'Monochrome',
+    description: 'Black and white only',
     colors: {
       ...DEFAULT_THEMES.light.colors,
       primary: {
@@ -1499,14 +1319,18 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
     },
   },
   gaming: {
-    // Spread base dark theme first
-    ...DEFAULT_THEMES.dark,
-    // Override with unique properties for gaming theme
     id: 'gaming',
     name: 'gaming',
     displayName: 'Gaming',
     description: 'Dark theme with neon gaming aesthetics',
     category: 'specialized',
+    isCustom: false,
+    isPremium: false,
+    ...DEFAULT_THEMES.dark,
+    id: 'gaming',
+    name: 'gaming',
+    displayName: 'Gaming',
+    description: 'Dark theme with neon gaming aesthetics',
     colors: {
       ...DEFAULT_THEMES.dark.colors,
       primary: {
@@ -1568,14 +1392,18 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
     },
   },
   professional: {
-    // Spread base light theme first
-    ...DEFAULT_THEMES.light,
-    // Override with unique properties for professional theme
     id: 'professional',
     name: 'professional',
     displayName: 'Professional',
     description: 'Clean business theme with corporate colors',
     category: 'specialized',
+    isCustom: false,
+    isPremium: false,
+    ...DEFAULT_THEMES.light,
+    id: 'professional',
+    name: 'professional',
+    displayName: 'Professional',
+    description: 'Clean business theme with corporate colors',
     colors: {
       ...DEFAULT_THEMES.light.colors,
       primary: {
@@ -1612,15 +1440,18 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
     },
   },
   retro: {
-    // Spread base dark theme first
-    ...DEFAULT_THEMES.dark,
-    // Override with unique properties for retro theme
     id: 'retro',
     name: 'retro',
     displayName: 'Retro',
     description: '80s inspired theme with vibrant colors',
     category: 'specialized',
+    isCustom: false,
     isPremium: true,
+    ...DEFAULT_THEMES.dark,
+    id: 'retro',
+    name: 'retro',
+    displayName: 'Retro',
+    description: '80s inspired theme with vibrant colors',
     colors: {
       ...DEFAULT_THEMES.dark.colors,
       primary: {
@@ -1674,15 +1505,18 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
     },
   },
   cyberpunk: {
-    // Spread base dark theme first
-    ...DEFAULT_THEMES.dark,
-    // Override with unique properties for cyberpunk theme
     id: 'cyberpunk',
     name: 'cyberpunk',
     displayName: 'Cyberpunk',
     description: 'Futuristic neon theme with high contrast',
     category: 'specialized',
+    isCustom: false,
     isPremium: true,
+    ...DEFAULT_THEMES.dark,
+    id: 'cyberpunk',
+    name: 'cyberpunk',
+    displayName: 'Cyberpunk',
+    description: 'Futuristic neon theme with high contrast',
     colors: {
       ...DEFAULT_THEMES.dark.colors,
       primary: {
@@ -1752,14 +1586,18 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
     },
   },
   spring: {
-    // Spread base light theme first
-    ...DEFAULT_THEMES.light,
-    // Override with unique properties for spring theme
     id: 'spring',
     name: 'spring',
     displayName: 'Spring',
     description: 'Fresh spring colors with soft greens and pastels',
     category: 'seasonal',
+    isCustom: false,
+    isPremium: false,
+    ...DEFAULT_THEMES.light,
+    id: 'spring',
+    name: 'spring',
+    displayName: 'Spring',
+    description: 'Fresh spring colors with soft greens and pastels',
     colors: {
       ...DEFAULT_THEMES.light.colors,
       primary: {
@@ -1804,14 +1642,18 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
     },
   },
   summer: {
-    // Spread base light theme first
-    ...DEFAULT_THEMES.light,
-    // Override with unique properties for summer theme
     id: 'summer',
     name: 'summer',
     displayName: 'Summer',
     description: 'Warm summer colors with bright blues and oranges',
     category: 'seasonal',
+    isCustom: false,
+    isPremium: false,
+    ...DEFAULT_THEMES.light,
+    id: 'summer',
+    name: 'summer',
+    displayName: 'Summer',
+    description: 'Warm summer colors with bright blues and oranges',
     colors: {
       ...DEFAULT_THEMES.light.colors,
       primary: {
@@ -1856,14 +1698,18 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
     },
   },
   autumn: {
-    // Spread base light theme first
-    ...DEFAULT_THEMES.light,
-    // Override with unique properties for autumn theme
     id: 'autumn',
     name: 'autumn',
     displayName: 'Autumn',
     description: 'Rich autumn colors with warm browns and oranges',
     category: 'seasonal',
+    isCustom: false,
+    isPremium: false,
+    ...DEFAULT_THEMES.light,
+    id: 'autumn',
+    name: 'autumn',
+    displayName: 'Autumn',
+    description: 'Rich autumn colors with warm browns and oranges',
     colors: {
       ...DEFAULT_THEMES.light.colors,
       primary: {
@@ -1908,14 +1754,18 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
     },
   },
   winter: {
-    // Spread base light theme first
-    ...DEFAULT_THEMES.light,
-    // Override with unique properties for winter theme
     id: 'winter',
     name: 'winter',
     displayName: 'Winter',
     description: 'Cool winter colors with icy blues and whites',
     category: 'seasonal',
+    isCustom: false,
+    isPremium: false,
+    ...DEFAULT_THEMES.light,
+    id: 'winter',
+    name: 'winter',
+    displayName: 'Winter',
+    description: 'Cool winter colors with icy blues and whites',
     colors: {
       ...DEFAULT_THEMES.light.colors,
       primary: {
@@ -1960,14 +1810,18 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
     },
   },
   focus: {
-    // Spread base light theme first
-    ...DEFAULT_THEMES.light,
-    // Override with unique properties for focus theme
     id: 'focus',
     name: 'focus',
     displayName: 'Focus',
     description: 'Minimal distraction theme optimized for concentration',
     category: 'specialized',
+    isCustom: false,
+    isPremium: false,
+    ...DEFAULT_THEMES.light,
+    id: 'focus',
+    name: 'focus',
+    displayName: 'Focus',
+    description: 'Minimal distraction theme optimized for concentration',
     colors: {
       ...DEFAULT_THEMES.light.colors,
       primary: {
@@ -2018,15 +1872,18 @@ const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
     },
   },
   custom: {
-    // Spread base light theme first
-    ...DEFAULT_THEMES.light,
-    // Override with unique properties for custom theme
     id: 'custom',
     name: 'custom',
     displayName: 'Custom',
     description: 'User-defined theme',
     category: 'custom',
     isCustom: true,
+    isPremium: false,
+    ...DEFAULT_THEMES.light,
+    id: 'custom',
+    name: 'custom',
+    displayName: 'Custom',
+    description: 'User-defined theme',
   },
 };
 
@@ -2126,14 +1983,83 @@ export function ThemeProvider({
   const [personalization, setPersonalizationState] = useState<PersonalizationSettings>(
     DEFAULT_PERSONALIZATION
   );
-  const [cloudSyncStatus, setCloudSyncStatus] = useState<CloudSyncStatus>(
-    getDefaultCloudSyncStatus
-  );
+  const [cloudSyncStatus, setCloudSyncStatus] = useState<CloudSyncStatus>({
+    isOnline: navigator.onLine,
+    isSyncing: false,
+    lastSyncTime: null,
+    hasConflicts: false,
+    pendingChanges: 0,
+    error: null,
+  });
   const cloudSyncServiceRef = useRef<CloudSyncService | null>(null);
   const syncListenersRef = useRef<((status: CloudSyncStatus) => void)[]>([]);
   const persistenceServiceRef = useRef<ThemePersistenceService | null>(null);
-  const [availableThemes] = useState<ThemePreset[]>(DEFAULT_AVAILABLE_THEMES);
-  const [themeAnalytics] = useState<ThemeUsageAnalytics>(DEFAULT_THEME_ANALYTICS);
+  const [availableThemes] = useState<ThemePreset[]>([
+    {
+      id: 'light',
+      name: 'Light',
+      description: 'Clean and bright interface',
+      theme: 'light',
+      personalization: {},
+      preview: {
+        primaryColor: '#0ea5e9',
+        backgroundColor: '#ffffff',
+        textColor: '#0f172a',
+        cardColor: '#ffffff',
+        accentColor: '#ef4444',
+      },
+      tags: ['system', 'default'],
+      isDefault: true,
+      isPremium: false,
+      popularityScore: 100,
+    },
+    {
+      id: 'dark',
+      name: 'Dark',
+      description: 'Easy on the eyes dark interface',
+      theme: 'dark',
+      personalization: {},
+      preview: {
+        primaryColor: '#38bdf8',
+        backgroundColor: '#0f172a',
+        textColor: '#f8fafc',
+        cardColor: '#1e293b',
+        accentColor: '#f87171',
+      },
+      tags: ['system', 'default'],
+      isDefault: true,
+      isPremium: false,
+      popularityScore: 95,
+    },
+    {
+      id: 'high-contrast',
+      name: 'High Contrast',
+      description: 'Maximum contrast for accessibility',
+      theme: 'high-contrast',
+      personalization: {},
+      preview: {
+        primaryColor: '#000000',
+        backgroundColor: '#ffffff',
+        textColor: '#000000',
+        cardColor: '#ffffff',
+        accentColor: '#ff0000',
+      },
+      tags: ['accessibility'],
+      isDefault: false,
+      isPremium: false,
+      popularityScore: 60,
+    },
+    // Include premium themes
+    ...PREMIUM_THEME_PRESETS,
+  ]);
+  const [themeAnalytics] = useState<ThemeUsageAnalytics>({
+    mostUsedThemes: [],
+    timeSpentPerTheme: [],
+    switchFrequency: 0,
+    favoriteColors: [],
+    accessibilityFeatureUsage: [],
+    customizationActivity: [],
+  });
 
   // Initialize theme from enhanced persistence service
   useEffect(() => {
@@ -2173,8 +2099,8 @@ export function ThemeProvider({
             ...themeData.personalization,
           });
         }
-      } catch (_error) {
-        console._error('Failed to initialize theme data:', _error);
+      } catch (error) {
+        console.error('Failed to initialize theme data:', error);
 
         // Fallback to old localStorage method
         const storedTheme = localStorage.getItem(storageKey);
@@ -2270,20 +2196,18 @@ export function ThemeProvider({
     const syncService = cloudSyncServiceRef.current;
 
     // Listen for sync status changes
-    const unsubscribe = syncService.onStatusChange((status: unknown) => {
-      // auto
+    const unsubscribe = syncService.onStatusChange((status: any) => { // auto
       setCloudSyncStatus(status);
       // Notify all registered listeners
-      syncListenersRef.current.forEach((listener: unknown) => listener(status));
+      syncListenersRef.current.forEach((listener: any) => l // auto: implicit anyistener(status));
     });
 
     // Initialize with current status
     setCloudSyncStatus(syncService.getStatus());
 
     // Start auto-sync if enabled
-    syncService.initialize().catch((_error: unknown) => {
-      // auto
-      console._error('Failed to initialize cloud sync:', _error);
+    syncService.initialize().catch((error: any) => { // auto
+      console.error('Failed to initialize cloud sync:', error);
     });
 
     return () => {
@@ -2306,9 +2230,8 @@ export function ThemeProvider({
 
     // Debounce sync to avoid too frequent calls
     const timeoutId = setTimeout(() => {
-      syncService.updatePreferences(preferences).catch((_error: unknown) => {
-        // auto
-        console._error('Failed to sync preferences:', _error);
+      syncService.updatePreferences(preferences).catch((error: any) => { // auto
+        console.error('Failed to sync preferences:', error);
       });
     }, 1000);
 
@@ -2318,7 +2241,7 @@ export function ThemeProvider({
   const setTheme = useCallback(
     (newTheme: Theme) => {
       if (!Object.keys(DEFAULT_THEMES).includes(newTheme)) {
-        console._error(`Unknown theme: ${newTheme}`);
+        console.error(`Unknown theme: ${newTheme}`);
         return;
       }
 
@@ -2378,7 +2301,7 @@ export function ThemeProvider({
   );
 
   const updateColorPreference = useCallback(
-    (property: string, value: unknown) => {
+    (property: string, value: any) => {
       updatePersonalization({
         colorPreferences: {
           ...personalization.colorPreferences,
@@ -2390,7 +2313,7 @@ export function ThemeProvider({
   );
 
   const updateTypographyPreference = useCallback(
-    (property: string, value: unknown) => {
+    (property: string, value: any) => {
       updatePersonalization({
         typographyPreferences: {
           ...personalization.typographyPreferences,
@@ -2402,7 +2325,7 @@ export function ThemeProvider({
   );
 
   const updateMotionPreference = useCallback(
-    (property: string, value: unknown) => {
+    (property: string, value: any) => {
       updatePersonalization({
         motionPreferences: {
           ...personalization.motionPreferences,
@@ -2414,7 +2337,7 @@ export function ThemeProvider({
   );
 
   const updateSoundPreference = useCallback(
-    (property: string, value: unknown) => {
+    (property: string, value: any) => {
       updatePersonalization({
         soundPreferences: {
           ...personalization.soundPreferences,
@@ -2426,7 +2349,7 @@ export function ThemeProvider({
   );
 
   const updateLayoutPreference = useCallback(
-    (property: string, value: unknown) => {
+    (property: string, value: any) => {
       updatePersonalization({
         layoutPreferences: {
           ...personalization.layoutPreferences,
@@ -2438,7 +2361,7 @@ export function ThemeProvider({
   );
 
   const updateAccessibilityPreference = useCallback(
-    (property: string, value: unknown) => {
+    (property: string, value: any) => {
       updatePersonalization({
         accessibilityPreferences: {
           ...personalization.accessibilityPreferences,
@@ -2450,7 +2373,7 @@ export function ThemeProvider({
   );
 
   const createCustomTheme = useCallback(
-    async (baseTheme: Theme, customizations: unknown): Promise<CustomThemeConfig> => {
+    async (baseTheme: Theme, customizations: any): Promise<CustomThemeConfig> => {
       // This would integrate with a backend service in a real app
       const customTheme: CustomThemeConfig = {
         ...DEFAULT_THEMES[baseTheme],
@@ -2476,7 +2399,7 @@ export function ThemeProvider({
 
   const loadThemePreset = useCallback(
     async (presetId: string): Promise<void> => {
-      const preset = availableThemes.find((t: unknown) => t.id === presetId);
+      const preset = availableThemes.find((t: any) => t.id === presetId);
       if (preset) {
         setTheme(preset.theme);
         if (preset.personalization) {
@@ -2489,7 +2412,7 @@ export function ThemeProvider({
 
   const getThemeRecommendations = useCallback((): ThemePreset[] => {
     // This would use AI/ML in a real app
-    return availableThemes.filter((theme: unknown) => !theme.isDefault).slice(0, 3);
+    return availableThemes.filter((theme: any) => ! // auto: implicit anytheme.isDefault).slice(0, 3);
   }, [availableThemes]);
 
   const exportThemes = useCallback(async (): Promise<string> => {
@@ -2536,8 +2459,8 @@ export function ThemeProvider({
           updatePersonalization(importData.personalization);
         }
         return true;
-      } catch (_error) {
-        console._error('Failed to import themes:', _error);
+      } catch (error) {
+        console.error('Failed to import themes:', error);
         return false;
       }
     },
@@ -2593,9 +2516,9 @@ export function ThemeProvider({
           });
         }
       }
-    } catch (_error) {
-      console.error('Failed to sync themes:', _error);
-      throw _error;
+    } catch (error) {
+      console.error('Failed to sync themes:', error);
+      throw error;
     }
   }, [theme, themeConfig, personalization]);
 
@@ -2610,9 +2533,8 @@ export function ThemeProvider({
 
     if (enabled) {
       // Perform initial sync when enabling
-      syncService.sync().catch((_error: unknown) => {
-        // auto
-        console._error('Failed to perform initial sync:', _error);
+      syncService.sync().catch((error: any) => { // auto
+        console.error('Failed to perform initial sync:', error);
       });
     }
   }, []);
@@ -2624,9 +2546,9 @@ export function ThemeProvider({
 
     try {
       await cloudSyncServiceRef.current.sync();
-    } catch (_error) {
-      console.error('Failed to force cloud sync:', _error);
-      throw _error;
+    } catch (error) {
+      console.error('Failed to force cloud sync:', error);
+      throw error;
     }
   }, []);
 
@@ -2643,9 +2565,9 @@ export function ThemeProvider({
       setPersonalizationState(DEFAULT_PERSONALIZATION);
       localStorage.removeItem(storageKey);
       localStorage.removeItem(`${storageKey}-personalization`);
-    } catch (_error) {
-      console.error('Failed to reset cloud data:', _error);
-      throw _error;
+    } catch (error) {
+      console.error('Failed to reset cloud data:', error);
+      throw error;
     }
   }, [defaultTheme, storageKey]);
 
@@ -2655,9 +2577,9 @@ export function ThemeProvider({
 
       // Return unsubscribe function
       return () => {
-        const _index = syncListenersRef.current.indexOf(listener);
-        if (_index > -1) {
-          syncListenersRef.current.splice(_index, 1);
+        const index = syncListenersRef.current.indexOf(listener);
+        if (index > -1) {
+          syncListenersRef.current.splice(index, 1);
         }
       };
     },
@@ -2971,106 +2893,59 @@ export function ThemeProvider({
     return theme === 'system' || theme === 'auto';
   }, [theme]);
 
-  const value = useMemo(
-    (): ThemeContextValue => ({
-      theme,
-      themeConfig,
-      personalization,
-      isDarkMode,
-      isSystemTheme,
-      setTheme,
-      toggleTheme,
-      resetTheme,
-      updatePersonalization,
-      updateColorPreference,
-      updateTypographyPreference,
-      updateMotionPreference,
-      updateSoundPreference,
-      updateLayoutPreference,
-      updateAccessibilityPreference,
-      availableThemes,
-      createCustomTheme,
-      saveThemePreset,
-      loadThemePreset,
-      themeAnalytics,
-      getThemeRecommendations,
-      exportThemes,
-      importThemes,
-      syncThemes,
-      // Cloud Sync
-      cloudSyncStatus,
-      enableCloudSync,
-      forceCloudSync,
-      resetCloudData,
-      onCloudSyncStatusChange,
-      // Utility functions
-      getCSSVariables,
-      getThemeClasses,
-      isAccessibleContrast,
-      applyThemeWithPerformance,
-      preloadTheme,
+  const value: ThemeContextValue = {
+    theme,
+    themeConfig,
+    personalization,
+    isDarkMode,
+    isSystemTheme,
+    setTheme,
+    toggleTheme,
+    resetTheme,
+    updatePersonalization,
+    updateColorPreference,
+    updateTypographyPreference,
+    updateMotionPreference,
+    updateSoundPreference,
+    updateLayoutPreference,
+    updateAccessibilityPreference,
+    availableThemes,
+    createCustomTheme,
+    saveThemePreset,
+    loadThemePreset,
+    themeAnalytics,
+    getThemeRecommendations,
+    exportThemes,
+    importThemes,
+    syncThemes,
+    // Cloud Sync
+    cloudSyncStatus,
+    enableCloudSync,
+    forceCloudSync,
+    resetCloudData,
+    onCloudSyncStatusChange,
+    // Utility functions
+    getCSSVariables,
+    getThemeClasses,
+    isAccessibleContrast,
+    applyThemeWithPerformance,
+    preloadTheme,
 
-      // Accessibility functions
-      testThemeAccessibility,
-      getAccessibilityStatus,
-      announceThemeChange,
-      calculateContrastRatio,
-      simulateColorBlindness,
+    // Accessibility functions
+    testThemeAccessibility,
+    getAccessibilityStatus,
+    announceThemeChange,
+    calculateContrastRatio,
+    simulateColorBlindness,
 
-      // Premium animation functions
-      initializePremiumAnimations,
-      setAnimationIntensity,
-      setAnimationsEnabled,
-      getDefaultAnimationEffects,
-    }),
-    [
-      theme,
-      themeConfig,
-      personalization,
-      isDarkMode,
-      isSystemTheme,
-      setTheme,
-      toggleTheme,
-      resetTheme,
-      updatePersonalization,
-      updateColorPreference,
-      updateTypographyPreference,
-      updateMotionPreference,
-      updateSoundPreference,
-      updateLayoutPreference,
-      updateAccessibilityPreference,
-      availableThemes,
-      createCustomTheme,
-      saveThemePreset,
-      loadThemePreset,
-      themeAnalytics,
-      getThemeRecommendations,
-      exportThemes,
-      importThemes,
-      syncThemes,
-      cloudSyncStatus,
-      enableCloudSync,
-      forceCloudSync,
-      resetCloudData,
-      onCloudSyncStatusChange,
-      getCSSVariables,
-      getThemeClasses,
-      isAccessibleContrast,
-      applyThemeWithPerformance,
-      preloadTheme,
-      testThemeAccessibility,
-      getAccessibilityStatus,
-      announceThemeChange,
-      calculateContrastRatio,
-      simulateColorBlindness,
-      initializePremiumAnimations,
-      setAnimationIntensity,
-      setAnimationsEnabled,
-      getDefaultAnimationEffects,
-    ]
-  );
+    // Premium animation functions
+    initializePremiumAnimations,
+    setAnimationIntensity,
+    setAnimationsEnabled,
+    getDefaultAnimationEffects,
+  };
 
-  return <ThemeContext.Provider value={value}>children</ThemeContext.Provider>;
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
 export default useTheme;

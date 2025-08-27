@@ -15,7 +15,7 @@ interface UseEmotionalNotificationsProps {
 
 interface EmotionalNotificationState {
   isLoading: boolean;
-  _error: string | null;
+  error: string | null;
   lastNotification: EmotionalNotificationPayload | null;
   emotionalProfile: UserEmotionalProfile | null;
   currentEmotionalState: EmotionalState | null;
@@ -43,7 +43,7 @@ export function useEmotionalNotifications({
 ] {
   const [state, setState] = useState<EmotionalNotificationState>({
     isLoading: false,
-    _error: null,
+    error: null,
     lastNotification: null,
     emotionalProfile: null,
     currentEmotionalState: null,
@@ -56,17 +56,13 @@ export function useEmotionalNotifications({
         return null;
       }
 
-      setState((prev: EmotionalNotificationState) => ({
-        ...prev,
-        isLoading: true,
-        _error: null,
-      }));
+      setState((prev: any) => ({ // auto: implicit any ...prev, isLoading: true, error: null }));
 
       try {
         const notification =
           await emotionalIntelligenceService.generateEmotionalNotification(userId);
 
-        setState((prev: EmotionalNotificationState) => ({
+        setState((prev: any) => ({ // auto: implicit any
           ...prev,
           isLoading: false,
           lastNotification: notification,
@@ -82,16 +78,16 @@ export function useEmotionalNotifications({
         }
 
         return notification;
-      } catch (_error) {
-        setState((prev: EmotionalNotificationState) => ({
+      } catch (error) {
+        setState((prev: any) => ({ // auto: implicit any
           ...prev,
           isLoading: false,
-          _error: _error.message || 'Failed to generate emotional notification',
+          error: error.message || 'Failed to generate emotional notification',
         }));
 
         AnalyticsService.track('EMOTIONAL_NOTIFICATION_ERROR', {
           userId,
-          _error: _error.message,
+          error: error.message,
         });
 
         return null;
@@ -129,12 +125,11 @@ export function useEmotionalNotifications({
           effectivenessRating: response.effectivenessRating,
           responseTime: response.timeToResponse,
         });
-      } catch (_error) {
-        console._error('Error tracking emotional response:', _error);
-
-        setState((prev: EmotionalNotificationState) => ({
+      } catch (error) {
+        console.error('Error tracking emotional response:', error);
+        setState((prev: any) => ({ // auto: implicit any
           ...prev,
-          _error: 'Failed to track notification response',
+          error: 'Failed to track notification response',
         }));
       }
     },
@@ -146,13 +141,12 @@ export function useEmotionalNotifications({
     async (preferences: Partial<UserEmotionalProfile>): Promise<void> => {
       if (!userId) return;
 
-      setState((prev: EmotionalNotificationState) => ({ ...prev, isLoading: true }));
+      setState((prev: any) => ({ // auto: implicit any ...prev, isLoading: true }));
 
       try {
         // Update preferences in the service
         // This would be implemented in the emotional intelligence service
-
-        setState((prev: EmotionalNotificationState) => ({
+        setState((prev: any) => ({ // auto: implicit any
           ...prev,
           isLoading: false,
           emotionalProfile: prev.emotionalProfile
@@ -164,18 +158,18 @@ export function useEmotionalNotifications({
           userId,
           updatedFields: Object.keys(preferences),
         });
-      } catch (_error) {
-        setState((prev: EmotionalNotificationState) => ({
+      } catch (error) {
+        setState((prev: any) => ({ // auto: implicit any
           ...prev,
           isLoading: false,
-          _error: 'Failed to update emotional preferences',
+          error: 'Failed to update emotional preferences',
         }));
       }
     },
     [userId]
   );
 
-  // Test emotional notification (for development/_user testing)
+  // Test emotional notification (for development/user testing)
   const testEmotionalNotification = useCallback(
     async (emotion: string = 'happy', tone: string = 'encouraging'): Promise<void> => {
       if (!userId) return;
@@ -206,18 +200,15 @@ export function useEmotionalNotifications({
           },
         };
 
-        setState((prev: EmotionalNotificationState) => ({
-          ...prev,
-          lastNotification: testPayload,
-        }));
+        setState((prev: any) => ({ // auto: implicit any ...prev, lastNotification: testPayload }));
 
         AnalyticsService.track('EMOTIONAL_NOTIFICATION_TEST', {
           userId,
           emotion,
           tone,
         });
-      } catch (_error) {
-        console._error('Error testing emotional notification:', _error);
+      } catch (error) {
+        console.error('Error testing emotional notification:', error);
       }
     },
     [userId]
@@ -225,10 +216,7 @@ export function useEmotionalNotifications({
 
   // Dismiss current notification
   const dismissCurrentNotification = useCallback(() => {
-    setState((prev: EmotionalNotificationState) => ({
-      ...prev,
-      lastNotification: null,
-    }));
+    setState((prev: any) => ({ // auto: implicit any ...prev, lastNotification: null }));
 
     AnalyticsService.track('EMOTIONAL_NOTIFICATION_DISMISSED', {
       userId,
@@ -250,8 +238,7 @@ export function useEmotionalNotifications({
       try {
         // This would load the user's emotional profile
         // For now, we'll set a default profile
-
-        setState((prev: EmotionalNotificationState) => ({
+        setState((prev: any) => ({ // auto: implicit any
           ...prev,
           emotionalProfile: {
             userId,
@@ -267,8 +254,8 @@ export function useEmotionalNotifications({
             lastAnalyzed: new Date(),
           },
         }));
-      } catch (_error) {
-        console._error('Error loading emotional profile:', _error);
+      } catch (error) {
+        console.error('Error loading emotional profile:', error);
       }
     };
 
@@ -330,7 +317,7 @@ export function useEmotionalNotificationSettings(userId: string) {
 
   const updateSettings = useCallback(
     async (newSettings: Partial<typeof settings>) => {
-      setSettings((prev: typeof settings) => ({ ...prev, ...newSettings }));
+      setSettings((prev: any) => ({ // auto: implicit any ...prev, ...newSettings }));
 
       // Save to database
       try {
@@ -338,8 +325,8 @@ export function useEmotionalNotificationSettings(userId: string) {
           userId,
           settings: newSettings,
         });
-      } catch (_error) {
-        console._error('Error updating emotional notification settings:', _error);
+      } catch (error) {
+        console.error('Error updating emotional notification settings:', error);
       }
     },
     [userId]

@@ -58,12 +58,12 @@ const SyncStatus: React.FC<SyncStatusProps> = ({
 
     // Set up listeners
     const handleOnline = () => {
-      setStatus((prev: any) => ({ ...prev, isOnline: true }));
+      setStatus((prev: any) => ({ // auto: implicit any ...prev, isOnline: true }));
       triggerSyncAnimation();
     };
 
     const handleOffline = () => {
-      setStatus((prev: any) => ({ ...prev, isOnline: false }));
+      setStatus((prev: any) => ({ // auto: implicit any ...prev, isOnline: false }));
     };
 
     OfflineManager.addOnlineListener(handleOnline);
@@ -90,8 +90,8 @@ const SyncStatus: React.FC<SyncStatusProps> = ({
       await OfflineManager.syncPendingOperations();
       const newStatus = await OfflineManager.getStatus();
       setStatus(newStatus);
-    } catch (_error) {
-      console._error('Manual sync failed:', _error);
+    } catch (error) {
+      console.error('Manual sync failed:', error);
     }
   };
 
@@ -170,13 +170,14 @@ const SyncStatus: React.FC<SyncStatusProps> = ({
                 {status.isOnline ? 'Online' : 'Offline Mode'}
               </div>
               <div className={`text-sm ${getStatusColor()}`}>{getStatusText()}</div>
+              <div className={`text-sm ${getStatusColor()}`}>{getStatusText()}</div>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
             {status.isOnline && (
               <button
-                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                onClick={(e: any) => { // auto
                   e.stopPropagation();
                   handleManualSync();
                 }}

@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 import React from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import {
@@ -20,7 +19,7 @@ export interface DeviceCapabilityHookReturn {
   tier: DeviceTier | null;
   capabilities: DeviceCapabilities | null;
   metrics: DevicePerformanceMetrics | null;
-  _config: AdaptiveConfig | null;
+  config: AdaptiveConfig | null;
   adaptations: DeviceAdaptation | null;
 
   // Performance monitoring
@@ -40,7 +39,7 @@ export interface DeviceCapabilityHookReturn {
 
   // Loading states
   isLoading: boolean;
-  _error: Error | null;
+  error: Error | null;
 
   // Actions
   reevaluateCapabilities: () => Promise<void>;
@@ -52,13 +51,13 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
   const [tier, setTier] = useState<DeviceTier | null>(null);
   const [capabilities, setCapabilities] = useState<DeviceCapabilities | null>(null);
   const [metrics, setMetrics] = useState<DevicePerformanceMetrics | null>(null);
-  const [_config, setConfig] = useState<AdaptiveConfig | null>(null);
+  const [config, setConfig] = useState<AdaptiveConfig | null>(null);
   const [adaptations, setAdaptations] = useState<DeviceAdaptation | null>(null);
   const [performanceSnapshot, setPerformanceSnapshot] =
     useState<PerformanceSnapshot | null>(null);
   const [activeAlerts, setActiveAlerts] = useState<PerformanceAlert[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [_error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<Error | null>(null);
 
   // Initialize device capabilities
   useEffect(() => {
@@ -87,7 +86,7 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
             ? err
             : new Error('Failed to initialize device capabilities')
         );
-        console._error('Device capabilities initialization _error:', err);
+        console.error('Device capabilities initialization error:', err);
       } finally {
         setIsLoading(false);
       }
@@ -115,11 +114,14 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
     });
 
     const unsubscribeAlerts = performanceBudgetManager.onAlert(alert => {
-      setActiveAlerts((prev: PerformanceAlert[]) => {
+      setActiveAlerts((prev: any) => { // auto
         const existing = prev.find((a: any) => a.id === alert.id);
         if (existing) {
           // Update existing alert
-          return prev.map((a: any) => (a.id === alert.id ? alert : a));
+          return prev.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
         } else {
           // Add new alert
           return [...prev, alert];
@@ -168,19 +170,15 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
 
   const resolveAlert = useCallback((alertId: string) => {
     performanceBudgetManager.resolveAlert(alertId);
-    setActiveAlerts((prev: PerformanceAlert[]) =>
-      prev.filter((alert: PerformanceAlert) => alert.id !== alertId)
-    );
+    setActiveAlerts((prev: any) => p // auto: implicit anyrev.filter((alert: any) => a // auto: implicit anylert.id !== alertId));
   }, []);
 
   const triggerAutoFix = useCallback(async (alertId: string) => {
     try {
       await performanceBudgetManager.triggerAutoFix(alertId);
-      setActiveAlerts((prev: PerformanceAlert[]) =>
-        prev.filter((alert: PerformanceAlert) => alert.id !== alertId)
-      );
+      setActiveAlerts((prev: any) => p // auto: implicit anyrev.filter((alert: any) => a // auto: implicit anylert.id !== alertId));
     } catch (err) {
-      console._error('Auto-fix failed:', err);
+      console.error('Auto-fix failed:', err);
     }
   }, []);
 
@@ -189,7 +187,7 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
     tier,
     capabilities,
     metrics,
-    _config,
+    config,
     adaptations,
 
     // Performance monitoring
@@ -209,7 +207,7 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
 
     // Loading states
     isLoading,
-    _error,
+    error,
 
     // Actions
     reevaluateCapabilities,

@@ -3,7 +3,6 @@
 
 import { supabase } from './supabase';
 import AnalyticsService from './analytics';
-import { ErrorHandler } from './error-handler';
 import type {
   BillingInterval,
   SubscriptionStatus,
@@ -129,9 +128,9 @@ export class RevenueAnalyticsService {
 
       this.setCachedData(cacheKey, metrics);
       return metrics;
-    } catch (_error) {
-      console.error('Error calculating revenue metrics:', _error);
-      throw _error;
+    } catch (error) {
+      console.error('Error calculating revenue metrics:', error);
+      throw error;
     }
   }
 
@@ -139,16 +138,16 @@ export class RevenueAnalyticsService {
    * Calculate Monthly Recurring Revenue
    */
   private async calculateMRR(): Promise<number> {
-    const { data, _error } = await supabase
+    const { data, error } = await supabase
       .from('subscriptions')
       .select('amount, billingInterval, currency')
       .eq('status', 'active')
       .neq('tier', 'free');
 
-    if (_error) throw error;
+    if (error) throw error;
 
     let totalMRR = 0;
-    data?.forEach((subscription: any) => {
+    data?.forEach((subscription: any) => { // auto
       const monthlyAmount =
         subscription.billingInterval === 'year'
           ? subscription.amount / 12
@@ -178,7 +177,7 @@ export class RevenueAnalyticsService {
     const end = endDate || new Date();
 
     // Get users who were active at the beginning of the period
-    const { data: activeAtStart, _error: activeError } = await supabase
+    const { data: activeAtStart, error: activeError } = await supabase
       .from('subscriptions')
       .select('userId')
       .eq('status', 'active')
@@ -187,7 +186,7 @@ export class RevenueAnalyticsService {
     if (activeError) throw activeError;
 
     // Get users who churned during the period
-    const { data: churned, _error: churnError } = await supabase
+    const { data: churned, error: churnError } = await supabase
       .from('subscriptions')
       .select('userId')
       .in('status', ['canceled', 'unpaid'])
@@ -212,7 +211,7 @@ export class RevenueAnalyticsService {
     const end = endDate || new Date();
 
     // Get trial users who started in the period
-    const { data: trialUsers, _error: trialError } = await supabase
+    const { data: trialUsers, error: trialError } = await supabase
       .from('trials')
       .select('userId')
       .gte('startDate', start.toISOString())
@@ -224,7 +223,7 @@ export class RevenueAnalyticsService {
     const trialUserIds = trialUsers?.map((t: any) => t.userId) || [];
     if (trialUserIds.length === 0) return 0;
 
-    const { data: conversions, _error: conversionError } = await supabase
+    const { data: conversions, error: conversionError } = await supabase
       .from('subscriptions')
       .select('userId')
       .in('userId', trialUserIds)
@@ -243,16 +242,16 @@ export class RevenueAnalyticsService {
     startDate: Date,
     endDate: Date
   ): Promise<Record<string, number>> {
-    const { data, _error } = await supabase
+    const { data, error } = await supabase
       .from('subscription_changes')
       .select('previousTier, newTier')
       .gte('createdAt', startDate.toISOString())
       .lte('createdAt', endDate.toISOString());
 
-    if (_error) throw error;
+    if (error) throw error;
 
     const paths: Record<string, number> = {};
-    data?.forEach((change: any) => {
+    data?.forEach((change: any) => { // auto
       const path = `${change.previousTier}_to_${change.newTier}`;
       paths[path] = (paths[path] || 0) + 1;
     });
@@ -264,12 +263,12 @@ export class RevenueAnalyticsService {
    * Get current tier distribution
    */
   private async getTierDistribution(): Promise<Record<string, number>> {
-    const { data, _error } = await supabase
+    const { data, error } = await supabase
       .from('subscriptions')
       .select('tier')
       .eq('status', 'active');
 
-    if (_error) throw error;
+    if (error) throw error;
 
     const distribution = {
       free: 0,
@@ -279,9 +278,7 @@ export class RevenueAnalyticsService {
       enterprise: 0,
     };
 
-    data?.forEach((subscription: any) => {
-      // TODO: implement
-    });
+    data?.forEach((subscription: any) => { // auto});
 
     return distribution;
   }
@@ -335,20 +332,23 @@ export class RevenueAnalyticsService {
    * Get user journey data
    */
   public async getUserJourney(userId: string): Promise<UserJourney> {
-    const { data: events, _error } = await supabase
+    const { data: events, error } = await supabase
       .from('user_events')
       .select('*')
       .eq('userId', userId)
       .order('timestamp', { ascending: true });
 
-    if (_error) throw error;
+    if (error) throw error;
 
     const journey: UserJourney = {
       userId,
       events:
-        events?.map((_event: any) => ({
+        events?.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
           type: event.type,
-          timestamp: new Date(_event.timestamp),
+          timestamp: new Date(event.timestamp),
           tier: event.tier,
           amount: event.amount,
           metadata: event.metadata,
@@ -381,7 +381,7 @@ export class RevenueAnalyticsService {
   /**
    * Track revenue event
    */
-  public async trackRevenueEvent(_event: RevenueEventInput): Promise<void> {
+  public async trackRevenueEvent(event: RevenueEventInput): Promise<void> {
     // Store in database
     await supabase.from('user_events').insert({
       userId: event.userId,
@@ -389,7 +389,7 @@ export class RevenueAnalyticsService {
       amount: event.amount,
       tier: event.tier,
       billingInterval: event.billingInterval,
-      metadata: _event.metadata,
+      metadata: event.metadata,
       timestamp: new Date(),
     });
 
@@ -400,7 +400,7 @@ export class RevenueAnalyticsService {
       amount: event.amount,
       tier: event.tier,
       billingInterval: event.billingInterval,
-      ..._event.metadata,
+      ...event.metadata,
     } as AnalyticsEventProperties);
 
     // Clear relevant caches
@@ -435,13 +435,13 @@ export class RevenueAnalyticsService {
   // Helper methods
 
   private async getAverageRevenuePerUser(): Promise<number> {
-    const { data, _error } = await supabase
+    const { data, error } = await supabase
       .from('subscriptions')
       .select('amount')
       .eq('status', 'active')
       .neq('tier', 'free');
 
-    if (_error) throw error;
+    if (error) throw error;
 
     if (!data?.length) return 0;
 
@@ -462,14 +462,14 @@ export class RevenueAnalyticsService {
   private async getFeatureAdoptionData(
     feature: string
   ): Promise<FeatureAdoptionMetrics> {
-    const { data: usage, _error } = await supabase
+    const { data: usage, error } = await supabase
       .from('feature_usage')
       .select('userId, tier')
       .eq('featureName', feature);
 
-    if (_error) throw error;
+    if (error) throw error;
 
-    const { data: totalUsers, _error: totalError } = await supabase
+    const { data: totalUsers, error: totalError } = await supabase
       .from('users')
       .select('tier');
 

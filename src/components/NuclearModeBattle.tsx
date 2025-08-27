@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { TimeoutHandle } from '../types/timers';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  AlertTriangle,
   Zap,
   Alert,
   Timer,
@@ -87,7 +86,7 @@ const NUCLEAR_CHALLENGES: NuclearChallenge[] = [
 
 export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
   alarm,
-  _user,
+  user,
   onDismiss,
   onSnooze,
   isActive,
@@ -105,7 +104,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
     'green' | 'yellow' | 'red' | 'critical'
   >('green');
 
-  const timerRef = useRef<TimeoutHandle | undefined>(undefined);
+  const timerRef = useRef<TimeoutHandle | undefined>(undefined); // auto: changed from number | null to TimeoutHandle
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const requiredChallenges = 3; // Must complete 3 nuclear challenges to dismiss
@@ -147,8 +146,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
     }
 
     timerRef.current = setInterval(() => {
-      setTimeRemaining((prev: any) => {
-        // auto
+      setTimeRemaining((prev: any) => { // auto
         if (prev <= 1) {
           handleChallengeTimeout();
           return 0;
@@ -185,8 +183,8 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
       }
 
       if (success) {
-        setTotalScore((prev: any) => prev + score);
-        setChallengesCompleted((prev: any) => prev + 1);
+        setTotalScore((prev: any) => p // auto: implicit anyrev + score);
+        setChallengesCompleted((prev: any) => p // auto: implicit anyrev + 1);
 
         // Check if all challenges completed
         if (challengesCompleted + 1 >= requiredChallenges) {
@@ -217,7 +215,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
 
     // Award bonus points for nuclear completion
     const bonusScore = totalScore * 0.5;
-    setTotalScore((prev: any) => prev + bonusScore);
+    setTotalScore((prev: any) => p // auto: implicit anyrev + bonusScore);
 
     // Dismiss alarm with nuclear success
     setTimeout(() => {
@@ -242,8 +240,8 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
     try {
       // Play intense nuclear alarm sound
       SoundService.playSystemSound('nuclear-alarm');
-    } catch (_error) {
-      ErrorHandler.handleError(_error, 'Failed to play nuclear alarm');
+    } catch (error) {
+      ErrorHandler.handleError(error, 'Failed to play nuclear alarm');
     }
   }, []);
 
@@ -299,7 +297,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
   return (
     <PremiumGate
       feature="nuclearMode"
-      userId={_user.id}
+      userId={user.id}
       title="🚀 Nuclear Mode Activated"
       description="The ultimate wake-up challenge. Complete nuclear protocols or face meltdown. Pro subscription required."
     >
@@ -425,7 +423,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
           {/* Warning Footer */}
           <div className="p-4 bg-red-900/50 border-t border-red-500/50">
             <div className="flex items-center justify-center space-x-2">
-              <AlertTriangle className="h-5 w-5 text-yellow-400" />
+              <Alert className="h-5 w-5 text-yellow-400" />
               <span className="text-sm font-medium">
                 FAILURE TO COMPLETE PROTOCOLS WILL RESULT IN NUCLEAR MELTDOWN
               </span>

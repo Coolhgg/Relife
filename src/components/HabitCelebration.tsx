@@ -4,7 +4,6 @@ import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { TimeoutHandle } from '../types/timers';
-import { config } from '../config/environment';
 import {
   Trophy,
   Share2,
@@ -123,17 +122,19 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
 
   // Animate confetti
   const animateConfetti = () => {
-    setConfettiPieces((pieces: any) =>
+    setConfettiPieces((pieces: any) => // auto: implicit any
       pieces
-
-        .map((piece: any) => ({
+        .map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
           ...piece,
           x: piece.x + piece.velocityX,
           y: piece.y + piece.velocityY,
           rotation: piece.rotation + 5,
           velocityY: piece.velocityY + 0.1,
         }))
-        .filter((piece: any) => piece.y < window.innerHeight + 50)
+        .filter((piece: any) => p // auto: implicit anyiece.y < window.innerHeight + 50)
     );
 
     animationRef.current = requestAnimationFrame(animateConfetti);
@@ -196,7 +197,10 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
         {/* Confetti Layer */}
         {confettiPieces.length > 0 && (
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            {confettiPieces.map((piece: any) => (
+            {confettiPieces.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
               <motion.div
                 key={piece.id}
                 className="absolute w-2 h-2 rounded-sm"
@@ -235,8 +239,8 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
           className="relative max-w-md w-full"
         >
           <Card
-            className={`relative overflow-hidden bg-gradient-to-br ${_config.bgGradient} border-2`}
-            style={{ borderColor: _config.color }}
+            className={`relative overflow-hidden bg-gradient-to-br ${config.bgGradient} border-2`}
+            style={{ borderColor: config.color }}
           >
             {/* Close Button */}
             <Button
@@ -252,7 +256,7 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
               {/* Main Icon with Pulse Animation */}
               <motion.div
                 className="w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center relative"
-                style={{ backgroundColor: `${_config.color}15` }}
+                style={{ backgroundColor: `${config.color}15` }}
                 animate={{
                   scale: [1, 1.1, 1],
                 }}
@@ -267,14 +271,14 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
                 >
                   <IconComponent
                     className="w-10 h-10"
-                    style={{ color: _config.color }}
+                    style={{ color: config.color }}
                   />
                 </motion.div>
 
                 {/* Glow Effect */}
                 <motion.div
                   className="absolute inset-0 rounded-full opacity-30"
-                  style={{ backgroundColor: _config.color }}
+                  style={{ backgroundColor: config.color }}
                   animate={{
                     scale: [1, 1.3, 1],
                     opacity: [0.3, 0.1, 0.3],
@@ -289,7 +293,7 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
               {/* Title */}
               <motion.h2
                 className="text-2xl font-bold mb-3"
-                style={{ color: _config.color }}
+                style={{ color: config.color }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
@@ -342,13 +346,13 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
                     </div>
 
                     <div className="space-y-2">
-                      {celebration.rewards.map((reward, _index) => (
+                      {celebration.rewards.map((reward, index) => (
                         <motion.div
-                          key={_index}
+                          key={index}
                           className="flex items-center justify-between p-3 bg-muted/10 rounded-lg border border-muted/20"
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: 0.3 + _index * 0.1 }}
+                          transition={{ delay: 0.3 + index * 0.1 }}
                         >
                           <div className="flex items-center gap-3">
                             {reward.type === 'badge' && (
@@ -421,7 +425,7 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
                 <Button
                   onClick={onClose}
                   className="flex items-center gap-2"
-                  style={{ backgroundColor: _config.color }}
+                  style={{ backgroundColor: config.color }}
                 >
                   <Trophy className="w-4 h-4" />
                   Continue
@@ -443,7 +447,10 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
                     {celebration.socialShare.defaultMessage}
                   </div>
                   <div className="flex gap-1 mt-2">
-                    {celebration.socialShare.hashtags.map((tag: any) => (
+                    {celebration.socialShare.hashtags.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
                       <Badge key={tag} variant="secondary" className="text-xs">
                         {tag}
                       </Badge>
@@ -457,7 +464,7 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
             <div
               className="absolute inset-0 opacity-5 pointer-events-none"
               style={{
-                backgroundImage: `radial-gradient(circle at 50% 50%, ${_config.color} 1px, transparent 1px)`,
+                backgroundImage: `radial-gradient(circle at 50% 50%, ${config.color} 1px, transparent 1px)`,
                 backgroundSize: '30px 30px',
               }}
             />

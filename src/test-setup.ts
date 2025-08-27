@@ -41,7 +41,7 @@ if (typeof global !== 'undefined') {
 
   // Mock window.matchMedia only if it doesn't exist
   if (!global.matchMedia) {
-    global.matchMedia = vi.fn().mockImplementation((query: unknown) => ({
+    global.matchMedia = vi.fn().mockImplementation((query: any) => ({ // auto: implicit any
       matches: false,
       media: query,
       onchange: null,
@@ -78,7 +78,7 @@ if (!global.speechSynthesis) {
     pending: false,
     paused: false,
     onvoiceschanged: null,
-  } as unknown;
+  } as any;
   global.speechSynthesis = mockSpeechSynthesis;
 }
 
@@ -101,15 +101,15 @@ if (!global.IntersectionObserver) {
 
 // Mock animation frame functions only if they don't exist
 if (!global.requestAnimationFrame) {
-  global.requestAnimationFrame = vi.fn((cb: unknown) => setTimeout(cb, 0));
+  global.requestAnimationFrame = vi.fn((cb: any) => s // auto: implicit anyetTimeout(cb, 0));
 }
 if (!global.cancelAnimationFrame) {
-  global.cancelAnimationFrame = vi.fn((id: unknown) => clearTimeout(id));
+  global.cancelAnimationFrame = vi.fn((id: any) => c // auto: implicit anylearTimeout(id));
 }
 
 // Mock window timer functions only if they don't exist or need enhancement
-const createTimerMock = (originalTimer: unknown) => {
-  const mockFn = vi.fn(originalTimer) as unknown;
+const createTimerMock = (originalTimer: any) => {
+  const mockFn = vi.fn(originalTimer) as any;
   mockFn.__promisify__ = vi.fn();
   return mockFn;
 };
@@ -117,30 +117,30 @@ const createTimerMock = (originalTimer: unknown) => {
 if (typeof window !== 'undefined') {
   // Only mock if window timer functions don't exist
   if (!window.setInterval) {
-    (window as unknown).setInterval = createTimerMock(() => 1);
+    (window as any).setInterval = createTimerMock(() => 1);
   }
   if (!window.clearInterval) {
-    (window as unknown).clearInterval = vi.fn();
+    (window as any).clearInterval = vi.fn();
   }
   if (!window.setTimeout) {
-    (window as unknown).setTimeout = createTimerMock(() => 1);
+    (window as any).setTimeout = createTimerMock(() => 1);
   }
   if (!window.clearTimeout) {
-    (window as unknown).clearTimeout = vi.fn();
+    (window as any).clearTimeout = vi.fn();
   }
 } else {
   // For global scope
-  if (!(global as unknown).setInterval) {
-    (global as unknown).setInterval = createTimerMock(() => 1);
+  if (!(global as any).setInterval) {
+    (global as any).setInterval = createTimerMock(() => 1);
   }
-  if (!(global as unknown).clearInterval) {
-    (global as unknown).clearInterval = vi.fn();
+  if (!(global as any).clearInterval) {
+    (global as any).clearInterval = vi.fn();
   }
-  if (!(global as unknown).setTimeout) {
-    (global as unknown).setTimeout = createTimerMock(() => 1);
+  if (!(global as any).setTimeout) {
+    (global as any).setTimeout = createTimerMock(() => 1);
   }
-  if (!(global as unknown).clearTimeout) {
-    (global as unknown).clearTimeout = vi.fn();
+  if (!(global as any).clearTimeout) {
+    (global as any).clearTimeout = vi.fn();
   }
 }
 

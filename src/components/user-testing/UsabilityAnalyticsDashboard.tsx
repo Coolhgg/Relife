@@ -99,8 +99,8 @@ export function UsabilityAnalyticsDashboard() {
       const bugs = userTestingService.getBugReports();
 
       setData({ sessions, events, feedback, bugs });
-    } catch (_error) {
-      console._error('Failed to load analytics data:', _error);
+    } catch (error) {
+      console.error('Failed to load analytics data:', error);
     } finally {
       setIsLoading(false);
     }
@@ -126,7 +126,7 @@ export function UsabilityAnalyticsDashboard() {
       totalEvents: events.length,
       averageEventsPerSession:
         sessions.length > 0 ? events.length / sessions.length : 0,
-      uniqueUsers: new Set(sessions.map((s: unknown) => s.userId)).size,
+      uniqueUsers: new Set(sessions.map((s: any) => s.userId)).size,
       bounceRate: 0.15, // Mock value
     };
   };
@@ -135,9 +135,9 @@ export function UsabilityAnalyticsDashboard() {
     const { events } = data;
 
     const clicksByPage = events
-      .filter((e: unknown) => e.type === 'click')
+      .filter((e: any) => e.type === 'click')
       .reduce(
-        (acc, _event) => {
+        (acc, event) => {
           const page = event.page || 'Unknown';
           acc[page] = (acc[page] || 0) + 1;
           return acc;
@@ -146,9 +146,9 @@ export function UsabilityAnalyticsDashboard() {
       );
 
     const navigationFlow = events
-      .filter((e: unknown) => e.type === 'navigation')
+      .filter((e: any) => e.type === 'navigation')
       .reduce(
-        (acc, _event) => {
+        (acc, event) => {
           const key = `${event.metadata.fromPage || 'Unknown'} → ${event.page}`;
           acc[key] = (acc[key] || 0) + 1;
           return acc;
@@ -157,10 +157,10 @@ export function UsabilityAnalyticsDashboard() {
       );
 
     const errorsByType = events
-      .filter((e: unknown) => e.type === 'error')
+      .filter((e: any) => e.type === 'error')
       .reduce(
-        (acc, _event) => {
-          const errorType = event.metadata._error || 'Unknown';
+        (acc, event) => {
+          const errorType = event.metadata.error || 'Unknown';
           acc[errorType] = (acc[errorType] || 0) + 1;
           return acc;
         },
@@ -192,7 +192,7 @@ export function UsabilityAnalyticsDashboard() {
     const { feedback } = data;
 
     const ratingDistribution = feedback
-      .filter((f: unknown) => f.rating)
+      .filter((f: any) => f.rating)
       .reduce(
         (acc, f) => {
           acc[f.rating!] = (acc[f.rating!] || 0) + 1;
@@ -265,15 +265,13 @@ export function UsabilityAnalyticsDashboard() {
         <div>
           <h2 className="text-2xl font-bold">User Testing Analytics</h2>
           <p className="text-gray-600 mt-1">
-            Insights from _user behavior and feedback data
+            Insights from user behavior and feedback data
           </p>
         </div>
         <div className="flex items-center gap-3">
           <select
             value={selectedTimeRange}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setSelectedTimeRange(e.target.value)
-            }
+            onChange={(e: any) => setSelectedTimeRange(e.target.value)}
             className="px-3 py-2 border rounded-lg"
           >
             <option value="1d">Last 24 Hours</option>
@@ -411,10 +409,10 @@ export function UsabilityAnalyticsDashboard() {
                         dataKey="count"
                         label={({ type, count }) => `${type}: ${count}`}
                       >
-                        {eventAnalytics.errorsByType.map((entry, _index) => (
+                        {eventAnalytics.errorsByType.map((entry, index) => (
                           <Cell
-                            key={`cell-${_index}`}
-                            fill={COLORS[_index % COLORS.length]}
+                            key={`cell-${index}`}
+                            fill={COLORS[index % COLORS.length]}
                           />
                         ))}
                       </Pie>
@@ -423,7 +421,7 @@ export function UsabilityAnalyticsDashboard() {
                   </ResponsiveContainer>
                 ) : (
                   <div className="flex items-center justify-center h-300 text-gray-500">
-                    No _error data available
+                    No error data available
                   </div>
                 )}
               </CardContent>
@@ -479,10 +477,10 @@ export function UsabilityAnalyticsDashboard() {
                         dataKey="count"
                         label={({ sentiment, count }) => `${sentiment}: ${count}`}
                       >
-                        {feedbackAnalytics.sentimentBreakdown.map((entry, _index) => (
+                        {feedbackAnalytics.sentimentBreakdown.map((entry, index) => (
                           <Cell
-                            key={`cell-${_index}`}
-                            fill={COLORS[_index % COLORS.length]}
+                            key={`cell-${index}`}
+                            fill={COLORS[index % COLORS.length]}
                           />
                         ))}
                       </Pie>
@@ -505,7 +503,10 @@ export function UsabilityAnalyticsDashboard() {
             <CardContent>
               {data.feedback.length > 0 ? (
                 <div className="space-y-4">
-                  {data.feedback.slice(0, 5).map((feedback: unknown) => (
+                  {data.feedback.slice(0, 5).map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
                     <div key={feedback.id} className="border rounded-lg p-4">
                       <div className="flex items-start justify-between mb-2">
                         <h4 className="font-medium">{feedback.title}</h4>
@@ -560,7 +561,10 @@ export function UsabilityAnalyticsDashboard() {
             <CardContent>
               {data.bugs.length > 0 ? (
                 <div className="space-y-4">
-                  {data.bugs.slice(0, 10).map((bug: unknown) => (
+                  {data.bugs.slice(0, 10).map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
                     <div key={bug.id} className="border rounded-lg p-4">
                       <div className="flex items-start justify-between mb-2">
                         <h4 className="font-medium">{bug.title}</h4>

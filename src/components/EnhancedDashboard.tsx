@@ -46,12 +46,12 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
   onAddAlarm,
   onQuickSetup,
   onNavigateToAdvanced,
-  userId = 'demo-_user',
+  userId = 'demo-user',
 }) => {
   const { alarm: nextAlarm, timeUntil } = getTimeUntilNextAlarm(alarms);
-  const enabledAlarms = alarms?.filter((a: unknown) => a.enabled) || [];
-  const [smartInsights, setSmartInsights] = useState<unknown[]>([]);
-  const [optimizationSuggestions, setOptimizationSuggestions] = useState<unknown[]>([]);
+  const enabledAlarms = alarms?.filter((a: any) => a.enabled) || [];
+  const [smartInsights, setSmartInsights] = useState<any[]>([]);
+  const [optimizationSuggestions, setOptimizationSuggestions] = useState<any[]>([]);
   const [advancedFeaturesEnabled, setAdvancedFeaturesEnabled] = useState(false);
 
   // Struggling Sam Integration
@@ -111,16 +111,14 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
         const suggestions = await MLAlarmOptimizer.getOptimizationSuggestions(userId);
         setOptimizationSuggestions(suggestions.slice(0, 2));
       }
-    } catch (_error) {
-      console._error('Error loading smart insights:', _error);
+    } catch (error) {
+      console.error('Error loading smart insights:', error);
     }
   };
 
   // Handle milestone celebrations
-  const handleMilestoneReached = (milestone: unknown) => {
-    trackFeatureUsage('streaks', 'milestone_reached', {
-      days: milestone.streakDays,
-    });
+  const handleMilestoneReached = (milestone: any) => {
+    trackFeatureUsage('streaks', 'milestone_reached', { days: milestone.streakDays });
     // Trigger celebration in context
   };
 
@@ -282,12 +280,12 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
           {shouldShowAchievements && achievements.length > 0 && (
             <AchievementBadges
               achievements={achievements}
-              onAchievementClick={(achievement: unknown) => {
+              onAchievementClick={(achievement: any) => { // auto
                 trackFeatureUsage('achievements', 'clicked', {
                   type: achievement.achievementType,
                 });
               }}
-              onAchievementShare={(achievement: unknown) => {
+              onAchievementShare={(achievement: any) => { // auto
                 trackFeatureUsage('achievements', 'shared', {
                   type: achievement.achievementType,
                 });
@@ -315,15 +313,15 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
       {shouldShowChallenges && activeChallenges.length > 0 && (
         <CommunityChallenge
           challenges={activeChallenges}
-          onJoinChallenge={(challengeId: unknown) => {
+          onJoinChallenge={(challengeId: any) => { // auto
             trackFeatureUsage('challenges', 'joined', { challengeId });
             joinChallenge(challengeId);
           }}
-          onLeaveChallenge={(challengeId: unknown) => {
+          onLeaveChallenge={(challengeId: any) => { // auto
             trackFeatureUsage('challenges', 'left', { challengeId });
             leaveChallenge(challengeId);
           }}
-          onChallengeShare={(challengeId: unknown) => {
+          onChallengeShare={(challengeId: any) => { // auto
             trackFeatureUsage('challenges', 'shared', { challengeId });
           }}
         />
@@ -369,7 +367,10 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
 
       {/* Smart Upgrade Prompts for Struggling Sam */}
       {shouldShowUpgradePrompts &&
-        upgradePrompts.map((prompt: unknown) => (
+        upgradePrompts.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
           <SmartUpgradePrompt
             key={prompt.id}
             prompt={prompt}
@@ -397,7 +398,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
             Recent Alarms
           </h3>
           <ul className="space-y-3" role="list" aria-label="Recent alarm summaries">
-            {alarms.slice(0, 3).map((alarm: unknown) => {
+            {alarms.slice(0, 3).map((alarm: any) => { // auto
               const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
 
               return (
@@ -482,9 +483,9 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
 
           <div className="space-y-3">
             {/* Optimization Suggestions */}
-            {optimizationSuggestions.map((suggestion, _index) => (
+            {optimizationSuggestions.map((suggestion, index) => (
               <div
-                key={_index}
+                key={index}
                 className="bg-white dark:bg-dark-800 rounded-lg p-3 border border-blue-200 dark:border-blue-700"
               >
                 <div className="flex items-start gap-3">
@@ -511,7 +512,10 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
             ))}
 
             {/* Smart Insights */}
-            {smartInsights.map((insight: unknown) => (
+            {smartInsights.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
               <div
                 key={insight.id}
                 className="bg-white dark:bg-dark-800 rounded-lg p-3 border border-blue-200 dark:border-blue-700"
@@ -677,11 +681,14 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
 
       {/* Habit Celebrations */}
       {shouldShowCelebrations &&
-        pendingCelebrations.map((celebration: unknown) => (
+        pendingCelebrations.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
           <HabitCelebration
             key={celebration.id}
             celebration={celebration}
-            onShare={(platform: unknown) => {
+            onShare={(platform: any) => { // auto
               trackFeatureUsage('celebrations', 'shared', {
                 platform,
                 type: celebration.celebrationType,

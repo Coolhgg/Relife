@@ -1,6 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import path from 'path';
-import { AppState } from '../types';
 import {
   capacitorEnhanced,
   DeviceFeatures,
@@ -23,8 +21,8 @@ export function useCapacitor() {
         setIsInitialized(true);
         setDeviceFeatures(capacitorEnhanced.getDeviceFeatures());
         setIsNative(capacitorEnhanced.isNativePlatform());
-      } catch (_error) {
-        console._error('Failed to initialize Capacitor:', _error);
+      } catch (error) {
+        console.error('Failed to initialize Capacitor:', error);
       }
     };
 
@@ -62,9 +60,9 @@ export function useAlarmNotifications() {
       const pending = await capacitorEnhanced.getPendingAlarms();
       setPendingAlarms(pending);
       return true;
-    } catch (_error) {
-      console.error('Failed to schedule alarm:', _error);
-      throw _error;
+    } catch (error) {
+      console.error('Failed to schedule alarm:', error);
+      throw error;
     } finally {
       setIsScheduling(false);
     }
@@ -76,9 +74,9 @@ export function useAlarmNotifications() {
       const pending = await capacitorEnhanced.getPendingAlarms();
       setPendingAlarms(pending);
       return true;
-    } catch (_error) {
-      console.error('Failed to cancel alarm:', _error);
-      throw _error;
+    } catch (error) {
+      console.error('Failed to cancel alarm:', error);
+      throw error;
     }
   }, []);
 
@@ -86,8 +84,8 @@ export function useAlarmNotifications() {
     try {
       const pending = await capacitorEnhanced.getPendingAlarms();
       setPendingAlarms(pending);
-    } catch (_error) {
-      console._error('Failed to refresh pending alarms:', _error);
+    } catch (error) {
+      console.error('Failed to refresh pending alarms:', error);
     }
   }, []);
 
@@ -126,14 +124,14 @@ export function useHapticFeedback() {
 
   const triggerHaptic = useCallback(
     async (
-      type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | '_error' = 'light'
+      type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error' = 'light'
     ) => {
       if (!isSupported) return;
 
       try {
         await capacitorEnhanced.triggerHapticFeedback(type);
-      } catch (_error) {
-        console.warn('Haptic feedback failed:', _error);
+      } catch (error) {
+        console.warn('Haptic feedback failed:', error);
       }
     },
     [isSupported]
@@ -213,8 +211,8 @@ export function useWakeLock() {
       await capacitorEnhanced.keepAwake();
       setIsAwake(true);
       return true;
-    } catch (_error) {
-      console._error('Failed to keep awake:', _error);
+    } catch (error) {
+      console.error('Failed to keep awake:', error);
       return false;
     }
   }, [isSupported]);
@@ -226,8 +224,8 @@ export function useWakeLock() {
       await capacitorEnhanced.allowSleep();
       setIsAwake(false);
       return true;
-    } catch (_error) {
-      console._error('Failed to allow sleep:', _error);
+    } catch (error) {
+      console.error('Failed to allow sleep:', error);
       return false;
     }
   }, [isSupported]);
@@ -251,18 +249,15 @@ export function useNotificationEvents() {
     };
 
     const handleAlarmSnoozed = (data: any) => {
-      setNotificationActions((prev: string[]) => [...prev, `snoozed-${data.alarmId}`]);
+      setNotificationActions((prev: any) => [...prev, `snoozed-${data.alarmId}`]);
     };
 
     const handleAlarmDismissed = (data: any) => {
-      setNotificationActions((prev: string[]) => [
-        ...prev,
-        `dismissed-${data.alarmId}`,
-      ]);
+      setNotificationActions((prev: any) => [...prev, `dismissed-${data.alarmId}`]);
     };
 
     const handleAlarmTapped = (data: any) => {
-      setNotificationActions((prev: string[]) => [...prev, `tapped-${data.alarmId}`]);
+      setNotificationActions((prev: any) => [...prev, `tapped-${data.alarmId}`]);
     };
 
     capacitorEnhanced.on('notification-received', handleNotificationReceived);
@@ -295,7 +290,7 @@ export function useBackButton() {
   const [backButtonPressed, setBackButtonPressed] = useState(false);
 
   useEffect(() => {
-    const handleBackButton = (_event: any) => {
+    const handleBackButton = (event: any) => {
       setBackButtonPressed(true);
 
       // Reset after a short delay
@@ -319,8 +314,8 @@ export function useAppUrlOpen() {
   const [lastUrl, setLastUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    const handleAppUrlOpen = (_event: any) => {
-      setLastUrl(_event.url);
+    const handleAppUrlOpen = (event: any) => {
+      setLastUrl(event.url);
     };
 
     capacitorEnhanced.on('app-url-open', handleAppUrlOpen);

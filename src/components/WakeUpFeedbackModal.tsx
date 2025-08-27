@@ -93,15 +93,15 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
           onClose();
         }, 2000);
       }
-    } catch (_error) {
-      console._error('Error submitting feedback:', _error);
+    } catch (error) {
+      console.error('Error submitting feedback:', error);
     } finally {
       setSubmitting(false);
     }
   };
 
   const updateFeedback = (updates: Partial<WakeUpFeedback>) => {
-    setFeedback((prev: any) => ({ ...prev, ...updates }));
+    setFeedback((prev: any) => ({ // auto: implicit any ...prev, ...updates }));
   };
 
   if (!isOpen) return null;
@@ -164,9 +164,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
                 <input
                   type="time"
                   value={feedback.actualWakeTime}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                    updateFeedback({ actualWakeTime: e.target.value })
-                  }
+                  onChange={(e: any) => u // auto: implicit anypdateFeedback({ actualWakeTime: e.target.value })}
                   className="w-full bg-white/10 border border-white/20 rounded px-2 py-1 text-white font-mono text-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
                 />
               </div>
@@ -234,7 +232,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
                 min="1"
                 max="10"
                 value={feedback.sleepQuality}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                onChange={(e: any) => // auto: implicit any
                   updateFeedback({ sleepQuality: parseInt(e.target.value) })
                 }
                 className="flex-1 accent-purple-500"
@@ -269,7 +267,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
               max="60"
               step="5"
               value={feedback.timeToFullyAwake}
-              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+              onChange={(e: any) => // auto: implicit any
                 updateFeedback({ timeToFullyAwake: parseInt(e.target.value) })
               }
               className="w-full accent-purple-500"
@@ -291,7 +289,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
                 <input
                   type="checkbox"
                   checked={feedback.wouldPreferEarlier}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                  onChange={(e: any) => // auto: implicit any
                     updateFeedback({
                       wouldPreferEarlier: e.target.checked,
                       wouldPreferLater: e.target.checked
@@ -309,7 +307,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
                 <input
                   type="checkbox"
                   checked={feedback.wouldPreferLater}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                  onChange={(e: any) => // auto: implicit any
                     updateFeedback({
                       wouldPreferLater: e.target.checked,
                       wouldPreferEarlier: e.target.checked
@@ -330,9 +328,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
             <h3 className="text-white font-medium mb-3">Additional Notes (optional)</h3>
             <textarea
               value={feedback.notes}
-              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                updateFeedback({ notes: e.target.value })
-              }
+              onChange={(e: any) => u // auto: implicit anypdateFeedback({ notes: e.target.value })}
               placeholder="Any additional thoughts about your wake-up experience..."
               className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 resize-none"
               rows={3}

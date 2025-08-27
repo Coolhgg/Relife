@@ -180,7 +180,7 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
   }, [userId]);
 
   const loadDashboardData = async () => {
-    setState((prev: any) => ({ ...prev, loading: true }));
+    setState((prev: any) => ({ // auto: implicit any ...prev, loading: true }));
 
     try {
       const [tier, featureAccess, trialDays, isTrialing, upgradeRec] =
@@ -192,7 +192,7 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
           PremiumVoiceService.getUpgradeRecommendation(userId),
         ]);
 
-      setState((prev: any) => ({
+      setState((prev: any) => ({ // auto: implicit any
         ...prev,
         tier,
         featureAccess,
@@ -201,10 +201,9 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
         upgradeRecommendation: upgradeRec,
         loading: false,
       }));
-    } catch (_error) {
-      console._error('Error loading dashboard data:', _error);
-
-      setState((prev: any) => ({ ...prev, loading: false }));
+    } catch (error) {
+      console.error('Error loading dashboard data:', error);
+      setState((prev: any) => ({ // auto: implicit any ...prev, loading: false }));
     }
   };
 
@@ -219,7 +218,7 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
   };
 
   const handleUpgrade = () => {
-    setState((prev: any) => ({ ...prev, showSubscriptionModal: true }));
+    setState((prev: any) => ({ // auto: implicit any ...prev, showSubscriptionModal: true }));
   };
 
   const renderHeader = () => {
@@ -272,9 +271,9 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
                 <div className="flex flex-wrap gap-2">
                   {state.upgradeRecommendation.benefits
                     .slice(0, 2)
-                    .map((benefit, _index) => (
+                    .map((benefit, index) => (
                       <span
-                        key={_index}
+                        key={index}
                         className="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full"
                       >
                         {benefit}
@@ -337,7 +336,7 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
 
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {features.map((feature, _index) => (
+        {features.map((feature, index) => (
           <FeatureCard
             key={feature.title}
             icon={feature.icon}
@@ -426,7 +425,7 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
           <SubscriptionModal
             isOpen={state.showSubscriptionModal}
             onClose={() =>
-              setState((prev: any) => ({ ...prev, showSubscriptionModal: false }))
+              setState((prev: any) => ({ // auto: implicit any ...prev, showSubscriptionModal: false }))
             }
             userId={userId}
           />

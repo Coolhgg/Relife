@@ -1,7 +1,6 @@
 /// <reference types="node" />
 import React, { useState, useRef, useCallback } from 'react';
 import {
-  // BlobPart is a native Web API type - no import needed
   Mic,
   Upload,
   Play,
@@ -31,7 +30,7 @@ interface AudioSample {
   url: string;
 }
 
-const VoiceCloning: React.FC<VoiceCloningProps> = ({ _user, onClose }) => {
+const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
   const [samples, setSamples] = useState<AudioSample[]>([]);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
@@ -52,12 +51,12 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ _user, onClose }) => {
   const checkAccess = async () => {
     try {
       const access = await PremiumService.getInstance().hasFeatureAccess(
-        _user.id,
+        user.id,
         'voice_cloning'
       );
       setHasAccess(access);
-    } catch (_error) {
-      console._error('Error checking voice cloning access:', _error);
+    } catch (error) {
+      console.error('Error checking voice cloning access:', error);
       setHasAccess(false);
     }
   };
@@ -69,7 +68,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ _user, onClose }) => {
 
       const chunks: BlobPart[] = [];
       mediaRecorder.ondataavailable = event => {
-        chunks.push(_event.data);
+        chunks.push(event.data);
       };
 
       mediaRecorder.onstop = () => {
@@ -96,10 +95,10 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ _user, onClose }) => {
 
       // Start timer
       recordingTimerRef.current = setInterval(() => {
-        setRecordingTime((prev: any) => prev + 1);
+        setRecordingTime((prev: any) => p // auto: implicit anyrev + 1);
       }, 1000);
-    } catch (_error) {
-      console._error('Error starting recording:', _error);
+    } catch (error) {
+      console.error('Error starting recording:', error);
       alert('Could not access microphone. Please check permissions.');
     }
   };
@@ -116,33 +115,30 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ _user, onClose }) => {
     }
   };
 
-  const handleFileUpload = useCallback(
-    (_event: React.ChangeEvent<HTMLInputElement>) => {
-      const files = event.target.files;
-      if (!files) return;
+  const handleFileUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files) return;
 
-      Array.from(files).forEach(file => {
-        if (file.type.startsWith('audio/')) {
-          const sampleId = `upload_${Date.now()}_${Math.random()}`;
-          const url = URL.createObjectURL(file);
+    Array.from(files).forEach(file => {
+      if (file.type.startsWith('audio/')) {
+        const sampleId = `upload_${Date.now()}_${Math.random()}`;
+        const url = URL.createObjectURL(file);
 
-          const newSample: AudioSample = {
-            id: sampleId,
-            blob: file,
-            duration: 0, // Would need to calculate from audio
-            name: file.name,
-            url,
-          };
+        const newSample: AudioSample = {
+          id: sampleId,
+          blob: file,
+          duration: 0, // Would need to calculate from audio
+          name: file.name,
+          url,
+        };
 
-          setSamples((prev: any) => [...prev, newSample]);
-        }
-      });
+        setSamples((prev: any) => [...prev, newSample]);
+      }
+    });
 
-      // Reset input
-      event.target.value = '';
-    },
-    []
-  );
+    // Reset input
+    event.target.value = '';
+  }, []);
 
   const playAudio = (sampleId: string) => {
     const sample = samples.find((s: any) => s.id === sampleId);
@@ -168,7 +164,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ _user, onClose }) => {
     audio.onpause = () => setPlayingId(null);
 
     setPlayingId(sampleId);
-    audio.play().catch(console._error);
+    audio.play().catch(console.error);
   };
 
   const stopAudio = (sampleId: string) => {
@@ -181,7 +177,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ _user, onClose }) => {
   };
 
   const removeSample = (sampleId: string) => {
-    setSamples((prev: any) => prev.filter((s: any) => s.id !== sampleId));
+    setSamples((prev: any) => p // auto: implicit anyrev.filter((s: any) => s.id !== sampleId));
 
     // Clean up audio and URL
     const audio = audioRefs.current.get(sampleId);
@@ -208,11 +204,11 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ _user, onClose }) => {
 
     try {
       setIsProcessing(true);
-      const audioBlobs = samples.map((sample: any) => sample.blob);
-      const request = await PremiumVoiceService.createVoiceClone(_user.id, audioBlobs);
+      const audioBlobs = samples.map((sample: any) => s // auto: implicit anyample.blob);
+      const request = await PremiumVoiceService.createVoiceClone(user.id, audioBlobs);
       setCloneRequest(request);
-    } catch (_error) {
-      console._error('Error creating voice clone:', _error);
+    } catch (error) {
+      console.error('Error creating voice clone:', error);
       alert('Failed to create voice clone. Please try again.');
     } finally {
       setIsProcessing(false);
@@ -418,7 +414,10 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ _user, onClose }) => {
                 Voice Samples
               </h3>
               <div className="space-y-3">
-                {samples.map((sample: any) => (
+                {samples.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
                   <div
                     key={sample.id}
                     className="bg-gray-50 rounded-lg p-4 flex items-center gap-3"
@@ -470,11 +469,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ _user, onClose }) => {
                 </span>
               </div>
               <div
-                className={`flex items-center gap-2 ${
-                  samples.some((s: any) => s.duration >= 10)
-                    ? 'text-green-600'
-                    : 'text-gray-400'
-                }`}
+                className={`flex items-center gap-2 ${samples.some((s: any) => s.duration >= 10) ? 'text-green-600' : 'text-gray-400'}`}
               >
                 <CheckCircle className="h-4 w-4" />
                 <span className="text-sm">Samples should be 10+ seconds each</span>

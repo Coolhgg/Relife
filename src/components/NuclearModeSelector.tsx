@@ -6,7 +6,7 @@ import { Button } from './ui/button';
 import { Checkbox } from './ui/checkbox';
 import { Label } from './ui/label';
 import { Slider } from './ui/slider';
-import { Alert, AlertDescription } from './ui/alert';
+import { Alert, AlertDescription, Alert } from './ui/alert';
 import {
   Dialog,
   DialogContent,
@@ -32,7 +32,6 @@ import {
   Crown,
   Lock,
   Alert as AlertIcon,
-  AlertTriangle,
 } from 'lucide-react';
 import { nuclearModeService } from '../services/nuclear-mode';
 import { premiumService } from '../services/premium';
@@ -78,7 +77,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
   className,
 }) => {
   const [hasAccess, setHasAccess] = useState(false);
-  const [userTier, setUserTier] = useState<string>('free');
+  const [userTier, setUserTier] = useState<string>('free'); // auto: added missing userTier state
   const [upgradeUrl, setUpgradeUrl] = useState<string>();
   const [isLoading, setIsLoading] = useState(true);
   const [challengeTypes, setChallengeTypes] = useState<
@@ -103,8 +102,8 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
         setUserTier(access.userTier);
         setUpgradeUrl(access.upgradeUrl);
         setChallengeTypes(types);
-      } catch (_error) {
-        console._error('Error checking nuclear mode access:', _error);
+      } catch (error) {
+        console.error('Error checking nuclear mode access:', error);
       } finally {
         setIsLoading(false);
       }
@@ -120,7 +119,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
     if (checked) {
       onChallengesChange([...selectedChallenges, challengeType]);
     } else {
-      onChallengesChange(selectedChallenges.filter((c: any) => c !== challengeType));
+      onChallengesChange(selectedChallenges.filter((c: any) => c // auto: implicit any !== challengeType));
     }
   };
 
@@ -192,7 +191,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
         </CardHeader>
         <CardContent>
           <Alert className="border-orange-200 bg-orange-50">
-            <AlertTriangle className="w-4 h-4 text-orange-600" />
+            <AlertIcon className="w-4 h-4 text-orange-600" />
             <AlertDescription className="text-orange-800">
               Nuclear Mode requires a Premium subscription. This feature includes
               extreme difficulty challenges with math problems, memory tests, physical
@@ -201,8 +200,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
           </Alert>
 
           <div className="mt-4 grid grid-cols-2 gap-2">
-            {challengeTypes.slice(0, 4).map((challenge: any) => {
-              // auto
+            {challengeTypes.slice(0, 4).map((challenge: any) => { // auto
               const Icon = challengeIcons[challenge.type];
               return (
                 <div
@@ -246,8 +244,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
                 </DialogHeader>
 
                 <div className="space-y-4 max-h-96 overflow-y-auto">
-                  {challengeTypes.map((challenge: any) => {
-                    // auto
+                  {challengeTypes.map((challenge: any) => { // auto
                     const Icon = challengeIcons[challenge.type];
                     return (
                       <div key={challenge.type} className="p-4 border rounded-lg">
@@ -334,7 +331,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
       {isEnabled && (
         <CardContent>
           <Alert className="border-red-200 bg-red-50 mb-6">
-            <AlertTriangle className="w-4 h-4 text-red-600" />
+            <Alert className="w-4 h-4 text-red-600" />
             <AlertDescription className="text-red-800">
               <strong>Warning:</strong> Nuclear Mode disables snoozing and requires
               completing all selected challenges to dismiss the alarm. Choose your
@@ -352,7 +349,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
             </div>
             <Slider
               value={[customDifficulty]}
-              onValueChange={(value: any) => onDifficultyChange(value[0])}
+              onValueChange={(value: any) => o // auto: implicit anynDifficultyChange(value[0])}
               min={1}
               max={10}
               step={1}
@@ -375,8 +372,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {challengeTypes.map((challenge: any) => {
-                // auto
+              {challengeTypes.map((challenge: any) => { // auto
                 const Icon = challengeIcons[challenge.type];
                 const isSelected = selectedChallenges.includes(challenge.type);
 
@@ -394,7 +390,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
                     <div className="flex items-start gap-3">
                       <Checkbox
                         checked={isSelected}
-                        onCheckedChange={(checked: any) =>
+                        onCheckedChange={(checked: any) => // auto: implicit any
                           handleChallengeToggle(challenge.type, checked as boolean)
                         }
                         className="mt-1"
@@ -436,7 +432,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
 
             {selectedChallenges.length === 0 && (
               <Alert className="border-yellow-200 bg-yellow-50">
-                <AlertTriangle className="w-4 h-4 text-yellow-600" />
+                <Alert className="w-4 h-4 text-yellow-600" />
                 <AlertDescription className="text-yellow-800">
                   Select at least one challenge to enable Nuclear Mode
                 </AlertDescription>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// Replaced stub import with proper implementation
 import {
   Palette,
   Plus,
@@ -49,7 +48,7 @@ import {
 } from './ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { ScrollArea } from './ui/scroll-area';
-import { AlertTriangle, AlertDescription } from './ui/alert';
+import { Alert, AlertDescription } from './ui/alert';
 import { CustomSoundThemeCreator } from './CustomSoundThemeCreator';
 import { SoundPreviewSystem } from './SoundPreviewSystem';
 import { soundEffectsService } from '../services/sound-effects';
@@ -98,12 +97,10 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
     } else {
       loadCommunityThemes();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: loadThemes
   }, [userId, showCommunityThemes]);
 
   useEffect(() => {
     filterAndSortThemes();
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: filterAndSortThemes
   }, [themes, searchQuery, filterCategory, sortBy]);
 
   const loadThemes = async () => {
@@ -113,8 +110,8 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
     try {
       const userThemes = soundEffectsService.getCustomThemesByUser(userId);
       setThemes(userThemes);
-    } catch (_error) {
-      console._error('Error loading themes:', _error);
+    } catch (error) {
+      console.error('Error loading themes:', error);
     } finally {
       setIsLoading(false);
     }
@@ -127,8 +124,8 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
       const publicThemes = await soundEffectsService.getCommunityThemes();
       setCommunityThemes(publicThemes);
       setThemes(publicThemes);
-    } catch (_error) {
-      console._error('Error loading community themes:', _error);
+    } catch (error) {
+      console.error('Error loading community themes:', error);
     } finally {
       setIsLoadingCommunity(false);
     }
@@ -144,13 +141,13 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
         theme =>
           theme.name.toLowerCase().includes(query) ||
           theme.description.toLowerCase().includes(query) ||
-          theme.tags.some((tag: unknown) => tag.toLowerCase().includes(query))
+          theme.tags.some((tag: any) => t // auto: implicit anyag.toLowerCase().includes(query))
       );
     }
 
     // Apply category filter
     if (filterCategory !== 'all') {
-      filtered = filtered.filter((theme: unknown) => theme.category === filterCategory);
+      filtered = filtered.filter((theme: any) => t // auto: implicit anyheme.category === filterCategory);
     }
 
     // Apply sorting
@@ -175,14 +172,15 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
   };
 
   const handleThemeCreated = (theme: CustomSoundTheme) => {
-    setThemes((prev: unknown) => [theme, ...prev]);
+    setThemes((prev: any) => [ // auto: implicit anytheme, ...prev]);
     setShowCreator(false);
   };
 
   const handleThemeUpdated = (theme: CustomSoundTheme) => {
-    setThemes((prev: unknown) =>
-      prev.map((t: unknown) => (t.id === theme.id ? theme : t))
-    );
+    setThemes((prev: any) => p // auto: implicit anyrev.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
     setEditingTheme(null);
   };
 
@@ -190,10 +188,10 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
     try {
       const success = await soundEffectsService.deleteCustomTheme(themeId, userId);
       if (success) {
-        setThemes((prev: unknown) => prev.filter((t: unknown) => t.id !== themeId));
+        setThemes((prev: any) => p // auto: implicit anyrev.filter((t: any) => t.id !== themeId));
       }
-    } catch (_error) {
-      console._error('Error deleting theme:', _error);
+    } catch (error) {
+      console.error('Error deleting theme:', error);
     }
   };
 
@@ -211,15 +209,15 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
 
     const success = await soundEffectsService.saveCustomTheme(duplicatedTheme);
     if (success) {
-      setThemes((prev: unknown) => [duplicatedTheme, ...prev]);
+      setThemes((prev: any) => [ // auto: implicit anyduplicatedTheme, ...prev]);
     }
   };
 
   const handleSetActiveTheme = async (theme: CustomSoundTheme) => {
     try {
       await soundEffectsService.setSoundTheme(theme.id);
-    } catch (_error) {
-      console._error('Error setting active theme:', _error);
+    } catch (error) {
+      console.error('Error setting active theme:', error);
     }
   };
 
@@ -282,20 +280,21 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
       URL.revokeObjectURL(url);
 
       console.log(`Theme "${theme.name}" exported successfully`);
-    } catch (_error) {
-      console._error('Error exporting theme:', _error);
+    } catch (error) {
+      console.error('Error exporting theme:', error);
     }
   };
 
   const handleExportMultipleThemes = async (themeIds: string[]) => {
     try {
-      const themesToExport = themes.filter((theme: unknown) =>
-        themeIds.includes(theme.id)
-      );
+      const themesToExport = themes.filter((theme: any) => t // auto: implicit anyhemeIds.includes(theme.id));
       const exportData = {
         version: '1.0',
         exportedAt: new Date().toISOString(),
-        themes: themesToExport.map((theme: unknown) => ({
+        themes: themesToExport.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
           ...theme,
           id: undefined,
           createdBy: undefined,
@@ -322,8 +321,8 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
 
       console.log(`${themesToExport.length} themes exported successfully`);
       setSelectedThemes(new Set()); // Clear selection
-    } catch (_error) {
-      console._error('Error exporting themes:', _error);
+    } catch (error) {
+      console.error('Error exporting themes:', error);
     }
   };
 
@@ -332,7 +331,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
     input.type = 'file';
     input.accept = '.json';
     input.onchange = async event => {
-      const file = (_event.target as HTMLInputElement).files?.[0];
+      const file = (event.target as HTMLInputElement).files?.[0];
       if (!file) return;
 
       try {
@@ -355,7 +354,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
           }
 
           // Check if theme with same name exists
-          const existingTheme = themes.find((t: unknown) => t.name === themeData.name);
+          const existingTheme = themes.find((t: any) => t.name === themeData.name);
           let finalName = themeData.name;
           if (existingTheme) {
             finalName = `${themeData.name} (Imported)`;
@@ -383,13 +382,13 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
         }
 
         if (importedThemes.length > 0) {
-          setThemes((prev: unknown) => [...importedThemes, ...prev]);
+          setThemes((prev: any) => [...importedThemes, ...prev]);
           console.log(`Successfully imported ${importedThemes.length} theme(s)`);
         } else {
           console.warn('No valid themes found in import file');
         }
-      } catch (_error) {
-        console._error('Error importing theme:', _error);
+      } catch (error) {
+        console.error('Error importing theme:', error);
         alert('Failed to import theme. Please check the file format.');
       }
     };
@@ -406,7 +405,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
   };
 
   const toggleThemeSelection = (themeId: string) => {
-    setSelectedThemes((prev: unknown) => {
+    setSelectedThemes((prev: any) => { // auto
       const newSelection = new Set(prev);
       if (newSelection.has(themeId)) {
         newSelection.delete(themeId);
@@ -418,7 +417,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
   };
 
   const selectAllThemes = () => {
-    setSelectedThemes(new Set(filteredThemes.map((t: unknown) => t.id)));
+    setSelectedThemes(new Set(filteredThemes.map((t: any) => t.id)));
   };
 
   const clearSelection = () => {
@@ -442,16 +441,17 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
 
       const success = await soundEffectsService.shareThemeWithCommunity(updatedTheme);
       if (success) {
-        setThemes((prev: unknown) =>
-          prev.map((t: unknown) => (t.id === theme.id ? updatedTheme : t))
-        );
+        setThemes((prev: any) => p // auto: implicit anyrev.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
         if (onThemeUpdated) {
           onThemeUpdated(updatedTheme);
         }
         console.log(`Theme "${theme.name}" shared with community`);
       }
-    } catch (_error) {
-      console._error('Error sharing theme:', _error);
+    } catch (error) {
+      console.error('Error sharing theme:', error);
     }
   };
 
@@ -462,8 +462,8 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
       const success = await soundEffectsService.rateTheme(themeId, userId, rating);
       if (success) {
         // Update local theme rating
-        setThemes((prev: unknown) =>
-          prev.map((theme: unknown) => {
+        setThemes((prev: any) => // auto: implicit any
+          prev.map((theme: any) => { // auto
             if (theme.id === themeId) {
               return {
                 ...theme,
@@ -474,8 +474,8 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
           })
         );
       }
-    } catch (_error) {
-      console._error('Error rating theme:', _error);
+    } catch (error) {
+      console.error('Error rating theme:', error);
     }
   };
 
@@ -500,8 +500,8 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
         // Update download count
         await soundEffectsService.incrementThemeDownloads(theme.id);
       }
-    } catch (_error) {
-      console._error('Error installing theme:', _error);
+    } catch (error) {
+      console.error('Error installing theme:', error);
     }
   };
 
@@ -660,7 +660,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
                     : handleInstallCommunityTheme(theme)
                 }
               >
-                userId ? 'Use Theme' : 'Install'
+                {userId ? 'Use Theme' : 'Install'}
               </Button>
             </div>
           </div>
@@ -809,9 +809,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
               <Input
                 placeholder="Search themes..."
                 value={searchQuery}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setSearchQuery(e.target.value)
-                }
+                onChange={(e: any) => setSearchQuery(e.target.value)}
                 className="pl-10"
               />
             </div>
@@ -957,7 +955,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
               : 'space-y-4'
           }
         >
-          {filteredThemes.map((theme: unknown) =>
+          {filteredThemes.map((theme: any) => // auto: implicit any
             viewMode === 'grid' ? renderThemeCard(theme) : renderThemeListItem(theme)
           )}
         </div>

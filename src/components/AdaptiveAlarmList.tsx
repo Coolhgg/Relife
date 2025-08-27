@@ -1,6 +1,5 @@
 import React, { memo, useMemo, useCallback, useRef, useEffect } from 'react';
 import { FixedSizeList as VirtualList, areEqual } from 'react-window';
-// Replaced stub import with proper implementation
 import {
   Clock,
   MoreVertical,
@@ -73,8 +72,7 @@ const AlarmItem = memo<AlarmItemProps>(
       const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
       if (alarm.days.length === 7) return 'Every day';
       if (alarm.days.length === 0) return 'Never';
-
-      return alarm.days.map((day: any) => dayNames[day]).join(', ');
+      return alarm.days.map((day: any) => d // auto: implicit anyayNames[day]).join(', ');
     }, [alarm.days]);
 
     return (
@@ -178,7 +176,7 @@ AlarmItem.displayName = 'AlarmItem';
 
 // Virtual list item renderer for performance optimization
 const VirtualAlarmItem = memo<{
-  _index: number;
+  index: number;
   style: React.CSSProperties;
   data: {
     alarms: Alarm[];
@@ -188,7 +186,7 @@ const VirtualAlarmItem = memo<{
     isLowEnd: boolean;
     shouldReduceAnimations: boolean;
   };
-}>(({ _index, style, data }) => {
+}>(({ index, style, data }) => {
   const {
     alarms,
     onToggleAlarm,
@@ -310,8 +308,10 @@ export const AdaptiveAlarmList: React.FC<AdaptiveAlarmListProps> = ({
   // Standard list rendering for better devices or short lists
   return (
     <div className={`space-y-3 ${className}`}>
-      {}
-      {sortedAlarms.map((alarm: any) => (
+      {sortedAlarms.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
         <AlarmItem
           key={alarm.id}
           alarm={alarm}
@@ -328,38 +328,38 @@ export const AdaptiveAlarmList: React.FC<AdaptiveAlarmListProps> = ({
 
 // Performance-optimized wrapper with error boundary
 interface AdaptiveAlarmListWrapperProps extends AdaptiveAlarmListProps {
-  fallback?: React.ComponentType<{ _error: Error }>;
+  fallback?: React.ComponentType<{ error: Error }>;
 }
 
 class AlarmListErrorBoundary extends React.Component<
-  { children: React.ReactNode; fallback?: React.ComponentType<{ _error: Error }> },
-  { hasError: boolean; _error: Error | null }
+  { children: React.ReactNode; fallback?: React.ComponentType<{ error: Error }> },
+  { hasError: boolean; error: Error | null }
 > {
   constructor(props: any) {
     super(props);
-    this.state = { hasError: false, _error: null };
+    this.state = { hasError: false, error: null };
   }
 
-  static getDerivedStateFromError(_error: Error) {
-    return { hasError: true, _error };
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
   }
 
-  componentDidCatch(_error: Error, errorInfo: React.ErrorInfo) {
-    console._error('AdaptiveAlarmList Error:', _error, errorInfo);
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('AdaptiveAlarmList Error:', error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
       const FallbackComponent = this.props.fallback;
-      if (FallbackComponent && this.state._error) {
-        return <FallbackComponent error={this.state._error} />;
+      if (FallbackComponent && this.state.error) {
+        return <FallbackComponent error={this.state.error} />;
       }
 
       return (
         <div className="p-4 text-center text-red-600">
           <p>Something went wrong with the alarm list.</p>
           <button
-            onClick={() => this.setState({ hasError: false, _error: null })}
+            onClick={() => this.setState({ hasError: false, error: null })}
             className="mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
           >
             Try Again

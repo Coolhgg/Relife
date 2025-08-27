@@ -3,7 +3,6 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { criticalPreloader } from '../services/critical-preloader';
 import type { Alarm } from '../types';
 import { TimeoutHandle } from '../types/timers';
-import type { PerformanceHistoryEntry } from '../types/state-updaters';
 import type {
   CriticalAsset,
   PreloadStats,
@@ -44,7 +43,7 @@ export function useCriticalPreloading(alarms: Alarm[]): CriticalPreloadingState 
   const analyzeAndPreload = useCallback(async () => {
     if (state.isAnalyzing) return;
 
-    setState((prev: CriticalPreloadingState) => ({ ...prev, isAnalyzing: true }));
+    setState((prev: any) => ({ // auto: implicit any ...prev, isAnalyzing: true }));
 
     try {
       const criticalAssets = await criticalPreloader.analyzeCriticalAssets(alarms);
@@ -58,7 +57,7 @@ export function useCriticalPreloading(alarms: Alarm[]): CriticalPreloadingState 
         }
       }
 
-      setState((prev: CriticalPreloadingState) => ({
+      setState((prev: any) => ({ // auto: implicit any
         ...prev,
         criticalAssets,
         readinessStatus,
@@ -66,17 +65,15 @@ export function useCriticalPreloading(alarms: Alarm[]): CriticalPreloadingState 
       }));
 
       lastAnalysis.current = new Date();
-    } catch (_error) {
-      console._error('Error analyzing critical assets:', _error);
-
-      setState((prev: CriticalPreloadingState) => ({ ...prev, isAnalyzing: false }));
+    } catch (error) {
+      console.error('Error analyzing critical assets:', error);
+      setState((prev: any) => ({ // auto: implicit any ...prev, isAnalyzing: false }));
     }
   }, [alarms, state.isAnalyzing]);
 
   const updateStats = useCallback(() => {
     const stats = criticalPreloader.getStats();
-
-    setState((prev: CriticalPreloadingState) => ({ ...prev, stats }));
+    setState((prev: any) => ({ // auto: implicit any ...prev, stats }));
   }, []);
 
   // Initial analysis and periodic re-analysis
@@ -125,8 +122,8 @@ export function useAlarmReadiness(alarmId: string, enabled: boolean = true) {
         ...status,
         lastChecked: new Date(),
       });
-    } catch (_error) {
-      console._error(`Error checking readiness for alarm ${alarmId}:`, _error);
+    } catch (error) {
+      console.error(`Error checking readiness for alarm ${alarmId}:`, error);
     }
   }, [alarmId, enabled]);
 
@@ -157,8 +154,8 @@ export function useEmergencyPreloading() {
 
       try {
         await criticalPreloader.emergencyPreload(alarmIds);
-      } catch (_error) {
-        console._error('Emergency preload failed:', _error);
+      } catch (error) {
+        console.error('Emergency preload failed:', error);
       } finally {
         setIsEmergencyPreloading(false);
       }
@@ -321,7 +318,7 @@ export function usePreloadPerformance() {
       setPerformance(newPerformance);
 
       // Update history
-      setPerformanceHistory((prev: PerformanceHistoryEntry[]) => {
+      setPerformanceHistory((prev: any) => { // auto
         const newEntry = {
           timestamp: new Date(),
           successRate: stats.successRate,
@@ -369,7 +366,7 @@ export function usePreloadDebugging() {
       setDebugInfo({
         queueSize: stats.totalAssets,
         activeLoads: 0, // This would need to be exposed from the preloader
-        lastError: null, // This would need _error tracking
+        lastError: null, // This would need error tracking
         criticalAssetsCount: assetStatus.length,
         nextPreloadTime: nextAsset
           ? new Date(Date.now() + nextAsset.timeUntilPreload * 60000)

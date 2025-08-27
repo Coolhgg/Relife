@@ -254,7 +254,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
         themeDescription || `Custom theme based on ${baseTheme}`;
 
       setCurrentEditingTheme(customTheme);
-      setSavedThemes((prev: unknown) => [...prev, customTheme]);
+      setSavedThemes((prev: any) => [...prev, customTheme]);
 
       // Save to localStorage
       const savedCustomThemes = JSON.parse(
@@ -262,8 +262,8 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
       );
       savedCustomThemes.push(customTheme);
       localStorage.setItem('custom-themes', JSON.stringify(savedCustomThemes));
-    } catch (_error) {
-      console._error('Error generating custom theme:', _error);
+    } catch (error) {
+      console.error('Error generating custom theme:', error);
       alert('Failed to generate theme. Please try again.');
     } finally {
       setIsGeneratingTheme(false);
@@ -306,7 +306,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
   };
 
   const handleColorChange = (colorKey: keyof ColorPaletteState, color: string) => {
-    setColorPalette((prev: unknown) => ({
+    setColorPalette((prev: any) => ({ // auto: implicit any
       ...prev,
       [colorKey]: color,
     }));
@@ -341,9 +341,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
       <input
         type="color"
         value={color}
-        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-          onChange(e.target.value)
-        }
+        onChange={(e: any) => o // auto: implicit anynChange(e.target.value)}
         className="w-full h-32 rounded-md border border-gray-200 cursor-pointer"
       />
       <div className="mt-3 flex gap-2">
@@ -370,9 +368,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
         <input
           type="text"
           value={color}
-          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-            onChange(e.target.value)
-          }
+          onChange={(e: any) => o // auto: implicit anynChange(e.target.value)}
           className="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="#000000"
         />
@@ -490,9 +486,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
                 <span>Based on</span>
                 <select
                   value={baseTheme}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                    setBaseTheme(e.target.value as Theme)
-                  }
+                  onChange={(e: any) => s // auto: implicit anyetBaseTheme(e.target.value as Theme)}
                   className="px-3 py-1 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="light">Light Theme</option>
@@ -553,9 +547,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
                     <input
                       type="text"
                       value={themeName}
-                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                        setThemeName(e.target.value)
-                      }
+                      onChange={(e: any) => s // auto: implicit anyetThemeName(e.target.value)}
                       placeholder="My Awesome Theme"
                       className="w-full px-3 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
@@ -566,9 +558,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
                     </label>
                     <textarea
                       value={themeDescription}
-                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                        setThemeDescription(e.target.value)
-                      }
+                      onChange={(e: any) => s // auto: implicit anyetThemeDescription(e.target.value)}
                       placeholder="Describe your theme..."
                       rows={3}
                       className="w-full px-3 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
@@ -621,7 +611,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
                         <input
                           type="text"
                           value={color}
-                          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                          onChange={(e: any) => // auto: implicit any
                             handleColorChange(
                               key as keyof ColorPaletteState,
                               e.target.value
@@ -633,7 +623,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) 
                       {showColorPicker === key && (
                         <ColorPicker
                           color={color}
-                          onChange={(newColor: unknown) =>
+                          onChange={(newColor: any) => // auto: implicit any
                             handleColorChange(key as keyof ColorPaletteState, newColor)
                           }
                           onClose={() => setShowColorPicker(null)}

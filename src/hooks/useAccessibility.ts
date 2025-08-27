@@ -36,8 +36,7 @@ export const useAccessibility = () => {
     setIsInitialized(true);
 
     // Subscribe to changes
-    const unsubscribe = accessibilityService.current.subscribe((newPrefs: any) => {
-      // auto
+    const unsubscribe = accessibilityService.current.subscribe((newPrefs: any) => { // auto
       setPreferences(newPrefs);
       setState(accessibilityService.current!.getState());
     });
@@ -231,7 +230,7 @@ export const useAccessibleTooltip = () => {
   }, []);
 
   const removeAllTooltips = useCallback(() => {
-    tooltipCleanupRef.current.forEach((cleanup: any) => cleanup());
+    tooltipCleanupRef.current.forEach((cleanup: any) => c // auto: implicit anyleanup());
     tooltipCleanupRef.current.clear();
   }, []);
 
@@ -499,13 +498,13 @@ export const useKeyboardNavigation = () => {
 
   const handleKeyboardNavigation = useCallback(
     (
-      _event: React.KeyboardEvent,
+      event: React.KeyboardEvent,
       items: HTMLElement[],
-      onSelect?: (_index: number) => void
+      onSelect?: (index: number) => void
     ) => {
       if (!preferences.keyboardNavigation) return;
 
-      switch (_event.key) {
+      switch (event.key) {
         case 'ArrowDown':
         case 'ArrowRight':
           event.preventDefault();

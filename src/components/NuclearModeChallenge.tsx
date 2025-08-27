@@ -4,17 +4,16 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Progress } from './ui/progress';
 import { Badge } from './ui/badge';
-import { AlertTriangle, AlertDescription } from './ui/alert';
+import { Alert, AlertDescription } from './ui/alert';
 import { Separator } from './ui/separator';
 import { Label } from './ui/label';
 import {
-  Alert,
   Zap,
   Clock,
   Target,
   CheckCircle,
   XCircle,
-  AlertTriangle,
+  Alert,
   Brain,
   Camera,
   Mic,
@@ -42,7 +41,7 @@ import { TimeoutHandle } from '../types/timers';
 interface NuclearModeChallengeProps {
   session: NuclearModeSession;
   currentChallenge: NuclearModeChallenge;
-  onChallengeComplete: (successful: boolean, data?: unknown) => void;
+  onChallengeComplete: (successful: boolean, data?: any) => void;
   onSessionComplete: () => void;
   onSessionFailed: () => void;
   className?: string;
@@ -51,7 +50,7 @@ interface NuclearModeChallengeProps {
 // Math Challenge Component
 const MathChallenge: React.FC<{
   challenge: NuclearModeChallenge;
-  onComplete: (success: boolean, data: unknown) => void;
+  onComplete: (success: boolean, data: any) => void;
 }> = ({ challenge, onComplete }) => {
   const [problems, setProblems] = useState<
     Array<{
@@ -136,14 +135,10 @@ const MathChallenge: React.FC<{
       if (newErrors >= 2) {
         // Reset sequence on too many errors
         setCurrentProblem(0);
-
-        setProblems(
-          problems.map((p: unknown) => ({
-            ...p,
-            userAnswer: '',
-            correct: undefined,
-          }))
-        );
+        setProblems(problems.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
         setErrors(0);
         setUserAnswer('');
         return;
@@ -181,15 +176,11 @@ const MathChallenge: React.FC<{
           <Input
             type="number"
             value={userAnswer}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setUserAnswer(e.target.value)
-            }
+            onChange={(e: any) => s // auto: implicit anyetUserAnswer(e.target.value)}
             placeholder="Enter your answer"
             className="text-center text-2xl h-16"
             autoFocus
-            onKeyPress={(e: React.SyntheticEvent) =>
-              e.key === 'Enter' && handleSubmit()
-            }
+            onKeyPress={(e: any) => e.key === 'Enter' && handleSubmit()}
           />
 
           <Button
@@ -204,10 +195,10 @@ const MathChallenge: React.FC<{
 
       {errors > 0 && (
         <Alert className="border-red-200 bg-red-50">
-          <AlertTriangle className="w-4 h-4 text-red-600" />
+          <Alert className="w-4 h-4 text-red-600" />
           <AlertDescription className="text-red-800">
             {errors} error{errors !== 1 ? 's' : ''} made.
-            {errors >= 1 && ' One more _error will reset the sequence!'}
+            {errors >= 1 && ' One more error will reset the sequence!'}
           </AlertDescription>
         </Alert>
       )}
@@ -218,7 +209,7 @@ const MathChallenge: React.FC<{
 // Memory Challenge Component
 const MemoryChallenge: React.FC<{
   challenge: NuclearModeChallenge;
-  onComplete: (success: boolean, data: unknown) => void;
+  onComplete: (success: boolean, data: any) => void;
 }> = ({ challenge, onComplete }) => {
   const [sequence, setSequence] = useState<number[]>([]);
   const [userSequence, setUserSequence] = useState<number[]>([]);
@@ -273,7 +264,7 @@ const MemoryChallenge: React.FC<{
         round: currentRound,
         sequence,
         userSequence: newUserSequence,
-        _error: 'wrong_sequence',
+        error: 'wrong_sequence',
       });
       return;
     }
@@ -327,9 +318,9 @@ const MemoryChallenge: React.FC<{
       </div>
 
       <div className="grid grid-cols-3 gap-4 max-w-md mx-auto">
-        {colors.map((color, _index) => (
+        {colors.map((color, index) => (
           <button
-            key={_index}
+            key={index}
             className={cn(
               'w-20 h-20 rounded-lg border-4 transition-all transform',
               color,
@@ -338,11 +329,11 @@ const MemoryChallenge: React.FC<{
                 : 'cursor-not-allowed',
               showingSequence &&
                 sequence[Math.floor((Date.now() % (sequence.length * 800)) / 800)] ===
-                  _index
+                  index
                 ? 'scale-110 border-white shadow-lg'
                 : 'border-gray-300'
             )}
-            onClick={() => handleColorClick(_index)}
+            onClick={() => handleColorClick(index)}
             disabled={gameState !== 'input'}
           />
         ))}
@@ -352,8 +343,8 @@ const MemoryChallenge: React.FC<{
         <div className="text-center">
           <div className="text-sm text-gray-600 mb-2">Your sequence:</div>
           <div className="flex gap-2 justify-center">
-            {userSequence.map((colorIndex, _index) => (
-              <div key={_index} className={cn('w-6 h-6 rounded', colors[colorIndex])} />
+            {userSequence.map((colorIndex, index) => (
+              <div key={index} className={cn('w-6 h-6 rounded', colors[colorIndex])} />
             ))}
           </div>
         </div>
@@ -365,7 +356,7 @@ const MemoryChallenge: React.FC<{
 // Photo Challenge Component
 const PhotoChallenge: React.FC<{
   challenge: NuclearModeChallenge;
-  onComplete: (success: boolean, data: unknown) => void;
+  onComplete: (success: boolean, data: any) => void;
 }> = ({ challenge, onComplete }) => {
   const [photosTaken, setPhotosTaken] = useState<File[]>([]);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
@@ -390,7 +381,7 @@ const PhotoChallenge: React.FC<{
     },
   ];
 
-  const handlePhotoCapture = (_event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoCapture = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       const newPhotos = [...photosTaken, file];
@@ -452,8 +443,8 @@ const PhotoChallenge: React.FC<{
           <div className="mt-6">
             <h5 className="text-sm font-medium text-gray-700 mb-2">Photos taken:</h5>
             <div className="flex gap-2 justify-center">
-              {photosTaken.map((_, _index) => (
-                <CheckCircle key={_index} className="w-6 h-6 text-green-500" />
+              {photosTaken.map((_, index) => (
+                <CheckCircle key={index} className="w-6 h-6 text-green-500" />
               ))}
             </div>
           </div>
@@ -466,7 +457,7 @@ const PhotoChallenge: React.FC<{
 // Voice Challenge Component
 const VoiceChallenge: React.FC<{
   challenge: NuclearModeChallenge;
-  onComplete: (success: boolean, data: unknown) => void;
+  onComplete: (success: boolean, data: any) => void;
 }> = ({ challenge, onComplete }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [currentPhrase, setCurrentPhrase] = useState(0);
@@ -558,18 +549,18 @@ const VoiceChallenge: React.FC<{
 
         {completedPhrases.length > 0 && (
           <div className="space-y-2">
-            {tongueTwisters.slice(0, currentPhrase + 1).map((phrase, _index) => (
-              <div key={_index} className="flex items-center gap-2 text-sm">
-                {completedPhrases[_index] ? (
+            {tongueTwisters.slice(0, currentPhrase + 1).map((phrase, index) => (
+              <div key={index} className="flex items-center gap-2 text-sm">
+                {completedPhrases[index] ? (
                   <CheckCircle className="w-5 h-5 text-green-500" />
-                ) : _index === currentPhrase ? (
+                ) : index === currentPhrase ? (
                   <Clock className="w-5 h-5 text-yellow-500" />
                 ) : (
                   <XCircle className="w-5 h-5 text-red-500" />
                 )}
                 <span
                   className={
-                    completedPhrases[_index] ? 'text-green-600' : 'text-gray-600'
+                    completedPhrases[index] ? 'text-green-600' : 'text-gray-600'
                   }
                 >
                   {phrase}
@@ -598,7 +589,7 @@ export const NuclearModeChallenge: React.FC<NuclearModeChallengeProps> = ({
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeRemaining((prev: unknown) => {
+      setTimeRemaining((prev: any) => { // auto
         if (prev <= 1) {
           // Time's up!
           onChallengeComplete(false, { reason: 'timeout' });
@@ -770,7 +761,7 @@ export const NuclearModeChallenge: React.FC<NuclearModeChallengeProps> = ({
 
         {/* Warning */}
         <Alert className="mt-6 max-w-2xl mx-auto border-red-200 bg-red-50">
-          <AlertTriangle className="w-4 h-4 text-red-600" />
+          <Alert className="w-4 h-4 text-red-600" />
           <AlertDescription className="text-red-800">
             Nuclear Mode is active. You must complete all challenges to dismiss the
             alarm. Snoozing is disabled.

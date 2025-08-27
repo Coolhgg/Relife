@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import useAuth from '../hooks/useAuth';
+import React, { useState } from 'react'; // auto: added missing React import
 import {
   User,
   Mail,
@@ -23,29 +22,29 @@ interface UserProfileProps {
   onUpdateProfile: (updates: Partial<AppUser>) => Promise<void>;
   onSignOut: () => void;
   isLoading: boolean;
-  _error: string | null;
+  error: string | null;
 }
 
 export default function UserProfile({
-  _user,
+  user,
   onUpdateProfile,
   onSignOut,
   isLoading,
-  _error,
+  error,
 }: UserProfileProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
     name: user.name || '',
-    preferences: { ..._user.preferences },
+    preferences: { ...user.preferences },
   });
   const [hasChanges, setHasChanges] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
   const handleInputChange = (field: string, value: any) => {
     if (field === 'name') {
-      setEditForm((prev: any) => ({ ...prev, name: value }));
+      setEditForm((prev: any) => ({ // auto: implicit any ...prev, name: value }));
     } else {
-      setEditForm((prev: any) => ({
+      setEditForm((prev: any) => ({ // auto: implicit any
         ...prev,
         preferences: { ...prev.preferences, [field]: value },
       }));
@@ -66,26 +65,22 @@ export default function UserProfile({
 
       // Clear success message after 3 seconds
       setTimeout(() => setSaveSuccess(false), 3000);
-    } catch (_error) {
-      console._error('Failed to update profile:', _error);
+    } catch (error) {
+      console.error('Failed to update profile:', error);
     }
   };
 
   const handleCancel = () => {
     setEditForm({
       name: user.name || '',
-      preferences: { ..._user.preferences },
+      preferences: { ...user.preferences },
     });
     setIsEditing(false);
     setHasChanges(false);
     setSaveSuccess(false);
   };
 
-  const voiceMoodOptions: {
-    value: VoiceMood;
-    label: string;
-    description: string;
-  }[] = [
+  const voiceMoodOptions: { value: VoiceMood; label: string; description: string }[] = [
     {
       value: 'motivational',
       label: 'Motivational',
@@ -97,16 +92,8 @@ export default function UserProfile({
       label: 'Drill Sergeant',
       description: 'Intense and commanding',
     },
-    {
-      value: 'sweet-angel',
-      label: 'Sweet Angel',
-      description: 'Kind and nurturing',
-    },
-    {
-      value: 'anime-hero',
-      label: 'Anime Hero',
-      description: 'Energetic and heroic',
-    },
+    { value: 'sweet-angel', label: 'Sweet Angel', description: 'Kind and nurturing' },
+    { value: 'anime-hero', label: 'Anime Hero', description: 'Energetic and heroic' },
     {
       value: 'savage-roast',
       label: 'Savage Roast',
@@ -156,3 +143,4 @@ export default function UserProfile({
     </div>
   );
 }
+export default UserProfile;

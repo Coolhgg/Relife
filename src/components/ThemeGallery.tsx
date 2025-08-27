@@ -236,8 +236,8 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
           })
         );
         setCustomThemes(customThemeCards);
-      } catch (_error) {
-        console._error('Failed to load custom themes:', _error);
+      } catch (error) {
+        console.error('Failed to load custom themes:', error);
       }
     }
   }, [favorites]);
@@ -266,9 +266,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
       searchQuery &&
       !theme.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
       !theme.description.toLowerCase().includes(searchQuery.toLowerCase()) &&
-      !theme.tags.some((tag: unknown) =>
-        tag.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+      !theme.tags.some((tag: any) => t // auto: implicit anyag.toLowerCase().includes(searchQuery.toLowerCase()))
     ) {
       return false;
     }
@@ -304,14 +302,14 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
   });
 
   const applyTheme = async (themeCard: ThemeCard) => {
-    if (themeCard.isCustom && themeCard._config) {
+    if (themeCard.isCustom && themeCard.config) {
       // Apply custom theme
       try {
         await saveThemePreset({
           id: themeCard.config.id,
           name: themeCard.config.displayName,
-          description: themeCard._config.description,
-          theme: themeCard._config.baseTheme || 'light',
+          description: themeCard.config.description,
+          theme: themeCard.config.baseTheme || 'light',
           personalization: {},
           preview: themeCard.preview,
           tags: themeCard.tags,
@@ -319,9 +317,9 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
           isPremium: false,
           popularityScore: 0,
         });
-        setTheme(themeCard._config.name as Theme);
-      } catch (_error) {
-        console._error('Failed to apply custom theme:', _error);
+        setTheme(themeCard.config.name as Theme);
+      } catch (error) {
+        console.error('Failed to apply custom theme:', error);
         alert('Failed to apply theme. Please try again.');
       }
     } else {
@@ -331,20 +329,19 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
   };
 
   const deleteCustomTheme = (themeId: string) => {
-    const updatedThemes = customThemes.filter((t: unknown) => t.id !== themeId);
+    const updatedThemes = customThemes.filter((t: any) => t.id !== themeId);
     setCustomThemes(updatedThemes);
 
     // Update localStorage
-
-    const savedThemes = updatedThemes.map((t: unknown) => t._config).filter(Boolean);
+    const savedThemes = updatedThemes.map((t: any) => t.config).filter(Boolean);
     localStorage.setItem('custom-themes', JSON.stringify(savedThemes));
 
     setShowDeleteConfirm(null);
   };
 
   const duplicateTheme = (themeCard: ThemeCard) => {
-    if (onEditTheme && themeCard._config) {
-      onEditTheme(themeCard._config);
+    if (onEditTheme && themeCard.config) {
+      onEditTheme(themeCard.config);
     }
   };
 
@@ -410,9 +407,9 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
             <Eye size={14} />
             <span className="text-xs">Apply</span>
           </button>
-          {themeCard.isCustom && onEditTheme && themeCard._config && (
+          {themeCard.isCustom && onEditTheme && themeCard.config && (
             <button
-              onClick={() => onEditTheme(themeCard._config!)}
+              onClick={() => onEditTheme(themeCard.config!)}
               className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition-colors"
             >
               <Edit3 size={14} />
@@ -451,8 +448,10 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
         {/* Tags */}
         {!isCompact && (
           <div className="flex flex-wrap gap-1 mb-3">
-            {}
-            {themeCard.tags.slice(0, 3).map((tag: unknown) => (
+            {themeCard.tags.slice(0, 3).map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
               <span
                 key={tag}
                 className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full"
@@ -550,9 +549,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
             type="text"
             placeholder="Search themes..."
             value={searchQuery}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setSearchQuery(e.target.value)
-            }
+            onChange={(e: any) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -561,9 +558,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
         <div className="flex gap-2">
           <select
             value={selectedCategory}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setSelectedCategory(e.target.value)
-            }
+            onChange={(e: any) => setSelectedCategory(e.target.value)}
             className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             {categories.map(category => (
@@ -575,9 +570,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
 
           <select
             value={sortBy}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setSortBy(e.target.value as unknown)
-            }
+            onChange={(e: any) => setSortBy(e.target.value as any)}
             className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="name">Sort by Name</option>

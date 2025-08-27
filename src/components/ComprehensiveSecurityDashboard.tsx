@@ -59,7 +59,7 @@ interface SecurityAlert {
 const ComprehensiveSecurityDashboard: React.FC = () => {
   const [securityStatus, setSecurityStatus] = useState<SecurityStatus | null>(null);
   const [activeAlerts, setActiveAlerts] = useState<SecurityAlert[]>([]);
-  const [diagnosticsResults, setDiagnosticsResults] = useState<unknown>(null);
+  const [diagnosticsResults, setDiagnosticsResults] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState<
     'overview' | 'alerts' | 'diagnostics' | 'backup'
@@ -77,13 +77,13 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
 
   useEffect(() => {
     // Listen for real-time security events
-    const handleSecurityAlert = (_event: unknown) => {
-      console.log('New security alert:', _event.detail);
+    const handleSecurityAlert = (event: any) => {
+      console.log('New security alert:', event.detail);
       loadSecurityData(); // Refresh data when new alerts come in
     };
 
-    const handleTamperDetection = (_event: unknown) => {
-      console._error('Tamper detection:', _event.detail);
+    const handleTamperDetection = (event: any) => {
+      console.error('Tamper detection:', event.detail);
       loadSecurityData();
     };
 
@@ -107,8 +107,8 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
       // Load active alerts
       const alerts = await SecurityMonitoringForensicsService.getActiveAlerts();
       setActiveAlerts(alerts);
-    } catch (_error) {
-      console._error('Failed to load security data:', _error);
+    } catch (error) {
+      console.error('Failed to load security data:', error);
     } finally {
       setLoading(false);
     }
@@ -119,8 +119,8 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
       setLoading(true);
       const results = await AlarmSecurityIntegrationService.runSecurityDiagnostics();
       setDiagnosticsResults(results);
-    } catch (_error) {
-      console._error('Failed to run diagnostics:', _error);
+    } catch (error) {
+      console.error('Failed to run diagnostics:', error);
     } finally {
       setLoading(false);
     }
@@ -130,8 +130,8 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
     try {
       await SecurityMonitoringForensicsService.acknowledgeAlert(alertId);
       await loadSecurityData();
-    } catch (_error) {
-      console._error('Failed to acknowledge alert:', _error);
+    } catch (error) {
+      console.error('Failed to acknowledge alert:', error);
     }
   };
 
@@ -139,8 +139,8 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
     try {
       await SecurityMonitoringForensicsService.resolveAlert(alertId);
       await loadSecurityData();
-    } catch (_error) {
-      console._error('Failed to resolve alert:', _error);
+    } catch (error) {
+      console.error('Failed to resolve alert:', error);
     }
   };
 
@@ -271,9 +271,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
                 <input
                   type="checkbox"
                   checked={autoRefresh}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setAutoRefresh(e.target.checked)
-                  }
+                  onChange={(e: any) => s // auto: implicit anyetAutoRefresh(e.target.checked)}
                   className="alarm-toggle rounded border-white/30 text-primary-500 focus:ring-primary-300 bg-white/10"
                   aria-describedby="auto-refresh-desc"
                 />
@@ -388,9 +386,9 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
                   Security Recommendations
                 </h3>
                 <ul className="space-y-2" role="list">
-                  {securityStatus.recommendations.map((rec, _index) => (
+                  {securityStatus.recommendations.map((rec, index) => (
                     <li
-                      key={_index}
+                      key={index}
                       className="text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2"
                       role="listitem"
                     >
@@ -439,7 +437,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
             ].map(({ key, label, icon: Icon, desc }) => (
               <button
                 key={key}
-                onClick={() => setSelectedTab(key as unknown)}
+                onClick={() => setSelectedTab(key as any)}
                 role="tab"
                 aria-selected={selectedTab === key}
                 aria-controls={`${key}-panel`}
@@ -590,7 +588,10 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                {activeAlerts.map((alert: unknown) => (
+                {activeAlerts.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
                   <div
                     key={alert.id}
                     className="alarm-card glass-card backdrop-blur-lg border hover:transform hover:scale-[1.02] transition-all"
@@ -706,7 +707,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
                   <h5 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                     Diagnostic Tests
                   </h5>
-                  {diagnosticsResults.tests.map((test: unknown, _index: number) => {
+                  {diagnosticsResults.tests.map((test: any, index: number) => {
                     const isHealthy = ['passed', 'healthy', 'active'].includes(
                       test.status
                     );
@@ -714,7 +715,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
 
                     return (
                       <div
-                        key={_index}
+                        key={index}
                         className={`glass-card flex items-start space-x-4 p-4 backdrop-blur-sm border ${
                           isHealthy
                             ? 'border-green-200/50 bg-green-50/50 dark:bg-green-900/10 dark:border-green-700/30'

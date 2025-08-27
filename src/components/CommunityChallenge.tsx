@@ -5,7 +5,6 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { config } from '../config/environment';
 import {
   Users,
   Trophy,
@@ -146,7 +145,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
     isUserChallenge?: boolean;
   }) => {
     const config = CHALLENGE_TYPE_CONFIGS[challenge.challengeType];
-    const IconComponent = _config.icon;
+    const IconComponent = config.icon;
     const isActive = challenge.status === 'active';
     const timeRemaining = formatTimeRemaining(challenge.endDate);
 
@@ -163,9 +162,9 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
               <div className="flex items-start gap-3">
                 <div
                   className="w-12 h-12 rounded-lg flex items-center justify-center"
-                  style={{ backgroundColor: `${_config.color}15` }}
+                  style={{ backgroundColor: `${config.color}15` }}
                 >
-                  <IconComponent className="w-6 h-6" style={{ color: _config.color }} />
+                  <IconComponent className="w-6 h-6" style={{ color: config.color }} />
                 </div>
                 <div className="flex-1">
                   <CardTitle className="text-lg mb-1">{challenge.title}</CardTitle>
@@ -253,7 +252,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                   <span className="text-sm font-medium">Top Performers</span>
                 </div>
                 <div className="flex -space-x-2">
-                  {challenge.leaderboard.slice(0, 3).map((leader, _index) => (
+                  {challenge.leaderboard.slice(0, 3).map((leader, index) => (
                     <motion.div
                       key={leader.userId}
                       className="relative"
@@ -264,7 +263,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                           {leader.username.charAt(0).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
-                      {_index === 0 && (
+                      {index === 0 && (
                         <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-500 rounded-full flex items-center justify-center">
                           <Crown className="w-2 h-2 text-white" />
                         </div>
@@ -318,7 +317,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                     onJoinChallenge?.(challenge);
                   }}
                   disabled={challenge.currentParticipants >= challenge.maxParticipants}
-                  style={{ backgroundColor: _config.color }}
+                  style={{ backgroundColor: config.color }}
                 >
                   <Users className="w-4 h-4 mr-2" />
                   {challenge.currentParticipants >= challenge.maxParticipants
@@ -388,7 +387,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                 <select
                   className="text-sm bg-background border rounded px-2 py-1"
                   value={selectedType}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  onChange={(e: any) => // auto: implicit any
                     setSelectedType(e.target.value as SocialChallengeType | 'all')
                   }
                 >
@@ -404,7 +403,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                 <select
                   className="text-sm bg-background border rounded px-2 py-1"
                   value={selectedDifficulty}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  onChange={(e: any) => // auto: implicit any
                     setSelectedDifficulty(
                       e.target.value as 'all' | 'easy' | 'medium' | 'hard'
                     )
@@ -420,7 +419,10 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
               {/* Challenge Grid */}
               <div className="grid md:grid-cols-2 gap-4">
                 <AnimatePresence>
-                  {filteredChallenges.map((challenge: any) => (
+                  {filteredChallenges.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
                     <motion.div
                       key={challenge.id}
                       layout
@@ -454,7 +456,10 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
           {activeTab === 'joined' && (
             <>
               <div className="grid md:grid-cols-2 gap-4">
-                {userChallenges.map((challenge: any) => (
+                {userChallenges.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
                   <ChallengeCard
                     key={challenge.id}
                     challenge={challenge}

@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
-import { Button } from './ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Badge } from './ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-// Replaced stub import with proper implementation
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from './ui/dialog';
+} from '@/components/ui/dialog';
 import {
   Users,
   UserPlus,
@@ -33,7 +32,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from './ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu';
 import { useGamingAnnouncements } from '../hooks/useGamingAnnouncements';
 import type { User as UserType, UserStats, Friendship } from '../types/index';
 
@@ -236,7 +235,7 @@ export function FriendsManager({
 
   const filteredFriends = MOCK_FRIENDS.filter(
     friend =>
-      friend._user.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      friend.user.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       friend.user.username.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -306,7 +305,7 @@ export function FriendsManager({
                         <div>
                           <div className="text-sm font-medium">{user.displayName}</div>
                           <div className="text-xs text-muted-foreground">
-                            Level {_user.level}
+                            Level {user.level}
                           </div>
                         </div>
                       </div>
@@ -314,8 +313,8 @@ export function FriendsManager({
                         size="sm"
                         variant="outline"
                         onClick={() => {
-                          announceFriendEvent('request-sent', _user);
-                          onSendFriendRequest?.(_user.username);
+                          announceFriendEvent('request-sent', user);
+                          onSendFriendRequest?.(user.username);
                         }}
                         aria-label={`Send friend request to ${user.displayName}`}
                       >
@@ -365,9 +364,7 @@ export function FriendsManager({
             <Input
               placeholder="Search friends..."
               value={searchQuery}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setSearchQuery(e.target.value)
-              }
+              onChange={(e: any) => setSearchQuery(e.target.value)}
               className="pl-10"
             />
           </div>
@@ -381,7 +378,7 @@ export function FriendsManager({
                     <div className="flex items-center gap-3">
                       <div className="relative">
                         <Avatar>
-                          <AvatarFallback>{friend._user.displayName[0]}</AvatarFallback>
+                          <AvatarFallback>{friend.user.displayName[0]}</AvatarFallback>
                         </Avatar>
                         {friend.isOnline && (
                           <div className="absolute -bottom-1 -right-1 h-3 w-3 bg-green-500 rounded-full border-2 border-background" />
@@ -391,7 +388,7 @@ export function FriendsManager({
                         <div className="font-medium">{friend.user.displayName}</div>
                         <div className="text-sm text-muted-foreground">
                           Level {friend.user.level} •{' '}
-                          {formatLastActive(friend._user.lastActive)}
+                          {formatLastActive(friend.user.lastActive)}
                         </div>
                         <div className="flex items-center gap-4 mt-1">
                           <span
@@ -416,13 +413,13 @@ export function FriendsManager({
                       <Button
                         size="sm"
                         onClick={() => {
-                          announceFriendEvent('added', friend._user);
+                          announceFriendEvent('added', friend.user);
                           announceGaming({
                             type: 'battle',
-                            customMessage: `Challenge sent to ${friend._user.displayName}!`,
+                            customMessage: `Challenge sent to ${friend.user.displayName}!`,
                             priority: 'polite',
                           });
-                          onChallengeFriend?.(friend._user.id);
+                          onChallengeFriend?.(friend.user.id);
                         }}
                         className="gap-1"
                         aria-label={`Challenge ${friend.user.displayName} to a battle`}
@@ -442,7 +439,7 @@ export function FriendsManager({
                               setSelectedFriend(friend);
                               announceGaming({
                                 type: 'friend',
-                                customMessage: `Viewing ${friend.user.displayName}'s profile. Level ${friend._user.level}. Win rate: ${Math.round(friend.stats.winRate * 100)}%. Current streak: ${friend.stats.currentStreak}.`,
+                                customMessage: `Viewing ${friend.user.displayName}'s profile. Level ${friend.user.level}. Win rate: ${Math.round(friend.stats.winRate * 100)}%. Current streak: ${friend.stats.currentStreak}.`,
                                 priority: 'polite',
                               });
                             }}
@@ -456,7 +453,7 @@ export function FriendsManager({
                           <DropdownMenuItem
                             className="text-destructive"
                             onClick={() => {
-                              announceFriendEvent('removed', friend._user);
+                              announceFriendEvent('removed', friend.user);
                             }}
                           >
                             Remove Friend
@@ -485,7 +482,7 @@ export function FriendsManager({
                         <div>
                           <div className="font-medium">{request.user.displayName}</div>
                           <div className="text-sm text-muted-foreground">
-                            Level {request._user.level} • Sent{' '}
+                            Level {request.user.level} • Sent{' '}
                             {formatLastActive(request.sentAt)}
                           </div>
                         </div>
@@ -495,7 +492,7 @@ export function FriendsManager({
                         <Button
                           size="sm"
                           onClick={() => {
-                            announceFriendEvent('added', request._user);
+                            announceFriendEvent('added', request.user);
                             onAcceptFriendRequest?.(request.id);
                           }}
                           aria-label={`Accept friend request from ${request.user.displayName}`}
@@ -506,7 +503,7 @@ export function FriendsManager({
                           size="sm"
                           variant="outline"
                           onClick={() => {
-                            announceFriendEvent('removed', request._user);
+                            announceFriendEvent('removed', request.user);
                             onRejectFriendRequest?.(request.id);
                           }}
                           aria-label={`Reject friend request from ${request.user.displayName}`}
@@ -559,7 +556,7 @@ export function FriendsManager({
               },
             ]
               .sort((a, b) => b.stats.winRate - a.stats.winRate)
-              .map((friend, _index) => (
+              .map((friend, index) => (
                 <Card
                   key={friend.user.id}
                   className={
@@ -572,7 +569,7 @@ export function FriendsManager({
                     <div className="flex items-center gap-3">
                       <div className="flex items-center gap-3">
                         <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted font-bold text-sm">
-                          {_index + 1}
+                          {index + 1}
                         </div>
                         <Avatar>
                           <AvatarFallback>{friend.user.displayName[0]}</AvatarFallback>
@@ -581,10 +578,10 @@ export function FriendsManager({
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           <span className="font-medium">{friend.user.displayName}</span>
-                          {friend._user.id === currentUser.id && (
+                          {friend.user.id === currentUser.id && (
                             <Badge variant="secondary">You</Badge>
                           )}
-                          {_index === 0 && <Star className="h-4 w-4 text-yellow-500" />}
+                          {index === 0 && <Star className="h-4 w-4 text-yellow-500" />}
                         </div>
                         <div className="text-sm text-muted-foreground">
                           Level {friend.user.level} •{' '}
@@ -625,7 +622,7 @@ export function FriendsManager({
                     {selectedFriend.user.displayName}
                   </h3>
                   <p className="text-muted-foreground">
-                    Level {selectedFriend._user.level}
+                    Level {selectedFriend.user.level}
                   </p>
                   <div className="flex justify-center gap-2 mt-2">
                     <Badge variant={selectedFriend.isOnline ? 'default' : 'secondary'}>
@@ -668,7 +665,7 @@ export function FriendsManager({
                   <Button
                     className="flex-1 gap-2"
                     onClick={() => {
-                      onChallengeFriend?.(selectedFriend._user.id);
+                      onChallengeFriend?.(selectedFriend.user.id);
                       setSelectedFriend(null);
                     }}
                   >

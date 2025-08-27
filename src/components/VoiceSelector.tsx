@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Crown, Play, Lock, Info, Volume2, Star, Heart } from 'lucide-react';
+import { Crown, Play, Lock, Info, Volume2, Star, Heart, Zap } from 'lucide-react';
 import type { VoiceMood, VoiceMoodConfig, VoicePersonality, User } from '../types';
 import { PremiumVoiceService } from '../services/premium-voice';
 import { PremiumService } from '../services/premium';
 import { TimeoutHandle } from '../types/timers';
-// auto: restored by scout - verify import path
-import { Zap } from 'lucide-react';
-// auto: restored by scout - verify import path
-import { Zap } from 'lucide-react';
-import useAuth from '../hooks/useAuth';
-// Removed generic stub import - using specific implementations as needed
 
 interface VoiceSelectorProps {
   selectedVoice: VoiceMood;
@@ -49,8 +43,8 @@ const VoiceCard: React.FC<VoiceCardProps> = ({
       setTimeout(() => {
         setIsTestingVoice(false);
       }, 3000);
-    } catch (_error) {
-      console._error('Error testing voice:', _error);
+    } catch (error) {
+      console.error('Error testing voice:', error);
       setIsTestingVoice(false);
     }
   };
@@ -129,7 +123,10 @@ const VoiceCard: React.FC<VoiceCardProps> = ({
         {personality && personality.characteristics.length > 0 && (
           <div className="mb-3">
             <div className="flex flex-wrap gap-1">
-              {personality.characteristics.slice(0, 3).map((characteristic: any) => (
+              {personality.characteristics.slice(0, 3).map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
                 <span
                   key={characteristic}
                   className={`px-2 py-1 rounded-full text-xs font-medium ${getCharacteristicColor(characteristic)}`}
@@ -191,7 +188,7 @@ const VoiceCard: React.FC<VoiceCardProps> = ({
 const VoiceSelector: React.FC<VoiceSelectorProps> = ({
   selectedVoice,
   onVoiceChange,
-  _user,
+  user,
   showUpgradePrompts = true,
 }) => {
   const [availableVoices, setAvailableVoices] = useState<VoiceMoodConfig[]>([]);
@@ -208,17 +205,17 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
   const loadAvailableVoices = async () => {
     try {
       setLoading(true);
-      const voices = await PremiumVoiceService.getAvailableVoices(_user.id);
+      const voices = await PremiumVoiceService.getAvailableVoices(user.id);
       setAvailableVoices(voices);
-    } catch (_error) {
-      console._error('Error loading available voices:', _error);
+    } catch (error) {
+      console.error('Error loading available voices:', error);
     } finally {
       setLoading(false);
     }
   };
 
   const handleVoiceSelect = async (voiceMood: VoiceMood) => {
-    const canAccess = await PremiumVoiceService.canAccessVoice(_user.id, voiceMood);
+    const canAccess = await PremiumVoiceService.canAccessVoice(user.id, voiceMood);
     if (canAccess) {
       onVoiceChange(voiceMood);
     }
@@ -226,9 +223,9 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
 
   const handleVoiceTest = async (voiceMood: VoiceMood) => {
     try {
-      await PremiumVoiceService.testPremiumVoice(voiceMood, _user.id);
-    } catch (_error) {
-      console._error('Error testing voice:', _error);
+      await PremiumVoiceService.testPremiumVoice(voiceMood, user.id);
+    } catch (error) {
+      console.error('Error testing voice:', error);
     }
   };
 
@@ -241,7 +238,7 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
   const getFilteredVoices = () => {
     if (filter === 'all') return availableVoices;
 
-    return availableVoices.filter((voice: any) => {
+    return availableVoices.filter((voice: any) => { // auto
       const personality = PremiumVoiceService.getVoicePersonality(voice.id);
       if (!personality) {
         return filter === 'free';
@@ -254,7 +251,7 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
     const filteredVoices = getFilteredVoices();
     const categories: Record<string, VoiceMoodConfig[]> = {};
 
-    filteredVoices.forEach((voice: any) => {
+    filteredVoices.forEach((voice: any) => { // auto
       const personality = PremiumVoiceService.getVoicePersonality(voice.id);
       const category = personality?.category || 'basic';
 
@@ -353,8 +350,7 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
               {voices.map(voice => {
                 const personality = PremiumVoiceService.getVoicePersonality(voice.id);
                 const isLocked =
-                  personality &&
-                  !availableVoices.some((av: any) => a.v.id === voice.id);
+                  personality && !availableVoices.some((av: any) => a // auto: implicit anyv.id === voice.id);
 
                 return (
                   <VoiceCard

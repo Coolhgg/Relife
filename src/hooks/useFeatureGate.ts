@@ -1,7 +1,7 @@
 // Feature Gate Hook for Relife Alarm App
 // Provides access control and upgrade prompts for premium features
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSubscription } from './useSubscription';
 import AnalyticsService from '../services/analytics';
 
@@ -34,125 +34,14 @@ interface FeatureGateActions {
 interface UseFeatureGateOptions {
   userId: string;
   feature: string;
-  _config?: Partial<FeatureGateConfig>;
+  config?: Partial<FeatureGateConfig>;
   onAccessDenied?: (result: FeatureGateResult) => void;
 }
-
-// Feature access definitions - moved outside component to avoid recreation on every render
-const FEATURE_DEFINITIONS: Record<
-  string,
-  {
-    category: string;
-    description: string;
-    upgradeMessage: string;
-    hasUsageLimit?: boolean;
-  }
-> = {
-  unlimited_alarms: {
-    requiredTier: 'basic',
-    category: 'alarms',
-    description: 'Set unlimited alarms',
-    upgradeMessage:
-      'Upgrade to Basic to set unlimited alarms and never miss an important wake-up call!',
-  },
-  custom_sounds: {
-    requiredTier: 'basic',
-    category: 'alarms',
-    description: 'Upload custom alarm sounds',
-    upgradeMessage:
-      'Upgrade to Basic to upload your own alarm sounds and wake up to your favorite tunes!',
-  },
-  alarm_battles: {
-    requiredTier: 'basic',
-    category: 'battles',
-    description: 'Join alarm battles',
-    upgradeMessage:
-      'Upgrade to Basic to participate in alarm battles and compete with friends!',
-    hasUsageLimit: true,
-  },
-  unlimited_battles: {
-    requiredTier: 'premium',
-    category: 'battles',
-    description: 'Unlimited battle participation',
-    upgradeMessage:
-      'Upgrade to Premium to join unlimited battles and become the ultimate early bird!',
-  },
-  smart_scheduling: {
-    requiredTier: 'premium',
-    category: 'ai',
-    description: 'AI-powered smart alarm scheduling',
-    upgradeMessage:
-      'Upgrade to Premium to unlock AI-powered smart scheduling and optimize your sleep cycles!',
-  },
-  advanced_voice_ai: {
-    requiredTier: 'premium',
-    category: 'voice',
-    description: 'Advanced AI voice recognition',
-    upgradeMessage:
-      'Upgrade to Premium for advanced voice AI that understands context and natural speech!',
-  },
-  calendar_integration: {
-    requiredTier: 'premium',
-    category: 'integrations',
-    description: 'Calendar sync and integration',
-    upgradeMessage:
-      'Upgrade to Premium to sync with your calendar and automatically schedule optimal wake-up times!',
-  },
-  sleep_tracking: {
-    requiredTier: 'premium',
-    category: 'health',
-    description: 'Advanced sleep pattern tracking',
-    upgradeMessage:
-      'Upgrade to Premium for detailed sleep analysis and personalized insights!',
-  },
-  weather_integration: {
-    requiredTier: 'premium',
-    category: 'integrations',
-    description: 'Weather-based alarm adjustments',
-    upgradeMessage:
-      'Upgrade to Premium to automatically adjust alarm times based on weather conditions!',
-  },
-  team_management: {
-    requiredTier: 'pro',
-    category: 'collaboration',
-    description: 'Team alarm coordination',
-    upgradeMessage:
-      'Upgrade to Pro to manage team wake-up schedules and coordinate group activities!',
-  },
-  advanced_analytics: {
-    requiredTier: 'pro',
-    category: 'analytics',
-    description: 'Detailed usage analytics',
-    upgradeMessage:
-      'Upgrade to Pro for comprehensive analytics and insights into your wake-up patterns!',
-  },
-  api_access: {
-    requiredTier: 'pro',
-    category: 'integrations',
-    description: 'Developer API access',
-    upgradeMessage:
-      'Upgrade to Pro to access our developer API and build custom integrations!',
-  },
-  white_label: {
-    requiredTier: 'pro',
-    category: 'customization',
-    description: 'Remove Relife branding',
-    upgradeMessage:
-      'Upgrade to Pro to remove branding and white-label the app for your organization!',
-  },
-  custom_themes: {
-    requiredTier: 'pro',
-    category: 'themes',
-    description: 'Create custom themes',
-    upgradeMessage:
-      'Upgrade to Pro to create and share custom themes with unlimited customization options!',
-  },
-};
 
 function useFeatureGate(
   options: UseFeatureGateOptions
 ): FeatureGateResult & FeatureGateActions {
-  const { userId, feature, _config = {}, onAccessDenied, onUpgradeRequired } = options;
+  const { userId, feature, config = {}, onAccessDenied, onUpgradeRequired } = options;
 
   const subscription = useSubscription({ userId });
   const [gateResult, setGateResult] = useState<FeatureGateResult>({
@@ -163,7 +52,7 @@ function useFeatureGate(
     canBypass: false,
   });
 
-  const analytics = useRef(AnalyticsService.getInstance());
+  const analytics = AnalyticsService.getInstance();
 
   const defaultConfig: FeatureGateConfig = {
     feature,
@@ -173,11 +62,10 @@ function useFeatureGate(
     customMessage: '',
     redirectToUpgrade: true,
     trackUsage: true,
-    ..._config,
+    ...config,
   };
 
-  // Use pre-defined feature definitions constant (moved outside component for performance)
-  /* REMOVED: Feature definitions moved to FEATURE_DEFINITIONS constant
+  // Feature access definitions
   const featureDefinitions: Record<
     string,
     {
@@ -279,13 +167,13 @@ function useFeatureGate(
       upgradeMessage:
         'Upgrade to Pro to create and share custom themes with unlimited customization options!',
     },
-  }; */
+  };
 
   // Calculate feature access
   useEffect(() => {
     const calculateAccess = () => {
       if (!subscription.featureAccess) {
-        setGateResult((prev: any) => ({
+        setGateResult((prev: any) => ({ // auto: implicit any
           ...prev,
           hasAccess: false,
           isGated: true,
@@ -294,11 +182,10 @@ function useFeatureGate(
         return;
       }
 
-      const featureDef = FEATURE_DEFINITIONS[feature];
+      const featureDef = featureDefinitions[feature];
       if (!featureDef) {
         // Unknown feature, allow access
-
-        setGateResult((prev: any) => ({
+        setGateResult((prev: any) => ({ // auto: implicit any
           ...prev,
           hasAccess: true,
           isGated: false,
@@ -370,14 +257,9 @@ function useFeatureGate(
     // Check if access can be granted (e.g., during trial)
     if (gateResult.canBypass) {
       // Temporarily grant access
+      setGateResult((prev: any) => ({ // auto: implicit any ...prev, hasAccess: true, isGated: false }));
 
-      setGateResult((prev: any) => ({
-        ...prev,
-        hasAccess: true,
-        isGated: false,
-      }));
-
-      analytics.current.trackFeatureUsage('feature_gate_bypassed', undefined, {
+      analytics.trackFeatureUsage('feature_gate_bypassed', undefined, {
         userId,
         feature,
         reason: gateResult.bypassReason || 'soft_gate',
@@ -387,7 +269,7 @@ function useFeatureGate(
     }
 
     // Track access request
-    analytics.current.trackFeatureUsage('feature_access_requested', undefined, {
+    analytics.trackFeatureUsage('feature_access_requested', undefined, {
       userId,
       feature,
       currentTier: subscription.userTier,
@@ -400,7 +282,7 @@ function useFeatureGate(
   const trackFeatureAttempt = useCallback(() => {
     if (!defaultConfig.trackUsage) return;
 
-    analytics.current.trackFeatureUsage('feature_gate_hit', undefined, {
+    analytics.trackFeatureUsage('feature_gate_hit', undefined, {
       userId,
       feature,
       hasAccess: gateResult.hasAccess,
@@ -413,7 +295,7 @@ function useFeatureGate(
   const showUpgradeModal = useCallback(() => {
     if (defaultConfig.redirectToUpgrade && gateResult.requiredTier) {
       // Implementation would show upgrade modal or navigate to pricing
-      analytics.current.trackFeatureUsage('upgrade_modal_requested', undefined, {
+      analytics.trackFeatureUsage('upgrade_modal_requested', undefined, {
         userId,
         feature,
         requiredTier: gateResult.requiredTier,
@@ -426,14 +308,14 @@ function useFeatureGate(
 
   const bypassGate = useCallback(
     (reason: string) => {
-      setGateResult((prev: any) => ({
+      setGateResult((prev: any) => ({ // auto: implicit any
         ...prev,
         hasAccess: true,
         isGated: false,
         bypassReason: reason,
       }));
 
-      analytics.current.trackFeatureUsage('feature_gate_bypassed_manual', undefined, {
+      analytics.trackFeatureUsage('feature_gate_bypassed_manual', undefined, {
         userId,
         feature,
         reason,

@@ -39,7 +39,7 @@ export const CustomThemeCreator: React.FC = () => {
       {
         category: 'gentle',
         tags: customTheme.tags,
-        timeOfDay: customTheme.timeOfDay as unknown,
+        timeOfDay: customTheme.timeOfDay as any,
         weatherSuitability: ['sunny', 'cloudy'],
         difficulty: 'moderate',
         mood: 'peaceful',
@@ -83,15 +83,13 @@ export const CustomThemeCreator: React.FC = () => {
                 type="text"
                 placeholder="Theme name (e.g., 'My Perfect Morning')"
                 value={customTheme.name}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setCustomTheme({ ...customTheme, name: e.target.value })
-                }
+                onChange={(e: any) => s // auto: implicit anyetCustomTheme({ ...customTheme, name: e.target.value })}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
               />
               <textarea
                 placeholder="Describe your ideal wake-up experience..."
                 value={customTheme.description}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                onChange={(e: any) => // auto: implicit any
                   setCustomTheme({ ...customTheme, description: e.target.value })
                 }
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 h-24"
@@ -145,7 +143,7 @@ export const CustomThemeCreator: React.FC = () => {
                         name="sound"
                         value={theme.id}
                         checked={customTheme.sound === theme.id}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        onChange={(e: any) => // auto: implicit any
                           setCustomTheme({
                             ...customTheme,
                             sound: e.target.value as SoundTheme,
@@ -181,7 +179,7 @@ export const CustomThemeCreator: React.FC = () => {
                         name="voice"
                         value={voice}
                         checked={customTheme.voice === voice}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        onChange={(e: any) => // auto: implicit any
                           setCustomTheme({
                             ...customTheme,
                             voice: e.target.value as VoiceMood,
@@ -211,12 +209,12 @@ export const CustomThemeCreator: React.FC = () => {
                 <input
                   type="text"
                   placeholder="morning, energetic, workout, peaceful"
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  onChange={(e: any) => // auto: implicit any
                     setCustomTheme({
                       ...customTheme,
                       tags: e.target.value
                         .split(',')
-                        .map((tag: unknown) => tag.trim())
+                        .map((tag: any) => t // auto: implicit anyag.trim())
                         .filter(Boolean),
                     })
                   }
@@ -241,7 +239,7 @@ export const CustomThemeCreator: React.FC = () => {
                       <input
                         type="checkbox"
                         value={time}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        onChange={(e: any) => { // auto
                           if (e.target.checked) {
                             setCustomTheme({
                               ...customTheme,
@@ -250,9 +248,7 @@ export const CustomThemeCreator: React.FC = () => {
                           } else {
                             setCustomTheme({
                               ...customTheme,
-                              timeOfDay: customTheme.timeOfDay.filter(
-                                (t: unknown) => t !== time
-                              ),
+                              timeOfDay: customTheme.timeOfDay.filter((t: any) => t // auto: implicit any !== time),
                             });
                           }
                         }}
@@ -307,11 +303,10 @@ export const SmartThemesDemo: React.FC = () => {
     useState<ContextualThemeRecommendation | null>(null);
   const [testTime, setTestTime] = useState('07:00');
   const [testDate, setTestDate] = useState(new Date());
-  const [learningData, setLearningData] = useState<unknown[]>([]);
+  const [learningData, setLearningData] = useState<any[]>([]);
 
   useEffect(() => {
     loadRecommendation();
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: loadRecommendation
   }, [testTime, testDate]);
 
   const loadRecommendation = async () => {
@@ -321,8 +316,8 @@ export const SmartThemesDemo: React.FC = () => {
         testDate
       );
       setCurrentRecommendation(recommendation);
-    } catch (_error) {
-      console._error('Failed to load recommendation:', _error);
+    } catch (error) {
+      console.error('Failed to load recommendation:', error);
     }
   };
 
@@ -339,7 +334,7 @@ export const SmartThemesDemo: React.FC = () => {
       );
 
       // Update learning data display
-      setLearningData((prev: unknown) =>
+      setLearningData((prev: any) => // auto: implicit any
         [
           ...prev,
           {
@@ -368,9 +363,7 @@ export const SmartThemesDemo: React.FC = () => {
                 <input
                   type="time"
                   value={testTime}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setTestTime(e.target.value)
-                  }
+                  onChange={(e: any) => s // auto: implicit anyetTestTime(e.target.value)}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -379,9 +372,7 @@ export const SmartThemesDemo: React.FC = () => {
                 <input
                   type="date"
                   value={testDate.toISOString().split('T')[0]}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setTestDate(new Date(e.target.value))
-                  }
+                  onChange={(e: any) => s // auto: implicit anyetTestDate(new Date(e.target.value))}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -402,8 +393,8 @@ export const SmartThemesDemo: React.FC = () => {
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h4 className="font-medium mb-2">Recent Learning Data</h4>
                 <div className="space-y-2 text-sm">
-                  {learningData.map((data, _index) => (
-                    <div key={_index} className="flex justify-between">
+                  {learningData.map((data, index) => (
+                    <div key={index} className="flex justify-between">
                       <span>
                         {data.time} on {data.date}
                       </span>
@@ -453,8 +444,8 @@ export const SmartThemesDemo: React.FC = () => {
               <div className="mt-4">
                 <h5 className="font-medium mb-2">Context Factors:</h5>
                 <div className="flex flex-wrap gap-2">
-                  {currentRecommendation.context.map((ctx, _index) => (
-                    <span key={_index} className="px-2 py-1 bg-white text-sm rounded">
+                  {currentRecommendation.context.map((ctx, index) => (
+                    <span key={index} className="px-2 py-1 bg-white text-sm rounded">
                       {ctx.type}: {ctx.value}
                     </span>
                   ))}
@@ -560,14 +551,12 @@ export const AudioSetupDemo: React.FC = () => {
 
   const testSingleSound = async (soundId: string) => {
     try {
-      const result = await soundEffectsService.testSound(soundId as unknown);
-
-      setTestResults((prev: unknown) => ({ ...prev, [soundId]: result }));
+      const result = await soundEffectsService.testSound(soundId as any);
+      setTestResults((prev: any) => ({ // auto: implicit any ...prev, [soundId]: result }));
       return result;
-    } catch (_error) {
-      console._error('Sound test failed:', _error);
-
-      setTestResults((prev: unknown) => ({ ...prev, [soundId]: false }));
+    } catch (error) {
+      console.error('Sound test failed:', error);
+      setTestResults((prev: any) => ({ // auto: implicit any ...prev, [soundId]: false }));
       return false;
     }
   };
@@ -577,8 +566,8 @@ export const AudioSetupDemo: React.FC = () => {
     try {
       const results = await soundEffectsService.testAllSounds();
       setTestResults(results);
-    } catch (_error) {
-      console._error('Failed to test all sounds:', _error);
+    } catch (error) {
+      console.error('Failed to test all sounds:', error);
     } finally {
       setIsTestingAll(false);
     }
@@ -587,8 +576,8 @@ export const AudioSetupDemo: React.FC = () => {
   const playThemePreview = async (theme: SoundTheme) => {
     try {
       await soundEffectsService.previewTheme(theme);
-    } catch (_error) {
-      console._error('Theme preview failed:', _error);
+    } catch (error) {
+      console.error('Theme preview failed:', error);
     }
   };
 
@@ -691,7 +680,7 @@ export const AudioSetupDemo: React.FC = () => {
               min="0"
               max="100"
               defaultValue="70"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              onChange={(e: any) => // auto: implicit any
                 soundEffectsService.setVolume('master', parseInt(e.target.value) / 100)
               }
               className="w-full"
@@ -704,7 +693,7 @@ export const AudioSetupDemo: React.FC = () => {
               min="0"
               max="100"
               defaultValue="50"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              onChange={(e: any) => // auto: implicit any
                 soundEffectsService.setVolume('ui', parseInt(e.target.value) / 100)
               }
               className="w-full"
@@ -717,7 +706,7 @@ export const AudioSetupDemo: React.FC = () => {
               min="0"
               max="100"
               defaultValue="100"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              onChange={(e: any) => // auto: implicit any
                 soundEffectsService.setVolume('alarm', parseInt(e.target.value) / 100)
               }
               className="w-full"
@@ -730,7 +719,7 @@ export const AudioSetupDemo: React.FC = () => {
               min="0"
               max="100"
               defaultValue="60"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              onChange={(e: any) => // auto: implicit any
                 soundEffectsService.setVolume('ambient', parseInt(e.target.value) / 100)
               }
               className="w-full"
@@ -765,7 +754,7 @@ export const CompleteThemeSystemDemo: React.FC = () => {
   });
 
   const handleAlarmUpdate = (updates: Partial<Alarm>) => {
-    setMockAlarm((prev: unknown) => ({ ...prev, ...updates }));
+    setMockAlarm((prev: any) => ({ // auto: implicit any ...prev, ...updates }));
   };
 
   return (
@@ -780,7 +769,7 @@ export const CompleteThemeSystemDemo: React.FC = () => {
         ].map(tab => (
           <button
             key={tab.id}
-            onClick={() => setActiveDemo(tab.id as unknown)}
+            onClick={() => setActiveDemo(tab.id as any)}
             className={`flex-1 flex items-center justify-center space-x-2 px-4 py-3 rounded-md transition-colors
               ${
                 activeDemo === tab.id

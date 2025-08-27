@@ -1,5 +1,4 @@
 import type {
-  // Note: alarms should come from app state or be passed as parameter
   User,
   SleepPattern,
   WakeUpBehavior,
@@ -74,7 +73,7 @@ interface PredictiveInsight {
   suggestedActions: string[];
   impact: 'minimal' | 'moderate' | 'significant' | 'major';
   timeframe: string;
-  data: Record<string, unknown>;
+  data: Record<string, any>;
   createdAt: Date;
   expiresAt?: Date;
   applied?: Date;
@@ -93,7 +92,7 @@ interface TrendAnalysis {
 }
 
 export class PredictiveAnalyticsService {
-  private static _config: AnalyticsConfig = {
+  private static config: AnalyticsConfig = {
     enabled: true,
     analysisFrequency: 'weekly',
     patternConfidenceThreshold: 0.6,
@@ -116,14 +115,14 @@ export class PredictiveAnalyticsService {
       await this.loadDetectedPatterns();
       await this.loadInsightsHistory();
 
-      if (this._config.enabled) {
+      if (this.config.enabled) {
         await this.startAnalysisSchedule();
         await this.runInitialAnalysis();
       }
 
       console.log('Predictive Analytics Service initialized');
-    } catch (_error) {
-      console._error('Failed to initialize Predictive Analytics:', _error);
+    } catch (error) {
+      console.error('Failed to initialize Predictive Analytics:', error);
     }
   }
 
@@ -131,10 +130,10 @@ export class PredictiveAnalyticsService {
     try {
       const { value } = await Preferences.get({ key: ANALYTICS_CONFIG_KEY });
       if (value) {
-        this.config = { ...this._config, ...JSON.parse(value) };
+        this.config = { ...this.config, ...JSON.parse(value) };
       }
-    } catch (_error) {
-      console._error('Error loading analytics _config:', _error);
+    } catch (error) {
+      console.error('Error loading analytics config:', error);
     }
   }
 
@@ -147,15 +146,15 @@ export class PredictiveAnalyticsService {
           Object.entries(data).map(([k, v]) => [
             k,
             {
-              ...(v as unknown),
-              firstDetected: new Date((v as unknown).firstDetected),
-              lastUpdated: new Date((v as unknown).lastUpdated),
+              ...(v as any),
+              firstDetected: new Date((v as any).firstDetected),
+              lastUpdated: new Date((v as any).lastUpdated),
             },
           ])
         );
       }
-    } catch (_error) {
-      console._error('Error loading detected patterns:', _error);
+    } catch (error) {
+      console.error('Error loading detected patterns:', error);
     }
   }
 
@@ -164,15 +163,15 @@ export class PredictiveAnalyticsService {
       const { value } = await Preferences.get({ key: INSIGHTS_HISTORY_KEY });
       if (value) {
         const data = JSON.parse(value);
-        this.insightsHistory = data.map((insight: unknown) => ({
+        this.insightsHistory = data.map((insight: any) => ({
           ...insight,
           createdAt: new Date(insight.createdAt),
           expiresAt: insight.expiresAt ? new Date(insight.expiresAt) : undefined,
           applied: insight.applied ? new Date(insight.applied) : undefined,
         }));
       }
-    } catch (_error) {
-      console._error('Error loading insights history:', _error);
+    } catch (error) {
+      console.error('Error loading insights history:', error);
     }
   }
 
@@ -199,7 +198,7 @@ export class PredictiveAnalyticsService {
 
       // Filter by confidence threshold
       const validPatterns = patterns.filter(
-        p => p.confidence >= this._config.patternConfidenceThreshold
+        p => p.confidence >= this.config.patternConfidenceThreshold
       );
 
       // Update detected patterns cache
@@ -209,8 +208,8 @@ export class PredictiveAnalyticsService {
 
       await this.saveDetectedPatterns();
       return validPatterns;
-    } catch (_error) {
-      console._error('Error analyzing _user patterns:', _error);
+    } catch (error) {
+      console.error('Error analyzing user patterns:', error);
       return [];
     }
   }
@@ -491,8 +490,8 @@ export class PredictiveAnalyticsService {
           }
         }
       }
-    } catch (_error) {
-      console._error('Error detecting location influence patterns:', _error);
+    } catch (error) {
+      console.error('Error detecting location influence patterns:', error);
     }
 
     return patterns;
@@ -630,16 +629,16 @@ export class PredictiveAnalyticsService {
       this.insightsHistory.push(...validInsights);
 
       // Maintain history size
-      if (this.insightsHistory.length > this._config.maxInsightsHistory) {
+      if (this.insightsHistory.length > this.config.maxInsightsHistory) {
         this.insightsHistory = this.insightsHistory.slice(
-          -this._config.maxInsightsHistory
+          -this.config.maxInsightsHistory
         );
       }
 
       await this.saveInsightsHistory();
       return validInsights;
-    } catch (_error) {
-      console._error('Error generating predictive insights:', _error);
+    } catch (error) {
+      console.error('Error generating predictive insights:', error);
       return [];
     }
   }
@@ -764,7 +763,7 @@ export class PredictiveAnalyticsService {
     const insights: PredictiveInsight[] = [];
 
     // Analyze alarm frequency and distribution
-    const activeAlarms = alarms.filter((a: unknown) => a.enabled);
+    const activeAlarms = alarms.filter((a: any) => a.enabled);
     if (activeAlarms.length > 5) {
       insights.push({
         id: this.generateInsightId(),
@@ -967,8 +966,8 @@ export class PredictiveAnalyticsService {
     this.analysisSchedule = setInterval(async () => {
       try {
         await this.runScheduledAnalysis();
-      } catch (_error) {
-        console._error('Error in scheduled analysis:', _error);
+      } catch (error) {
+        console.error('Error in scheduled analysis:', error);
       }
     }, interval) as unknown as number;
   }
@@ -988,8 +987,8 @@ export class PredictiveAnalyticsService {
         key: PATTERNS_CACHE_KEY,
         value: JSON.stringify(dataObject),
       });
-    } catch (_error) {
-      console._error('Error saving detected patterns:', _error);
+    } catch (error) {
+      console.error('Error saving detected patterns:', error);
     }
   }
 
@@ -999,15 +998,15 @@ export class PredictiveAnalyticsService {
         key: INSIGHTS_HISTORY_KEY,
         value: JSON.stringify(this.insightsHistory),
       });
-    } catch (_error) {
-      console._error('Error saving insights history:', _error);
+    } catch (error) {
+      console.error('Error saving insights history:', error);
     }
   }
 
   // ===== PUBLIC API =====
 
   static async enablePredictiveAnalytics(enabled: boolean): Promise<void> {
-    this._config.enabled = enabled;
+    this.config.enabled = enabled;
 
     if (enabled) {
       await this.startAnalysisSchedule();
@@ -1018,7 +1017,7 @@ export class PredictiveAnalyticsService {
 
     await Preferences.set({
       key: ANALYTICS_CONFIG_KEY,
-      value: JSON.stringify(this._config),
+      value: JSON.stringify(this.config),
     });
   }
 
@@ -1064,12 +1063,12 @@ export class PredictiveAnalyticsService {
       patterns: this.detectedPatterns.size,
       insights: this.insightsHistory.length,
       lastAnalysis: this.lastAnalysisDate,
-      isEnabled: this._config.enabled,
+      isEnabled: this.config.enabled,
     };
   }
 
   static isAnalyticsEnabled(): boolean {
-    return this._config.enabled;
+    return this.config.enabled;
   }
 }
 

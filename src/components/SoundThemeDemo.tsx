@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Play, Volume2, VolumeX, Music } from 'lucide-react';
+import { Play, Volume2, VolumeX, Palette, Music, Zap } from 'lucide-react';
 import { soundEffectsService, SoundTheme } from '../services/sound-effects';
 import { motion } from 'framer-motion';
 import { TimeoutHandle } from '../types/timers';
@@ -30,14 +30,14 @@ const SoundThemeDemo: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState<{ [key: string]: boolean }>({});
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [testResults, setTestResults] = useState<{
-    [key: string]: 'success' | '_error' | 'testing';
+    [key: string]: 'success' | 'error' | 'testing';
   }>({});
 
   // Organized theme categories for better presentation
   const themeCategories: ThemeCategory[] = [
     {
       name: 'Core Themes',
-      icon: <div className="w-5 h-5" />,
+      icon: <Palette className="w-5 h-5" />,
       color: 'blue',
       themes: [
         {
@@ -81,7 +81,7 @@ const SoundThemeDemo: React.FC = () => {
     },
     {
       name: 'Electronic & Futuristic',
-      icon: <div className="w-5 h-5 text-purple-500" />,
+      icon: <Zap className="w-5 h-5 text-purple-500" />,
       color: 'purple',
       themes: [
         {
@@ -161,7 +161,7 @@ const SoundThemeDemo: React.FC = () => {
     { id: 'ui.click', name: 'Click', description: 'Primary interaction sound' },
     { id: 'ui.hover', name: 'Hover', description: 'Rollover feedback' },
     { id: 'ui.success', name: 'Success', description: 'Positive confirmation' },
-    { id: 'ui._error', name: 'Error', description: 'Negative feedback' },
+    { id: 'ui.error', name: 'Error', description: 'Negative feedback' },
   ];
 
   const alarmTypes = [
@@ -174,10 +174,8 @@ const SoundThemeDemo: React.FC = () => {
     if (!soundEnabled) return;
 
     const key = `${themeId}-${soundId}`;
-
-    setIsPlaying((prev: any) => ({ ...prev, [key]: true }));
-
-    setTestResults((prev: any) => ({ ...prev, [key]: 'testing' }));
+    setIsPlaying((prev: any) => ({ // auto: implicit any ...prev, [key]: true }));
+    setTestResults((prev: any) => ({ // auto: implicit any ...prev, [key]: 'testing' }));
 
     try {
       // Temporarily switch to theme for testing
@@ -194,14 +192,13 @@ const SoundThemeDemo: React.FC = () => {
         await soundEffectsService.setSoundTheme(originalTheme);
       }
 
-      setTestResults((prev: any) => ({ ...prev, [key]: 'success' }));
-    } catch (_error) {
-      console._error('Sound test failed:', _error);
-
-      setTestResults((prev: any) => ({ ...prev, [key]: '_error' }));
+      setTestResults((prev: any) => ({ // auto: implicit any ...prev, [key]: 'success' }));
+    } catch (error) {
+      console.error('Sound test failed:', error);
+      setTestResults((prev: any) => ({ // auto: implicit any ...prev, [key]: 'error' }));
     } finally {
       setTimeout(() => {
-        setIsPlaying((prev: any) => ({ ...prev, [key]: false }));
+        setIsPlaying((prev: any) => ({ // auto: implicit any ...prev, [key]: false }));
       }, 500);
     }
   };
@@ -211,14 +208,13 @@ const SoundThemeDemo: React.FC = () => {
     if (!soundEnabled) return;
 
     const key = `${themeId}-alarm-${alarmType}`;
-
-    setIsPlaying((prev: any) => ({ ...prev, [key]: true }));
+    setIsPlaying((prev: any) => ({ // auto: implicit any ...prev, [key]: true }));
 
     // Simulate alarm sound by playing success sound with loop simulation
     await playSound('ui.success', themeId);
 
     setTimeout(() => {
-      setIsPlaying((prev: any) => ({ ...prev, [key]: false }));
+      setIsPlaying((prev: any) => ({ // auto: implicit any ...prev, [key]: false }));
     }, 2000);
   };
 
@@ -234,8 +230,8 @@ const SoundThemeDemo: React.FC = () => {
           soundEffectsService.playSound('ui.success', { force: true });
         }, 200);
       }
-    } catch (_error) {
-      console._error('Failed to apply theme:', _error);
+    } catch (error) {
+      console.error('Failed to apply theme:', error);
     }
   };
 
@@ -243,7 +239,7 @@ const SoundThemeDemo: React.FC = () => {
     const status = testResults[key];
     if (status === 'testing') return 'animate-pulse text-blue-500';
     if (status === 'success') return 'text-green-500';
-    if (status === '_error') return 'text-red-500';
+    if (status === 'error') return 'text-red-500';
     return 'text-gray-400';
   };
 
@@ -379,12 +375,12 @@ const SoundThemeDemo: React.FC = () => {
                         Alarm Sounds
                       </h4>
                       <div className="space-y-1">
-                        {alarmTypes.map((alarm, _index) => {
+                        {alarmTypes.map((alarm, index) => {
                           const key = `${theme.id}-alarm-${alarm.name}`;
                           const isPlayingThis = isPlaying[key];
                           return (
                             <Button
-                              key={_index}
+                              key={index}
                               variant="ghost"
                               size="sm"
                               className="h-8 text-xs justify-start w-full"

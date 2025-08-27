@@ -24,10 +24,10 @@ interface DashboardState {
     slowResources: number;
   };
   analyticsData: {
-    currentSession: unknown;
+    currentSession: any;
     totalEvents: number;
     featuresUsed: number;
-    behavior: unknown;
+    behavior: any;
   };
   isLoading: boolean;
   autoRefresh: boolean;
@@ -64,7 +64,7 @@ const PerformanceDashboard: React.FC = () => {
       const performanceSummary = performanceMonitor.getPerformanceSummary();
       const analyticsSummary = analytics.getAnalyticsSummary();
 
-      setState((prev: unknown) => ({
+      setState((prev: any) => ({ // auto: implicit any
         ...prev,
         performanceData: {
           webVitals: [
@@ -122,10 +122,9 @@ const PerformanceDashboard: React.FC = () => {
         analyticsData: analyticsSummary,
         isLoading: false,
       }));
-    } catch (_error) {
-      console._error('Failed to refresh dashboard data:', _error);
-
-      setState((prev: unknown) => ({ ...prev, isLoading: false }));
+    } catch (error) {
+      console.error('Failed to refresh dashboard data:', error);
+      setState((prev: any) => ({ // auto: implicit any ...prev, isLoading: false }));
     }
   }, []);
 
@@ -246,7 +245,7 @@ const PerformanceDashboard: React.FC = () => {
         <div className="flex gap-3">
           <button
             onClick={() =>
-              setState((prev: unknown) => ({ ...prev, autoRefresh: !prev.autoRefresh }))
+              setState((prev: any) => ({ // auto: implicit any ...prev, autoRefresh: !prev.autoRefresh }))
             }
             className={`px-4 py-2 rounded-lg font-medium ${
               state.autoRefresh
@@ -304,7 +303,10 @@ const PerformanceDashboard: React.FC = () => {
               Core Web Vitals
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-              {state.performanceData.webVitals.map((vital: unknown) => (
+              {state.performanceData.webVitals.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
                 <MetricCard
                   key={vital.name}
                   title={vital.name}
@@ -367,9 +369,9 @@ const PerformanceDashboard: React.FC = () => {
               </h2>
               <div className="bg-white rounded-lg shadow-sm border p-4">
                 <div className="space-y-2">
-                  {state.performanceData.customMetrics.map((metric, _index) => (
+                  {state.performanceData.customMetrics.map((metric, index) => (
                     <div
-                      key={_index}
+                      key={index}
                       className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0"
                     >
                       <span className="font-medium text-gray-900">{metric.name}</span>
@@ -534,14 +536,14 @@ const PerformanceDashboard: React.FC = () => {
                     <div className="space-y-3">
                       {state.analyticsData.behavior.mostUsedFeatures
                         .slice(0, 10)
-                        .map((feature, _index) => (
+                        .map((feature, index) => (
                           <div
                             key={feature.feature}
                             className="flex justify-between items-center py-2"
                           >
                             <div className="flex items-center">
                               <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full text-sm font-bold flex items-center justify-center mr-3">
-                                {_index + 1}
+                                {index + 1}
                               </span>
                               <span className="font-medium">{feature.feature}</span>
                             </div>
@@ -601,14 +603,14 @@ const PerformanceDashboard: React.FC = () => {
                     .length > 0 ? (
                     <div className="space-y-3">
                       {state.analyticsData.behavior.navigationPatterns.mostVisitedPages.map(
-                        (page, _index) => (
+                        (page, index) => (
                           <div
                             key={page.page}
                             className="flex justify-between items-center py-2"
                           >
                             <div className="flex items-center">
                               <span className="w-6 h-6 bg-green-100 text-green-600 rounded-full text-sm font-bold flex items-center justify-center mr-3">
-                                {_index + 1}
+                                {index + 1}
                               </span>
                               <span className="font-medium">{page.page}</span>
                             </div>

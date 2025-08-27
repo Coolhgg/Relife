@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import {
-  // Replaced stub import with proper implementation // auto: restored by scout - verify
   EnhancedSmartAlarmScheduler,
   type EnhancedSmartAlarm,
 } from '../services/enhanced-smart-alarm-scheduler';
@@ -9,7 +8,7 @@ import { RealTimeSmartAdapter } from '../services/real-time-smart-adapter';
 export interface UseEnhancedSmartAlarmsResult {
   alarms: EnhancedSmartAlarm[];
   loading: boolean;
-  _error: string | null;
+  error: string | null;
   createAlarm: (alarmData: Partial<EnhancedSmartAlarm>) => Promise<boolean>;
   updateAlarm: (id: string, updates: Partial<EnhancedSmartAlarm>) => Promise<boolean>;
   deleteAlarm: (id: string) => Promise<boolean>;
@@ -20,7 +19,7 @@ export interface UseEnhancedSmartAlarmsResult {
 export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
   const [alarms, setAlarms] = useState<EnhancedSmartAlarm[]>([]);
   const [loading, setLoading] = useState(true);
-  const [_error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   // Initialize services and load alarms
   useEffect(() => {
@@ -32,7 +31,7 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
         // Load existing alarms
         await loadAlarms();
       } catch (err) {
-        console._error('Error initializing smart alarm services:', err);
+        console.error('Error initializing smart alarm services:', err);
         setError('Failed to initialize smart alarm system');
       }
     };
@@ -61,7 +60,7 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
         }
       }
     } catch (err) {
-      console._error('Error loading smart alarms:', err);
+      console.error('Error loading smart alarms:', err);
       setError('Failed to load smart alarms');
     } finally {
       setLoading(false);
@@ -90,7 +89,7 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
         setError('Failed to create smart alarm');
         return false;
       } catch (err) {
-        console._error('Error creating smart alarm:', err);
+        console.error('Error creating smart alarm:', err);
         setError('Failed to create smart alarm');
         return false;
       }
@@ -109,8 +108,11 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
         )) as EnhancedSmartAlarm;
 
         if (updatedAlarm) {
-          setAlarms((prev: any) =>
-            prev.map((alarm: any) => (alarm.id === id ? updatedAlarm : alarm))
+          setAlarms((prev: any) => // auto: implicit any
+            prev.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
           );
 
           // Update monitoring status
@@ -126,7 +128,7 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
         setError('Failed to update smart alarm');
         return false;
       } catch (err) {
-        console._error('Error updating smart alarm:', err);
+        console.error('Error updating smart alarm:', err);
         setError('Failed to update smart alarm');
         return false;
       }
@@ -142,11 +144,11 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
       RealTimeSmartAdapter.stopMonitoringAlarm(id);
 
       // Remove from state (actual deletion would happen in the service)
-      setAlarms((prev: any) => prev.filter((alarm: any) => a.larm.id !== id));
+      setAlarms((prev: any) => p // auto: implicit anyrev.filter((alarm: any) => alarm.id !== id));
 
       return true;
     } catch (err) {
-      console._error('Error deleting smart alarm:', err);
+      console.error('Error deleting smart alarm:', err);
       setError('Failed to delete smart alarm');
       return false;
     }
@@ -164,14 +166,17 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
           alarmId
         )) as EnhancedSmartAlarm;
         if (updatedAlarm) {
-          setAlarms((prev: any) =>
-            prev.map((alarm: any) => (alarm.id === alarmId ? updatedAlarm : alarm))
+          setAlarms((prev: any) => // auto: implicit any
+            prev.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
           );
         }
 
         return true;
       } catch (err) {
-        console._error('Error recording feedback:', err);
+        console.error('Error recording feedback:', err);
         setError('Failed to record feedback');
         return false;
       }
@@ -186,7 +191,7 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
   return {
     alarms,
     loading,
-    _error,
+    error,
     createAlarm,
     updateAlarm,
     deleteAlarm,

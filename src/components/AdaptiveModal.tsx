@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 /**
  * Adaptive Modal Component
  * Automatically adjusts visual complexity, animations, and interactions based on device capabilities
@@ -247,8 +246,8 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(
 
     // Handle overlay click
     const handleOverlayClick = useCallback(
-      (_event: React.MouseEvent) => {
-        if (closeOnOverlay && _event.target === overlayRef.current) {
+      (event: React.MouseEvent) => {
+        if (closeOnOverlay && event.target === overlayRef.current) {
           onClose();
         }
       },
@@ -284,7 +283,7 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(
           className={`${sizeClasses} ${className}`.trim()}
           style={finalModalStyles}
           tabIndex={-1}
-          onClick={(e: React.MouseEvent) => e.stopPropagation()}
+          onClick={(e: any) => e.stopPropagation()}
           role="document"
         >
           {/* Header */}
@@ -340,8 +339,7 @@ export function useAdaptiveModal(initialOpen = false) {
 
   const open = useCallback(() => setIsOpen(true), []);
   const close = useCallback(() => setIsOpen(false), []);
-
-  const toggle = useCallback(() => setIsOpen((prev: any) => !prev), []);
+  const toggle = useCallback(() => setIsOpen((prev: any) => ! // auto: implicit anyprev), []);
 
   return {
     isOpen,

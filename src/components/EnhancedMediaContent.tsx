@@ -8,7 +8,6 @@ import { Progress } from './ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Textarea } from './ui/textarea';
 import { Slider } from './ui/slider';
-import { ErrorHandler } from '../services/error-handler';
 import {
   Music,
   Upload,
@@ -163,7 +162,7 @@ interface AudioPlayerState {
   currentTime: number;
   duration: number;
   loading: boolean;
-  _error: string | null;
+  error: string | null;
 }
 
 export function EnhancedMediaContent({
@@ -189,7 +188,7 @@ export function EnhancedMediaContent({
     currentTime: 0,
     duration: 0,
     loading: false,
-    _error: null,
+    error: null,
   });
 
   // Audio context and source
@@ -269,7 +268,7 @@ export function EnhancedMediaContent({
 
   const playSound = useCallback(
     async (sound: CustomSound) => {
-      setPlayerState((prev: unknown) => ({ ...prev, loading: true, _error: null }));
+      setPlayerState((prev: any) => ({ // auto: implicit any ...prev, loading: true, error: null }));
 
       try {
         // Stop current audio if playing
@@ -282,7 +281,7 @@ export function EnhancedMediaContent({
         const audioSource = await audioManager.playAudioFile(sound.fileUrl, {
           volume: playerState.volume,
           onEnded: () => {
-            setPlayerState((prev: unknown) => ({
+            setPlayerState((prev: any) => ({ // auto: implicit any
               ...prev,
               isPlaying: false,
               currentTrack: null,
@@ -293,8 +292,7 @@ export function EnhancedMediaContent({
 
         if (audioSource) {
           currentAudioSource.current = audioSource;
-
-          setPlayerState((prev: unknown) => ({
+          setPlayerState((prev: any) => ({ // auto: implicit any
             ...prev,
             isPlaying: true,
             currentTrack: sound.id,
@@ -308,8 +306,7 @@ export function EnhancedMediaContent({
           const updateTime = () => {
             if (currentAudioSource.current === audioSource) {
               const elapsed = (performance.now() - startTime) / 1000;
-
-              setPlayerState((prev: unknown) => ({
+              setPlayerState((prev: any) => ({ // auto: implicit any
                 ...prev,
                 currentTime: Math.min(elapsed, sound.duration),
               }));
@@ -323,20 +320,19 @@ export function EnhancedMediaContent({
         } else {
           throw new Error('Failed to create audio source');
         }
-      } catch (_error) {
-        console.error('Error playing sound:', _error);
-
-        setPlayerState((prev: unknown) => ({
+      } catch (error) {
+        console.error('Error playing sound:', error);
+        setPlayerState((prev: any) => ({ // auto: implicit any
           ...prev,
           loading: false,
-          error: error instanceof Error ? _error.message : 'Unknown _error',
+          error: error instanceof Error ? error.message : 'Unknown error',
         }));
 
         // Fallback to beep if audio fails
         try {
           await audioManager.playFallbackBeep('single');
         } catch (fallbackError) {
-          console._error('Fallback beep also failed:', fallbackError);
+          console.error('Fallback beep also failed:', fallbackError);
         }
       }
     },
@@ -348,8 +344,7 @@ export function EnhancedMediaContent({
       currentAudioSource.current.stop();
       currentAudioSource.current = null;
     }
-
-    setPlayerState((prev: unknown) => ({
+    setPlayerState((prev: any) => ({ // auto: implicit any
       ...prev,
       isPlaying: false,
       currentTrack: null,
@@ -358,8 +353,7 @@ export function EnhancedMediaContent({
 
   const handleVolumeChange = useCallback((newVolume: number[]) => {
     const volume = newVolume[0] / 100;
-
-    setPlayerState((prev: unknown) => ({ ...prev, volume }));
+    setPlayerState((prev: any) => ({ // auto: implicit any ...prev, volume }));
 
     // Update current audio volume if playing
     // Note: Web Audio API doesn't allow real-time volume changes easily
@@ -370,10 +364,7 @@ export function EnhancedMediaContent({
     async (playlist: Playlist) => {
       if (playlist.sounds.length === 0) return;
 
-      setPlayerState((prev: unknown) => ({
-        ...prev,
-        currentPlaylist: playlist.id,
-      }));
+      setPlayerState((prev: any) => ({ // auto: implicit any ...prev, currentPlaylist: playlist.id }));
 
       // Start with the first sound
       const firstSound = playlist.sounds.sort((a, b) => a.order - b.order)[0];
@@ -383,7 +374,7 @@ export function EnhancedMediaContent({
     [playSound]
   );
 
-  const handleFileUpload = async (_event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -405,7 +396,7 @@ export function EnhancedMediaContent({
     try {
       // Simulate upload progress
       const progressInterval = setInterval(() => {
-        setUploadProgress((prev: unknown) => {
+        setUploadProgress((prev: any) => { // auto
           const next = prev + 10;
           if (next >= 100) {
             clearInterval(progressInterval);
@@ -424,8 +415,8 @@ export function EnhancedMediaContent({
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       alert('File uploaded successfully!');
-    } catch (_error) {
-      console._error('Upload failed:', _error);
+    } catch (error) {
+      console.error('Upload failed:', error);
       alert('Upload failed. Please try again.');
     } finally {
       setIsUploading(false);
@@ -563,10 +554,10 @@ export function EnhancedMediaContent({
         </div>
 
         {/* Error display */}
-        {playerState._error && (
+        {playerState.error && (
           <div className="mt-3 p-2 bg-destructive/10 border border-destructive/20 rounded text-sm text-destructive flex items-center gap-2">
             <AlertCircle className="h-4 w-4" />
-            {playerState._error}
+            {playerState.error}
           </div>
         )}
       </CardContent>
@@ -619,9 +610,7 @@ export function EnhancedMediaContent({
                 <Input
                   placeholder="Search sounds..."
                   value={searchQuery}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setSearchQuery(e.target.value)
-                  }
+                  onChange={(e: any) => setSearchQuery(e.target.value)}
                 />
               </div>
               <label htmlFor="category-filter" className="sr-only">
@@ -630,9 +619,7 @@ export function EnhancedMediaContent({
               <select
                 id="category-filter"
                 value={selectedCategory}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setSelectedCategory(e.target.value)
-                }
+                onChange={(e: any) => setSelectedCategory(e.target.value)}
                 className="px-3 py-2 border rounded-md bg-background"
                 aria-label="Filter media by category"
               >

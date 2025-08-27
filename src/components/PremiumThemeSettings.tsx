@@ -216,24 +216,22 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
   }, [userId]);
 
   const checkPremiumAccess = async () => {
-    setState((prev: any) => ({ ...prev, loading: true }));
+    setState((prev: any) => ({ // auto: implicit any ...prev, loading: true }));
 
     try {
       const hasAccess = await SubscriptionService.hasFeatureAccess(
         userId,
         'premiumThemes'
       );
-
-      setState((prev: any) => ({
+      setState((prev: any) => ({ // auto: implicit any
         ...prev,
         hasAccess,
         availableThemes: hasAccess ? [...FREE_THEMES, ...PREMIUM_THEMES] : FREE_THEMES,
         loading: false,
       }));
-    } catch (_error) {
-      console._error('Error checking premium theme access:', _error);
-
-      setState((prev: any) => ({ ...prev, loading: false }));
+    } catch (error) {
+      console.error('Error checking premium theme access:', error);
+      setState((prev: any) => ({ // auto: implicit any ...prev, loading: false }));
     }
   };
 
@@ -242,11 +240,11 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
       return; // Premium gate will handle this
     }
 
-    setState((prev: any) => ({ ...prev, selectedTheme: theme }));
+    setState((prev: any) => ({ // auto: implicit any ...prev, selectedTheme: theme }));
     onThemeChange(theme);
   };
 
-  const renderThemeCard = (theme: ThemeConfig, _index: number) => {
+  const renderThemeCard = (theme: ThemeConfig, index: number) => {
     const isSelected = state.selectedTheme.id === theme.id;
     const isPremium = theme.isPremium;
     const hasAccessToTheme = !isPremium || state.hasAccess;
@@ -256,7 +254,7 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
         key={theme.id}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: _index * 0.1 }}
+        transition={{ delay: index * 0.1 }}
         className={`relative group cursor-pointer transition-all duration-300 ${
           isSelected ? 'ring-2 ring-blue-500 scale-105' : 'hover:scale-102'
         }`}
@@ -347,8 +345,8 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
 
         {state.hasAccess ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {state.premiumThemes.map((theme, _index) =>
-              renderThemeCard(theme, _index + state.availableThemes.length)
+            {state.premiumThemes.map((theme, index) =>
+              renderThemeCard(theme, index + state.availableThemes.length)
             )}
           </div>
         ) : (
@@ -363,7 +361,7 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 opacity-50 pointer-events-none">
               {state.premiumThemes
                 .slice(0, 6)
-                .map((theme, _index) => renderThemeCard(theme, _index))}
+                .map((theme, index) => renderThemeCard(theme, index))}
             </div>
           </PremiumGate>
         )}
@@ -405,7 +403,7 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {FREE_THEMES.map((theme, _index) => renderThemeCard(theme, _index))}
+          {FREE_THEMES.map((theme, index) => renderThemeCard(theme, index))}
         </div>
       </div>
 

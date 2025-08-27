@@ -112,8 +112,8 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
       try {
         const parsed = JSON.parse(savedCustomThemes);
         setCustomThemes(parsed);
-      } catch (_error) {
-        console._error('Failed to load custom themes:', _error);
+      } catch (error) {
+        console.error('Failed to load custom themes:', error);
       }
     }
   }, []);
@@ -153,7 +153,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
     linkElement.click();
   };
 
-  const importThemes = (_event: React.ChangeEvent<HTMLInputElement>) => {
+  const importThemes = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -181,8 +181,8 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
         }
 
         alert('Themes imported successfully!');
-      } catch (_error) {
-        console._error('Failed to import themes:', _error);
+      } catch (error) {
+        console.error('Failed to import themes:', error);
         alert('Failed to import themes. Please check the file format.');
       }
     };
@@ -263,7 +263,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
 
                 {/* Favorite button */}
                 <button
-                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  onClick={(e: any) => { // auto
                     e.stopPropagation();
                     toggleFavorite(quickTheme.id);
                   }}
@@ -288,12 +288,14 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-gray-700">Custom Themes</span>
                 <span className="text-xs text-gray-500">
-                  {customThemes.length} theme
-                  {customThemes.length !== 1 ? 's' : ''}
+                  {customThemes.length} theme{customThemes.length !== 1 ? 's' : ''}
                 </span>
               </div>
               <div className="flex gap-1 overflow-x-auto pb-2">
-                {customThemes.slice(0, 4).map((customTheme: unknown) => (
+                {customThemes.slice(0, 4).map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
                   <button
                     key={customTheme.id}
                     onClick={() => applyTheme(customTheme.name)}
@@ -481,9 +483,9 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
                 }`}
               >
                 <div className="flex gap-1 mb-2">
-                  {Object.values(quickTheme.colors).map((color, _index) => (
+                  {Object.values(quickTheme.colors).map((color, index) => (
                     <div
-                      key={_index}
+                      key={index}
                       className="w-4 h-4 rounded-full"
                       style={{ backgroundColor: color }}
                     />
@@ -516,7 +518,10 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
               Custom Themes ({customThemes.length})
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {customThemes.slice(0, 6).map((customTheme: unknown) => (
+              {customThemes.slice(0, 6).map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
                 <button
                   key={customTheme.id}
                   onClick={() => applyTheme(customTheme.name)}

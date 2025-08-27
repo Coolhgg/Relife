@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import AnalyticsService from '../services/analytics';
 import {
-  // Note: persona should be derived from user analytics or context
   BarChart,
   Bar,
   LineChart,
@@ -22,9 +20,11 @@ import {
   PersonaAnalyticsData,
   CampaignPerformanceData,
 } from '../analytics/PersonaAnalytics';
+
 interface AnalyticsDashboardProps {
   className?: string;
 }
+
 interface PersonaMetrics {
   persona: UserPersona;
   detections: number;
@@ -34,6 +34,7 @@ interface PersonaMetrics {
   avgConfidence: number;
   color: string;
 }
+
 interface CampaignMetrics {
   campaign: string;
   persona: UserPersona;
@@ -44,6 +45,7 @@ interface CampaignMetrics {
   conversionRate: number;
   revenue: number;
 }
+
 const PERSONA_COLORS: Record<UserPersona, string> = {
   struggling_sam: '#10B981', // Green
   busy_ben: '#3B82F6', // Blue
@@ -52,6 +54,7 @@ const PERSONA_COLORS: Record<UserPersona, string> = {
   student_sarah: '#F59E0B', // Orange
   lifetime_larry: '#F59E0B', // Yellow
 };
+
 const PERSONA_NAMES: Record<UserPersona, string> = {
   struggling_sam: 'Struggling Sam',
   busy_ben: 'Busy Ben',
@@ -60,6 +63,7 @@ const PERSONA_NAMES: Record<UserPersona, string> = {
   student_sarah: 'Student Sarah',
   lifetime_larry: 'Lifetime Larry',
 };
+
 export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   className = '',
 }) => {
@@ -68,6 +72,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   const [timeRange, setTimeRange] = useState<'24h' | '7d' | '30d' | '90d'>('7d');
   const [loading, setLoading] = useState(true);
   const analytics = usePersonaAnalytics();
+
   // Fetch analytics data
   useEffect(() => {
     const fetchAnalyticsData = async () => {
@@ -75,13 +80,13 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       try {
         // Replace with actual API calls
         const response = await fetch(
-          `/api/analytics/_persona-data?timeRange=${timeRange}`
+          `/api/analytics/persona-data?timeRange=${timeRange}`
         );
         const data = await response.json();
         setAnalyticsData(data.personaData || []);
         setCampaignData(data.campaignData || []);
-      } catch (_error) {
-        console._error('Failed to fetch analytics data:', _error);
+      } catch (error) {
+        console.error('Failed to fetch analytics data:', error);
         // Use mock data for development
         setAnalyticsData(generateMockPersonaData());
         setCampaignData(generateMockCampaignData());
@@ -89,13 +94,16 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         setLoading(false);
       }
     };
+
     fetchAnalyticsData();
   }, [timeRange]);
+
   // Calculate persona metrics
   const personaMetrics = useMemo((): PersonaMetrics[] => {
     const metrics = new Map<UserPersona, PersonaMetrics>();
-    analyticsData.forEach((data: unknown) => {
-      const existing = metrics.get(data._persona) || {
+
+    analyticsData.forEach((data: any) => { // auto
+      const existing = metrics.get(data.persona) || {
         persona: data.persona,
         detections: 0,
         conversions: 0,
@@ -104,14 +112,18 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         avgConfidence: 0,
         color: PERSONA_COLORS[data.persona],
       };
+
       existing.detections += 1;
       existing.avgConfidence += data.confidence;
+
       if (data.conversionStep === 'conversion') {
         existing.conversions += 1;
         existing.revenue += data.metadata?.revenue || 0;
       }
-      metrics.set(data._persona, existing);
+
+      metrics.set(data.persona, existing);
     });
+
     return Array.from(metrics.values()).map(metric => ({
       ...metric,
       conversionRate:
@@ -120,11 +132,15 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         metric.detections > 0 ? (metric.avgConfidence / metric.detections) * 100 : 0,
     }));
   }, [analyticsData]);
+
   // Calculate campaign metrics
   const campaignMetrics = useMemo((): CampaignMetrics[] => {
-    return campaignData.map((data: unknown) => ({
+    return campaignData.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
       campaign: data.campaignId,
-      persona: data._persona,
+      persona: data.persona,
       impressions: data.metrics.impressions,
       clicks: data.metrics.clicks,
       conversions: data.metrics.conversions,
@@ -133,6 +149,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       revenue: data.metrics.revenue,
     }));
   }, [campaignData]);
+
   // Overall statistics
   const overallStats = useMemo(() => {
     const totalDetections = personaMetrics.reduce((sum, p) => sum + p.detections, 0);
@@ -141,6 +158,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     const avgConfidence =
       personaMetrics.reduce((sum, p) => sum + p.avgConfidence, 0) /
         personaMetrics.length || 0;
+
     return {
       totalDetections,
       totalConversions,
@@ -150,6 +168,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       avgConfidence,
     };
   }, [personaMetrics]);
+
   if (loading) {
     return (
       <div className={`${className} flex items-center justify-center h-96`}>
@@ -160,6 +179,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       </div>
     );
   }
+
   return (
     <div className={`${className} space-y-6`}>
       {/* Header */}
@@ -169,7 +189,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
             Persona Analytics Dashboard
           </h2>
           <p className="text-gray-600">
-            Track _persona detection accuracy and campaign performance
+            Track persona detection accuracy and campaign performance
           </p>
         </div>
         <div className="flex space-x-2">
@@ -188,6 +208,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           ))}
         </div>
       </div>
+
       {/* Overview Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-white rounded-lg border p-6">
@@ -215,6 +236,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
             </div>
           </div>
         </div>
+
         <div className="bg-white rounded-lg border p-6">
           <div className="flex items-center">
             <div className="p-2 bg-green-100 rounded-lg">
@@ -240,6 +262,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
             </div>
           </div>
         </div>
+
         <div className="bg-white rounded-lg border p-6">
           <div className="flex items-center">
             <div className="p-2 bg-yellow-100 rounded-lg">
@@ -265,6 +288,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
             </div>
           </div>
         </div>
+
         <div className="bg-white rounded-lg border p-6">
           <div className="flex items-center">
             <div className="p-2 bg-purple-100 rounded-lg">
@@ -291,6 +315,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           </div>
         </div>
       </div>
+
       {/* Charts Row 1: Persona Distribution and Conversion Rates */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Persona Distribution Pie Chart */}
@@ -305,21 +330,22 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={({ _persona, detections }) =>
+                label={({ persona, detections }) =>
                   `${PERSONA_NAMES[persona]} (${detections})`
                 }
                 outerRadius={80}
                 fill="#8884d8"
                 dataKey="detections"
               >
-                {personaMetrics.map((entry, _index) => (
-                  <Cell key={`cell-${_index}`} fill={entry.color} />
+                {personaMetrics.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Pie>
               <Tooltip />
             </PieChart>
           </ResponsiveContainer>
         </div>
+
         {/* Conversion Rates by Persona */}
         <div className="bg-white rounded-lg border p-6">
           <h3 className="text-lg font-medium text-gray-900 mb-4">
@@ -331,23 +357,21 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               <XAxis
                 dataKey="persona"
                 tick={{ fontSize: 12 }}
-                tickFormatter={(value: unknown) =>
+                tickFormatter={(value: any) => // auto: implicit any
                   PERSONA_NAMES[value as UserPersona].split(' ')[1]
                 } // Show only first name
               />
               <YAxis />
               <Tooltip
-                labelFormatter={(value: unknown) => PERSONA_NAMES[value as UserPersona]}
-                formatter={(value: unknown) => [
-                  `${value.toFixed(1)}%`,
-                  'Conversion Rate',
-                ]}
+                labelFormatter={(value: any) => P // auto: implicit anyERSONA_NAMES[value as UserPersona]}
+                formatter={(value: any) => [`${value.toFixed(1)}%`, 'Conversion Rate']}
               />
               <Bar dataKey="conversionRate" fill="#3B82F6" />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
+
       {/* Charts Row 2: Revenue and Campaign Performance */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Revenue by Persona */}
@@ -359,22 +383,20 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               <XAxis
                 dataKey="persona"
                 tick={{ fontSize: 12 }}
-                tickFormatter={(value: unknown) =>
+                tickFormatter={(value: any) => // auto: implicit any
                   PERSONA_NAMES[value as UserPersona].split(' ')[1]
                 }
               />
               <YAxis />
               <Tooltip
-                labelFormatter={(value: unknown) => PERSONA_NAMES[value as UserPersona]}
-                formatter={(value: unknown) => [
-                  `$${value.toLocaleString()}`,
-                  'Revenue',
-                ]}
+                labelFormatter={(value: any) => P // auto: implicit anyERSONA_NAMES[value as UserPersona]}
+                formatter={(value: any) => [`$${value.toLocaleString()}`, 'Revenue']}
               />
               <Bar dataKey="revenue" fill="#10B981" />
             </BarChart>
           </ResponsiveContainer>
         </div>
+
         {/* Detection Confidence */}
         <div className="bg-white rounded-lg border p-6">
           <h3 className="text-lg font-medium text-gray-900 mb-4">
@@ -386,23 +408,21 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               <XAxis
                 dataKey="persona"
                 tick={{ fontSize: 12 }}
-                tickFormatter={(value: unknown) =>
+                tickFormatter={(value: any) => // auto: implicit any
                   PERSONA_NAMES[value as UserPersona].split(' ')[1]
                 }
               />
               <YAxis domain={[0, 100]} />
               <Tooltip
-                labelFormatter={(value: unknown) => PERSONA_NAMES[value as UserPersona]}
-                formatter={(value: unknown) => [
-                  `${value.toFixed(1)}%`,
-                  'Avg Confidence',
-                ]}
+                labelFormatter={(value: any) => P // auto: implicit anyERSONA_NAMES[value as UserPersona]}
+                formatter={(value: any) => [`${value.toFixed(1)}%`, 'Avg Confidence']}
               />
               <Bar dataKey="avgConfidence" fill="#8B5CF6" />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
+
       {/* Campaign Performance Table */}
       <div className="bg-white rounded-lg border">
         <div className="px-6 py-4 border-b border-gray-200">
@@ -436,8 +456,8 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {campaignMetrics.map((campaign, _index) => (
-                <tr key={_index} className="hover:bg-gray-50">
+              {campaignMetrics.map((campaign, index) => (
+                <tr key={index} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {campaign.campaign}
                   </td>
@@ -446,7 +466,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                       className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white"
                       style={{ backgroundColor: PERSONA_COLORS[campaign.persona] }}
                     >
-                      {PERSONA_NAMES[campaign._persona]}
+                      {PERSONA_NAMES[campaign.persona]}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -473,6 +493,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     </div>
   );
 };
+
 // Mock data generators for development
 function generateMockPersonaData(): PersonaAnalyticsData[] {
   const personas: UserPersona[] = [
@@ -484,7 +505,8 @@ function generateMockPersonaData(): PersonaAnalyticsData[] {
     'lifetime_larry',
   ];
   const mockData: PersonaAnalyticsData[] = [];
-  personas.forEach(_persona => {
+
+  personas.forEach(persona => {
     const baseCount = Math.floor(Math.random() * 100) + 50;
     for (let i = 0; i < baseCount; i++) {
       mockData.push({
@@ -499,8 +521,10 @@ function generateMockPersonaData(): PersonaAnalyticsData[] {
       });
     }
   });
+
   return mockData;
 }
+
 function generateMockCampaignData(): CampaignPerformanceData[] {
   const personas: UserPersona[] = [
     'struggling_sam',
@@ -517,10 +541,11 @@ function generateMockCampaignData(): CampaignPerformanceData[] {
     'Paid_Google',
     'Influencer_Collab',
   ];
+
   return campaigns.flatMap(campaign =>
     personas.map(persona => ({
       campaignId: `${campaign}_${persona}`,
-      _persona,
+      persona,
       channel: 'email' as const,
       metrics: {
         impressions: Math.floor(Math.random() * 10000) + 1000,
@@ -535,4 +560,5 @@ function generateMockCampaignData(): CampaignPerformanceData[] {
     }))
   );
 }
+
 export default PersonaAnalyticsDashboard;

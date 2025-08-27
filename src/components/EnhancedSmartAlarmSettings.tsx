@@ -42,7 +42,7 @@ interface EnhancedSmartAlarmSettingsProps {
   onSave: (alarmData: Partial<EnhancedSmartAlarm>) => void;
 }
 
-const conditionIcons: Record<string, React.ComponentType<unknown>> = {
+const conditionIcons: Record<string, React.ComponentType<any>> = {
   weather: CloudRain,
   calendar: Calendar,
   sleep_debt: Moon,
@@ -110,8 +110,8 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
       if (alarmMetrics) {
         setRecommendations(alarmMetrics.recommendedAdjustments);
       }
-    } catch (_error) {
-      console._error('Error loading optimization data:', _error);
+    } catch (error) {
+      console.error('Error loading optimization data:', error);
     } finally {
       setLoading(false);
     }
@@ -132,8 +132,11 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
   };
 
   const updateCondition = (id: string, updates: Partial<ConditionBasedAdjustment>) => {
-    setConditions((prev: unknown) =>
-      prev.map((cond: unknown) => (cond.id === id ? { ...cond, ...updates } : cond))
+    setConditions((prev: any) => // auto: implicit any
+      prev.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
     );
   };
 
@@ -288,8 +291,8 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                       alert(
                         '✅ Your custom configuration has been applied successfully!'
                       );
-                    } catch (_error) {
-                      console._error('Setup failed:', _error);
+                    } catch (error) {
+                      console.error('Setup failed:', error);
                       alert('❌ Setup failed. Please try again.');
                     } finally {
                       setLoading(false);
@@ -324,8 +327,8 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                       setLoading(true);
                       try {
                         await QuickSetupScripts.setupNewUser(alarm.id);
-                        alert('✅ New _user setup complete!');
-                      } catch (_error) {
+                        alert('✅ New user setup complete!');
+                      } catch (error) {
                         alert('❌ Setup failed. Please try again.');
                       } finally {
                         setLoading(false);
@@ -358,7 +361,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                         setConditions([]);
                         setSmartEnabled(false);
                         alert('✅ Settings reset to defaults');
-                      } catch (_error) {
+                      } catch (error) {
                         alert('❌ Reset failed. Please try again.');
                       } finally {
                         setLoading(false);
@@ -391,9 +394,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                     <input
                       type="checkbox"
                       checked={smartEnabled}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setSmartEnabled(e.target.checked)
-                      }
+                      onChange={(e: any) => setSmartEnabled(e.target.checked)}
                       className="sr-only peer"
                     />
                     <div className="w-11 h-6 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
@@ -416,9 +417,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                         <input
                           type="checkbox"
                           checked={realTimeAdaptation}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            setRealTimeAdaptation(e.target.checked)
-                          }
+                          onChange={(e: any) => s // auto: implicit anyetRealTimeAdaptation(e.target.checked)}
                           className="sr-only peer"
                         />
                         <div className="w-8 h-5 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-purple-500"></div>
@@ -439,9 +438,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                         <input
                           type="checkbox"
                           checked={dynamicWakeWindow}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            setDynamicWakeWindow(e.target.checked)
-                          }
+                          onChange={(e: any) => s // auto: implicit anyetDynamicWakeWindow(e.target.checked)}
                           className="sr-only peer"
                         />
                         <div className="w-8 h-5 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-purple-500"></div>
@@ -460,7 +457,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                         max="1"
                         step="0.1"
                         value={sleepPatternWeight}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        onChange={(e: any) => // auto: implicit any
                           setSleepPatternWeight(parseFloat(e.target.value))
                         }
                         className="w-full accent-purple-500"
@@ -482,9 +479,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                         max="0.5"
                         step="0.05"
                         value={learningFactor}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          setLearningFactor(parseFloat(e.target.value))
-                        }
+                        onChange={(e: any) => s // auto: implicit anyetLearningFactor(parseFloat(e.target.value))}
                         className="w-full accent-purple-500"
                       />
                       <div className="flex justify-between text-xs text-white/60 mt-1">
@@ -504,7 +499,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                 Condition-Based Adjustments
               </h3>
 
-              {conditions.map((condition: unknown) => {
+              {conditions.map((condition: any) => { // auto
                 const Icon = conditionIcons[condition.type] || Settings;
                 return (
                   <div
@@ -531,7 +526,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                             <input
                               type="checkbox"
                               checked={condition.isEnabled}
-                              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                              onChange={(e: any) => // auto: implicit any
                                 updateCondition(condition.id, {
                                   isEnabled: e.target.checked,
                                 })
@@ -603,9 +598,9 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                     </h3>
 
                     <div className="space-y-3">
-                      {optimalTimes.slice(0, 5).map((slot, _index) => (
+                      {optimalTimes.slice(0, 5).map((slot, index) => (
                         <div
-                          key={_index}
+                          key={index}
                           className="flex items-center justify-between p-3 bg-white/5 rounded-lg"
                         >
                           <div className="flex items-center gap-3">
@@ -657,9 +652,9 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                       </h3>
 
                       <div className="space-y-3">
-                        {recommendations.map((rec, _index) => (
+                        {recommendations.map((rec, index) => (
                           <div
-                            key={_index}
+                            key={index}
                             className="flex items-start gap-3 p-3 bg-white/5 rounded-lg"
                           >
                             <div
@@ -768,9 +763,9 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                       Sleep Quality Trend (7 days)
                     </h3>
                     <div className="flex items-end gap-2 h-32">
-                      {metrics.sleepDebtTrend.map((quality, _index) => (
+                      {metrics.sleepDebtTrend.map((quality, index) => (
                         <div
-                          key={_index}
+                          key={index}
                           className="flex-1 bg-white/20 rounded-t"
                           style={{ height: `${quality * 10}%` }}
                         />
@@ -784,13 +779,13 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                       Most Effective Conditions
                     </h3>
                     <div className="space-y-2">
-                      {metrics.mostEffectiveConditions.map((condition, _index) => (
+                      {metrics.mostEffectiveConditions.map((condition, index) => (
                         <div
-                          key={_index}
+                          key={index}
                           className="flex items-center gap-3 p-2 bg-white/5 rounded"
                         >
                           <span className="text-purple-400 font-mono">
-                            #{_index + 1}
+                            #{index + 1}
                           </span>
                           <span className="text-white capitalize">
                             {condition.replace('_', ' ')}

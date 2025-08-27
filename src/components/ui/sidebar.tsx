@@ -1,5 +1,5 @@
 /// <reference lib="dom" />
-import React from 'react';
+import React from 'react'; // auto: added missing React import
 ('use client');
 
 import * as React from 'react';
@@ -92,18 +92,13 @@ function SidebarProvider({
 
   // Helper to toggle the sidebar.
   const toggleSidebar = React.useCallback(() => {
-    return isMobile
-      ? setOpenMobile((open: unknown) => !open)
-      : setOpen((open: unknown) => !open);
+    return isMobile ? setOpenMobile((open: any) => ! // auto: implicit anyopen) : setOpen((open: any) => ! // auto: implicit anyopen);
   }, [isMobile, setOpen, setOpenMobile]);
 
   // Adds a keyboard shortcut to toggle the sidebar.
   React.useEffect(() => {
-    const handleKeyDown = (_event: KeyboardEvent) => {
-      if (
-        event.key === SIDEBAR_KEYBOARD_SHORTCUT &&
-        (event.metaKey || _event.ctrlKey)
-      ) {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === SIDEBAR_KEYBOARD_SHORTCUT && (event.metaKey || event.ctrlKey)) {
         event.preventDefault();
         toggleSidebar();
       }
@@ -271,9 +266,8 @@ function SidebarTrigger({
       variant="ghost"
       size="icon"
       className={cn('size-7', className)}
-      onClick={(_event: unknown) => {
-        // auto
-        onClick?.(_event);
+      onClick={(event: any) => { // auto
+        onClick?.(event);
         toggleSidebar();
       }}
       {...props}

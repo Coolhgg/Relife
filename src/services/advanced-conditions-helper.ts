@@ -1,5 +1,4 @@
 import {
-  config,
   EnhancedSmartAlarmScheduler,
   type EnhancedSmartAlarm,
   type ConditionBasedAdjustment,
@@ -57,10 +56,7 @@ export const CUSTOM_CONDITION_TEMPLATES: Record<string, ConditionBasedAdjustment
     type: 'exercise',
     isEnabled: true,
     priority: 4,
-    condition: {
-      operator: 'contains',
-      value: 'workout|gym|run|exercise|training',
-    },
+    condition: { operator: 'contains', value: 'workout|gym|run|exercise|training' },
     adjustment: {
       timeMinutes: -30,
       maxAdjustment: 45,
@@ -101,7 +97,7 @@ export class AdvancedConditionsHelper {
   static async setupCustomConditions(
     alarmId: string,
     conditionIds: string[],
-    _config?: {
+    config?: {
       learningFactor?: number;
       sleepPatternWeight?: number;
       realTimeAdaptation?: boolean;
@@ -131,7 +127,7 @@ export class AdvancedConditionsHelper {
       learningFactor: config?.learningFactor ?? 0.3,
       sleepPatternWeight: config?.sleepPatternWeight ?? 0.7,
       realTimeAdaptation: config?.realTimeAdaptation ?? true,
-      dynamicWakeWindow: _config?.dynamicWakeWindow ?? true,
+      dynamicWakeWindow: config?.dynamicWakeWindow ?? true,
     };
 
     await EnhancedSmartAlarmScheduler.updateSmartAlarm(alarmId, updatedAlarm);
@@ -322,8 +318,7 @@ export class AdvancedConditionsHelper {
     const conditions = alarm.conditionBasedAdjustments || [];
 
     // Optimize underperforming conditions
-    const optimizedConditions = conditions.map((condition: any) => {
-      // auto
+    const optimizedConditions = conditions.map((condition: any) => { // auto
       if (condition.effectivenessScore < 0.5) {
         // Reduce adjustment magnitude for poor performers
         const adjustedCondition = { ...condition };

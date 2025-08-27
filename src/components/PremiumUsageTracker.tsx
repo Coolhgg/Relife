@@ -46,11 +46,7 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
   }, [userId]);
 
   const loadUsageData = async () => {
-    setUsageData((prev: any) => ({
-      ...prev,
-      isLoading: true,
-      _error: undefined,
-    }));
+    setUsageData((prev: any) => ({ // auto: implicit any ...prev, isLoading: true, error: undefined }));
 
     try {
       const summary = await PremiumVoiceService.getUsageSummary(userId);
@@ -59,11 +55,11 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
         isLoading: false,
       });
       setLastRefresh(new Date());
-    } catch (_error) {
-      setUsageData((prev: any) => ({
+    } catch (error) {
+      setUsageData((prev: any) => ({ // auto: implicit any
         ...prev,
         isLoading: false,
-        error: _error instanceof Error ? _error.message : 'Failed to load usage data',
+        error: error instanceof Error ? error.message : 'Failed to load usage data',
       }));
     }
   };
@@ -197,11 +193,11 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
         </motion.button>
       </div>
 
-      {usageData._error ? (
+      {usageData.error ? (
         <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
           <div className="flex items-center space-x-2">
             <AlertCircle className="w-4 h-4" />
-            <span>{usageData._error}</span>
+            <span>{usageData.error}</span>
           </div>
         </div>
       ) : (

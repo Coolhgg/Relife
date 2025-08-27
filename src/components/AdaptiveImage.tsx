@@ -13,7 +13,7 @@ interface AdaptiveImageProps {
   priority?: boolean; // For above-the-fold images
   placeholder?: 'blur' | 'empty' | string; // Blur, empty, or custom placeholder URL
   onLoad?: () => void;
-  onError?: (_error: Event) => void;
+  onError?: (error: Event) => void;
   sizes?: string; // Responsive image sizes
   quality?: 'auto' | 'low' | 'medium' | 'high';
 }
@@ -187,9 +187,9 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(
 
     // Handle image error
     const handleError = useCallback(
-      (_event: React.SyntheticEvent<HTMLImageElement>) => {
+      (event: React.SyntheticEvent<HTMLImageElement>) => {
         setHasError(true);
-        onError?.(_event.nativeEvent);
+        onError?.(event.nativeEvent);
       },
       [onError]
     );
@@ -235,13 +235,11 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(
     const generateSrcSet = useCallback((): string => {
       if (!shouldPreloadImages || isLowEnd) return '';
 
-      const webpVariants = variants.filter(
-        (v: any) => v.format === 'webp' && supportsWebP()
-      );
+      const webpVariants = variants.filter((v: any) => v.format === 'webp' && supportsWebP()); // auto: implicit any
       if (webpVariants.length === 0) return '';
 
       return webpVariants
-        .map((variant: any) => {
+        .map((variant: any) => { // auto
           const descriptor =
             variant.quality === 'low'
               ? '0.5x'

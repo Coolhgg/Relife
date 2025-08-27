@@ -122,8 +122,8 @@ export function BugReportModal({
 
         stream.getTracks().forEach(track => track.stop());
       });
-    } catch (_error) {
-      console._error('Failed to take screenshot:', _error);
+    } catch (error) {
+      console.error('Failed to take screenshot:', error);
     }
   };
 
@@ -131,15 +131,15 @@ export function BugReportModal({
     setSteps([...steps, '']);
   };
 
-  const updateStep = (_index: number, value: string) => {
+  const updateStep = (index: number, value: string) => {
     const newSteps = [...steps];
-    newSteps[_index] = value;
+    newSteps[index] = value;
     setSteps(newSteps);
   };
 
-  const removeStep = (_index: number) => {
+  const removeStep = (index: number) => {
     if (steps.length > 1) {
-      const newSteps = steps.filter((_, i) => i !== _index);
+      const newSteps = steps.filter((_, i) => i !== index);
       setSteps(newSteps);
     }
   };
@@ -152,7 +152,7 @@ export function BugReportModal({
   };
 
   const removeTag = (tagToRemove: string) => {
-    setTags(tags.filter((tag: unknown) => tag !== tagToRemove));
+    setTags(tags.filter((tag: any) => t // auto: implicit anyag !== tagToRemove));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -165,7 +165,7 @@ export function BugReportModal({
       const bugData: Partial<BugReport> = {
         title: title.trim(),
         description: description.trim(),
-        steps: steps.filter((step: unknown) => step.trim() !== ''),
+        steps: steps.filter((step: any) => s // auto: implicit anytep.trim() !== ''),
         expectedBehavior: expectedBehavior.trim(),
         actualBehavior: actualBehavior.trim(),
         severity,
@@ -186,8 +186,8 @@ export function BugReportModal({
         resetForm();
         onClose();
       }, 2000);
-    } catch (_error) {
-      console._error('Failed to submit bug report:', _error);
+    } catch (error) {
+      console.error('Failed to submit bug report:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -266,9 +266,7 @@ export function BugReportModal({
                   <Input
                     id="title"
                     value={title}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                      setTitle(e.target.value)
-                    }
+                    onChange={(e: any) => s // auto: implicit anyetTitle(e.target.value)}
                     placeholder="Brief summary of the bug"
                     className="mt-1"
                     required
@@ -280,9 +278,7 @@ export function BugReportModal({
                   <Textarea
                     id="description"
                     value={description}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                      setDescription(e.target.value)
-                    }
+                    onChange={(e: any) => s // auto: implicit anyetDescription(e.target.value)}
                     placeholder="Describe the bug in detail..."
                     className="mt-1 min-h-[100px]"
                     rows={4}
@@ -375,9 +371,7 @@ export function BugReportModal({
                   <Textarea
                     id="expected"
                     value={expectedBehavior}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                      setExpectedBehavior(e.target.value)
-                    }
+                    onChange={(e: any) => s // auto: implicit anyetExpectedBehavior(e.target.value)}
                     placeholder="Describe what you thought would happen..."
                     className="mt-1"
                     rows={3}
@@ -389,9 +383,7 @@ export function BugReportModal({
                   <Textarea
                     id="actual"
                     value={actualBehavior}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                      setActualBehavior(e.target.value)
-                    }
+                    onChange={(e: any) => s // auto: implicit anyetActualBehavior(e.target.value)}
                     placeholder="Describe what actually happened instead..."
                     className="mt-1"
                     rows={3}
@@ -414,19 +406,17 @@ export function BugReportModal({
                       </Button>
                     </div>
                     <div className="space-y-3">
-                      {steps.map((step, _index) => (
-                        <div key={_index} className="flex items-center gap-3">
+                      {steps.map((step, index) => (
+                        <div key={index} className="flex items-center gap-3">
                           <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
                             <span className="text-sm font-medium text-primary">
-                              {_index + 1}
+                              {index + 1}
                             </span>
                           </div>
                           <Input
                             value={step}
-                            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                              updateStep(_index, e.target.value)
-                            }
-                            placeholder={`Step ${_index + 1}...`}
+                            onChange={(e: any) => u // auto: implicit anypdateStep(index, e.target.value)}
+                            placeholder={`Step ${index + 1}...`}
                             className="flex-1"
                           />
                           {steps.length > 1 && (
@@ -434,7 +424,7 @@ export function BugReportModal({
                               type="button"
                               variant="ghost"
                               size="sm"
-                              onClick={() => removeStep(_index)}
+                              onClick={() => removeStep(index)}
                               className="flex-shrink-0"
                             >
                               <Trash2 className="w-4 h-4" />
@@ -451,12 +441,10 @@ export function BugReportModal({
                   <div className="flex items-center gap-2 mt-2">
                     <Input
                       value={newTag}
-                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                        setNewTag(e.target.value)
-                      }
+                      onChange={(e: any) => s // auto: implicit anyetNewTag(e.target.value)}
                       placeholder="Add a tag..."
                       className="flex-1"
-                      onKeyDown={(e: React.KeyboardEvent) =>
+                      onKeyDown={(e: any) => // auto: implicit any
                         e.key === 'Enter' && (e.preventDefault(), addTag())
                       }
                     />
@@ -471,7 +459,10 @@ export function BugReportModal({
                   </div>
                   {tags.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-3">
-                      {tags.map((tag: unknown) => (
+                      {tags.map(($1) => {
+        // TODO(manual): implement
+        return null;
+      })
                         <Badge
                           key={tag}
                           variant="secondary"

@@ -1,13 +1,10 @@
 // Advanced Analytics Service for Relife Smart Alarm
 // Provides comprehensive analytics, insights, and AI-powered recommendations
-import { MockDataRecord, MockDataStore } from '../../types/common-types';
 
 import { SupabaseService } from './supabase';
 import PerformanceMonitor from './performance-monitor';
 import { ErrorHandler } from './error-handler';
 import type { Alarm, User } from '../types';
-import { ErrorHandler } from './error-handler';
-import AnalyticsService from './analytics';
 
 export interface AnalyticsInsight {
   id: string;
@@ -24,7 +21,7 @@ export interface AnalyticsInsight {
     trend: 'improving' | 'declining' | 'stable';
     comparison_period: string;
   };
-  metadata: Record<string, unknown>;
+  metadata: Record<string, any>;
   created_at: Date;
 }
 
@@ -210,10 +207,7 @@ class AdvancedAnalyticsService {
       };
 
       // Cache the results
-      this.analyticsCache.set(cacheKey, {
-        data: analytics,
-        timestamp: Date.now(),
-      });
+      this.analyticsCache.set(cacheKey, { data: analytics, timestamp: Date.now() });
 
       const duration = performance.now() - startTime;
       this.performanceMonitor.trackCustomMetric(
@@ -222,8 +216,8 @@ class AdvancedAnalyticsService {
       );
 
       return analytics;
-    } catch (_error) {
-      ErrorHandler.handleError(_error as Error, 'Failed to generate _user analytics', {
+    } catch (error) {
+      ErrorHandler.handleError(error as Error, 'Failed to generate user analytics', {
         userId,
         period,
       });
@@ -235,19 +229,19 @@ class AdvancedAnalyticsService {
    * Calculate summary metrics
    */
   private async calculateSummaryMetrics(
-    alarmData: MockDataRecord[],
-    sleepData: MockDataRecord[],
-    eventsData: MockDataRecord[]
+    alarmData: any[],
+    sleepData: any[],
+    eventsData: any[]
   ): Promise<UserAnalytics['summary']> {
     const total_alarms = eventsData.length;
     const successful_wake_ups = eventsData.filter(
-      event => event.dismissed && !_event.snoozed
+      event => event.dismissed && !event.snoozed
     ).length;
     const average_response_time =
       eventsData
-        .filter(event => _event.response_time)
-        .reduce((sum, _event) => sum + event.response_time, 0) /
-        eventsData.filter(event => _event.response_time).length || 0;
+        .filter(event => event.response_time)
+        .reduce((sum, event) => sum + event.response_time, 0) /
+        eventsData.filter(event => event.response_time).length || 0;
 
     const success_rate =
       total_alarms > 0 ? (successful_wake_ups / total_alarms) * 100 : 0;
@@ -274,8 +268,8 @@ class AdvancedAnalyticsService {
   private async calculateTrends(
     userId: string,
     period: string,
-    eventsData: MockDataRecord[],
-    sleepData: MockDataRecord[]
+    eventsData: any[],
+    sleepData: any[]
   ): Promise<UserAnalytics['trends']> {
     const wake_time_consistency =
       await this.calculateWakeTimeConsistencyTrend(eventsData);
@@ -301,9 +295,9 @@ class AdvancedAnalyticsService {
     userId: string,
     summary: UserAnalytics['summary'],
     trends: UserAnalytics['trends'],
-    alarmData: MockDataRecord[],
-    sleepData: MockDataRecord[],
-    eventsData: MockDataRecord[]
+    alarmData: any[],
+    sleepData: any[],
+    eventsData: any[]
   ): Promise<AnalyticsInsight[]> {
     const insights: AnalyticsInsight[] = [];
 
@@ -480,8 +474,8 @@ class AdvancedAnalyticsService {
    */
   private async buildPredictionModels(
     userId: string,
-    eventsData: MockDataRecord[],
-    sleepData: MockDataRecord[],
+    eventsData: any[],
+    sleepData: any[],
     trends: UserAnalytics['trends']
   ): Promise<UserAnalytics['prediction_models']> {
     const optimal_wake_times = await this.predictOptimalWakeTimes(userId, eventsData);
@@ -502,16 +496,16 @@ class AdvancedAnalyticsService {
    * Get real-time analytics dashboard data
    */
   async getRealtimeDashboard(userId: string): Promise<{
-    liveMetrics: unknown;
-    todayStats: unknown;
+    liveMetrics: any;
+    todayStats: any;
     activeInsights: AnalyticsInsight[];
-    quickActions: MockDataRecord[];
+    quickActions: any[];
   }> {
     try {
       const today = new Date().toISOString().split('T')[0];
 
       // Get today's events
-      const { data: todayEvents, _error } = await this.supabaseService
+      const { data: todayEvents, error } = await this.supabaseService
         .getInstance()
         .client.from('alarm_events')
         .select(
@@ -524,12 +518,12 @@ class AdvancedAnalyticsService {
         .gte('fired_at', today)
         .order('fired_at', { ascending: false });
 
-      if (_error) throw error;
+      if (error) throw error;
 
       const liveMetrics = {
         todayAlarms: todayEvents?.length || 0,
         successfulWakeups:
-          todayEvents?.filter((e: unknown) => e.dismissed && !e.snoozed).length || 0,
+          todayEvents?.filter((e: any) => e.dismissed && !e.snoozed).length || 0,
         avgResponseTime: this.calculateAverageResponseTime(todayEvents || []),
         streak: await this.calculateCurrentStreak(userId),
       };
@@ -538,7 +532,7 @@ class AdvancedAnalyticsService {
         firstAlarm: todayEvents?.[0]?.fired_at,
         lastAlarm: todayEvents?.[todayEvents.length - 1]?.fired_at,
         mostEffectiveVoice: this.getMostEffectiveVoice(todayEvents || []),
-        totalSnoozed: todayEvents?.filter((e: unknown) => e.snoozed).length || 0,
+        totalSnoozed: todayEvents?.filter((e: any) => e.snoozed).length || 0,
       };
 
       // Get active insights (cached)
@@ -558,8 +552,8 @@ class AdvancedAnalyticsService {
         activeInsights,
         quickActions,
       };
-    } catch (_error) {
-      ErrorHandler.handleError(_error as Error, 'Failed to get realtime dashboard', {
+    } catch (error) {
+      ErrorHandler.handleError(error as Error, 'Failed to get realtime dashboard', {
         userId,
       });
       throw error;
@@ -569,12 +563,12 @@ class AdvancedAnalyticsService {
   /**
    * Helper methods for calculations
    */
-  private calculateConsistencyScore(eventsData: MockDataRecord[]): number {
+  private calculateConsistencyScore(eventsData: any[]): number {
     if (eventsData.length < 2) return 100;
 
     // Calculate variance in wake times
     const wakeTimes = eventsData.map(event => {
-      const time = new Date(_event.fired_at);
+      const time = new Date(event.fired_at);
       return time.getHours() * 60 + time.getMinutes();
     });
 
@@ -592,7 +586,7 @@ class AdvancedAnalyticsService {
     return consistencyScore;
   }
 
-  private calculateSleepHealthScore(sleepData: MockDataRecord[]): number {
+  private calculateSleepHealthScore(sleepData: any[]): number {
     if (sleepData.length === 0) return 50; // No data
 
     const recentSleep = sleepData.slice(-7); // Last 7 days
@@ -618,13 +612,13 @@ class AdvancedAnalyticsService {
   }
 
   private async calculateWakeTimeConsistencyTrend(
-    eventsData: MockDataRecord[]
+    eventsData: any[]
   ): Promise<TrendData> {
     // Group events by week and calculate consistency for each week
     const weeklyConsistency = new Map<string, TimeoutHandle>();
 
     eventsData.forEach(event => {
-      const date = new Date(_event.fired_at);
+      const date = new Date(event.fired_at);
       const weekKey = this.getWeekKey(date);
 
       if (!weeklyConsistency.has(weekKey)) {
@@ -649,21 +643,16 @@ class AdvancedAnalyticsService {
     };
   }
 
-  private async calculateResponseTimeTrend(
-    eventsData: MockDataRecord[]
-  ): Promise<TrendData> {
+  private async calculateResponseTimeTrend(eventsData: any[]): Promise<TrendData> {
     const weeklyAvgResponseTime = new Map<string, { total: number; count: number }>();
 
     eventsData
-      .filter(event => _event.response_time)
+      .filter(event => event.response_time)
       .forEach(event => {
-        const date = new Date(_event.fired_at);
+        const date = new Date(event.fired_at);
         const weekKey = this.getWeekKey(date);
 
-        const current = weeklyAvgResponseTime.get(weekKey) || {
-          total: 0,
-          count: 0,
-        };
+        const current = weeklyAvgResponseTime.get(weekKey) || { total: 0, count: 0 };
         current.total += event.response_time;
         current.count += 1;
         weeklyAvgResponseTime.set(weekKey, current);
@@ -684,7 +673,7 @@ class AdvancedAnalyticsService {
 
   private async calculateVoiceMoodEffectivenessTrend(
     userId: string,
-    eventsData: MockDataRecord[]
+    eventsData: any[]
   ): Promise<TrendData> {
     // This would calculate how voice mood effectiveness changes over time
     const weeklyEffectiveness = new Map<string, TimeoutHandle>();
@@ -693,12 +682,12 @@ class AdvancedAnalyticsService {
     const weeklyData = new Map<string, { successful: number; total: number }>();
 
     eventsData.forEach(event => {
-      const date = new Date(_event.fired_at);
+      const date = new Date(event.fired_at);
       const weekKey = this.getWeekKey(date);
 
       const current = weeklyData.get(weekKey) || { successful: 0, total: 0 };
       current.total += 1;
-      if (event.dismissed && !_event.snoozed) {
+      if (event.dismissed && !event.snoozed) {
         current.successful += 1;
       }
       weeklyData.set(weekKey, current);
@@ -720,9 +709,7 @@ class AdvancedAnalyticsService {
     };
   }
 
-  private async calculateSleepQualityTrend(
-    sleepData: MockDataRecord[]
-  ): Promise<TrendData> {
+  private async calculateSleepQualityTrend(sleepData: any[]): Promise<TrendData> {
     const values = sleepData
       .slice(-30) // Last 30 days
       .map(session => ({
@@ -825,9 +812,9 @@ class AdvancedAnalyticsService {
     return Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
   }
 
-  private async getAlarmData(userId: string, period: string): Promise<unknown[]> {
+  private async getAlarmData(userId: string, period: string): Promise<any[]> {
     const daysBack = this.getPeriodDays(period);
-    const { data, _error } = await this.supabaseService
+    const { data, error } = await this.supabaseService
       .getInstance()
       .client.from('alarms')
       .select('*')
@@ -837,13 +824,13 @@ class AdvancedAnalyticsService {
         new Date(Date.now() - daysBack * 24 * 60 * 60 * 1000).toISOString()
       );
 
-    if (_error) throw error;
+    if (error) throw error;
     return data || [];
   }
 
-  private async getSleepData(userId: string, period: string): Promise<unknown[]> {
+  private async getSleepData(userId: string, period: string): Promise<any[]> {
     const daysBack = this.getPeriodDays(period);
-    const { data, _error } = await this.supabaseService
+    const { data, error } = await this.supabaseService
       .getInstance()
       .client.from('sleep_sessions')
       .select('*')
@@ -854,13 +841,13 @@ class AdvancedAnalyticsService {
       )
       .order('sleep_start', { ascending: false });
 
-    if (_error) throw error;
+    if (error) throw error;
     return data || [];
   }
 
-  private async getEventData(userId: string, period: string): Promise<unknown[]> {
+  private async getEventData(userId: string, period: string): Promise<any[]> {
     const daysBack = this.getPeriodDays(period);
-    const { data, _error } = await this.supabaseService
+    const { data, error } = await this.supabaseService
       .getInstance()
       .client.from('alarm_events')
       .select(
@@ -876,7 +863,7 @@ class AdvancedAnalyticsService {
       )
       .order('fired_at', { ascending: false });
 
-    if (_error) throw error;
+    if (error) throw error;
     return data || [];
   }
 
@@ -897,18 +884,15 @@ class AdvancedAnalyticsService {
 
   private async analyzeVoiceEffectiveness(
     userId: string,
-    eventsData: MockDataRecord[]
-  ): Promise<unknown> {
+    eventsData: any[]
+  ): Promise<any> {
     const moodEffectiveness = new Map<string, { successful: number; total: number }>();
 
     eventsData.forEach(event => {
-      const mood = _event.alarms?.voice_mood || 'motivational';
-      const current = moodEffectiveness.get(mood) || {
-        successful: 0,
-        total: 0,
-      };
+      const mood = event.alarms?.voice_mood || 'motivational';
+      const current = moodEffectiveness.get(mood) || { successful: 0, total: 0 };
       current.total += 1;
-      if (event.dismissed && !_event.snoozed) {
+      if (event.dismissed && !event.snoozed) {
         current.successful += 1;
       }
       moodEffectiveness.set(mood, current);
@@ -983,7 +967,7 @@ class AdvancedAnalyticsService {
     metric: string
   ): Promise<PersonalBest> {
     // Query historical best performance
-    const { data, _error } = await this.supabaseService
+    const { data, error } = await this.supabaseService
       .getInstance()
       .client.from('user_analytics_history')
       .select('*')
@@ -992,7 +976,7 @@ class AdvancedAnalyticsService {
       .order('value', { ascending: false })
       .limit(1);
 
-    if (_error || !data || data.length === 0) {
+    if (error || !data || data.length === 0) {
       return {
         metric,
         best_value: 0,
@@ -1038,14 +1022,14 @@ class AdvancedAnalyticsService {
 
   private async predictOptimalWakeTimes(
     userId: string,
-    eventsData: MockDataRecord[]
+    eventsData: any[]
   ): Promise<OptimalWakeTime[]> {
     const optimal: OptimalWakeTime[] = [];
 
     // Analyze success by day of week and time
     for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
       const dayEvents = eventsData.filter(event => {
-        const date = new Date(_event.fired_at);
+        const date = new Date(event.fired_at);
         return date.getDay() === dayOfWeek;
       });
 
@@ -1055,10 +1039,10 @@ class AdvancedAnalyticsService {
       const hourSuccess = new Map<number, { successful: number; total: number }>();
 
       dayEvents.forEach(event => {
-        const hour = new Date(_event.fired_at).getHours();
+        const hour = new Date(event.fired_at).getHours();
         const current = hourSuccess.get(hour) || { successful: 0, total: 0 };
         current.total += 1;
-        if (event.dismissed && !_event.snoozed) {
+        if (event.dismissed && !event.snoozed) {
           current.successful += 1;
         }
         hourSuccess.set(hour, current);
@@ -1095,7 +1079,7 @@ class AdvancedAnalyticsService {
   }
 
   private async forecastEffectiveness(
-    eventsData: MockDataRecord[],
+    eventsData: any[],
     trends: UserAnalytics['trends']
   ): Promise<EffectivenessForecast> {
     const recentEvents = eventsData.slice(0, 14); // Last 2 weeks
@@ -1148,8 +1132,8 @@ class AdvancedAnalyticsService {
   }
 
   private async generateSleepRecommendations(
-    sleepData: MockDataRecord[],
-    eventsData: MockDataRecord[]
+    sleepData: any[],
+    eventsData: any[]
   ): Promise<SleepRecommendation[]> {
     const recommendations: SleepRecommendation[] = [];
 
@@ -1191,7 +1175,7 @@ class AdvancedAnalyticsService {
     return recommendations;
   }
 
-  private calculateAverageResponseTime(events: MockDataRecord[]): number {
+  private calculateAverageResponseTime(events: any[]): number {
     const withResponseTime = events.filter(e => e.response_time);
     return withResponseTime.length > 0
       ? Math.round(
@@ -1203,7 +1187,7 @@ class AdvancedAnalyticsService {
 
   private async calculateCurrentStreak(userId: string): Promise<number> {
     // Calculate consecutive successful wake-ups
-    const { data, _error } = await this.supabaseService
+    const { data, error } = await this.supabaseService
       .getInstance()
       .client.from('alarm_events')
       .select(
@@ -1218,11 +1202,11 @@ class AdvancedAnalyticsService {
       .order('fired_at', { ascending: false })
       .limit(30);
 
-    if (_error || !data) return 0;
+    if (error || !data) return 0;
 
     let streak = 0;
-    for (const _event of data) {
-      if (event.dismissed && !_event.snoozed) {
+    for (const event of data) {
+      if (event.dismissed && !event.snoozed) {
         streak++;
       } else {
         break;
@@ -1232,14 +1216,14 @@ class AdvancedAnalyticsService {
     return streak;
   }
 
-  private getMostEffectiveVoice(events: MockDataRecord[]): string {
+  private getMostEffectiveVoice(events: any[]): string {
     const moodCounts = new Map<string, { successful: number; total: number }>();
 
     events.forEach(event => {
-      const mood = _event.alarms?.voice_mood || 'motivational';
+      const mood = event.alarms?.voice_mood || 'motivational';
       const current = moodCounts.get(mood) || { successful: 0, total: 0 };
       current.total += 1;
-      if (event.dismissed && !_event.snoozed) {
+      if (event.dismissed && !event.snoozed) {
         current.successful += 1;
       }
       moodCounts.set(mood, current);
@@ -1261,9 +1245,9 @@ class AdvancedAnalyticsService {
 
   private async generateQuickActions(
     userId: string,
-    liveMetrics: unknown,
+    liveMetrics: any,
     insights: AnalyticsInsight[]
-  ): Promise<unknown[]> {
+  ): Promise<any[]> {
     const actions = [];
 
     if (liveMetrics.successfulWakeups === 0 && liveMetrics.todayAlarms > 0) {

@@ -9,7 +9,6 @@ import type {
 } from '../services/enhanced-cache-manager';
 import type { CustomSound } from '../services/types/media';
 import { TimeoutHandle } from '../types/timers';
-import type { PerformanceHistoryEntry } from '../types/state-updaters';
 
 export interface CacheState {
   stats: CacheStats;
@@ -49,7 +48,7 @@ export function useEnhancedCaching(): {
           ? 'medium'
           : 'high';
 
-    setCacheState((prev: CacheState) => ({
+    setCacheState((prev: any) => ({ // auto: implicit any
       ...prev,
       stats,
       memoryPressure,
@@ -57,29 +56,28 @@ export function useEnhancedCaching(): {
   }, []);
 
   const optimize = useCallback(async () => {
-    setCacheState((prev: CacheState) => ({ ...prev, isOptimizing: true }));
+    setCacheState((prev: any) => ({ // auto: implicit any ...prev, isOptimizing: true }));
 
     try {
       await enhancedCacheManager.optimize();
-
-      setCacheState((prev: CacheState) => ({
+      setCacheState((prev: any) => ({ // auto: implicit any
         ...prev,
         lastOptimization: new Date(),
       }));
     } finally {
-      setCacheState((prev: CacheState) => ({ ...prev, isOptimizing: false }));
+      setCacheState((prev: any) => ({ // auto: implicit any ...prev, isOptimizing: false }));
       updateStats();
     }
   }, [updateStats]);
 
   const warmCache = useCallback(
     async (sounds: CustomSound[]) => {
-      setCacheState((prev: CacheState) => ({ ...prev, isWarming: true }));
+      setCacheState((prev: any) => ({ // auto: implicit any ...prev, isWarming: true }));
 
       try {
         await enhancedCacheManager.warmCache(sounds);
       } finally {
-        setCacheState((prev: CacheState) => ({ ...prev, isWarming: false }));
+        setCacheState((prev: any) => ({ // auto: implicit any ...prev, isWarming: false }));
         updateStats();
       }
     },
@@ -174,18 +172,16 @@ export function useCachePerformance() {
       setPerformance(newPerformance);
 
       // Update history
-      setPerformanceHistory(
-        (prev: { timestamp: Date; hitRate: number; accessTime: number }[]) => {
-          const newEntry = {
-            timestamp: new Date(),
-            hitRate: newPerformance.hitRate,
-            accessTime: stats.averageAccessTime,
-          };
+      setPerformanceHistory((prev: any) => { // auto
+        const newEntry = {
+          timestamp: new Date(),
+          hitRate: newPerformance.hitRate,
+          accessTime: stats.averageAccessTime,
+        };
 
-          const updated = [...prev, newEntry];
-          return updated.slice(-50); // Keep last 50 entries
-        }
-      );
+        const updated = [...prev, newEntry];
+        return updated.slice(-50); // Keep last 50 entries
+      });
     };
 
     updatePerformance();
@@ -233,9 +229,7 @@ export function useCacheWarming() {
     const currentHour = now.getHours();
 
     // Find next scheduled warming time
-    const nextHour = warmingConfig.scheduleHours.find(
-      (hour: any) => hour > currentHour
-    );
+    const nextHour = warmingConfig.scheduleHours.find((hour: any) => h // auto: implicit anyour > currentHour);
     const targetHour = nextHour ?? warmingConfig.scheduleHours[0];
 
     const nextTime = new Date();
@@ -246,17 +240,10 @@ export function useCacheWarming() {
       nextTime.setHours(targetHour, 0, 0, 0);
     }
 
-    setWarmingStatus(
-      (prev: {
-        isActive: boolean;
-        nextScheduledTime: Date | null;
-        lastWarmingTime: Date | null;
-        warmedEntriesCount: number;
-      }) => ({
-        ...prev,
-        nextScheduledTime: nextTime,
-      })
-    );
+    setWarmingStatus((prev: any) => ({ // auto: implicit any
+      ...prev,
+      nextScheduledTime: nextTime,
+    }));
   }, [warmingConfig.scheduleHours]);
 
   const enableSmartWarming = useCallback(() => {
@@ -384,22 +371,15 @@ export function useAutoOptimization(enabled: boolean = true) {
 
           const optimizationTime = performance.now() - startTime;
 
-          setOptimizationStatus(
-            (prev: {
-              isEnabled: boolean;
-              lastOptimization: Date | null;
-              optimizationCount: number;
-              averageOptimizationTime: number;
-            }) => ({
-              ...prev,
-              lastOptimization: new Date(),
-              optimizationCount: prev.optimizationCount + 1,
-              averageOptimizationTime:
-                prev.averageOptimizationTime * 0.8 + optimizationTime * 0.2,
-            })
-          );
-        } catch (_error) {
-          console._error('Auto-optimization failed:', _error);
+          setOptimizationStatus((prev: any) => ({ // auto: implicit any
+            ...prev,
+            lastOptimization: new Date(),
+            optimizationCount: prev.optimizationCount + 1,
+            averageOptimizationTime:
+              prev.averageOptimizationTime * 0.8 + optimizationTime * 0.2,
+          }));
+        } catch (error) {
+          console.error('Auto-optimization failed:', error);
         }
       };
 
@@ -415,17 +395,10 @@ export function useAutoOptimization(enabled: boolean = true) {
   }, [enabled]);
 
   const toggleAutoOptimization = useCallback(() => {
-    setOptimizationStatus(
-      (prev: {
-        isEnabled: boolean;
-        lastOptimization: Date | null;
-        optimizationCount: number;
-        averageOptimizationTime: number;
-      }) => ({
-        ...prev,
-        isEnabled: !prev.isEnabled,
-      })
-    );
+    setOptimizationStatus((prev: any) => ({ // auto: implicit any
+      ...prev,
+      isEnabled: !prev.isEnabled,
+    }));
   }, []);
 
   return {
@@ -443,53 +416,23 @@ export function useCacheDebugging() {
     diskUsage: 0,
     hitRate: 0,
     compressionSavings: 0,
-    topAccessedEntries: [] as Array<{
-      id: string;
-      accessCount: number;
-      size: number;
-    }>,
-    recentEvictions: [] as Array<{
-      id: string;
-      reason: string;
-      timestamp: Date;
-    }>,
+    topAccessedEntries: [] as Array<{ id: string; accessCount: number; size: number }>,
+    recentEvictions: [] as Array<{ id: string; reason: string; timestamp: Date }>,
   });
 
   useEffect(() => {
     const updateDebugInfo = () => {
       const stats = enhancedCacheManager.getStats();
 
-      setDebugInfo(
-        (prev: {
-          memoryUsage: number;
-          diskUsage: number;
-          hitRate: number;
-          compressionSavings: number;
-          topAccessedEntries: Array<{
-            id: string;
-            accessCount: number;
-            size: number;
-          }>;
-          recentEvictions: Array<{
-            id: string;
-            evictedAt: Date;
-            reason: string;
-          }>;
-          cacheErrors: Array<{
-            timestamp: Date;
-            _error: string;
-            category: string;
-          }>;
-        }) => ({
-          ...prev,
-          memoryUsage: stats.memoryUsage,
-          diskUsage: stats.totalSize,
-          hitRate: stats.hitRate / (stats.hitRate + stats.missRate) || 0,
-          compressionSavings:
-            stats.compressionRatio > 1 ? (1 - 1 / stats.compressionRatio) * 100 : 0,
-          // topAccessedEntries and recentEvictions would need additional tracking
-        })
-      );
+      setDebugInfo((prev: any) => ({ // auto: implicit any
+        ...prev,
+        memoryUsage: stats.memoryUsage,
+        diskUsage: stats.totalSize,
+        hitRate: stats.hitRate / (stats.hitRate + stats.missRate) || 0,
+        compressionSavings:
+          stats.compressionRatio > 1 ? (1 - 1 / stats.compressionRatio) * 100 : 0,
+        // topAccessedEntries and recentEvictions would need additional tracking
+      }));
     };
 
     updateDebugInfo();
