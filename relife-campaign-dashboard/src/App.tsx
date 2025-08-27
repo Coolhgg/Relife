@@ -1,29 +1,16 @@
 import React, { useState } from 'react'; // auto: added missing React import
 import { Button } from '@/components/ui/button';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import {
-  Users as _Users,
   Mail,
   TrendingUp,
   Settings,
-  Target as _Target,
   Brain,
   Zap,
   ArrowUpRight,
   Send,
   Eye,
-  MousePointer,
-  CheckCircle as _CheckCircle,
-} from 'lucide-react';
+  MousePointer
+} from "lucide-react";
 
 // Mock data for demonstrations
 const personaData = {

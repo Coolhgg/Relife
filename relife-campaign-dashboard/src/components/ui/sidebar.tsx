@@ -60,8 +60,14 @@ function useSidebar() {
   return context;
 }
 
-function SidebarWrapper(_{
-  className, _style, _children, _defaultOpen, _open: openProp, _onOpenChange: setOpenProp, _...props
+function SidebarWrapper({
+  className,
+  style,
+  children,
+  defaultOpen,
+  open: openProp,
+  onOpenChange: setOpenProp,
+  ...props
 }: React.ComponentProps<'div'> & {
   defaultOpen?: boolean;
   open?: boolean;

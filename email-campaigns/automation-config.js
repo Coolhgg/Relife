@@ -103,7 +103,7 @@ const campaignConfig = {
       },
       {
         id: 'ben_calendar_03',
-        subject: "Never wonder 'what's my day like?' again",
+        subject: "Never wonder \"what's my day like?\" again",
         template: 'busy-ben-calendar',
         delay_hours: 96, // 4 days
         target_action: 'calendar_sync_setup',

@@ -548,12 +548,10 @@ export const LocalNotifications = {
     });
   }),
 
-  addListener: vi.fn(
-    (eventName: string, listenerFunc: (...args: unknown[]) => void) => {
-      log(`👂 Mock LocalNotifications.addListener: ${eventName}`);
-      return addMockListener('LocalNotifications', eventName, listenerFunc);
-    }
-  ),
+  addListener: vi.fn((eventName: string, listenerFunc: (...args: unknown[]) => void) => {
+    log(`👂 Mock LocalNotifications.addListener: ${eventName}`);
+    return addMockListener('LocalNotifications', eventName, listenerFunc);
+  }),
 
   removeAllListeners: vi.fn(() => {
     log('🔇 Mock LocalNotifications.removeAllListeners');
@@ -649,12 +647,10 @@ export const PushNotifications = {
     });
   }),
 
-  addListener: vi.fn(
-    (eventName: string, listenerFunc: (...args: unknown[]) => void) => {
-      log(`👂 Mock PushNotifications.addListener: ${eventName}`);
-      return addMockListener('PushNotifications', eventName, listenerFunc);
-    }
-  ),
+  addListener: vi.fn((eventName: string, listenerFunc: (...args: unknown[]) => void) => {
+    log(`👂 Mock PushNotifications.addListener: ${eventName}`);
+    return addMockListener('PushNotifications', eventName, listenerFunc);
+  }),
 
   removeAllListeners: vi.fn(() => {
     log('🔇 Mock PushNotifications.removeAllListeners');
@@ -956,12 +952,10 @@ export const App = {
     });
   }),
 
-  addListener: vi.fn(
-    (eventName: string, listenerFunc: (...args: unknown[]) => void) => {
-      log(`👂 Mock App.addListener: ${eventName}`);
-      return addMockListener('App', eventName, listenerFunc);
-    }
-  ),
+  addListener: vi.fn((eventName: string, listenerFunc: (...args: unknown[]) => void) => {
+    log(`👂 Mock App.addListener: ${eventName}`);
+    return addMockListener('App', eventName, listenerFunc);
+  }),
 
   removeAllListeners: vi.fn(() => {
     log('🔇 Mock App.removeAllListeners');
@@ -994,12 +988,10 @@ export const Network = {
     return Promise.resolve(mockState.network);
   }),
 
-  addListener: vi.fn(
-    (eventName: string, listenerFunc: (...args: unknown[]) => void) => {
-      log(`👂 Mock Network.addListener: ${eventName}`);
-      return addMockListener('Network', eventName, listenerFunc);
-    }
-  ),
+  addListener: vi.fn((eventName: string, listenerFunc: (...args: unknown[]) => void) => {
+    log(`👂 Mock Network.addListener: ${eventName}`);
+    return addMockListener('Network', eventName, listenerFunc);
+  }),
 
   removeAllListeners: vi.fn(() => {
     log('🔇 Mock Network.removeAllListeners');
@@ -1221,12 +1213,10 @@ export const Filesystem = {
 
 // Keyboard Plugin
 export const Keyboard = {
-  addListener: vi.fn(
-    (eventName: string, listenerFunc: (...args: unknown[]) => void) => {
-      log(`👂 Mock Keyboard.addListener: ${eventName}`);
-      return addMockListener('Keyboard', eventName, listenerFunc);
-    }
-  ),
+  addListener: vi.fn((eventName: string, listenerFunc: (...args: unknown[]) => void) => {
+    log(`👂 Mock Keyboard.addListener: ${eventName}`);
+    return addMockListener('Keyboard', eventName, listenerFunc);
+  }),
 
   removeAllListeners: vi.fn(() => {
     log('🔇 Mock Keyboard.removeAllListeners');
@@ -1294,12 +1284,10 @@ export const ScreenOrientation = {
     return Promise.resolve();
   }),
 
-  addListener: vi.fn(
-    (eventName: string, listenerFunc: (...args: unknown[]) => void) => {
-      log(`👂 Mock ScreenOrientation.addListener: ${eventName}`);
-      return addMockListener('ScreenOrientation', eventName, listenerFunc);
-    }
-  ),
+  addListener: vi.fn((eventName: string, listenerFunc: (...args: unknown[]) => void) => {
+    log(`👂 Mock ScreenOrientation.addListener: ${eventName}`);
+    return addMockListener('ScreenOrientation', eventName, listenerFunc);
+  }),
 
   removeAllListeners: vi.fn(() => {
     log('🔇 Mock ScreenOrientation.removeAllListeners');
@@ -1324,12 +1312,10 @@ export const Browser = {
     return Promise.resolve();
   }),
 
-  addListener: vi.fn(
-    (eventName: string, listenerFunc: (...args: unknown[]) => void) => {
-      log(`👂 Mock Browser.addListener: ${eventName}`);
-      return addMockListener('Browser', eventName, listenerFunc);
-    }
-  ),
+  addListener: vi.fn((eventName: string, listenerFunc: (...args: unknown[]) => void) => {
+    log(`👂 Mock Browser.addListener: ${eventName}`);
+    return addMockListener('Browser', eventName, listenerFunc);
+  }),
 
   removeAllListeners: vi.fn(() => {
     log('🔇 Mock Browser.removeAllListeners');
