@@ -267,8 +267,40 @@ function AppContent() {
   const refreshRewardsSystem = useCallback(
     async (alarms: Alarm[] = appState.alarms) => {
       try {
-        const aiRewards = AIRewardsService.getInstance();
-        const rewardSystem = await aiRewards.analyzeAndGenerateRewards(alarms);
+        // Update user habits based on current alarms
+        if (alarms.length > 0) {
+          const habitData = {
+            habit_name: "daily_alarms",
+            current_count: alarms.filter(a => a.enabled).length,
+            target_count: alarms.length,
+            last_activity: new Date().toISOString()
+          };
+        if (auth.user?.id) {
+          await rewardService.updateUserHabits(auth.user.id, habitData);
+        }
+        }
+
+        // Check and unlock any new rewards
+        if (auth.user?.id) {
+          await rewardService.checkAndUnlockRewards(auth.user.id);
+        }
+
+        // Get the comprehensive reward system data from database
+        const _rewards = await rewardService.getRewards();
+        const userRewards = auth.user?.id ? await rewardService.getUserRewards(auth.user.id) : null;
+        const _insights = auth.user?.id ? await rewardService.getUserInsights(auth.user.id) : null;
+        const analytics = auth.user?.id ? await rewardService.getUserAnalytics(auth.user.id) : null;
+        const _habits = auth.user?.id ? await rewardService.getUserHabits(auth.user.id) : null;
+        const _nicheProfile = auth.user?.id ? await rewardService.getUserNicheProfile(auth.user.id) : null;
+
+        // Build comprehensive reward system object
+        const rewardSystem = {
+          points: analytics?.total_points || 0,
+          level: analytics?.current_level || 1,
+          experience: analytics?.total_points || 0, // Using points as experience
+          streakDays: analytics?.current_streak || 0,
+          unlockedRewards: (userRewards || []).map(r => r.reward_id || r.id || String(r)),
+        };
 
         setAppState((prev: AppState) => ({ // type-safe replacement
           ...prev,
@@ -737,7 +769,7 @@ function AppContent() {
       );
       setSyncStatus('error');
     }
-  }, [auth.user, setSyncStatus]);
+  }, [auth.user, setSyncStatus, setAppState]);
 
   // Refresh rewards system based on current alarms and analytics
   // Handle quick alarm setup with preset configurations
@@ -890,7 +922,7 @@ function AppContent() {
         timestamp: new Date().toISOString(),
       });
     }
-  }, [auth.user, identify, track, reset, trackDailyActive]);
+  }, [auth.user, identify, track, reset, trackDailyActive, setAppState]);
 
   // Network status monitoring
   useEffect(() => {
@@ -1101,6 +1133,11 @@ function AppContent() {
     }
   }, [handleServiceWorkerMessage]);
 
+  // Extract complex expression for dependency array
+  const currentTriggeredAlarm = appState.alarm.currentlyTriggering.length > 0 
+    ? appState.alarm.alarms.find(a => appState.alarm.currentlyTriggering.includes(a.id)) || null 
+    : null;
+
   // Prevent accidental tab closure when alarms are active
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
@@ -1128,7 +1165,8 @@ function AppContent() {
 
       // Check if there are enabled alarms that could ring soon
       if (tabProtectionSettings.settings.protectionTiming.upcomingAlarmWarning) {
-        const enabledAlarms = appState.alarms.filter((alarm: any) => alarm.enabled);
+        // Performance optimization - compute enabled alarms
+        const enabledAlarms = appState.alarm.alarms.filter((alarm: Alarm) => alarm.enabled);
         if (enabledAlarms.length > 0) {
           // Check if any alarm is within the configured threshold
           const now = new Date();
@@ -1188,7 +1226,8 @@ function AppContent() {
     };
   }, [
     appState.activeAlarm,
-    appState.alarms,
+    currentTriggeredAlarm,
+    appState.alarm.alarms,
     announceProtectionWarning,
     tabProtectionSettings.settings,
   ]); // Re-run when activeAlarm, alarms, announcement function, or protection settings change
@@ -2007,6 +2046,24 @@ function AppContent() {
                 />
               </section>
             </div>
+          </ErrorBoundary>
+        );
+      case 'gift-shop':
+        appAnalytics.trackPageView('gift_shop');
+        appAnalytics.trackFeatureUsage('gift_shop', 'accessed');
+        return (
+          <ErrorBoundary context="GiftShop">
+            <GiftShop
+              userId={auth.user?.id || ''}
+              onGiftPurchased={() => {
+                // Refresh reward system to update user points
+                refreshRewardsSystem();
+              }}
+              onGiftEquipped={() => {
+                // Could trigger additional effects or notifications
+                appAnalytics.trackFeatureUsage('gift_shop', 'gift_equipped');
+              }}
+            />
           </ErrorBoundary>
         );
       case 'pricing':
