@@ -198,7 +198,7 @@ groups:
     rules:
       # Monthly SLA tracking and warnings
       - alert: MonthlySLABudgetWarning
-        expr: (1 - (avg_over_time(up[30d]))) > 0.0008 # More than 80% of monthly error budget used
+        expr: (1 - (avg_over_time(up[30d]))) > 0.0008  # More than 80% of monthly error budget used
         for: 1h
         labels:
           severity: warning
@@ -213,7 +213,7 @@ groups:
           runbook_url: "https://docs.relife.app/runbooks/sla/error-budget"
 
       - alert: MonthlySLABudgetCritical
-        expr: (1 - (avg_over_time(up[30d]))) > 0.001 # Monthly error budget exhausted
+        expr: (1 - (avg_over_time(up[30d]))) > 0.001  # Monthly error budget exhausted
         for: 30m
         labels:
           severity: critical
