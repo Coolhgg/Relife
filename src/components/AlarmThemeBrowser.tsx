@@ -146,7 +146,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
     }
 
     // Apply filters
-    filtered = filtered.filter((combo: any) => { // auto
+    filtered = filtered.filter((combo: any) => {
       if (selectedCategory !== 'all' && combo.category !== selectedCategory)
         return false;
       if (selectedIntensity !== 'all' && combo.difficulty !== selectedIntensity)
@@ -375,7 +375,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                   </label>
                   <select
                     value={selectedCategory}
-                    onChange={(e: any) => // auto: implicit any
+                    onChange={(e: any) =>
                       setSelectedCategory(e.target.value as ThemeCategory | 'all')
                     }
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
@@ -402,7 +402,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                   </label>
                   <select
                     value={selectedIntensity}
-                    onChange={(e: any) => // auto: implicit any
+                    onChange={(e: any) =>
                       setSelectedIntensity(e.target.value as AlarmIntensity | 'all')
                     }
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
@@ -423,7 +423,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
                   </label>
                   <select
                     value={selectedTimeOfDay}
-                    onChange={(e: any) => // auto: implicit any
+                    onChange={(e: any) =>
                       setSelectedTimeOfDay(e.target.value as TimeOfDay | 'all')
                     }
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
@@ -501,10 +501,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
               <span>Recommended for You</span>
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {contextualRecommendations.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+              {contextualRecommendations.map((combo: any) => (
                 <ThemeCard
                   key={combo.id}
                   combination={combo}
@@ -531,10 +528,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
               exit={{ opacity: 0, y: -20 }}
               className="space-y-8"
             >
-              {collections.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+              {collections.map((collection: any) => (
                 <CollectionView
                   key={collection.id}
                   collection={collection}
@@ -559,10 +553,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
               exit={{ opacity: 0, y: -20 }}
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
             >
-              {filteredCombinations.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+              {filteredCombinations.map((combo: any) => (
                 <ThemeCard
                   key={combo.id}
                   combination={combo}
@@ -585,10 +576,7 @@ export const AlarmThemeBrowser: React.FC<AlarmThemeBrowserProps> = ({
               exit={{ opacity: 0, y: -20 }}
               className="space-y-4"
             >
-              {filteredCombinations.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+              {filteredCombinations.map((combo: any) => (
                 <ThemeListItem
                   key={combo.id}
                   combination={combo}
@@ -656,7 +644,7 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
 
       {/* Favorite Button */}
       <button
-        onClick={(e: any) => { // auto
+        onClick={(e: any) => {
           e.stopPropagation();
           onToggleFavorite();
         }}
@@ -742,7 +730,8 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
         </div>
 
         <button
-          onClick={(e: any) => { // auto
+          onClick={(e: any) => {
+            // auto: implicit any
             e.stopPropagation();
             onPreview();
           }}
@@ -803,10 +792,7 @@ const CollectionView: React.FC<CollectionViewProps> = ({
     </div>
 
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-      {combinations.map(($1) => {
-        // TODO(manual): implement
-        return null;
-      })
+      {combinations.map((combo: any) => (
         <ThemeCard
           key={combo.id}
           combination={combo}
@@ -906,7 +892,8 @@ const ThemeListItem: React.FC<ThemeListItemProps> = ({
       {/* Actions */}
       <div className="flex items-center space-x-2 ml-4">
         <button
-          onClick={(e: any) => { // auto
+          onClick={(e: any) => {
+            // auto: implicit any
             e.stopPropagation();
             onToggleFavorite();
           }}
@@ -918,7 +905,8 @@ const ThemeListItem: React.FC<ThemeListItemProps> = ({
         </button>
 
         <button
-          onClick={(e: any) => { // auto
+          onClick={(e: any) => {
+            // auto: implicit any
             e.stopPropagation();
             onPreview();
           }}

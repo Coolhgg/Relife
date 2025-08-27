@@ -48,7 +48,7 @@ export function useEnhancedCaching(): {
           ? 'medium'
           : 'high';
 
-    setCacheState((prev: any) => ({ // auto: implicit any
+    setCacheState((prev: any) => ({
       ...prev,
       stats,
       memoryPressure,
@@ -56,28 +56,29 @@ export function useEnhancedCaching(): {
   }, []);
 
   const optimize = useCallback(async () => {
-    setCacheState((prev: any) => ({ // auto: implicit any ...prev, isOptimizing: true }));
+    setCacheState((prev: any) => ({ ...prev, isOptimizing: true }));
 
     try {
       await enhancedCacheManager.optimize();
-      setCacheState((prev: any) => ({ // auto: implicit any
+
+      setCacheState((prev: any) => ({
         ...prev,
         lastOptimization: new Date(),
       }));
     } finally {
-      setCacheState((prev: any) => ({ // auto: implicit any ...prev, isOptimizing: false }));
+      setCacheState((prev: any) => ({ ...prev, isOptimizing: false }));
       updateStats();
     }
   }, [updateStats]);
 
   const warmCache = useCallback(
     async (sounds: CustomSound[]) => {
-      setCacheState((prev: any) => ({ // auto: implicit any ...prev, isWarming: true }));
+      setCacheState((prev: any) => ({ ...prev, isWarming: true }));
 
       try {
         await enhancedCacheManager.warmCache(sounds);
       } finally {
-        setCacheState((prev: any) => ({ // auto: implicit any ...prev, isWarming: false }));
+        setCacheState((prev: any) => ({ ...prev, isWarming: false }));
         updateStats();
       }
     },
@@ -172,7 +173,7 @@ export function useCachePerformance() {
       setPerformance(newPerformance);
 
       // Update history
-      setPerformanceHistory((prev: any) => { // auto
+      setPerformanceHistory((prev: any) => {
         const newEntry = {
           timestamp: new Date(),
           hitRate: newPerformance.hitRate,
@@ -229,7 +230,9 @@ export function useCacheWarming() {
     const currentHour = now.getHours();
 
     // Find next scheduled warming time
-    const nextHour = warmingConfig.scheduleHours.find((hour: any) => h // auto: implicit anyour > currentHour);
+    const nextHour = warmingConfig.scheduleHours.find(
+      (hour: any) => hour > currentHour
+    );
     const targetHour = nextHour ?? warmingConfig.scheduleHours[0];
 
     const nextTime = new Date();
@@ -240,7 +243,7 @@ export function useCacheWarming() {
       nextTime.setHours(targetHour, 0, 0, 0);
     }
 
-    setWarmingStatus((prev: any) => ({ // auto: implicit any
+    setWarmingStatus((prev: any) => ({
       ...prev,
       nextScheduledTime: nextTime,
     }));
@@ -371,7 +374,7 @@ export function useAutoOptimization(enabled: boolean = true) {
 
           const optimizationTime = performance.now() - startTime;
 
-          setOptimizationStatus((prev: any) => ({ // auto: implicit any
+          setOptimizationStatus((prev: any) => ({
             ...prev,
             lastOptimization: new Date(),
             optimizationCount: prev.optimizationCount + 1,
@@ -395,7 +398,7 @@ export function useAutoOptimization(enabled: boolean = true) {
   }, [enabled]);
 
   const toggleAutoOptimization = useCallback(() => {
-    setOptimizationStatus((prev: any) => ({ // auto: implicit any
+    setOptimizationStatus((prev: any) => ({
       ...prev,
       isEnabled: !prev.isEnabled,
     }));
@@ -416,15 +419,23 @@ export function useCacheDebugging() {
     diskUsage: 0,
     hitRate: 0,
     compressionSavings: 0,
-    topAccessedEntries: [] as Array<{ id: string; accessCount: number; size: number }>,
-    recentEvictions: [] as Array<{ id: string; reason: string; timestamp: Date }>,
+    topAccessedEntries: [] as Array<{
+      id: string;
+      accessCount: number;
+      size: number;
+    }>,
+    recentEvictions: [] as Array<{
+      id: string;
+      reason: string;
+      timestamp: Date;
+    }>,
   });
 
   useEffect(() => {
     const updateDebugInfo = () => {
       const stats = enhancedCacheManager.getStats();
 
-      setDebugInfo((prev: any) => ({ // auto: implicit any
+      setDebugInfo((prev: any) => ({
         ...prev,
         memoryUsage: stats.memoryUsage,
         diskUsage: stats.totalSize,
