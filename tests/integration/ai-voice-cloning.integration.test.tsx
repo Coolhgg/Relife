@@ -1,7 +1,7 @@
 /// <reference lib="dom" />
 /**
  * AI Voice Cloning Integration Tests
- *
+ * 
  * Comprehensive end-to-end tests for AI voice cloning functionality including:
  * - Voice recording and sample upload
  * - AI voice cloning with premium TTS services
@@ -11,16 +11,7 @@
  * - Error handling, performance validation, and analytics tracking
  */
 
-import {
-  describe,
-  it,
-  expect,
-  beforeEach,
-  afterEach,
-  vi,
-  beforeAll,
-  afterAll,
-} from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi, beforeAll, afterAll } from 'vitest';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
@@ -37,19 +28,19 @@ import { PremiumService } from '../../src/services/premium';
 import { AppAnalyticsService } from '../../src/services/app-analytics';
 
 // Import test utilities
-import {
-  createMockUser,
-  createMockAlarm,
+import { 
+  createMockUser, 
+  createMockAlarm, 
   measurePerformance,
-  setupAllMocks,
+  setupAllMocks
 } from '../utils/test-mocks';
 
-import type {
-  User,
-  VoiceCloneRequest,
-  VoicePrint,
+import type { 
+  User, 
+  VoiceCloneRequest, 
+  VoicePrint, 
   VoiceAuthentication,
-  VoiceMoodAnalysis,
+  VoiceMoodAnalysis 
 } from '../../src/types';
 
 // Mock external services
@@ -64,7 +55,7 @@ describe('AI Voice Cloning Integration', () => {
   let container: HTMLElement;
   let user: ReturnType<typeof userEvent.setup>;
   let mockUser: User;
-
+  
   // Service instances
   let voiceAIService: VoiceAIEnhancedService;
   let voiceBiometricsService: VoiceBiometricsService;
@@ -84,31 +75,31 @@ describe('AI Voice Cloning Integration', () => {
     duration: 30,
     volume: 1,
     onended: null as any,
-    onpause: null as any,
+    onpause: null as any
   };
 
   beforeAll(() => {
     setupAllMocks();
-
+    
     // Mock additional voice-specific APIs
     global.MediaRecorder = vi.fn().mockImplementation(() => ({
       start: vi.fn(),
       stop: vi.fn(),
       ondataavailable: null,
       onstop: null,
-      state: 'inactive',
+      state: 'inactive'
     }));
 
     global.URL.createObjectURL = vi.fn().mockReturnValue('blob:mock-audio-url');
     global.URL.revokeObjectURL = vi.fn();
-
+    
     global.Audio = vi.fn().mockImplementation(() => mockAudioElement);
-
+    
     // Mock AudioContext
     global.AudioContext = vi.fn().mockImplementation(() => ({
       decodeAudioData: vi.fn().mockResolvedValue(mockAudioBuffer),
       resume: vi.fn().mockResolvedValue(undefined),
-      state: 'running',
+      state: 'running'
     }));
 
     console.log('Voice cloning integration tests initialized');
@@ -125,14 +116,14 @@ describe('AI Voice Cloning Integration', () => {
       preferences: {
         voiceSettings: {
           enabled: true,
-          defaultMood: 'motivational',
-        },
-      },
+          defaultMood: 'motivational'
+        }
+      }
     });
-
+    
     // Reset all mocks
     vi.clearAllMocks();
-
+    
     // Mock service instances
     voiceAIService = VoiceAIEnhancedService.getInstance() as any;
     voiceBiometricsService = VoiceBiometricsService.getInstance() as any;
@@ -142,17 +133,17 @@ describe('AI Voice Cloning Integration', () => {
 
     // Mock successful authentication
     vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(mockUser);
-    vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({
-      alarms: [],
-      error: null,
+    vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({ 
+      alarms: [], 
+      error: null 
     });
-
+    
     // Mock premium service access
     vi.mocked(premiumService.hasFeatureAccess).mockResolvedValue(true);
     vi.mocked(premiumService.validateSubscription).mockResolvedValue({
       valid: true,
       tier: 'premium',
-      features: ['voice_cloning', 'premium_tts'],
+      features: ['voice_cloning', 'premium_tts']
     });
 
     // Mock voice services
@@ -161,7 +152,7 @@ describe('AI Voice Cloning Integration', () => {
       audioUrl: 'blob:mock-tts-audio',
       emotion: 'motivational',
       personalizations: ['Addressed as Test User'],
-      effectiveness_prediction: 85,
+      effectiveness_prediction: 85
     });
 
     // Mock analytics
@@ -183,39 +174,38 @@ describe('AI Voice Cloning Integration', () => {
 
   describe('Voice Recording and Sample Management', () => {
     it('should record voice samples successfully', async () => {
-      const performanceMeasures: { [key: string]: number } = {};
+      const performanceMeasures: {[key: string]: number} = {};
 
       // Step 1: Render voice cloning component
       const recordingTime = await measurePerformance(async () => {
         await act(async () => {
-          const result = render(<VoiceCloning user={mockUser} onClose={() => {}} />);
+          const result = render(
+            <VoiceCloning 
+              user={mockUser} 
+              onClose={() => {}} 
+            />
+          );
           container = result.container;
         });
       });
-
+      
       performanceMeasures.componentRender = recordingTime;
 
       // Step 2: Start recording
-      const recordButton = screen.getByRole('button', {
-        name: /start.*recording|record.*voice/i,
-      });
+      const recordButton = screen.getByRole('button', { name: /start.*recording|record.*voice/i });
       expect(recordButton).toBeInTheDocument();
 
       // Mock successful microphone access
       const mockStream = {
-        getTracks: vi.fn().mockReturnValue([{ stop: vi.fn() }]),
+        getTracks: vi.fn().mockReturnValue([{ stop: vi.fn() }])
       };
-      vi.mocked(navigator.mediaDevices.getUserMedia).mockResolvedValue(
-        mockStream as any
-      );
+      vi.mocked(navigator.mediaDevices.getUserMedia).mockResolvedValue(mockStream as any);
 
       await user.click(recordButton);
 
       // Should show recording state
       await waitFor(() => {
-        expect(
-          screen.getByText(/recording|recording in progress/i)
-        ).toBeInTheDocument();
+        expect(screen.getByText(/recording|recording in progress/i)).toBeInTheDocument();
       });
 
       // Should show recording timer
@@ -223,7 +213,7 @@ describe('AI Voice Cloning Integration', () => {
 
       // Step 3: Stop recording after simulated duration
       const stopButton = screen.getByRole('button', { name: /stop.*recording|stop/i });
-
+      
       await act(async () => {
         // Simulate 5 seconds of recording
         vi.advanceTimersByTime(5000);
@@ -239,7 +229,7 @@ describe('AI Voice Cloning Integration', () => {
       // Should show recording controls
       const playButton = screen.getByRole('button', { name: /play/i });
       const deleteButton = screen.getByRole('button', { name: /delete|remove/i });
-
+      
       expect(playButton).toBeInTheDocument();
       expect(deleteButton).toBeInTheDocument();
 
@@ -250,7 +240,7 @@ describe('AI Voice Cloning Integration', () => {
       expect(analyticsService.trackVoiceCloning).toHaveBeenCalledWith({
         action: 'sample_recorded',
         userId: mockUser.id,
-        sampleDuration: expect.any(Number),
+        sampleDuration: expect.any(Number)
       });
 
       console.log('Voice recording performance:', performanceMeasures);
@@ -258,7 +248,12 @@ describe('AI Voice Cloning Integration', () => {
 
     it('should handle file upload for voice samples', async () => {
       await act(async () => {
-        const result = render(<VoiceCloning user={mockUser} onClose={() => {}} />);
+        const result = render(
+          <VoiceCloning 
+            user={mockUser} 
+            onClose={() => {}} 
+          />
+        );
         container = result.container;
       });
 
@@ -268,7 +263,7 @@ describe('AI Voice Cloning Integration', () => {
 
       // Step 2: Create mock audio file
       const mockFile = new File(['mock audio data'], 'voice-sample.wav', {
-        type: 'audio/wav',
+        type: 'audio/wav'
       });
 
       // Step 3: Upload file
@@ -281,34 +276,33 @@ describe('AI Voice Cloning Integration', () => {
 
       // Should show file controls
       expect(screen.getByRole('button', { name: /play/i })).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: /delete|remove/i })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /delete|remove/i })).toBeInTheDocument();
 
       expect(analyticsService.trackVoiceCloning).toHaveBeenCalledWith({
         action: 'sample_uploaded',
         userId: mockUser.id,
-        fileName: 'voice-sample.wav',
+        fileName: 'voice-sample.wav'
       });
     });
 
     it('should require minimum samples for voice cloning', async () => {
       await act(async () => {
-        const result = render(<VoiceCloning user={mockUser} onClose={() => {}} />);
+        const result = render(
+          <VoiceCloning 
+            user={mockUser} 
+            onClose={() => {}} 
+          />
+        );
         container = result.container;
       });
 
       // Try to create clone with no samples
-      const cloneButton = screen.getByRole('button', {
-        name: /create.*voice.*clone|clone.*voice/i,
-      });
+      const cloneButton = screen.getByRole('button', { name: /create.*voice.*clone|clone.*voice/i });
       await user.click(cloneButton);
 
       // Should show error message
       await waitFor(() => {
-        expect(
-          screen.getByText(/at least.*3.*samples|minimum.*samples/i)
-        ).toBeInTheDocument();
+        expect(screen.getByText(/at least.*3.*samples|minimum.*samples/i)).toBeInTheDocument();
       });
 
       // Add one sample (still not enough)
@@ -329,19 +323,24 @@ describe('AI Voice Cloning Integration', () => {
   describe('AI Voice Cloning Process', () => {
     it('should create voice clone with premium TTS integration', async () => {
       await act(async () => {
-        const result = render(<VoiceCloning user={mockUser} onClose={() => {}} />);
+        const result = render(
+          <VoiceCloning 
+            user={mockUser} 
+            onClose={() => {}} 
+          />
+        );
         container = result.container;
       });
 
       // Step 1: Add required voice samples
       const uploadInput = screen.getByLabelText(/upload.*audio/i);
-
+      
       for (let i = 0; i < 3; i++) {
         const mockFile = new File(['mock audio data'], `sample${i + 1}.wav`, {
-          type: 'audio/wav',
+          type: 'audio/wav'
         });
         await user.upload(uploadInput, mockFile);
-
+        
         await waitFor(() => {
           expect(screen.getByText(`sample${i + 1}.wav`)).toBeInTheDocument();
         });
@@ -355,12 +354,12 @@ describe('AI Voice Cloning Integration', () => {
         samples: ['sample1.wav', 'sample2.wav', 'sample3.wav'],
         createdAt: new Date(),
         estimatedCompletion: new Date(Date.now() + 300000), // 5 minutes
-        voiceId: null,
+        voiceId: null
       };
 
       vi.mocked(premiumVoiceService.createVoiceClone).mockResolvedValue({
         success: true,
-        cloneRequest: mockCloneRequest,
+        cloneRequest: mockCloneRequest
       });
 
       // Step 3: Initiate cloning process
@@ -380,12 +379,10 @@ describe('AI Voice Cloning Integration', () => {
         const completedRequest = {
           ...mockCloneRequest,
           status: 'completed' as const,
-          voiceId: 'voice-clone-123',
+          voiceId: 'voice-clone-123'
         };
 
-        vi.mocked(premiumVoiceService.getCloneStatus).mockResolvedValue(
-          completedRequest
-        );
+        vi.mocked(premiumVoiceService.getCloneStatus).mockResolvedValue(completedRequest);
       });
 
       // Step 6: Simulate polling completion
@@ -398,9 +395,7 @@ describe('AI Voice Cloning Integration', () => {
       });
 
       // Step 7: Should show clone preview
-      const previewButton = screen.getByRole('button', {
-        name: /preview.*voice|test.*clone/i,
-      });
+      const previewButton = screen.getByRole('button', { name: /preview.*voice|test.*clone/i });
       expect(previewButton).toBeInTheDocument();
 
       await user.click(previewButton);
@@ -416,22 +411,25 @@ describe('AI Voice Cloning Integration', () => {
         action: 'clone_completed',
         userId: mockUser.id,
         cloneId: 'clone-request-123',
-        processingTime: expect.any(Number),
+        processingTime: expect.any(Number)
       });
     });
 
     it('should handle voice cloning failures gracefully', async () => {
       await act(async () => {
-        const result = render(<VoiceCloning user={mockUser} onClose={() => {}} />);
+        const result = render(
+          <VoiceCloning 
+            user={mockUser} 
+            onClose={() => {}} 
+          />
+        );
         container = result.container;
       });
 
       // Add samples
       const uploadInput = screen.getByLabelText(/upload.*audio/i);
       for (let i = 0; i < 3; i++) {
-        const mockFile = new File(['mock'], `sample${i + 1}.wav`, {
-          type: 'audio/wav',
-        });
+        const mockFile = new File(['mock'], `sample${i + 1}.wav`, { type: 'audio/wav' });
         await user.upload(uploadInput, mockFile);
       }
 
@@ -445,9 +443,7 @@ describe('AI Voice Cloning Integration', () => {
 
       // Should show error state
       await waitFor(() => {
-        expect(
-          screen.getByText(/cloning.*failed|error.*processing/i)
-        ).toBeInTheDocument();
+        expect(screen.getByText(/cloning.*failed|error.*processing/i)).toBeInTheDocument();
       });
 
       // Should show retry option
@@ -457,7 +453,7 @@ describe('AI Voice Cloning Integration', () => {
       expect(analyticsService.trackVoiceCloning).toHaveBeenCalledWith({
         action: 'clone_failed',
         userId: mockUser.id,
-        error: 'Voice cloning service unavailable',
+        error: 'Voice cloning service unavailable'
       });
     });
 
@@ -466,33 +462,32 @@ describe('AI Voice Cloning Integration', () => {
       const freeUser = createMockUser({
         id: 'free-user-123',
         subscriptionTier: 'free',
-        premiumFeatures: [],
+        premiumFeatures: []
       });
 
       // Mock access check failure
       vi.mocked(premiumService.hasFeatureAccess).mockResolvedValue(false);
 
       await act(async () => {
-        const result = render(<VoiceCloning user={freeUser} onClose={() => {}} />);
+        const result = render(
+          <VoiceCloning 
+            user={freeUser} 
+            onClose={() => {}} 
+          />
+        );
         container = result.container;
       });
 
       // Should show premium upsell
       await waitFor(() => {
-        expect(
-          screen.getByText(/premium.*feature|upgrade.*required/i)
-        ).toBeInTheDocument();
+        expect(screen.getByText(/premium.*feature|upgrade.*required/i)).toBeInTheDocument();
       });
 
-      const upgradeButton = screen.getByRole('button', {
-        name: /upgrade|get.*premium/i,
-      });
+      const upgradeButton = screen.getByRole('button', { name: /upgrade|get.*premium/i });
       expect(upgradeButton).toBeInTheDocument();
 
       // Voice cloning controls should be disabled
-      const cloneButton = screen.queryByRole('button', {
-        name: /create.*voice.*clone/i,
-      });
+      const cloneButton = screen.queryByRole('button', { name: /create.*voice.*clone/i });
       if (cloneButton) {
         expect(cloneButton).toBeDisabled();
       }
@@ -522,16 +517,12 @@ describe('AI Voice Cloning Integration', () => {
       await user.click(voiceTab);
 
       // Step 1: Start voice training
-      const trainButton = screen.getByRole('button', {
-        name: /start.*training|train.*voice/i,
-      });
+      const trainButton = screen.getByRole('button', { name: /start.*training|train.*voice/i });
       await user.click(trainButton);
 
       // Mock training session
-      vi.mocked(voiceBiometricsService.startVoiceTraining).mockResolvedValue(
-        'training-session-123'
-      );
-
+      vi.mocked(voiceBiometricsService.startVoiceTraining).mockResolvedValue('training-session-123');
+      
       // Should show training phrases
       await waitFor(() => {
         expect(screen.getByText(/speak.*phrase|read.*aloud/i)).toBeInTheDocument();
@@ -541,7 +532,7 @@ describe('AI Voice Cloning Integration', () => {
       const trainingPhrases = [
         'Good morning, this is my voice training session',
         'My name is unique and this is how I sound',
-        'I am recording my voice for biometric authentication',
+        'I am recording my voice for biometric authentication'
       ];
 
       // Step 2: Complete training phrases
@@ -554,59 +545,43 @@ describe('AI Voice Cloning Integration', () => {
           userId: mockUser.id,
           features: {
             fundamentalFrequency: [150, 155, 152],
-            formants: [
-              [500, 1500],
-              [520, 1480],
-            ],
+            formants: [[500, 1500], [520, 1480]],
             spectralCentroid: [1200, 1250],
-            mfcc: [
-              [0.1, 0.2],
-              [0.15, 0.25],
-            ],
+            mfcc: [[0.1, 0.2], [0.15, 0.25]],
             voiceQuality: {
               jitter: 0.02,
               shimmer: 0.03,
-              harmonicsRatio: 15.5,
-            },
+              harmonicsRatio: 15.5
+            }
           },
           confidence: 0.85,
           recordedAt: new Date(),
           language: 'en-US',
           accent: 'General American',
-          emotion: 'neutral',
+          emotion: 'neutral'
         };
 
-        vi.mocked(voiceBiometricsService.recordVoiceSample).mockResolvedValue(
-          mockAudioBuffer as any
-        );
-        vi.mocked(voiceBiometricsService.analyzeVoiceSample).mockResolvedValue(
-          mockVoicePrint
-        );
+        vi.mocked(voiceBiometricsService.recordVoiceSample).mockResolvedValue(mockAudioBuffer as any);
+        vi.mocked(voiceBiometricsService.analyzeVoiceSample).mockResolvedValue(mockVoicePrint);
 
-        const recordPhraseButton = screen.getByRole('button', {
-          name: /record.*phrase|start.*recording/i,
-        });
+        const recordPhraseButton = screen.getByRole('button', { name: /record.*phrase|start.*recording/i });
         await user.click(recordPhraseButton);
 
         // Wait for recording completion
         await waitFor(() => {
-          expect(
-            screen.getByText(/phrase.*recorded|next.*phrase/i)
-          ).toBeInTheDocument();
+          expect(screen.getByText(/phrase.*recorded|next.*phrase/i)).toBeInTheDocument();
         });
       }
 
       // Step 3: Training completion
       await waitFor(() => {
-        expect(
-          screen.getByText(/training.*complete|voice.*profile.*ready/i)
-        ).toBeInTheDocument();
+        expect(screen.getByText(/training.*complete|voice.*profile.*ready/i)).toBeInTheDocument();
       });
 
       expect(analyticsService.trackVoiceBiometrics).toHaveBeenCalledWith({
         action: 'training_completed',
         userId: mockUser.id,
-        samplesRecorded: trainingPhrases.length,
+        samplesRecorded: trainingPhrases.length
       });
     });
 
@@ -628,22 +603,16 @@ describe('AI Voice Cloning Integration', () => {
       await user.click(authTab);
 
       // Step 1: Enable voice authentication
-      const voiceAuthToggle = screen.getByLabelText(
-        /voice.*authentication|biometric.*auth/i
-      );
+      const voiceAuthToggle = screen.getByLabelText(/voice.*authentication|biometric.*auth/i);
       await user.click(voiceAuthToggle);
 
       // Step 2: Test authentication
-      const testAuthButton = screen.getByRole('button', {
-        name: /test.*authentication|verify.*voice/i,
-      });
+      const testAuthButton = screen.getByRole('button', { name: /test.*authentication|verify.*voice/i });
       await user.click(testAuthButton);
 
       // Should prompt for voice
       await waitFor(() => {
-        expect(
-          screen.getByText(/speak.*verify|voice.*verification/i)
-        ).toBeInTheDocument();
+        expect(screen.getByText(/speak.*verify|voice.*verification/i)).toBeInTheDocument();
       });
 
       // Mock successful authentication
@@ -653,21 +622,17 @@ describe('AI Voice Cloning Integration', () => {
         confidence: 92,
         matchedFeatures: ['fundamental_frequency', 'voice_quality', 'mfcc'],
         riskLevel: 'low',
-        timestamp: new Date(),
+        timestamp: new Date()
       };
 
       vi.mocked(voiceBiometricsService.authenticateUser).mockResolvedValue(mockAuth);
 
-      const speakButton = screen.getByRole('button', {
-        name: /start.*speaking|begin.*verification/i,
-      });
+      const speakButton = screen.getByRole('button', { name: /start.*speaking|begin.*verification/i });
       await user.click(speakButton);
 
       // Step 3: Should show authentication result
       await waitFor(() => {
-        expect(
-          screen.getByText(/authentication.*successful|verified/i)
-        ).toBeInTheDocument();
+        expect(screen.getByText(/authentication.*successful|verified/i)).toBeInTheDocument();
       });
 
       expect(screen.getByText(/confidence.*92/i)).toBeInTheDocument();
@@ -678,7 +643,7 @@ describe('AI Voice Cloning Integration', () => {
         userId: mockUser.id,
         success: true,
         confidence: 92,
-        riskLevel: 'low',
+        riskLevel: 'low'
       });
     });
 
@@ -698,9 +663,7 @@ describe('AI Voice Cloning Integration', () => {
       const authTab = screen.getByRole('tab', { name: /authentication/i });
       await user.click(authTab);
 
-      const testAuthButton = screen.getByRole('button', {
-        name: /test.*authentication/i,
-      });
+      const testAuthButton = screen.getByRole('button', { name: /test.*authentication/i });
       await user.click(testAuthButton);
 
       // Mock authentication failure
@@ -710,7 +673,7 @@ describe('AI Voice Cloning Integration', () => {
         confidence: 35,
         matchedFeatures: ['fundamental_frequency'],
         riskLevel: 'high',
-        timestamp: new Date(),
+        timestamp: new Date()
       };
 
       vi.mocked(voiceBiometricsService.authenticateUser).mockResolvedValue(mockAuth);
@@ -720,9 +683,7 @@ describe('AI Voice Cloning Integration', () => {
 
       // Should show failure message
       await waitFor(() => {
-        expect(
-          screen.getByText(/authentication.*failed|not.*verified/i)
-        ).toBeInTheDocument();
+        expect(screen.getByText(/authentication.*failed|not.*verified/i)).toBeInTheDocument();
       });
 
       expect(screen.getByText(/confidence.*35|low.*confidence/i)).toBeInTheDocument();
@@ -756,9 +717,7 @@ describe('AI Voice Cloning Integration', () => {
       await user.click(moodToggle);
 
       // Step 2: Test mood analysis
-      const analyzeMoodButton = screen.getByRole('button', {
-        name: /analyze.*mood|test.*emotion/i,
-      });
+      const analyzeMoodButton = screen.getByRole('button', { name: /analyze.*mood|test.*emotion/i });
       await user.click(analyzeMoodButton);
 
       // Mock mood analysis result
@@ -770,15 +729,13 @@ describe('AI Voice Cloning Integration', () => {
         recommendations: [
           'Consider a gentler alarm tone',
           'Try going to bed earlier tonight',
-          'High stress detected - consider relaxation exercises',
-        ],
+          'High stress detected - consider relaxation exercises'
+        ]
       };
 
       vi.mocked(voiceBiometricsService.analyzeMood).mockResolvedValue(mockMoodAnalysis);
 
-      const recordButton = screen.getByRole('button', {
-        name: /record.*mood|start.*analysis/i,
-      });
+      const recordButton = screen.getByRole('button', { name: /record.*mood|start.*analysis/i });
       await user.click(recordButton);
 
       // Step 3: Should show analysis results
@@ -792,17 +749,11 @@ describe('AI Voice Cloning Integration', () => {
 
       // Should show recommendations
       mockMoodAnalysis.recommendations.forEach(recommendation => {
-        expect(
-          screen.getByText(
-            new RegExp(recommendation.split(' ').slice(0, 3).join('.*'), 'i')
-          )
-        ).toBeInTheDocument();
+        expect(screen.getByText(new RegExp(recommendation.split(' ').slice(0, 3).join('.*'), 'i'))).toBeInTheDocument();
       });
 
       // Step 4: Test contextual message adaptation
-      const testMessageButton = screen.getByRole('button', {
-        name: /test.*message|generate.*message/i,
-      });
+      const testMessageButton = screen.getByRole('button', { name: /test.*message|generate.*message/i });
       await user.click(testMessageButton);
 
       // Should generate appropriate message for tired mood
@@ -815,7 +766,7 @@ describe('AI Voice Cloning Integration', () => {
         userId: mockUser.id,
         detectedMood: 'tired',
         confidence: 78,
-        recommendations: mockMoodAnalysis.recommendations,
+        recommendations: mockMoodAnalysis.recommendations
       });
     });
 
@@ -826,7 +777,7 @@ describe('AI Voice Cloning Integration', () => {
         userId: mockUser.id,
         time: '07:00',
         label: 'Morning Workout',
-        voiceMood: 'motivational',
+        voiceMood: 'motivational'
       });
 
       // Mock context data
@@ -834,7 +785,7 @@ describe('AI Voice Cloning Integration', () => {
         timeOfDay: 7,
         sleepQuality: 75,
         weather: { condition: 'sunny', temperature: 22 },
-        dayOfWeek: 1, // Monday
+        dayOfWeek: 1 // Monday
       };
 
       // Step 1: Test message generation
@@ -866,7 +817,7 @@ describe('AI Voice Cloning Integration', () => {
       expect(analyticsService.trackPremiumFeatureUsage).toHaveBeenCalledWith({
         feature: 'contextual_messages',
         userId: mockUser.id,
-        effectiveness: expect.any(Number),
+        effectiveness: expect.any(Number)
       });
     });
   });
@@ -874,7 +825,12 @@ describe('AI Voice Cloning Integration', () => {
   describe('Performance and Error Handling', () => {
     it('should handle voice processing under load', async () => {
       await act(async () => {
-        const result = render(<VoiceCloning user={mockUser} onClose={() => {}} />);
+        const result = render(
+          <VoiceCloning 
+            user={mockUser} 
+            onClose={() => {}} 
+          />
+        );
         container = result.container;
       });
 
@@ -884,10 +840,12 @@ describe('AI Voice Cloning Integration', () => {
 
       for (let i = 0; i < 10; i++) {
         const mockFile = new File([`mock audio data ${i}`], `rapid-sample-${i}.wav`, {
-          type: 'audio/wav',
+          type: 'audio/wav'
         });
-
-        uploadPromises.push(user.upload(uploadInput, mockFile));
+        
+        uploadPromises.push(
+          user.upload(uploadInput, mockFile)
+        );
       }
 
       // Process all uploads
@@ -906,29 +864,28 @@ describe('AI Voice Cloning Integration', () => {
       });
 
       // Step 3: Test batch processing
-      const selectAllButton = screen.getByRole('button', {
-        name: /select.*all|batch.*process/i,
-      });
+      const selectAllButton = screen.getByRole('button', { name: /select.*all|batch.*process/i });
       if (selectAllButton) {
         await user.click(selectAllButton);
-
-        const batchProcessButton = screen.getByRole('button', {
-          name: /process.*batch|batch.*clone/i,
-        });
+        
+        const batchProcessButton = screen.getByRole('button', { name: /process.*batch|batch.*clone/i });
         await user.click(batchProcessButton);
-
+        
         // Should handle batch processing efficiently
         await waitFor(() => {
-          expect(
-            screen.getByText(/processing.*batch|batch.*in.*progress/i)
-          ).toBeInTheDocument();
+          expect(screen.getByText(/processing.*batch|batch.*in.*progress/i)).toBeInTheDocument();
         });
       }
     });
 
     it('should gracefully handle microphone permission denials', async () => {
       await act(async () => {
-        const result = render(<VoiceCloning user={mockUser} onClose={() => {}} />);
+        const result = render(
+          <VoiceCloning 
+            user={mockUser} 
+            onClose={() => {}} 
+          />
+        );
         container = result.container;
       });
 
@@ -942,38 +899,37 @@ describe('AI Voice Cloning Integration', () => {
 
       // Should show permission error
       await waitFor(() => {
-        expect(
-          screen.getByText(/microphone.*permission|permission.*denied/i)
-        ).toBeInTheDocument();
+        expect(screen.getByText(/microphone.*permission|permission.*denied/i)).toBeInTheDocument();
       });
 
       // Should show alternative options
       expect(screen.getByText(/upload.*file|choose.*file/i)).toBeInTheDocument();
-
+      
       // Should provide help text
-      expect(
-        screen.getByText(/enable.*microphone|check.*permissions/i)
-      ).toBeInTheDocument();
+      expect(screen.getByText(/enable.*microphone|check.*permissions/i)).toBeInTheDocument();
 
       expect(analyticsService.trackVoiceCloning).toHaveBeenCalledWith({
         action: 'permission_denied',
         userId: mockUser.id,
-        error: 'NotAllowedError',
+        error: 'NotAllowedError'
       });
     });
 
     it('should handle network failures gracefully', async () => {
       await act(async () => {
-        const result = render(<VoiceCloning user={mockUser} onClose={() => {}} />);
+        const result = render(
+          <VoiceCloning 
+            user={mockUser} 
+            onClose={() => {}} 
+          />
+        );
         container = result.container;
       });
 
       // Add samples
       const uploadInput = screen.getByLabelText(/upload.*audio/i);
       for (let i = 0; i < 3; i++) {
-        const mockFile = new File(['mock'], `network-test-${i}.wav`, {
-          type: 'audio/wav',
-        });
+        const mockFile = new File(['mock'], `network-test-${i}.wav`, { type: 'audio/wav' });
         await user.upload(uploadInput, mockFile);
       }
 
@@ -987,30 +943,24 @@ describe('AI Voice Cloning Integration', () => {
 
       // Should show network error
       await waitFor(() => {
-        expect(
-          screen.getByText(/network.*error|connection.*failed/i)
-        ).toBeInTheDocument();
+        expect(screen.getByText(/network.*error|connection.*failed/i)).toBeInTheDocument();
       });
 
       // Should show offline mode option
-      const offlineButton = screen.getByRole('button', {
-        name: /save.*offline|queue.*processing/i,
-      });
+      const offlineButton = screen.getByRole('button', { name: /save.*offline|queue.*processing/i });
       expect(offlineButton).toBeInTheDocument();
 
       await user.click(offlineButton);
 
       // Should queue for later processing
       await waitFor(() => {
-        expect(
-          screen.getByText(/queued.*processing|saved.*offline/i)
-        ).toBeInTheDocument();
+        expect(screen.getByText(/queued.*processing|saved.*offline/i)).toBeInTheDocument();
       });
 
       expect(analyticsService.trackVoiceCloning).toHaveBeenCalledWith({
         action: 'queued_offline',
         userId: mockUser.id,
-        samplesCount: 3,
+        samplesCount: 3
       });
     });
   });
@@ -1018,24 +968,27 @@ describe('AI Voice Cloning Integration', () => {
   describe('Analytics and Performance Validation', () => {
     it('should track comprehensive voice cloning analytics', async () => {
       await act(async () => {
-        const result = render(<VoiceCloning user={mockUser} onClose={() => {}} />);
+        const result = render(
+          <VoiceCloning 
+            user={mockUser} 
+            onClose={() => {}} 
+          />
+        );
         container = result.container;
       });
 
       // Complete full voice cloning workflow
       const uploadInput = screen.getByLabelText(/upload.*audio/i);
-
+      
       // Track sample uploads
       for (let i = 0; i < 3; i++) {
-        const mockFile = new File(['mock'], `analytics-sample-${i}.wav`, {
-          type: 'audio/wav',
-        });
+        const mockFile = new File(['mock'], `analytics-sample-${i}.wav`, { type: 'audio/wav' });
         await user.upload(uploadInput, mockFile);
-
+        
         expect(analyticsService.trackVoiceCloning).toHaveBeenCalledWith({
           action: 'sample_uploaded',
           userId: mockUser.id,
-          fileName: `analytics-sample-${i}.wav`,
+          fileName: `analytics-sample-${i}.wav`
         });
       }
 
@@ -1047,12 +1000,12 @@ describe('AI Voice Cloning Integration', () => {
         samples: ['sample1.wav', 'sample2.wav', 'sample3.wav'],
         createdAt: new Date(),
         estimatedCompletion: new Date(),
-        voiceId: 'voice-analytics-123',
+        voiceId: 'voice-analytics-123'
       };
 
       vi.mocked(premiumVoiceService.createVoiceClone).mockResolvedValue({
         success: true,
-        cloneRequest: mockCloneRequest,
+        cloneRequest: mockCloneRequest
       });
 
       const cloneButton = screen.getByRole('button', { name: /create.*voice.*clone/i });
@@ -1063,7 +1016,7 @@ describe('AI Voice Cloning Integration', () => {
           action: 'clone_started',
           userId: mockUser.id,
           samplesCount: 3,
-          cloneId: expect.any(String),
+          cloneId: expect.any(String)
         });
       });
 
@@ -1071,7 +1024,7 @@ describe('AI Voice Cloning Integration', () => {
       expect(analyticsService.trackPremiumFeatureUsage).toHaveBeenCalledWith({
         feature: 'voice_cloning',
         userId: mockUser.id,
-        subscriptionTier: 'premium',
+        subscriptionTier: 'premium'
       });
     });
 
@@ -1079,24 +1032,27 @@ describe('AI Voice Cloning Integration', () => {
       const performanceMetrics = {
         componentRender: 0,
         sampleProcessing: 0,
-        cloneCreation: 0,
+        cloneCreation: 0
       };
 
       // Measure component render performance
       performanceMetrics.componentRender = await measurePerformance(async () => {
         await act(async () => {
-          render(<VoiceCloning user={mockUser} onClose={() => {}} />);
+          render(
+            <VoiceCloning 
+              user={mockUser} 
+              onClose={() => {}} 
+            />
+          );
         });
       });
 
       // Measure sample processing performance
       performanceMetrics.sampleProcessing = await measurePerformance(async () => {
         const uploadInput = screen.getByLabelText(/upload.*audio/i);
-        const mockFile = new File(['performance test'], 'perf-sample.wav', {
-          type: 'audio/wav',
-        });
+        const mockFile = new File(['performance test'], 'perf-sample.wav', { type: 'audio/wav' });
         await user.upload(uploadInput, mockFile);
-
+        
         await waitFor(() => {
           expect(screen.getByText('perf-sample.wav')).toBeInTheDocument();
         });
@@ -1105,7 +1061,7 @@ describe('AI Voice Cloning Integration', () => {
       // Validate performance thresholds
       expect(performanceMetrics.componentRender).toBeLessThan(1000); // < 1s render
       expect(performanceMetrics.sampleProcessing).toBeLessThan(2000); // < 2s processing
-
+      
       console.log('Voice cloning performance metrics:', performanceMetrics);
     });
   });

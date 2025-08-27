@@ -1,14 +1,13 @@
-import React from 'react'; // auto: added missing React import
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor, act, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import {
-  setupAllMocks,
-  createMockUser,
-  createMockBattle,
+import { 
+  setupAllMocks, 
+  createMockUser, 
+  createMockBattle, 
   generateTestUsers,
   measurePerformance,
-  expectPerformanceWithin,
+  expectPerformanceWithin 
 } from '../utils/test-mocks';
 import type { User, Battle, Tournament, BattleResult } from '../../src/types';
 
@@ -27,18 +26,15 @@ const SocialBattlesComponent = ({ user }: { user: User }) => {
   );
 };
 
-const BattleCreationModal = ({
-  onSubmit,
-  onClose,
-}: {
-  onSubmit: (battle: any) => void;
+const BattleCreationModal = ({ onSubmit, onClose }: { 
+  onSubmit: (battle: any) => void; 
   onClose: () => void;
 }) => {
   const [battleData, setBattleData] = useState({
     name: '',
     type: 'streak',
     duration: 'P7D',
-    difficulty: 'medium',
+    difficulty: 'medium'
   });
 
   return (
@@ -46,13 +42,13 @@ const BattleCreationModal = ({
       <input
         data-testid="battle-name"
         value={battleData.name}
-        onChange={e => setBattleData({ ...battleData, name: e.target.value })}
+        onChange={(e) => setBattleData({ ...battleData, name: e.target.value })}
         placeholder="Battle Name"
       />
       <select
         data-testid="battle-type"
         value={battleData.type}
-        onChange={e => setBattleData({ ...battleData, type: e.target.value as any })}
+        onChange={(e) => setBattleData({ ...battleData, type: e.target.value as any })}
       >
         <option value="streak">Streak Challenge</option>
         <option value="early_bird">Early Bird</option>
@@ -62,7 +58,7 @@ const BattleCreationModal = ({
       <select
         data-testid="battle-duration"
         value={battleData.duration}
-        onChange={e => setBattleData({ ...battleData, duration: e.target.value })}
+        onChange={(e) => setBattleData({ ...battleData, duration: e.target.value })}
       >
         <option value="P1D">1 Day</option>
         <option value="P3D">3 Days</option>
@@ -70,7 +66,10 @@ const BattleCreationModal = ({
         <option value="P14D">2 Weeks</option>
         <option value="P30D">1 Month</option>
       </select>
-      <button data-testid="submit-battle" onClick={() => onSubmit(battleData)}>
+      <button
+        data-testid="submit-battle"
+        onClick={() => onSubmit(battleData)}
+      >
         Create Battle
       </button>
       <button data-testid="cancel-battle" onClick={onClose}>
@@ -114,7 +113,7 @@ const mockSocialBattlesService = {
   sendBattleMessage: vi.fn(),
   getBattleMessages: vi.fn(),
   updateBattleProgress: vi.fn(),
-  endBattle: vi.fn(),
+  endBattle: vi.fn()
 };
 
 const mockTournamentService = {
@@ -123,7 +122,7 @@ const mockTournamentService = {
   getTournaments: vi.fn(),
   getTournamentBracket: vi.fn(),
   updateTournamentProgress: vi.fn(),
-  endTournament: vi.fn(),
+  endTournament: vi.fn()
 };
 
 const mockRealtimeService = {
@@ -135,7 +134,7 @@ const mockRealtimeService = {
   onMessage: vi.fn(),
   onPresenceChange: vi.fn(),
   onBattleUpdate: vi.fn(),
-  getOnlineParticipants: vi.fn(),
+  getOnlineParticipants: vi.fn()
 };
 
 // Mock WebSocket
@@ -149,7 +148,7 @@ const mockWebSocket = () => {
     onopen: null,
     onmessage: null,
     onclose: null,
-    onerror: null,
+    onerror: null
   };
 
   global.WebSocket = vi.fn().mockImplementation(() => mockWS);
@@ -172,7 +171,7 @@ const generateMockTournament = (overrides: Partial<Tournament> = {}): Tournament
     settings: { difficulty: 'medium', battleType: 'streak' },
     createdAt: new Date().toISOString(),
     creatorId: 'system',
-    ...overrides,
+    ...overrides
   };
 };
 
@@ -186,7 +185,7 @@ const generateBattleMessages = (count: number, battleId: string) => {
       userName: `User ${i % 3}`,
       message: `Test message ${i}`,
       timestamp: new Date(Date.now() - (count - i) * 60000).toISOString(),
-      type: 'text',
+      type: 'text'
     });
   }
   return messages;
@@ -199,10 +198,8 @@ const generateBattleProgress = (participants: string[]) => {
     totalAlarms: Math.floor(Math.random() * 20) + 5,
     successfulAlarms: Math.floor(Math.random() * 15) + 3,
     averageWakeTime: `07:${15 + index * 5}:00`,
-    lastActive: new Date(
-      Date.now() - Math.random() * 24 * 60 * 60 * 1000
-    ).toISOString(),
-    score: Math.floor(Math.random() * 1000) + 100,
+    lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString(),
+    score: Math.floor(Math.random() * 1000) + 100
   }));
 };
 
@@ -214,19 +211,19 @@ describe('Social Battles Integration Tests', () => {
   beforeEach(() => {
     setupAllMocks();
     mockWebSocketInstance = mockWebSocket();
-
+    
     mockUser = createMockUser({
       id: 'test-user-main',
       subscriptionTier: 'premium',
       friends: ['friend-1', 'friend-2', 'friend-3'],
       level: 15,
-      experience: 2500,
+      experience: 2500
     });
-
+    
     mockFriends = generateTestUsers(5).map((user, index) => ({
       ...user,
       id: `friend-${index + 1}`,
-      friends: ['test-user-main'],
+      friends: ['test-user-main']
     }));
 
     // Reset all mocks
@@ -244,7 +241,7 @@ describe('Social Battles Integration Tests', () => {
       const mockBattle = createMockBattle({
         name: 'Morning Champions',
         type: 'streak',
-        participants: [mockUser.id],
+        participants: [mockUser.id]
       });
 
       mockSocialBattlesService.createBattle.mockResolvedValue(mockBattle);
@@ -271,18 +268,18 @@ describe('Social Battles Integration Tests', () => {
           name: 'Morning Champions',
           type: 'streak',
           duration: 'P7D',
-          difficulty: 'medium',
+          difficulty: 'medium'
         });
       });
     });
 
     it('should handle different battle types correctly', async () => {
       const battleTypes = ['streak', 'early_bird', 'consistency', 'team'];
-
+      
       for (const battleType of battleTypes) {
         const mockBattle = createMockBattle({
           type: battleType as any,
-          name: `${battleType} Battle`,
+          name: `${battleType} Battle`
         });
 
         mockSocialBattlesService.createBattle.mockResolvedValueOnce(mockBattle);
@@ -325,13 +322,13 @@ describe('Social Battles Integration Tests', () => {
         id: 'existing-battle',
         participants: ['other-user-1', 'other-user-2'],
         status: 'active',
-        name: 'Open Battle',
+        name: 'Open Battle'
       });
 
       mockSocialBattlesService.getBattles.mockResolvedValue([existingBattle]);
       mockSocialBattlesService.joinBattle.mockResolvedValue({
         ...existingBattle,
-        participants: [...existingBattle.participants, mockUser.id],
+        participants: [...existingBattle.participants, mockUser.id]
       });
 
       render(<SocialBattlesComponent user={mockUser} />);
@@ -346,9 +343,7 @@ describe('Social Battles Integration Tests', () => {
       await userEvent.click(joinButton);
 
       await waitFor(() => {
-        expect(mockSocialBattlesService.joinBattle).toHaveBeenCalledWith(
-          'existing-battle'
-        );
+        expect(mockSocialBattlesService.joinBattle).toHaveBeenCalledWith('existing-battle');
       });
     });
 
@@ -360,7 +355,7 @@ describe('Social Battles Integration Tests', () => {
         fromUserName: 'Friend One',
         battleName: 'Morning Challenge',
         invitedAt: new Date().toISOString(),
-        status: 'pending',
+        status: 'pending'
       };
 
       mockSocialBattlesService.getInvitations = vi.fn().mockResolvedValue([invitation]);
@@ -377,9 +372,7 @@ describe('Social Battles Integration Tests', () => {
       await userEvent.click(acceptButton);
 
       await waitFor(() => {
-        expect(mockSocialBattlesService.acceptInvitation).toHaveBeenCalledWith(
-          'invite-123'
-        );
+        expect(mockSocialBattlesService.acceptInvitation).toHaveBeenCalledWith('invite-123');
       });
     });
   });
@@ -388,7 +381,7 @@ describe('Social Battles Integration Tests', () => {
     it('should establish WebSocket connection for battle updates', async () => {
       const activeBattle = createMockBattle({
         status: 'active',
-        participants: [mockUser.id, 'friend-1', 'friend-2'],
+        participants: [mockUser.id, 'friend-1', 'friend-2']
       });
 
       mockRealtimeService.connect.mockResolvedValue({ connected: true });
@@ -407,7 +400,7 @@ describe('Social Battles Integration Tests', () => {
     it('should handle real-time battle progress updates', async () => {
       const activeBattle = createMockBattle({
         status: 'active',
-        participants: [mockUser.id, 'friend-1'],
+        participants: [mockUser.id, 'friend-1']
       });
 
       const progressUpdate = {
@@ -417,11 +410,11 @@ describe('Social Battles Integration Tests', () => {
         data: {
           streak: 5,
           lastAlarmCompleted: new Date().toISOString(),
-          score: 450,
-        },
+          score: 450
+        }
       };
 
-      mockRealtimeService.onBattleUpdate.mockImplementation(callback => {
+      mockRealtimeService.onBattleUpdate.mockImplementation((callback) => {
         setTimeout(() => callback(progressUpdate), 100);
       });
 
@@ -435,7 +428,7 @@ describe('Social Battles Integration Tests', () => {
 
     it('should show real-time participant presence', async () => {
       const activeBattle = createMockBattle({
-        participants: [mockUser.id, 'friend-1', 'friend-2', 'friend-3'],
+        participants: [mockUser.id, 'friend-1', 'friend-2', 'friend-3']
       });
 
       const presenceData = {
@@ -443,8 +436,8 @@ describe('Social Battles Integration Tests', () => {
         online: ['friend-1', 'friend-3'],
         offline: ['friend-2'],
         lastSeen: {
-          'friend-2': new Date(Date.now() - 30 * 60 * 1000).toISOString(),
-        },
+          'friend-2': new Date(Date.now() - 30 * 60 * 1000).toISOString()
+        }
       };
 
       mockRealtimeService.getOnlineParticipants.mockResolvedValue(presenceData);
@@ -453,9 +446,7 @@ describe('Social Battles Integration Tests', () => {
 
       await waitFor(() => {
         expect(screen.getByText('2 participants online')).toBeInTheDocument();
-        expect(
-          screen.getByText('Friend-2 last seen 30 minutes ago')
-        ).toBeInTheDocument();
+        expect(screen.getByText('Friend-2 last seen 30 minutes ago')).toBeInTheDocument();
       });
     });
 
@@ -464,9 +455,9 @@ describe('Social Battles Integration Tests', () => {
       const messages = generateBattleMessages(5, activeBattle.id);
 
       mockSocialBattlesService.getBattleMessages.mockResolvedValue(messages);
-
+      
       let messageCallback: (message: any) => void;
-      mockRealtimeService.onMessage.mockImplementation(callback => {
+      mockRealtimeService.onMessage.mockImplementation((callback) => {
         messageCallback = callback;
       });
 
@@ -480,7 +471,7 @@ describe('Social Battles Integration Tests', () => {
         userName: 'Friend One',
         message: 'Great job everyone!',
         timestamp: new Date().toISOString(),
-        type: 'text',
+        type: 'text'
       };
 
       act(() => {
@@ -516,14 +507,14 @@ describe('Social Battles Integration Tests', () => {
           name: 'Weekly Championship',
           status: 'upcoming',
           participants: [],
-          maxParticipants: 16,
+          maxParticipants: 16
         }),
         generateMockTournament({
           name: 'Monthly Masters',
           status: 'registration',
           participants: ['user-1', 'user-2', 'user-3'],
-          maxParticipants: 32,
-        }),
+          maxParticipants: 32
+        })
       ];
 
       mockTournamentService.getTournaments.mockResolvedValue(tournaments);
@@ -544,13 +535,13 @@ describe('Social Battles Integration Tests', () => {
       const tournament = generateMockTournament({
         id: 'tournament-123',
         participants: ['user-1', 'user-2'],
-        maxParticipants: 8,
+        maxParticipants: 8
       });
 
       mockTournamentService.getTournaments.mockResolvedValue([tournament]);
       mockTournamentService.joinTournament.mockResolvedValue({
         ...tournament,
-        participants: [...tournament.participants, mockUser.id],
+        participants: [...tournament.participants, mockUser.id]
       });
 
       render(<TournamentBracket tournament={tournament} />);
@@ -559,24 +550,13 @@ describe('Social Battles Integration Tests', () => {
       await userEvent.click(joinButton);
 
       await waitFor(() => {
-        expect(mockTournamentService.joinTournament).toHaveBeenCalledWith(
-          'tournament-123'
-        );
+        expect(mockTournamentService.joinTournament).toHaveBeenCalledWith('tournament-123');
       });
     });
 
     it('should generate tournament brackets correctly', async () => {
       const tournament = generateMockTournament({
-        participants: [
-          'user-1',
-          'user-2',
-          'user-3',
-          'user-4',
-          'user-5',
-          'user-6',
-          'user-7',
-          'user-8',
-        ],
+        participants: ['user-1', 'user-2', 'user-3', 'user-4', 'user-5', 'user-6', 'user-7', 'user-8'],
         rounds: [
           {
             roundNumber: 1,
@@ -584,21 +564,23 @@ describe('Social Battles Integration Tests', () => {
               { id: 'match-1', participants: ['user-1', 'user-2'], winner: null },
               { id: 'match-2', participants: ['user-3', 'user-4'], winner: null },
               { id: 'match-3', participants: ['user-5', 'user-6'], winner: null },
-              { id: 'match-4', participants: ['user-7', 'user-8'], winner: null },
-            ],
+              { id: 'match-4', participants: ['user-7', 'user-8'], winner: null }
+            ]
           },
           {
             roundNumber: 2,
             matches: [
               { id: 'match-5', participants: [], winner: null },
-              { id: 'match-6', participants: [], winner: null },
-            ],
+              { id: 'match-6', participants: [], winner: null }
+            ]
           },
           {
             roundNumber: 3,
-            matches: [{ id: 'match-7', participants: [], winner: null }],
-          },
-        ],
+            matches: [
+              { id: 'match-7', participants: [], winner: null }
+            ]
+          }
+        ]
       });
 
       render(<TournamentBracket tournament={tournament} />);
@@ -626,16 +608,16 @@ describe('Social Battles Integration Tests', () => {
           {
             roundNumber: 1,
             matches: [
-              {
-                id: 'match-1',
-                participants: [mockUser.id, 'friend-1'],
+              { 
+                id: 'match-1', 
+                participants: [mockUser.id, 'friend-1'], 
                 winner: null,
                 startTime: new Date().toISOString(),
-                endTime: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-              },
-            ],
-          },
-        ],
+                endTime: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+              }
+            ]
+          }
+        ]
       });
 
       mockTournamentService.getTournaments.mockResolvedValue([tournament]);
@@ -645,9 +627,9 @@ describe('Social Battles Integration Tests', () => {
         winner: mockUser.id,
         scores: {
           [mockUser.id]: 85,
-          'friend-1': 72,
+          'friend-1': 72
         },
-        completedAt: new Date().toISOString(),
+        completedAt: new Date().toISOString()
       };
 
       mockTournamentService.updateTournamentProgress.mockResolvedValue(matchResult);
@@ -676,14 +658,14 @@ describe('Social Battles Integration Tests', () => {
         requirements: {
           minLevel: 10,
           subscriptionTier: 'premium',
-          achievements: ['early_bird_master'],
-        },
+          achievements: ['early_bird_master']
+        }
       });
 
       const lowLevelUser = createMockUser({
         level: 5,
         subscriptionTier: 'free',
-        achievements: [],
+        achievements: []
       });
 
       mockTournamentService.joinTournament.mockRejectedValue(
@@ -711,7 +693,7 @@ describe('Social Battles Integration Tests', () => {
         type: 'friend_challenge',
         participants: [mockUser.id],
         invitedUsers: ['friend-1'],
-        settings: { private: true, duration: 'P3D' },
+        settings: { private: true, duration: 'P3D' }
       });
 
       mockSocialBattlesService.inviteFriend.mockResolvedValue(friendBattle);
@@ -732,7 +714,7 @@ describe('Social Battles Integration Tests', () => {
         expect(mockSocialBattlesService.inviteFriend).toHaveBeenCalledWith({
           friendId: 'friend-1',
           battleType: 'friend_challenge',
-          duration: 'P3D',
+          duration: 'P3D'
         });
       });
     });
@@ -746,25 +728,23 @@ describe('Social Battles Integration Tests', () => {
             id: 'team-1',
             name: 'Early Birds',
             members: [mockUser.id, 'friend-1'],
-            captain: mockUser.id,
+            captain: mockUser.id
           },
           {
             id: 'team-2',
             name: 'Night Owls',
             members: ['friend-2', 'friend-3'],
-            captain: 'friend-2',
-          },
-        ],
+            captain: 'friend-2'
+          }
+        ]
       });
 
       const teamProgress = {
         'team-1': { totalScore: 850, averageStreak: 6.5, teamBonus: 50 },
-        'team-2': { totalScore: 720, averageStreak: 5.2, teamBonus: 25 },
+        'team-2': { totalScore: 720, averageStreak: 5.2, teamBonus: 25 }
       };
 
-      mockSocialBattlesService.getTeamProgress = vi
-        .fn()
-        .mockResolvedValue(teamProgress);
+      mockSocialBattlesService.getTeamProgress = vi.fn().mockResolvedValue(teamProgress);
 
       render(<SocialBattlesComponent user={mockUser} />);
 
@@ -784,7 +764,7 @@ describe('Social Battles Integration Tests', () => {
       const publicBattle = createMockBattle({
         type: 'public_challenge',
         participants: ['friend-1', 'friend-2'],
-        settings: { allowSpectators: true, public: true },
+        settings: { allowSpectators: true, public: true }
       });
 
       const battleProgress = generateBattleProgress(['friend-1', 'friend-2']);
@@ -810,15 +790,13 @@ describe('Social Battles Integration Tests', () => {
 
     it('should support battle messaging with emoji reactions', async () => {
       const activeBattle = createMockBattle({
-        participants: [mockUser.id, 'friend-1', 'friend-2'],
+        participants: [mockUser.id, 'friend-1', 'friend-2']
       });
 
       const messages = generateBattleMessages(10, activeBattle.id);
       mockSocialBattlesService.getBattleMessages.mockResolvedValue(messages);
       mockSocialBattlesService.sendBattleMessage.mockResolvedValue({ success: true });
-      mockSocialBattlesService.addReaction = vi
-        .fn()
-        .mockResolvedValue({ success: true });
+      mockSocialBattlesService.addReaction = vi.fn().mockResolvedValue({ success: true });
 
       render(<SocialBattlesComponent user={mockUser} />);
 
@@ -832,16 +810,14 @@ describe('Social Battles Integration Tests', () => {
         expect(mockSocialBattlesService.sendBattleMessage).toHaveBeenCalledWith({
           battleId: activeBattle.id,
           message: 'Good morning everyone! 🌅',
-          type: 'text',
+          type: 'text'
         });
       });
 
       // Test emoji reactions
       const messageElement = screen.getByText('Test message 0');
-      const reactionButton = messageElement.parentElement?.querySelector(
-        '[data-testid="add-reaction"]'
-      );
-
+      const reactionButton = messageElement.parentElement?.querySelector('[data-testid="add-reaction"]');
+      
       if (reactionButton) {
         await userEvent.click(reactionButton);
         const thumbsUpEmoji = screen.getByTestId('emoji-👍');
@@ -850,7 +826,7 @@ describe('Social Battles Integration Tests', () => {
         await waitFor(() => {
           expect(mockSocialBattlesService.addReaction).toHaveBeenCalledWith({
             messageId: 'msg-0',
-            emoji: '👍',
+            emoji: '👍'
           });
         });
       }
@@ -863,9 +839,7 @@ describe('Social Battles Integration Tests', () => {
         createMockBattle({
           id: `battle-${i}`,
           name: `Battle ${i}`,
-          participants: generateTestUsers(Math.floor(Math.random() * 10) + 2).map(
-            u => u.id
-          ),
+          participants: generateTestUsers(Math.floor(Math.random() * 10) + 2).map(u => u.id)
         })
       );
 
@@ -873,14 +847,11 @@ describe('Social Battles Integration Tests', () => {
 
       const loadTime = await measurePerformance(async () => {
         render(<SocialBattlesComponent user={mockUser} />);
-
-        await waitFor(
-          () => {
-            expect(screen.getByText('Battle 0')).toBeInTheDocument();
-            expect(screen.getByText('Battle 49')).toBeInTheDocument();
-          },
-          { timeout: 5000 }
-        );
+        
+        await waitFor(() => {
+          expect(screen.getByText('Battle 0')).toBeInTheDocument();
+          expect(screen.getByText('Battle 49')).toBeInTheDocument();
+        }, { timeout: 5000 });
       });
 
       expectPerformanceWithin(loadTime, 2000); // Should load within 2 seconds
@@ -892,7 +863,7 @@ describe('Social Battles Integration Tests', () => {
         trackBattleJoined: vi.fn(),
         trackMessageSent: vi.fn(),
         trackTournamentJoined: vi.fn(),
-        trackFriendChallenged: vi.fn(),
+        trackFriendChallenged: vi.fn()
       };
 
       // Mock analytics service
@@ -914,21 +885,20 @@ describe('Social Battles Integration Tests', () => {
           duration: 'P7D',
           difficulty: 'medium',
           userLevel: mockUser.level,
-          subscriptionTier: mockUser.subscriptionTier,
+          subscriptionTier: mockUser.subscriptionTier
         });
       });
     });
 
     it('should measure real-time feature performance', async () => {
       const activeBattle = createMockBattle({ status: 'active' });
-      mockRealtimeService.connect.mockImplementation(
-        () =>
-          new Promise(resolve => setTimeout(() => resolve({ connected: true }), 100))
+      mockRealtimeService.connect.mockImplementation(() => 
+        new Promise(resolve => setTimeout(() => resolve({ connected: true }), 100))
       );
 
       const connectionTime = await measurePerformance(async () => {
         render(<SocialBattlesComponent user={mockUser} />);
-
+        
         await waitFor(() => {
           expect(screen.getByText('Connected')).toBeInTheDocument();
         });
@@ -938,7 +908,7 @@ describe('Social Battles Integration Tests', () => {
 
       // Test message delivery performance
       let messageCallback: (message: any) => void;
-      mockRealtimeService.onMessage.mockImplementation(callback => {
+      mockRealtimeService.onMessage.mockImplementation((callback) => {
         messageCallback = callback;
       });
 
@@ -950,7 +920,7 @@ describe('Social Battles Integration Tests', () => {
           userName: 'Friend One',
           message: 'Performance test message',
           timestamp: new Date().toISOString(),
-          type: 'text',
+          type: 'text'
         };
 
         act(() => {
@@ -968,9 +938,7 @@ describe('Social Battles Integration Tests', () => {
     it('should handle network failures gracefully', async () => {
       // Simulate network failure
       mockSocialBattlesService.getBattles.mockRejectedValue(new Error('Network Error'));
-      mockRealtimeService.connect.mockRejectedValue(
-        new Error('WebSocket connection failed')
-      );
+      mockRealtimeService.connect.mockRejectedValue(new Error('WebSocket connection failed'));
 
       render(<SocialBattlesComponent user={mockUser} />);
 
@@ -988,7 +956,7 @@ describe('Social Battles Integration Tests', () => {
 
       // Simulate successful retry
       mockSocialBattlesService.getBattles.mockResolvedValueOnce([
-        createMockBattle({ name: 'Restored Battle' }),
+        createMockBattle({ name: 'Restored Battle' })
       ]);
 
       await userEvent.click(retryButton);
@@ -1059,7 +1027,7 @@ describe('Social Battles Integration Tests', () => {
       render(<SocialBattlesComponent user={mockUser} />);
 
       await userEvent.click(screen.getByTestId('create-battle'));
-
+      
       // Try to submit without name
       await userEvent.click(screen.getByTestId('submit-battle'));
 
@@ -1067,10 +1035,7 @@ describe('Social Battles Integration Tests', () => {
 
       // Try invalid duration
       await userEvent.type(screen.getByTestId('battle-name'), 'Test Battle');
-      await userEvent.selectOptions(
-        screen.getByTestId('battle-duration'),
-        'invalid-duration'
-      );
+      await userEvent.selectOptions(screen.getByTestId('battle-duration'), 'invalid-duration');
 
       await waitFor(() => {
         expect(screen.getByText(/invalid duration selected/i)).toBeInTheDocument();
@@ -1079,11 +1044,11 @@ describe('Social Battles Integration Tests', () => {
 
     it('should handle WebSocket disconnections', async () => {
       const activeBattle = createMockBattle({ status: 'active' });
-
+      
       mockRealtimeService.connect.mockResolvedValue({ connected: true });
-
+      
       let disconnectCallback: () => void;
-      mockRealtimeService.onDisconnect = vi.fn().mockImplementation(callback => {
+      mockRealtimeService.onDisconnect = vi.fn().mockImplementation((callback) => {
         disconnectCallback = callback;
       });
 
@@ -1111,7 +1076,7 @@ describe('Social Battles Integration Tests', () => {
       // Test odd number of participants
       const oddTournament = generateMockTournament({
         participants: ['user-1', 'user-2', 'user-3', 'user-4', 'user-5'], // 5 participants
-        type: 'single_elimination',
+        type: 'single_elimination'
       });
 
       // Should create proper bracket with byes
@@ -1121,9 +1086,9 @@ describe('Social Battles Integration Tests', () => {
           matches: [
             { participants: ['user-1', 'user-2'] },
             { participants: ['user-3', 'user-4'] },
-            { participants: ['user-5'], bye: true }, // bye round
-          ],
-        },
+            { participants: ['user-5'], bye: true } // bye round
+          ]
+        }
       ];
 
       mockTournamentService.generateBracket = vi.fn().mockReturnValue(expectedRounds);

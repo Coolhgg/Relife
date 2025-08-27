@@ -1,7 +1,7 @@
 /// <reference lib="dom" />
 /**
  * Advanced Sleep Tracking Integration Tests
- *
+ * 
  * Comprehensive end-to-end tests for advanced sleep tracking functionality including:
  * - Sleep session logging and pattern analysis
  * - Chronotype detection and sleep cycle prediction
@@ -11,16 +11,7 @@
  * - Performance validation and analytics tracking
  */
 
-import {
-  describe,
-  it,
-  expect,
-  beforeEach,
-  afterEach,
-  vi,
-  beforeAll,
-  afterAll,
-} from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi, beforeAll, afterAll } from 'vitest';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
@@ -34,19 +25,19 @@ import { SupabaseService } from '../../src/services/supabase';
 import { AppAnalyticsService } from '../../src/services/app-analytics';
 
 // Import test utilities
-import {
-  createMockUser,
-  createMockAlarm,
+import { 
+  createMockUser, 
+  createMockAlarm, 
   measurePerformance,
-  setupAllMocks,
+  setupAllMocks
 } from '../utils/test-mocks';
 
-import type {
-  User,
-  SleepSession,
+import type { 
+  User, 
+  SleepSession, 
   SleepPattern,
   SmartAlarmRecommendation,
-  OptimalWakeWindow,
+  OptimalWakeWindow
 } from '../../src/types';
 
 // Mock external services
@@ -58,7 +49,7 @@ describe('Advanced Sleep Tracking Integration', () => {
   let container: HTMLElement;
   let user: ReturnType<typeof userEvent.setup>;
   let mockUser: User;
-
+  
   // Service instances
   let analyticsService: AppAnalyticsService;
 
@@ -74,24 +65,9 @@ describe('Advanced Sleep Tracking Integration', () => {
       sleepDuration: 450, // 7.5 hours
       sleepQuality: 8,
       sleepStages: [
-        {
-          stage: 'light',
-          startTime: new Date('2024-01-15T22:45:00'),
-          duration: 20,
-          quality: 8,
-        },
-        {
-          stage: 'deep',
-          startTime: new Date('2024-01-15T23:05:00'),
-          duration: 90,
-          quality: 9,
-        },
-        {
-          stage: 'rem',
-          startTime: new Date('2024-01-16T00:35:00'),
-          duration: 60,
-          quality: 7,
-        },
+        { stage: 'light', startTime: new Date('2024-01-15T22:45:00'), duration: 20, quality: 8 },
+        { stage: 'deep', startTime: new Date('2024-01-15T23:05:00'), duration: 90, quality: 9 },
+        { stage: 'rem', startTime: new Date('2024-01-16T00:35:00'), duration: 60, quality: 7 }
       ],
       environmentData: {
         averageLight: 2,
@@ -101,11 +77,11 @@ describe('Advanced Sleep Tracking Integration', () => {
         wearableData: {
           heartRate: [65, 58, 52, 48, 55, 62, 70],
           movement: [0.1, 0.05, 0.02, 0.01, 0.03, 0.08, 0.15],
-          oxygenSaturation: [98, 97, 98, 97, 98, 97, 98],
-        },
+          oxygenSaturation: [98, 97, 98, 97, 98, 97, 98]
+        }
       },
       createdAt: new Date('2024-01-16T07:30:00'),
-      updatedAt: new Date('2024-01-16T07:30:00'),
+      updatedAt: new Date('2024-01-16T07:30:00')
     },
     {
       id: 'sleep-session-2',
@@ -121,11 +97,11 @@ describe('Advanced Sleep Tracking Integration', () => {
         averageLight: 5,
         averageNoise: 35,
         temperature: 20,
-        humidity: 50,
+        humidity: 50
       },
       createdAt: new Date('2024-01-17T07:00:00'),
-      updatedAt: new Date('2024-01-17T07:00:00'),
-    },
+      updatedAt: new Date('2024-01-17T07:00:00')
+    }
   ];
 
   const mockSleepPattern: SleepPattern = {
@@ -141,25 +117,25 @@ describe('Advanced Sleep Tracking Integration', () => {
       bedtime: '22:30',
       wakeTime: '06:45',
       sleepDuration: 435,
-      sleepQuality: 7.5,
+      sleepQuality: 7.5
     },
     weekendPattern: {
       bedtime: '23:15',
       wakeTime: '08:30',
       sleepDuration: 465,
-      sleepQuality: 7.8,
+      sleepQuality: 7.8
     },
     seasonalVariations: {
       winter: {
         averageBedtime: '22:15',
-        averageSleepDuration: 450,
+        averageSleepDuration: 450
       },
       summer: {
         averageBedtime: '23:00',
-        averageSleepDuration: 420,
-      },
+        averageSleepDuration: 420
+      }
     },
-    chronotype: 'early',
+    chronotype: 'early'
   };
 
   beforeAll(() => {
@@ -177,41 +153,33 @@ describe('Advanced Sleep Tracking Integration', () => {
         sleepTracking: {
           enabled: true,
           smartRecommendations: true,
-          wearableIntegration: true,
-        },
-      },
+          wearableIntegration: true
+        }
+      }
     });
-
+    
     // Reset all mocks
     vi.clearAllMocks();
-
+    
     // Mock service instances
     analyticsService = AppAnalyticsService.getInstance();
 
     // Mock successful authentication
     vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(mockUser);
-    vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({
-      alarms: [],
-      error: null,
+    vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({ 
+      alarms: [], 
+      error: null 
     });
-
+    
     // Mock sleep analysis service
     vi.mocked(SleepAnalysisService.initialize).mockResolvedValue(undefined);
-    vi.mocked(SleepAnalysisService.getSleepHistory).mockResolvedValue(
-      mockSleepSessions
-    );
-    vi.mocked(SleepAnalysisService.analyzeSleepPatterns).mockResolvedValue(
-      mockSleepPattern
-    );
-    vi.mocked(SleepAnalysisService.getCachedSleepPattern).mockReturnValue(
-      mockSleepPattern
-    );
+    vi.mocked(SleepAnalysisService.getSleepHistory).mockResolvedValue(mockSleepSessions);
+    vi.mocked(SleepAnalysisService.analyzeSleepPatterns).mockResolvedValue(mockSleepPattern);
+    vi.mocked(SleepAnalysisService.getCachedSleepPattern).mockReturnValue(mockSleepPattern);
 
     // Mock analytics
     vi.mocked(analyticsService.trackSleepAnalytics).mockImplementation(() => {});
-    vi.mocked(analyticsService.trackSmartAlarmRecommendation).mockImplementation(
-      () => {}
-    );
+    vi.mocked(analyticsService.trackSmartAlarmRecommendation).mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -227,16 +195,21 @@ describe('Advanced Sleep Tracking Integration', () => {
 
   describe('Sleep Session Logging', () => {
     it('should log sleep session with manual entry', async () => {
-      const performanceMeasures: { [key: string]: number } = {};
+      const performanceMeasures: {[key: string]: number} = {};
 
       // Step 1: Render sleep tracker
       const renderTime = await measurePerformance(async () => {
         await act(async () => {
-          const result = render(<SleepTracker isOpen={true} onClose={() => {}} />);
+          const result = render(
+            <SleepTracker 
+              isOpen={true} 
+              onClose={() => {}} 
+            />
+          );
           container = result.container;
         });
       });
-
+      
       performanceMeasures.componentRender = renderTime;
 
       // Step 2: Should show log sleep form
@@ -274,13 +247,11 @@ describe('Advanced Sleep Tracking Integration', () => {
         bedtime: new Date('2024-01-18T22:00:00'),
         wakeTime: new Date('2024-01-19T06:30:00'),
         sleepDuration: 510,
-        sleepQuality: 7,
+        sleepQuality: 7
       };
 
       vi.mocked(SleepAnalysisService.trackSleepManually).mockResolvedValue(undefined);
-      vi.mocked(SleepAnalysisService.recordSleepSession).mockResolvedValue(
-        mockNewSession
-      );
+      vi.mocked(SleepAnalysisService.recordSleepSession).mockResolvedValue(mockNewSession);
 
       // Step 6: Submit the form
       const logTime = await measurePerformance(async () => {
@@ -307,7 +278,7 @@ describe('Advanced Sleep Tracking Integration', () => {
         sleepDuration: expect.any(Number),
         sleepQuality: 7,
         bedtime: '22:00',
-        wakeTime: '06:30',
+        wakeTime: '06:30'
       });
 
       console.log('Sleep logging performance:', performanceMeasures);
@@ -315,28 +286,27 @@ describe('Advanced Sleep Tracking Integration', () => {
 
     it('should handle wearable data integration', async () => {
       await act(async () => {
-        const result = render(<SleepTracker isOpen={true} onClose={() => {}} />);
+        const result = render(
+          <SleepTracker 
+            isOpen={true} 
+            onClose={() => {}} 
+          />
+        );
         container = result.container;
       });
 
       // Navigate to wearable integration
-      const settingsButton = screen.getByRole('button', {
-        name: /settings|integrate/i,
-      });
+      const settingsButton = screen.getByRole('button', { name: /settings|integrate/i });
       if (settingsButton) {
         await user.click(settingsButton);
 
         // Step 1: Enable wearable integration
-        const wearableToggle = screen.getByLabelText(
-          /wearable.*integration|fitness.*tracker/i
-        );
+        const wearableToggle = screen.getByLabelText(/wearable.*integration|fitness.*tracker/i);
         await user.click(wearableToggle);
 
         // Step 2: Should show connected devices
         await waitFor(() => {
-          expect(
-            screen.getByText(/connected.*device|fitness.*tracker.*connected/i)
-          ).toBeInTheDocument();
+          expect(screen.getByText(/connected.*device|fitness.*tracker.*connected/i)).toBeInTheDocument();
         });
 
         // Step 3: Mock wearable data sync
@@ -345,26 +315,16 @@ describe('Advanced Sleep Tracking Integration', () => {
           environmentData: {
             ...mockSleepSessions[0].environmentData,
             wearableData: {
-              heartRate: Array.from(
-                { length: 480 },
-                (_, i) => 60 + Math.sin(i / 60) * 15
-              ),
+              heartRate: Array.from({ length: 480 }, (_, i) => 60 + Math.sin(i / 60) * 15),
               movement: Array.from({ length: 480 }, (_, i) => Math.random() * 0.5),
-              oxygenSaturation: Array.from(
-                { length: 480 },
-                () => 97 + Math.random() * 2
-              ),
-            },
-          },
+              oxygenSaturation: Array.from({ length: 480 }, () => 97 + Math.random() * 2)
+            }
+          }
         };
 
-        vi.mocked(SleepAnalysisService.getSleepHistory).mockResolvedValue([
-          mockWearableSession,
-        ]);
+        vi.mocked(SleepAnalysisService.getSleepHistory).mockResolvedValue([mockWearableSession]);
 
-        const syncButton = screen.getByRole('button', {
-          name: /sync.*data|import.*wearable/i,
-        });
+        const syncButton = screen.getByRole('button', { name: /sync.*data|import.*wearable/i });
         await user.click(syncButton);
 
         // Step 4: Should show enhanced data
@@ -375,7 +335,7 @@ describe('Advanced Sleep Tracking Integration', () => {
         expect(analyticsService.trackSleepAnalytics).toHaveBeenCalledWith({
           action: 'wearable_data_synced',
           userId: mockUser.id,
-          dataPoints: expect.any(Number),
+          dataPoints: expect.any(Number)
         });
       }
     });
@@ -384,7 +344,12 @@ describe('Advanced Sleep Tracking Integration', () => {
   describe('Sleep Pattern Analysis and Chronotype Detection', () => {
     it('should analyze sleep patterns and detect chronotype', async () => {
       await act(async () => {
-        const result = render(<SleepTracker isOpen={true} onClose={() => {}} />);
+        const result = render(
+          <SleepTracker 
+            isOpen={true} 
+            onClose={() => {}} 
+          />
+        );
         container = result.container;
       });
 
@@ -411,9 +376,7 @@ describe('Advanced Sleep Tracking Integration', () => {
       expect(screen.getByText(/EARLY/i)).toBeInTheDocument();
 
       // Should show chronotype description
-      expect(
-        screen.getByText(/early.*bird|naturally.*wake.*early/i)
-      ).toBeInTheDocument();
+      expect(screen.getByText(/early.*bird|naturally.*wake.*early/i)).toBeInTheDocument();
 
       // Step 4: Should show weekday vs weekend patterns
       expect(screen.getByText(/weekday.*pattern|work.*day/i)).toBeInTheDocument();
@@ -424,13 +387,18 @@ describe('Advanced Sleep Tracking Integration', () => {
         userId: mockUser.id,
         chronotype: 'early',
         averageSleepDuration: 437,
-        sleepEfficiency: 92,
+        sleepEfficiency: 92
       });
     });
 
     it('should show seasonal variations in sleep patterns', async () => {
       await act(async () => {
-        const result = render(<SleepTracker isOpen={true} onClose={() => {}} />);
+        const result = render(
+          <SleepTracker 
+            isOpen={true} 
+            onClose={() => {}} 
+          />
+        );
         container = result.container;
       });
 
@@ -438,9 +406,7 @@ describe('Advanced Sleep Tracking Integration', () => {
       await user.click(insightsTab);
 
       await waitFor(() => {
-        expect(
-          screen.getByText(/seasonal.*variation|season.*pattern/i)
-        ).toBeInTheDocument();
+        expect(screen.getByText(/seasonal.*variation|season.*pattern/i)).toBeInTheDocument();
       });
 
       // Should show winter vs summer differences
@@ -460,25 +426,22 @@ describe('Advanced Sleep Tracking Integration', () => {
         userId: mockUser.id,
         time: '07:00',
         label: 'Smart Wake Up',
-        enabled: true,
+        enabled: true
       });
 
       // Mock smart alarm recommendation
       const mockRecommendation: SmartAlarmRecommendation = {
         originalTime: '07:00',
         recommendedTime: '06:45',
-        reason:
-          "You'll be in light sleep, making it easier to wake up naturally. Based on your early chronotype.",
+        reason: "You'll be in light sleep, making it easier to wake up naturally. Based on your early chronotype.",
         confidence: 0.87,
         sleepStageAtOriginal: 'deep',
         sleepStageAtRecommended: 'light',
         estimatedSleepQuality: 8.2,
-        wakeUpDifficulty: 'very_easy',
+        wakeUpDifficulty: 'very_easy'
       };
 
-      vi.mocked(SleepAnalysisService.getSmartAlarmRecommendation).mockResolvedValue(
-        mockRecommendation
-      );
+      vi.mocked(SleepAnalysisService.getSmartAlarmRecommendation).mockResolvedValue(mockRecommendation);
 
       await act(async () => {
         const result = render(
@@ -494,9 +457,7 @@ describe('Advanced Sleep Tracking Integration', () => {
       });
 
       // Navigate to alarm creation
-      const createAlarmButton = screen.getByRole('button', {
-        name: /create.*alarm|new.*alarm/i,
-      });
+      const createAlarmButton = screen.getByRole('button', { name: /create.*alarm|new.*alarm/i });
       await user.click(createAlarmButton);
 
       // Set alarm time
@@ -510,9 +471,7 @@ describe('Advanced Sleep Tracking Integration', () => {
 
       // Step 2: Should generate recommendation
       await waitFor(() => {
-        expect(
-          screen.getByText(/smart.*recommendation|optimal.*time/i)
-        ).toBeInTheDocument();
+        expect(screen.getByText(/smart.*recommendation|optimal.*time/i)).toBeInTheDocument();
       });
 
       // Should show recommended time
@@ -529,9 +488,7 @@ describe('Advanced Sleep Tracking Integration', () => {
       expect(screen.getByText(/very.*easy/i)).toBeInTheDocument();
 
       // Step 3: User can accept recommendation
-      const acceptButton = screen.getByRole('button', {
-        name: /accept.*recommendation|use.*smart.*time/i,
-      });
+      const acceptButton = screen.getByRole('button', { name: /accept.*recommendation|use.*smart.*time/i });
       await user.click(acceptButton);
 
       // Time should be updated
@@ -543,7 +500,7 @@ describe('Advanced Sleep Tracking Integration', () => {
         recommendedTime: '06:45',
         accepted: true,
         confidence: 0.87,
-        timeDifference: -15,
+        timeDifference: -15
       });
     });
 
@@ -555,23 +512,24 @@ describe('Advanced Sleep Tracking Integration', () => {
           { time: '06:30', stage: 'light', quality: 10 },
           { time: '06:45', stage: 'light', quality: 9 },
           { time: '07:00', stage: 'deep', quality: 2 },
-          { time: '07:05', stage: 'rem', quality: 5 },
-        ],
+          { time: '07:05', stage: 'rem', quality: 5 }
+        ]
       };
 
-      vi.mocked(SleepAnalysisService.findOptimalWakeWindow).mockReturnValue(
-        mockOptimalWindow
-      );
+      vi.mocked(SleepAnalysisService.findOptimalWakeWindow).mockReturnValue(mockOptimalWindow);
 
       await act(async () => {
-        const result = render(<SleepTracker isOpen={true} onClose={() => {}} />);
+        const result = render(
+          <SleepTracker 
+            isOpen={true} 
+            onClose={() => {}} 
+          />
+        );
         container = result.container;
       });
 
       // Navigate to sleep optimization
-      const optimizeTab = screen.getByRole('tab', {
-        name: /optimize|recommendations/i,
-      });
+      const optimizeTab = screen.getByRole('tab', { name: /optimize|recommendations/i });
       if (optimizeTab) {
         await user.click(optimizeTab);
 
@@ -599,12 +557,15 @@ describe('Advanced Sleep Tracking Integration', () => {
       // Mock insufficient data
       vi.mocked(SleepAnalysisService.getSleepHistory).mockResolvedValue([]);
       vi.mocked(SleepAnalysisService.analyzeSleepPatterns).mockResolvedValue(null);
-      vi.mocked(SleepAnalysisService.getSmartAlarmRecommendation).mockResolvedValue(
-        null
-      );
+      vi.mocked(SleepAnalysisService.getSmartAlarmRecommendation).mockResolvedValue(null);
 
       await act(async () => {
-        const result = render(<SleepTracker isOpen={true} onClose={() => {}} />);
+        const result = render(
+          <SleepTracker 
+            isOpen={true} 
+            onClose={() => {}} 
+          />
+        );
         container = result.container;
       });
 
@@ -613,9 +574,7 @@ describe('Advanced Sleep Tracking Integration', () => {
 
       // Should show insufficient data message
       await waitFor(() => {
-        expect(
-          screen.getByText(/insufficient.*data|more.*sleep.*data/i)
-        ).toBeInTheDocument();
+        expect(screen.getByText(/insufficient.*data|more.*sleep.*data/i)).toBeInTheDocument();
       });
 
       // Should suggest logging more sleep
@@ -630,35 +589,27 @@ describe('Advanced Sleep Tracking Integration', () => {
     it('should predict sleep stages based on sleep cycles', async () => {
       const mockAlarm = createMockAlarm({
         time: '07:00',
-        days: [1, 2, 3, 4, 5], // Weekdays
+        days: [1, 2, 3, 4, 5] // Weekdays
       });
 
       const mockPredictedStages = [
         { time: 390, stage: 'light' as const }, // 6:30 AM
-        { time: 405, stage: 'light' as const }, // 6:45 AM
-        { time: 420, stage: 'deep' as const }, // 7:00 AM
-        { time: 435, stage: 'rem' as const }, // 7:15 AM
+        { time: 405, stage: 'light' as const }, // 6:45 AM  
+        { time: 420, stage: 'deep' as const },  // 7:00 AM
+        { time: 435, stage: 'rem' as const }    // 7:15 AM
       ];
 
-      vi.mocked(SleepAnalysisService.predictSleepStages).mockResolvedValue(
-        mockPredictedStages
-      );
+      vi.mocked(SleepAnalysisService.predictSleepStages).mockResolvedValue(mockPredictedStages);
 
       // Test prediction functionality
-      const prediction = await SleepAnalysisService.predictSleepStages(
-        mockAlarm,
-        mockSleepPattern
-      );
+      const prediction = await SleepAnalysisService.predictSleepStages(mockAlarm, mockSleepPattern);
 
-      expect(SleepAnalysisService.predictSleepStages).toHaveBeenCalledWith(
-        mockAlarm,
-        mockSleepPattern
-      );
+      expect(SleepAnalysisService.predictSleepStages).toHaveBeenCalledWith(mockAlarm, mockSleepPattern);
       expect(prediction).toEqual(mockPredictedStages);
 
       // Verify 90-minute cycle pattern
       const lightStages = prediction.filter(s => s.stage === 'light');
-      const deepStages = prediction.filter(s => s.stage === 'deep');
+      const deepStages = prediction.filter(s => s.stage === 'deep'); 
       const remStages = prediction.filter(s => s.stage === 'rem');
 
       expect(lightStages.length).toBeGreaterThan(0);
@@ -670,13 +621,13 @@ describe('Advanced Sleep Tracking Integration', () => {
       // Test weekday alarm
       const weekdayAlarm = createMockAlarm({
         time: '06:30',
-        days: [1, 2, 3, 4, 5], // Monday-Friday
+        days: [1, 2, 3, 4, 5] // Monday-Friday
       });
 
       // Test weekend alarm
       const weekendAlarm = createMockAlarm({
         time: '08:00',
-        days: [0, 6], // Saturday-Sunday
+        days: [0, 6] // Saturday-Sunday
       });
 
       await SleepAnalysisService.predictSleepStages(weekdayAlarm, mockSleepPattern);
@@ -684,7 +635,7 @@ describe('Advanced Sleep Tracking Integration', () => {
 
       // Verify different patterns were used
       expect(SleepAnalysisService.predictSleepStages).toHaveBeenCalledTimes(2);
-
+      
       // The service should use weekday pattern (22:30 bedtime) vs weekend pattern (23:15 bedtime)
       const calls = vi.mocked(SleepAnalysisService.predictSleepStages).mock.calls;
       expect(calls[0][1].weekdayPattern.bedtime).toBe('22:30');
@@ -699,16 +650,19 @@ describe('Advanced Sleep Tracking Integration', () => {
         ...mockSleepSessions[0],
         id: `sleep-session-${i}`,
         bedtime: new Date(Date.now() - (365 - i) * 24 * 60 * 60 * 1000),
-        createdAt: new Date(Date.now() - (365 - i) * 24 * 60 * 60 * 1000),
+        createdAt: new Date(Date.now() - (365 - i) * 24 * 60 * 60 * 1000)
       }));
 
-      vi.mocked(SleepAnalysisService.getSleepHistory).mockResolvedValue(
-        largeSleepDataset
-      );
+      vi.mocked(SleepAnalysisService.getSleepHistory).mockResolvedValue(largeSleepDataset);
 
       const analysisTime = await measurePerformance(async () => {
         await act(async () => {
-          render(<SleepTracker isOpen={true} onClose={() => {}} />);
+          render(
+            <SleepTracker 
+              isOpen={true} 
+              onClose={() => {}} 
+            />
+          );
         });
 
         await waitFor(() => {
@@ -734,14 +688,19 @@ describe('Advanced Sleep Tracking Integration', () => {
 
     it('should track comprehensive sleep analytics', async () => {
       await act(async () => {
-        const result = render(<SleepTracker isOpen={true} onClose={() => {}} />);
+        const result = render(
+          <SleepTracker 
+            isOpen={true} 
+            onClose={() => {}} 
+          />
+        );
         container = result.container;
       });
 
       // Track component initialization
       expect(analyticsService.trackSleepAnalytics).toHaveBeenCalledWith({
         action: 'sleep_tracker_opened',
-        userId: mockUser.id,
+        userId: mockUser.id
       });
 
       // Navigate through different tabs
@@ -751,17 +710,17 @@ describe('Advanced Sleep Tracking Integration', () => {
       expect(analyticsService.trackSleepAnalytics).toHaveBeenCalledWith({
         action: 'sleep_history_viewed',
         userId: mockUser.id,
-        sessionCount: mockSleepSessions.length,
+        sessionCount: mockSleepSessions.length
       });
 
       const insightsTab = screen.getByRole('button', { name: /insights/i });
       await user.click(insightsTab);
 
       expect(analyticsService.trackSleepAnalytics).toHaveBeenCalledWith({
-        action: 'sleep_insights_viewed',
+        action: 'sleep_insights_viewed', 
         userId: mockUser.id,
         chronotype: 'early',
-        averageSleepQuality: 7.2,
+        averageSleepQuality: 7.2
       });
     });
 
@@ -772,7 +731,12 @@ describe('Advanced Sleep Tracking Integration', () => {
       );
 
       await act(async () => {
-        const result = render(<SleepTracker isOpen={true} onClose={() => {}} />);
+        const result = render(
+          <SleepTracker 
+            isOpen={true} 
+            onClose={() => {}} 
+          />
+        );
         container = result.container;
       });
 
@@ -786,23 +750,19 @@ describe('Advanced Sleep Tracking Integration', () => {
       expect(retryButton).toBeInTheDocument();
 
       // Should offer offline mode
-      const offlineButton = screen.getByRole('button', {
-        name: /offline.*mode|cached.*data/i,
-      });
+      const offlineButton = screen.getByRole('button', { name: /offline.*mode|cached.*data/i });
       if (offlineButton) {
         await user.click(offlineButton);
 
         await waitFor(() => {
-          expect(
-            screen.getByText(/offline.*data|cached.*session/i)
-          ).toBeInTheDocument();
+          expect(screen.getByText(/offline.*data|cached.*session/i)).toBeInTheDocument();
         });
       }
 
       expect(analyticsService.trackSleepAnalytics).toHaveBeenCalledWith({
         action: 'sync_error',
         userId: mockUser.id,
-        error: 'Sleep data synchronization failed',
+        error: 'Sleep data synchronization failed'
       });
     });
   });

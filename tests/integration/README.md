@@ -74,9 +74,7 @@ Tests the complete gamification and social features:
 - ✅ Error handling and graceful degradation
 
 ### 6. AI Voice Cloning Integration (`ai-voice-cloning.integration.test.tsx`)
-
 Tests the complete AI-powered voice features:
-
 - ✅ Voice sample recording with MediaRecorder API
 - ✅ AI voice cloning with ElevenLabs TTS integration
 - ✅ Voice biometric authentication and training workflows
@@ -88,9 +86,7 @@ Tests the complete AI-powered voice features:
 - ✅ Analytics tracking for voice cloning usage
 
 ### 7. Advanced Sleep Tracking (`advanced-sleep-tracking.integration.test.tsx`)
-
 Tests comprehensive sleep analysis and smart alarm features:
-
 - ✅ Manual sleep session logging with validation
 - ✅ Sleep pattern analysis and chronotype detection
 - ✅ Smart alarm recommendations based on 90-minute cycles
@@ -103,9 +99,7 @@ Tests comprehensive sleep analysis and smart alarm features:
 - ✅ Error handling for data sync failures and offline mode
 
 ### 8. Social Battles & Real-time Features (`social-battles.integration.test.tsx`)
-
 Tests multiplayer social features and real-time interactions:
-
 - ✅ Battle creation with different challenge types (streak, early_bird, team)
 - ✅ Real-time WebSocket connections for live updates
 - ✅ Tournament bracket generation and progression
@@ -357,6 +351,22 @@ export PERFORMANCE_WEBSOCKET_CONNECTION_THRESHOLD=500
 export PERFORMANCE_LARGE_DATASET_THRESHOLD=2000
 ```
 
+### Advanced Feature Environment
+
+```bash
+# Additional environment variables for new features
+export VITE_ELEVENLABS_API_KEY=test_elevenlabs_key
+export VITE_OPENAI_API_KEY=test_openai_key
+export VITE_WEBSOCKET_URL=ws://localhost:3001
+export VITE_SLEEP_API_URL=https://api.sleep-test.com
+
+# Performance thresholds for new features
+export PERFORMANCE_VOICE_CLONING_THRESHOLD=3000
+export PERFORMANCE_SLEEP_ANALYSIS_THRESHOLD=2000
+export PERFORMANCE_WEBSOCKET_CONNECTION_THRESHOLD=500
+export PERFORMANCE_LARGE_DATASET_THRESHOLD=2000
+```
+
 ## Debugging Integration Tests
 
 ### Local Debugging
@@ -397,29 +407,24 @@ npm run test:integration:ui
 - **Solution**: Verify Stripe mock configuration and test environment keys
 
 #### WebSocket Connection Issues
-
 - **Cause**: Real-time features failing to connect in test environment
 - **Solution**: Check WebSocket mock setup and message simulation in test-mocks.ts
 
 #### Voice Recording Failures
-
 - **Cause**: MediaRecorder API not properly mocked
 - **Solution**: Verify media API mocks and audio blob generation
 
 #### Sleep Data Performance
-
 - **Cause**: Large dataset tests taking too long
 - **Solution**: Optimize mock data generation and adjust performance thresholds
 
 #### Tournament Bracket Generation
-
 - **Cause**: Complex bracket logic failing with odd participant numbers
 - **Solution**: Check tournament bracket generation and bye round handling
 
 ## Test Coverage by Feature
 
 ### Core Features (Existing)
-
 - **Alarm Lifecycle**: 95% coverage
 - **Offline Sync**: 90% coverage
 - **Premium Upgrade**: 88% coverage
@@ -427,7 +432,6 @@ npm run test:integration:ui
 - **Gaming & Rewards**: 85% coverage
 
 ### Advanced Features (New)
-
 - **AI Voice Cloning**: 85% coverage
 - **Sleep Tracking**: 88% coverage
 - **Social Battles**: 82% coverage
