@@ -1,71 +1,126 @@
 // Additional type definitions for Advanced Alarm Scheduler
+// This file provides strict typing for the advanced alarm scheduler functionality
 
-// Helper types for geolocation
-interface GeolocationPosition {
-  coords: {
-    latitude: number;
-    longitude: number;
-    altitude?: number;
-    accuracy: number;
-    altitudeAccuracy?: number;
-    heading?: number;
-    speed?: number;
-  };
-  timestamp: number;
+import type {
+  Alarm,
+  RecurrencePattern,
+  ConditionalRule,
+  LocationTrigger,
+  CalendarIntegration,
+  SchedulingConfig,
+  SchedulingStats,
+  SunSchedule,
+  BulkScheduleOperation,
+  ScheduleExport,
+  ScheduleImport,
+  SmartOptimization,
+  SeasonalAdjustment,
+  OptimizationType,
+  AlarmDependency,
+  Location,
+  AlarmCondition,
+  AlarmAction
+} from './index';
+
+// Extended interface for capacitor notifications
+export interface CapacitorNotificationService {
+  scheduleLocalNotification(data: NotificationScheduleData): Promise<void>;
+  cancelLocalNotification(id: number): Promise<void>;
 }
 
-// Location action type for location triggers
+// Enhanced notification data structure
+export interface NotificationScheduleData {
+  id: number;
+  title: string;
+  body: string;
+  schedule: Date;
+}
+
+// Location action parameters
 export interface LocationActionParameters {
-  minutes?: number; // for adjust_time actions
-  message?: string; // for notification actions
-  type?: 'alert' | 'banner' | 'sound'; // for notification actions
+  type: 'enable_alarm' | 'disable_alarm' | 'adjust_time' | 'notification';
+  minutes?: number;
+  message?: string;
+  parameters?: {
+    minutes?: number;
+    message?: string;
+  };
 }
 
-// Additional utility types for the advanced scheduler
-export interface AlarmUpdateData {
-  time?: string;
-  label?: string;
-  days?: number[];
-  voiceMood?: import('./_index').VoiceMood;
-  sound?: string;
-  difficulty?: string;
-  snoozeEnabled?: boolean;
-  snoozeInterval?: number;
-  maxSnoozes?: number;
-  battleId?: string;
-  weatherEnabled?: boolean;
-  isActive?: boolean;
-  enabled?: boolean;
+// Weather condition types
+export interface WeatherConditionData {
+  type: 'temperature' | 'condition' | 'humidity' | 'wind_speed';
+  operator: 'greater_than' | 'less_than' | 'equals';
+  value: number;
+  condition?: string;
 }
 
-// Enhanced AlarmService interface with advanced scheduling methods
-declare module '../services/alarm' {
-  export class AlarmService {
-    // Add method overload for partial updates
-    static updateAlarm(
-      alarmId: string,
-      updates: Partial<import('./_index').Alarm>
-    ): Promise<void>;
-
-    // Add method overload for creating alarm from full Alarm object
-    static createAlarm(alarm: import('./_index').Alarm): Promise<void>;
-  }
+// Calendar condition types
+export interface CalendarConditionData {
+  type: 'day_of_week' | 'date_range' | 'has_events' | 'free_time';
+  value: any;
+  operator?: 'equals';
 }
 
-// Global type augmentations for browser APIs
-declare global {
-  interface GeolocationPosition {
-    coords: {
-      latitude: number;
-      longitude: number;
-      altitude?: number;
-      accuracy: number;
-      altitudeAccuracy?: number;
-      heading?: number;
-      speed?: number;
-    };
-    timestamp: number;
-  }
+// Sleep quality condition types
+export interface SleepQualityConditionData {
+  type: 'quality_score' | 'duration' | 'efficiency';
+  value: number;
+  operator: 'greater_than' | 'less_than';
 }
 
-export {};
+// Time since last condition types
+export interface TimeSinceLastConditionData {
+  value: number;
+  operator: 'greater_than' | 'less_than' | 'equals';
+  unit: 'minutes' | 'hours' | 'days';
+}
+
+// Bulk operation result
+export interface BulkOperationResult {
+  success: number;
+  failed: number;
+  errors: string[];
+}
+
+// Sun time data
+export interface SunTimeData {
+  sunrise: Date;
+  sunset: Date;
+}
+
+// Sleep data simulation
+export interface SleepData {
+  quality: number;
+  duration: number;
+  efficiency: number;
+  deepSleep: number;
+}
+
+// Current weather simulation
+export interface CurrentWeatherData {
+  temperature: number;
+  condition: string;
+  humidity: number;
+  windSpeed: number;
+}
+
+// Season type
+export type Season = 'spring' | 'summer' | 'fall' | 'winter';
+
+// Extended alarm condition types to match usage
+export interface ExtendedAlarmCondition extends AlarmCondition {
+  conditions?: any;
+}
+
+// Extended Alarm interface for advanced scheduling
+export interface AdvancedAlarm extends Alarm {
+  recurrencePattern?: RecurrencePattern;
+  smartOptimizations?: SmartOptimization[];
+  seasonalAdjustments?: SeasonalAdjustment[];
+  locationTriggers?: LocationTrigger[];
+  conditionalRules?: ConditionalRule[];
+  sunSchedule?: SunSchedule;
+  alarmDependencies?: AlarmDependency[];
+  calendarIntegration?: CalendarIntegration;
+}
