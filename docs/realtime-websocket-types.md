@@ -2,23 +2,17 @@
 
 ## Overview
 
-This documentation covers the comprehensive real-time WebSocket type system for the Relife alarm
-application. The type system provides full TypeScript coverage for WebSocket connections, push
-notifications, Supabase real-time subscriptions, and all related real-time functionality.
+This documentation covers the comprehensive real-time WebSocket type system for the Relife alarm application. The type system provides full TypeScript coverage for WebSocket connections, push notifications, Supabase real-time subscriptions, and all related real-time functionality.
 
 ## Architecture Overview
 
 The real-time system consists of several key components:
 
 1. **WebSocket Core** (`src/types/websocket.ts`) - Base WebSocket connection and message handling
-2. **Real-time Messages** (`src/types/realtime-messages.ts`) - Typed message payloads for all
-   real-time events
-3. **Push Notifications** (`src/types/push-notifications.ts`) - Push notification types and service
-   worker communication
-4. **Supabase Real-time** (`src/types/supabase-realtime.ts`) - Database change events and presence
-   management
-5. **Service Interface** (`src/types/realtime-service.ts`) - Main service interface and
-   configuration
+2. **Real-time Messages** (`src/types/realtime-messages.ts`) - Typed message payloads for all real-time events
+3. **Push Notifications** (`src/types/push-notifications.ts`) - Push notification types and service worker communication
+4. **Supabase Real-time** (`src/types/supabase-realtime.ts`) - Database change events and presence management
+5. **Service Interface** (`src/types/realtime-service.ts`) - Main service interface and configuration
 6. **React Hooks** (`src/hooks/useRealtime.ts`) - React integration and component-friendly API
 
 ## Type System Structure
@@ -26,7 +20,11 @@ The real-time system consists of several key components:
 ### Core WebSocket Types
 
 ```typescript
-import type { WebSocketMessage, WebSocketConfig, WebSocketManager } from './types/realtime';
+import type { 
+  WebSocketMessage, 
+  WebSocketConfig, 
+  WebSocketManager 
+} from './types/realtime';
 
 // Basic message structure
 interface WebSocketMessage<T = any> {
@@ -56,7 +54,7 @@ All real-time messages are strongly typed with specific payload interfaces:
 import type {
   AlarmTriggeredPayload,
   UserPresenceUpdatePayload,
-  RecommendationGeneratedPayload,
+  RecommendationGeneratedPayload
 } from './types/realtime';
 
 // Alarm events
@@ -96,14 +94,14 @@ const config: RealtimeServiceConfig = {
       timeout: 10000,
       heartbeatInterval: 30000,
       // ... other config
-    },
+    }
   },
   supabase: {
     enabled: true,
     enablePresence: true,
     enableBroadcast: true,
-    enableDatabaseChanges: true,
-  },
+    enableDatabaseChanges: true
+  }
 };
 
 const realtimeService = await RealtimeServiceFactory.create(config);
@@ -129,17 +127,17 @@ function App() {
 // Component usage
 function AlarmComponent() {
   const { alarm, isConnected, error } = useRealtime();
-
+  
   useEffect(() => {
     // Listen for alarm triggers
     const unsubscribe = alarm.onAlarmTriggered((data: AlarmTriggeredPayload) => {
       console.log('Alarm triggered:', data.alarm.label);
       // Handle alarm trigger with full type safety
     });
-
+    
     return unsubscribe;
   }, [alarm]);
-
+  
   // Rest of component...
 }
 ```
@@ -154,33 +152,33 @@ import type { AlarmTriggeredPayload, AlarmDismissedPayload } from './types/realt
 
 function AlarmManager() {
   const { alarm } = useRealtime();
-
+  
   useEffect(() => {
     // Strongly typed alarm event handlers
     const unsubscribeTriggered = alarm.onAlarmTriggered((data: AlarmTriggeredPayload) => {
       const { alarm: alarmData, triggeredAt, deviceInfo, contextualData } = data;
-
+      
       // Full access to typed data
       console.log(`Alarm "${alarmData.label}" triggered at ${triggeredAt}`);
       console.log(`Battery level: ${deviceInfo.batteryLevel}%`);
       console.log(`Weather: ${contextualData.weatherCondition}`);
     });
-
+    
     const unsubscribeDismissed = alarm.onAlarmDismissed((data: AlarmDismissedPayload) => {
       const { alarmId, dismissMethod, timeToReact, voiceData } = data;
-
+      
       if (voiceData) {
         console.log(`Voice mood detected: ${voiceData.mood}`);
         console.log(`Confidence: ${voiceData.confidenceScore}`);
       }
     });
-
+    
     return () => {
       unsubscribeTriggered();
       unsubscribeDismissed();
     };
   }, [alarm]);
-
+  
   const syncAlarm = async (alarmId: string) => {
     await alarm.syncAlarmState(alarmId);
   };
@@ -195,32 +193,32 @@ import type { UserPresenceUpdatePayload } from './types/realtime';
 function UserPresenceComponent() {
   const { user } = useRealtime();
   const [onlineUsers, setOnlineUsers] = useState<UserPresenceUpdatePayload[]>([]);
-
+  
   useEffect(() => {
     const unsubscribe = user.onPresenceUpdate((data: UserPresenceUpdatePayload) => {
-      setOnlineUsers((prev) => {
-        const filtered = prev.filter((u) => u.userId !== data.userId);
+      setOnlineUsers(prev => {
+        const filtered = prev.filter(u => u.userId !== data.userId);
         return [data, ...filtered];
       });
     });
-
+    
     return unsubscribe;
   }, [user]);
-
+  
   const updateMyPresence = async (status: 'online' | 'away' | 'busy' | 'offline') => {
     await user.updatePresence(status);
   };
-
+  
   const trackActivity = async () => {
     await user.trackActivity({
       type: 'page_view',
       details: {
         page: '/alarms',
         duration: 30000,
-        metadata: { feature: 'alarm_list' },
+        metadata: { feature: 'alarm_list' }
       },
       timestamp: new Date(),
-      sessionId: 'current-session',
+      sessionId: 'current-session'
     });
   };
 }
@@ -234,27 +232,27 @@ import type { RecommendationGeneratedPayload } from './types/realtime';
 function AIRecommendationsComponent() {
   const { ai } = useRealtime();
   const [recommendations, setRecommendations] = useState<RecommendationGeneratedPayload[]>([]);
-
+  
   useEffect(() => {
     const unsubscribe = ai.onRecommendation((data: RecommendationGeneratedPayload) => {
       const { recommendation, data: analysisData } = data;
-
+      
       console.log(`New ${data.type} recommendation: ${recommendation.title}`);
       console.log(`Confidence: ${analysisData.confidence}`);
       console.log(`Expected impact: ${recommendation.estimatedImpact}/10`);
-
-      setRecommendations((prev) => [data, ...prev.slice(0, 4)]);
+      
+      setRecommendations(prev => [data, ...prev.slice(0, 4)]);
     });
-
+    
     return unsubscribe;
   }, [ai]);
-
+  
   const requestAnalysis = async () => {
     const analysisId = await ai.requestAnalysis('sleep_pattern', {
       userId: 'current-user',
-      timeRange: { start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), end: new Date() },
+      timeRange: { start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), end: new Date() }
     });
-
+    
     console.log('Sleep analysis requested:', analysisId);
   };
 }
@@ -263,22 +261,22 @@ function AIRecommendationsComponent() {
 ### Push Notifications
 
 ```typescript
-import type {
-  PushNotification,
+import type { 
+  PushNotification, 
   NotificationPreferences,
-  AlarmNotificationData,
+  AlarmNotificationData 
 } from './types/realtime';
 
 function PushNotificationManager() {
   const { push } = useRealtime();
-
+  
   const subscribeToNotifications = async () => {
     const success = await push.subscribe();
     if (success) {
       console.log('Successfully subscribed to push notifications');
     }
   };
-
+  
   const updatePreferences = async () => {
     const preferences: Partial<NotificationPreferences> = {
       categories: {
@@ -288,18 +286,18 @@ function PushNotificationManager() {
         system: true,
         emergency: true,
         social: false,
-        promotional: false,
+        promotional: false
       },
       schedule: {
         enabled: true,
         allowedHours: { start: '07:00', end: '22:00' },
-        timezone: 'America/New_York',
-      },
+        timezone: 'America/New_York'
+      }
     };
-
+    
     await push.updatePreferences(preferences);
   };
-
+  
   const sendAlarmNotification = async (alarmId: string) => {
     const notification: PushNotification = {
       id: `alarm-${alarmId}`,
@@ -318,14 +316,14 @@ function PushNotificationManager() {
         snoozeCount: 0,
         maxSnoozes: 3,
         voiceEnabled: true,
-        challengeEnabled: false,
+        challengeEnabled: false
       } as AlarmNotificationData,
       actions: [
         { action: 'dismiss', title: 'Dismiss', icon: '/icons/dismiss.png' },
-        { action: 'snooze', title: 'Snooze', icon: '/icons/snooze.png' },
-      ],
+        { action: 'snooze', title: 'Snooze', icon: '/icons/snooze.png' }
+      ]
     };
-
+    
     const notificationId = await push.sendNotification(notification);
     console.log('Notification sent:', notificationId);
   };
@@ -348,15 +346,15 @@ function CustomMessageHandler() {
     'system_notification',
     (data) => {
       const { title, message, severity, actions } = data;
-
+      
       if (severity === 'critical') {
         // Handle critical system notifications
         showEmergencyModal(title, message);
       }
-
+      
       if (actions) {
         // Handle notification actions
-        actions.forEach((action) => {
+        actions.forEach(action => {
           console.log(`Available action: ${action.label}`);
         });
       }
@@ -374,7 +372,7 @@ import { useConnectionQuality, useRealtimeMetrics } from './hooks/useRealtime';
 function ConnectionMonitor() {
   const { quality, isGood, shouldWarn } = useConnectionQuality();
   const metrics = useRealtimeMetrics(5000); // Update every 5 seconds
-
+  
   if (shouldWarn) {
     return (
       <div className="bg-yellow-100 border border-yellow-300 rounded p-3">
@@ -382,7 +380,7 @@ function ConnectionMonitor() {
       </div>
     );
   }
-
+  
   return (
     <div className="bg-green-100 border border-green-300 rounded p-3">
       <p>Connection quality: {quality}</p>
@@ -405,9 +403,9 @@ import type { RealtimeServiceError } from './types/realtime';
 
 function ErrorHandler() {
   const { error, clearError } = useRealtime();
-
+  
   if (!error) return null;
-
+  
   const handleError = (error: RealtimeServiceError) => {
     switch (error.severity) {
       case 'critical':
@@ -424,10 +422,10 @@ function ErrorHandler() {
         showErrorToast(error);
         break;
     }
-
+    
     // Log error for debugging
     console.error(`Real-time ${error.type} error:`, error);
-
+    
     if (error.userActionRequired) {
       // Show actionable error message
       error.suggestedActions.forEach(action => {
@@ -435,13 +433,13 @@ function ErrorHandler() {
       });
     }
   };
-
+  
   useEffect(() => {
     if (error) {
       handleError(error);
     }
   }, [error]);
-
+  
   return (
     <div className="error-container">
       {error && (
@@ -466,7 +464,7 @@ import type { MockRealtimeService, RealtimeServiceTestHarness } from './types/re
 // Create mock service for testing
 const mockService: MockRealtimeService = RealtimeServiceTestHarness.createMockService({
   websocket: { enabled: true },
-  supabase: { enabled: false }, // Disable Supabase for unit tests
+  supabase: { enabled: false } // Disable Supabase for unit tests
 });
 
 // Simulate real-time events in tests
@@ -476,10 +474,10 @@ mockService.simulateMessage({
   payload: {
     alarm: { id: 'test-alarm', label: 'Test Alarm' },
     triggeredAt: new Date(),
-    deviceInfo: { batteryLevel: 100, networkType: 'wifi' },
+    deviceInfo: { batteryLevel: 100, networkType: 'wifi' }
   } as AlarmTriggeredPayload,
   timestamp: new Date().toISOString(),
-  userId: 'test-user',
+  userId: 'test-user'
 });
 
 // Test connection scenarios
@@ -501,17 +499,17 @@ Always clean up subscriptions to prevent memory leaks:
 ```typescript
 function MyComponent() {
   const { alarm, user, ai } = useRealtime();
-
+  
   useEffect(() => {
     const subscriptions = [
       alarm.onAlarmTriggered(handleAlarmTrigger),
       user.onPresenceUpdate(handlePresenceUpdate),
-      ai.onRecommendation(handleRecommendation),
+      ai.onRecommendation(handleRecommendation)
     ];
-
+    
     // Clean up all subscriptions on unmount
     return () => {
-      subscriptions.forEach((unsubscribe) => unsubscribe());
+      subscriptions.forEach(unsubscribe => unsubscribe());
     };
   }, []);
 }
@@ -547,16 +545,15 @@ import { debounce } from 'lodash';
 
 function HighFrequencyComponent() {
   const { user } = useRealtime();
-
+  
   // Debounce presence updates to avoid excessive re-renders
   const debouncedPresenceUpdate = useMemo(
-    () =>
-      debounce((data: UserPresenceUpdatePayload) => {
-        setPresenceData(data);
-      }, 1000),
+    () => debounce((data: UserPresenceUpdatePayload) => {
+      setPresenceData(data);
+    }, 1000),
     []
   );
-
+  
   useEffect(() => {
     return user.onPresenceUpdate(debouncedPresenceUpdate);
   }, [user, debouncedPresenceUpdate]);
@@ -580,7 +577,7 @@ const customConfig: RealtimeServiceConfig = {
       ...DEFAULT_REALTIME_CONFIG.websocket.config,
       reconnectAttempts: 10, // Increase reconnection attempts
       heartbeatInterval: 15000, // More frequent heartbeats
-    },
+    }
   },
   pushNotifications: {
     ...DEFAULT_REALTIME_CONFIG.pushNotifications,
@@ -588,10 +585,10 @@ const customConfig: RealtimeServiceConfig = {
       ...DEFAULT_NOTIFICATION_PREFERENCES,
       categories: {
         ...DEFAULT_NOTIFICATION_PREFERENCES.categories,
-        promotional: true, // Enable promotional notifications
-      },
-    },
-  },
+        promotional: true // Enable promotional notifications
+      }
+    }
+  }
 };
 ```
 
@@ -608,8 +605,8 @@ const config: RealtimeServiceConfig = {
     config: {
       url: 'wss://secure-websocket.example.com',
       // Authentication will be handled automatically using current user token
-    },
-  },
+    }
+  }
 };
 ```
 
@@ -633,7 +630,7 @@ useRealtimeMessage<AlarmTriggeredPayload>('alarm_triggered', (data) => {
     console.warn('Invalid alarm data received:', data);
     return;
   }
-
+  
   handleAlarmTrigger(data);
 });
 ```
@@ -673,12 +670,10 @@ const debugConfig: RealtimeServiceConfig = {
     ...DEFAULT_REALTIME_CONFIG.websocket,
     config: {
       ...DEFAULT_REALTIME_CONFIG.websocket.config,
-      enableLogging: true,
-    },
-  },
+      enableLogging: true
+    }
+  }
 };
 ```
 
-This comprehensive type system ensures type safety across all real-time functionality while
-providing a developer-friendly API for building responsive, real-time features in the Relife alarm
-application.
+This comprehensive type system ensures type safety across all real-time functionality while providing a developer-friendly API for building responsive, real-time features in the Relife alarm application.

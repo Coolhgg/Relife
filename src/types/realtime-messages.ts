@@ -110,7 +110,7 @@ export interface UserActivityPayload {
   deviceInfo: {
     type: string;
     userAgent: string;
-    screen: { width: number; height: number };
+    screen: { width: number; height: number; };
   };
 }
 
@@ -168,11 +168,7 @@ export interface RecommendationGeneratedPayload {
 
 export interface AIAnalysisCompletePayload {
   analysisId: string;
-  type:
-    | 'sleep_pattern'
-    | 'voice_effectiveness'
-    | 'habit_formation'
-    | 'performance_trend';
+  type: 'sleep_pattern' | 'voice_effectiveness' | 'habit_formation' | 'performance_trend';
   userId: string;
   results: {
     summary: string;
@@ -267,7 +263,7 @@ export interface SleepPatternUpdatedPayload {
 
 export interface SystemNotificationPayload {
   notificationId: string;
-  type: 'info' | 'warning' | '_error' | 'success' | 'maintenance';
+  type: 'info' | 'warning' | 'error' | 'success' | 'maintenance';
   severity: 'low' | 'medium' | 'high' | 'critical';
   title: string;
   message: string;
@@ -320,9 +316,9 @@ export interface SyncStatusUpdatePayload {
     estimatedTimeRemaining?: number; // seconds
   };
   items: {
-    alarms: { processed: number; total: number; errors: number };
-    settings: { processed: number; total: number; errors: number };
-    analytics: { processed: number; total: number; errors: number };
+    alarms: { processed: number; total: number; errors: number; };
+    settings: { processed: number; total: number; errors: number; };
+    analytics: { processed: number; total: number; errors: number; };
   };
   conflicts?: Array<{
     itemType: string;
@@ -342,11 +338,7 @@ export interface SyncConflictDetectedPayload {
   conflictId: string;
   itemType: 'alarm' | 'settings' | 'user_data';
   itemId: string;
-  conflictType:
-    | 'data_mismatch'
-    | 'timestamp_conflict'
-    | 'permission_conflict'
-    | 'version_conflict';
+  conflictType: 'data_mismatch' | 'timestamp_conflict' | 'permission_conflict' | 'version_conflict';
   localVersion: {
     data: any;
     lastModified: Date;
@@ -376,32 +368,32 @@ export interface SyncConflictDetectedPayload {
 // TYPED MESSAGE UNIONS
 // ===============================
 
-export type AlarmRealtimeMessage =
+export type AlarmRealtimeMessage = 
   | WebSocketMessage<AlarmTriggeredPayload>
   | WebSocketMessage<AlarmDismissedPayload>
   | WebSocketMessage<AlarmSnoozedPayload>
   | WebSocketMessage<AlarmSyncStatusPayload>;
 
-export type UserRealtimeMessage =
+export type UserRealtimeMessage = 
   | WebSocketMessage<UserPresenceUpdatePayload>
   | WebSocketMessage<UserActivityPayload>
   | WebSocketMessage<DeviceStatusChangePayload>;
 
-export type AIRealtimeMessage =
+export type AIRealtimeMessage = 
   | WebSocketMessage<RecommendationGeneratedPayload>
   | WebSocketMessage<AIAnalysisCompletePayload>
   | WebSocketMessage<VoiceMoodDetectedPayload>
   | WebSocketMessage<SleepPatternUpdatedPayload>;
 
-export type SystemRealtimeMessage =
+export type SystemRealtimeMessage = 
   | WebSocketMessage<SystemNotificationPayload>
   | WebSocketMessage<EmergencyAlertPayload>;
 
-export type SyncRealtimeMessage =
+export type SyncRealtimeMessage = 
   | WebSocketMessage<SyncStatusUpdatePayload>
   | WebSocketMessage<SyncConflictDetectedPayload>;
 
-export type RealtimeMessage =
+export type RealtimeMessage = 
   | AlarmRealtimeMessage
   | UserRealtimeMessage
   | AIRealtimeMessage
@@ -412,44 +404,22 @@ export type RealtimeMessage =
 // MESSAGE TYPE GUARDS
 // ===============================
 
-export const isAlarmMessage = (
-  message: WebSocketMessage
-): message is AlarmRealtimeMessage => {
-  return [
-    'alarm_triggered',
-    'alarm_dismissed',
-    'alarm_snoozed',
-    'alarm_sync_status',
-  ].includes(message.type);
+export const isAlarmMessage = (message: WebSocketMessage): message is AlarmRealtimeMessage => {
+  return ['alarm_triggered', 'alarm_dismissed', 'alarm_snoozed', 'alarm_sync_status'].includes(message.type);
 };
 
-export const isUserMessage = (
-  message: WebSocketMessage
-): message is UserRealtimeMessage => {
-  return ['user_presence_update', 'user_activity', 'device_status_change'].includes(
-    message.type
-  );
+export const isUserMessage = (message: WebSocketMessage): message is UserRealtimeMessage => {
+  return ['user_presence_update', 'user_activity', 'device_status_change'].includes(message.type);
 };
 
-export const isAIMessage = (
-  message: WebSocketMessage
-): message is AIRealtimeMessage => {
-  return [
-    'recommendation_generated',
-    'ai_analysis_complete',
-    'voice_mood_detected',
-    'sleep_pattern_updated',
-  ].includes(message.type);
+export const isAIMessage = (message: WebSocketMessage): message is AIRealtimeMessage => {
+  return ['recommendation_generated', 'ai_analysis_complete', 'voice_mood_detected', 'sleep_pattern_updated'].includes(message.type);
 };
 
-export const isSystemMessage = (
-  message: WebSocketMessage
-): message is SystemRealtimeMessage => {
+export const isSystemMessage = (message: WebSocketMessage): message is SystemRealtimeMessage => {
   return ['system_notification', 'emergency_alert'].includes(message.type);
 };
 
-export const isSyncMessage = (
-  message: WebSocketMessage
-): message is SyncRealtimeMessage => {
+export const isSyncMessage = (message: WebSocketMessage): message is SyncRealtimeMessage => {
   return ['sync_status_update', 'sync_conflict_detected'].includes(message.type);
 };

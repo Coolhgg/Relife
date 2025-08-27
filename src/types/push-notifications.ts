@@ -8,21 +8,21 @@
 // ===============================
 
 export type NotificationPriority = 'min' | 'low' | 'default' | 'high' | 'max';
-export type NotificationCategory =
-  | 'alarm'
-  | 'motivation'
-  | 'progress'
-  | 'system'
-  | 'emergency'
-  | 'social'
+export type NotificationCategory = 
+  | 'alarm' 
+  | 'motivation' 
+  | 'progress' 
+  | 'system' 
+  | 'emergency' 
+  | 'social' 
   | 'promotional';
 
-export type NotificationActionType =
-  | 'dismiss'
-  | 'snooze'
-  | 'view'
-  | 'settings'
-  | 'respond'
+export type NotificationActionType = 
+  | 'dismiss' 
+  | 'snooze' 
+  | 'view' 
+  | 'settings' 
+  | 'respond' 
   | 'quick_reply'
   | 'open_app'
   | 'share'
@@ -88,11 +88,7 @@ export interface AlarmNotificationData {
 
 export interface MotivationNotificationData {
   type: 'motivation';
-  motivationType:
-    | 'daily_encouragement'
-    | 'streak_celebration'
-    | 'goal_reminder'
-    | 'achievement_unlock';
+  motivationType: 'daily_encouragement' | 'streak_celebration' | 'goal_reminder' | 'achievement_unlock';
   personalizedMessage: string;
   streakCount?: number;
   achievementId?: string;
@@ -123,11 +119,7 @@ export interface ProgressNotificationData {
 
 export interface SystemNotificationData {
   type: 'system';
-  systemType:
-    | 'update_available'
-    | 'maintenance'
-    | 'security_alert'
-    | 'feature_announcement';
+  systemType: 'update_available' | 'maintenance' | 'security_alert' | 'feature_announcement';
   version?: string;
   updateSize?: number; // MB
   maintenanceWindow?: {
@@ -145,11 +137,7 @@ export interface SystemNotificationData {
 
 export interface EmergencyNotificationData {
   type: 'emergency';
-  emergencyType:
-    | 'critical_alarm_failure'
-    | 'account_security'
-    | 'data_breach'
-    | 'service_outage';
+  emergencyType: 'critical_alarm_failure' | 'account_security' | 'data_breach' | 'service_outage';
   severity: 'high' | 'critical';
   immediateAction: string;
   contactInfo?: {
@@ -163,11 +151,7 @@ export interface EmergencyNotificationData {
 
 export interface SocialNotificationData {
   type: 'social';
-  socialType:
-    | 'friend_request'
-    | 'challenge_invite'
-    | 'leaderboard_update'
-    | 'group_activity';
+  socialType: 'friend_request' | 'challenge_invite' | 'leaderboard_update' | 'group_activity';
   fromUserId?: string;
   fromUserName?: string;
   fromUserAvatar?: string;
@@ -197,7 +181,7 @@ export interface PromotionalNotificationData {
   };
 }
 
-export type NotificationDataPayload =
+export type NotificationDataPayload = 
   | AlarmNotificationData
   | MotivationNotificationData
   | ProgressNotificationData
@@ -358,7 +342,7 @@ export interface ServiceWorkerMessage<T = any> {
   timestamp: Date;
 }
 
-export type ServiceWorkerMessageType =
+export type ServiceWorkerMessageType = 
   | 'push_received'
   | 'notification_clicked'
   | 'notification_closed'
@@ -419,7 +403,11 @@ export interface PushTestResults {
     displayTest: number;
     totalTime: number;
   };
-  errors?: Array<{ step: string; _error: string; details?: any }>;
+  errors?: Array<{
+    step: string;
+    error: string;
+    details?: any;
+  }>;
   deviceCapabilities: {
     serviceWorkerSupport: boolean;
     notificationSupport: boolean;
@@ -440,29 +428,23 @@ export interface PushNotificationManager {
   // Subscription management
   subscribe(options?: PushSubscriptionOptions): Promise<PushSubscriptionData>;
   unsubscribe(subscriptionId: string): Promise<boolean>;
-  updateSubscription(
-    subscriptionId: string,
-    updates: Partial<PushSubscriptionData>
-  ): Promise<boolean>;
+  updateSubscription(subscriptionId: string, updates: Partial<PushSubscriptionData>): Promise<boolean>;
   getSubscription(): Promise<PushSubscriptionData | null>;
-
+  
   // Preferences
   updatePreferences(preferences: Partial<NotificationPreferences>): Promise<boolean>;
   getPreferences(): Promise<NotificationPreferences>;
-
+  
   // Notification management
   sendNotification(notification: PushNotification): Promise<string>;
-  scheduleNotification(
-    notification: PushNotification,
-    scheduleFor: Date
-  ): Promise<string>;
+  scheduleNotification(notification: PushNotification, scheduleFor: Date): Promise<string>;
   cancelNotification(notificationId: string): Promise<boolean>;
   getDeliveryStatus(notificationId: string): Promise<PushDeliveryStatus>;
-
+  
   // Analytics and testing
   getAnalytics(timeRange?: { start: Date; end: Date }): Promise<PushAnalytics[]>;
   testPushCapabilities(): Promise<PushTestResults>;
-
+  
   // Event handlers
   onNotificationReceived(handler: (notification: PushNotification) => void): void;
   onNotificationClicked(handler: (data: NotificationClickedPayload) => void): void;
