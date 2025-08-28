@@ -1,7 +1,6 @@
 /**
  * AlarmExecutor - Handles smart optimizations, conditional rules, and advanced execution logic
  */
-import { config } from '../config/environment';
 import type {
   Alarm,
   SmartOptimization,
@@ -20,7 +19,7 @@ const AlarmService = {
   },
   updateAlarm: async (id: string, updates: any): Promise<void> => {
     console.warn('AlarmService.updateAlarm stub called:', { id, updates });
-  },
+  }
 };
 
 export class AlarmExecutor {
@@ -28,9 +27,9 @@ export class AlarmExecutor {
 
   static async applySmartOptimizations(
     alarm: Alarm,
-    _config: SchedulingConfig
+    config: SchedulingConfig
   ): Promise<Alarm> {
-    if (!alarm.smartOptimizations || !_config.enableSmartAdjustments) {
+    if (!alarm.smartOptimizations || !config.enableSmartAdjustments) {
       return alarm;
     }
 
@@ -41,10 +40,10 @@ export class AlarmExecutor {
         optimizedAlarm = await this.applyOptimization(
           optimizedAlarm,
           optimization,
-          _config
+          config
         );
-      } catch (_error) {
-        console._error('Error applying optimization:', optimization.type, _error);
+      } catch (error) {
+        console.error('Error applying optimization:', optimization.type, error);
       }
     }
 
@@ -54,7 +53,7 @@ export class AlarmExecutor {
   private static async applyOptimization(
     alarm: Alarm,
     optimization: SmartOptimization,
-    _config: SchedulingConfig
+    config: SchedulingConfig
   ): Promise<Alarm> {
     const { type, parameters } = optimization;
     let adjustmentMinutes = 0;
@@ -353,8 +352,8 @@ export class AlarmExecutor {
       }
 
       return this.formatTimeToHHMM(adjustedTime);
-    } catch (_error) {
-      console._error('Error calculating sun-based time:', _error);
+    } catch (error) {
+      console.error('Error calculating sun-based time:', error);
       return '07:00'; // Fallback time
     }
   }
@@ -423,8 +422,8 @@ export class AlarmExecutor {
             conditionMet = true;
             break;
         }
-      } catch (_error) {
-        console._error(`Error evaluating conditional rule ${rule.type}:`, _error);
+      } catch (error) {
+        console.error(`Error evaluating conditional rule ${rule.type}:`, error);
         conditionMet = true; // Default to allowing the alarm
       }
 
