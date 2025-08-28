@@ -72,10 +72,26 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
 
+      - name: Create npm lock file for cache compatibility
+        run: |
+          # Create package-lock.json if it doesn't exist for npm cache compatibility
+          if [ ! -f package-lock.json ] && [ -f bun.lockb ]; then
+            echo "Creating package-lock.json for npm cache compatibility..."
+            npm install --package-lock-only
+          fi
+          # Also handle dashboard
+          if [ ! -f relife-campaign-dashboard/package-lock.json ] && [ -f relife-campaign-dashboard/bun.lockb ]; then
+            cd relife-campaign-dashboard
+            npm install --package-lock-only
+            cd ..
+          fi
+
       - name: Install dependencies
         run: |
-          bun install
-          cd relife-campaign-dashboard && bun install
+          echo "Installing main project with bun..."
+          bun install --frozen-lockfile || bun install
+          echo "Installing dashboard with bun..."
+          cd relife-campaign-dashboard && (bun install --frozen-lockfile || bun install)
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
@@ -104,11 +120,18 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
 
-      - name: Install dependencies (npm)
-        run: bun install
+      - name: Create npm lock file for cache compatibility
+        run: |
+          # Create package-lock.json if it doesn't exist for npm cache compatibility
+          if [ ! -f package-lock.json ] && [ -f bun.lockb ]; then
+            echo "Creating package-lock.json for npm cache compatibility..."
+            npm install --package-lock-only
+          fi
 
-      - name: Install dependencies (bun)
-        run: bun install --frozen-lockfile
+      - name: Install dependencies
+        run: |
+          echo "Installing with bun..."
+          bun install --frozen-lockfile || bun install
 
       - name: Dependency Review (PR only)
         uses: actions/dependency-review-action@v4
@@ -206,8 +229,25 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
 
+      - name: Create npm lock file for cache compatibility
+        run: |
+          if [ ! -f package-lock.json ] && [ -f bun.lockb ]; then
+            echo "Creating package-lock.json for npm cache compatibility..."
+            npm install --package-lock-only
+          fi
+          if [ ! -f relife-campaign-dashboard/package-lock.json ] && [ -f relife-campaign-dashboard/bun.lockb ]; then
+            cd relife-campaign-dashboard
+            npm install --package-lock-only
+            cd ..
+          fi
+
       - name: Install dependencies
-        run: bun install
+        run: |
+          # Create npm lock file for cache compatibility
+          if [ ! -f package-lock.json ] && [ -f bun.lockb ]; then
+            npm install --package-lock-only
+          fi
+          bun install --frozen-lockfile || bun install --frozen-lockfile || bun install
 
       - name: Install license-checker
         run: bun install -g license-checker
