@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { emotionalIntelligenceService } from '../services/emotional-intelligence';
-import { AnalyticsService } from '../services/analytics';
+import AnalyticsService from '../services/analytics';
 import type {
   EmotionalNotificationPayload,
   EmotionalResponse,

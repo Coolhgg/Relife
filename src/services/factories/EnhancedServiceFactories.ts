@@ -31,12 +31,12 @@ import { EnhancedAnalyticsService } from '../enhanced/EnhancedAnalyticsService';
 import { EnhancedStorageService } from '../enhanced/EnhancedStorageService';
 
 // Import other service implementations (to be enhanced later)
-import SubscriptionService from '../subscription';
-import VoiceService from '../voice';
-import BattleService from '../battle';
-import AudioService from '../audio-manager';
+import { SubscriptionService } from '../subscription';
+import { VoiceService } from '../voice';
+import { BattleService } from '../battle';
+import { AudioManager } from '../audio-manager';
 import PerformanceMonitorService from '../performance-monitor';
-import NotificationService from '../notification';
+import { NotificationService } from '../notification';
 
 // ============================================================================
 // Enhanced Service Factories
@@ -125,7 +125,7 @@ export class BattleServiceFactory implements ServiceFactory<IBattleService> {
 
 export class AudioServiceFactory implements ServiceFactory<IAudioService> {
   create(dependencies: ServiceMap, config: ServiceConfig): IAudioService {
-    return new AudioService({
+    return new AudioManager({
       config,
     });
   }

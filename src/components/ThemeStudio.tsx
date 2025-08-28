@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   Palette,
-  Gallery,
+  Images,
   Plus,
   ArrowLeft,
   Settings,
@@ -107,7 +107,7 @@ const ThemeStudio: React.FC<ThemeStudioProps> = ({ className = '', onClose }) =>
         return (
           <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-white">
             <div className="flex items-center gap-2">
-              <Gallery className="text-blue-600" size={24} />
+              <Images className="text-blue-600" size={24} />
               <h1 className="text-xl font-bold text-gray-900">Theme Studio</h1>
             </div>
             <div className="flex items-center gap-3">

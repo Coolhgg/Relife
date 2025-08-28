@@ -144,9 +144,9 @@
         "postcss": "^8.5.6",
         "prettier": "^3.0.0",
         "react-router-dom": "^7.8.0",
+        "redux-devtools-extension": "^2.13.9",
         "resize-observer-polyfill": "^1.5.1",
         "rollup-plugin-visualizer": "^6.0.3",
-        "semver": "^7.6.3",
         "storybook": "^9.1.2",
         "tailwindcss": "^4.1.11",
         "typescript": "~5.8.3",
@@ -2124,6 +2124,8 @@
     "redent": ["redent@3.0.0", "", { "dependencies": { "indent-string": "^4.0.0", "strip-indent": "^3.0.0" } }, "sha512-6tDA8g98We0zd0GvVeMT9arEOnTw9qM03L9cJXaCjrip1OO764RDBLBfrB4cwzNGDj5OA5ioymC9GkizgWJDUg=="],
 
     "redux": ["redux@5.0.1", "", {}, "sha512-M9/ELqF6fy8FwmkpnF0S3YKOqMyoWJ4+CS5Efg2ct3oY9daQvd/Pc71FpGZsVsbl3Cpb+IIcjBDUnnyBdQbq4w=="],
+
+    "redux-devtools-extension": ["redux-devtools-extension@2.13.9", "", { "peerDependencies": { "redux": "^3.1.0 || ^4.0.0" } }, "sha512-cNJ8Q/EtjhQaZ71c8I9+BPySIBVEKssbPpskBfsXqb8HJ002A3KRVHfeRzwRo6mGPqsm7XuHTqNSNeS1Khig0A=="],
 
     "redux-thunk": ["redux-thunk@3.1.0", "", { "peerDependencies": { "redux": "^5.0.0" } }, "sha512-NW2r5T6ksUKXCabzhL9z+h206HQw/NJkcLm1GPImRQ8IzfXwRGqjVhKJGauHirT0DAuyy6hjdnMZaRoAcy0Klw=="],
 
