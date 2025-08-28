@@ -128,9 +128,6 @@ class SessionSecurityService {
     return Array.from(this.sessions.values())
       .filter(session => session.userId === userId && session.isActive);
   }
-}
-
-export default SessionSecurityService.getInstance();
 
   /**
    * Validate and update session
