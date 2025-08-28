@@ -15,6 +15,7 @@
     ],
     "module": "ESNext",
     "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     // "types": ["@cloudflare/workers-types"], // Removed since server components were removed
