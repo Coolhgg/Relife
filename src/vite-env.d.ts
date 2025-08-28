@@ -10,24 +10,9 @@ declare global {
   interface Window {
     swManager?: import('./services/service-worker-manager').ServiceWorkerManager;
   }
-
+  
   interface ServiceWorkerGlobalScope {
     skipWaiting(): void;
-  }
-
-  interface ImportMeta {
-    env: Record<string, any>;
-  }
-}
-
-// React Component property extensions for ErrorBoundary classes
-declare module 'react' {
-  interface Component<P = {}, S = {}, SS = any> {
-    state: S;
-    props: P;
-    setState: (
-      partialState: Partial<S> | ((prevState: S, props: P) => Partial<S>)
-    ) => void;
   }
 }
 

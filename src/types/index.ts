@@ -1,6 +1,9 @@
 // Import premium types
 export * from './premium';
 
+// Import browser API types
+export * from './browser-apis';
+
 // Email Campaign Types
 export type PersonaType =
   | 'struggling_sam'     // Free-focused users
