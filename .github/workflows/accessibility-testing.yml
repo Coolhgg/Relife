@@ -37,6 +37,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Create npm lock file for cache compatibility
+        run: |
+          # Create package-lock.json if it doesn't exist for npm cache compatibility
+          if [ ! -f package-lock.json ] && [ -f bun.lock ]; then
+            echo "Creating package-lock.json for npm cache compatibility..."
+            npm install --package-lock-only --ignore-scripts --legacy-peer-deps
+          fi
+          # Also handle dashboard if applicable
+          if [ ! -f relife-campaign-dashboard/package-lock.json ] && [ -f relife-campaign-dashboard/bun.lock ]; then
+            cd relife-campaign-dashboard
+            npm install --package-lock-only --ignore-scripts --legacy-peer-deps
+            cd ..
+          fi
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -68,6 +87,25 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Create npm lock file for cache compatibility
+        run: |
+          # Create package-lock.json if it doesn't exist for npm cache compatibility
+          if [ ! -f package-lock.json ] && [ -f bun.lock ]; then
+            echo "Creating package-lock.json for npm cache compatibility..."
+            npm install --package-lock-only --ignore-scripts --legacy-peer-deps
+          fi
+          # Also handle dashboard if applicable
+          if [ ! -f relife-campaign-dashboard/package-lock.json ] && [ -f relife-campaign-dashboard/bun.lock ]; then
+            cd relife-campaign-dashboard
+            npm install --package-lock-only --ignore-scripts --legacy-peer-deps
+            cd ..
+          fi
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -118,6 +156,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Create npm lock file for cache compatibility
+        run: |
+          # Create package-lock.json if it doesn't exist for npm cache compatibility
+          if [ ! -f package-lock.json ] && [ -f bun.lock ]; then
+            echo "Creating package-lock.json for npm cache compatibility..."
+            npm install --package-lock-only --ignore-scripts --legacy-peer-deps
+          fi
+          # Also handle dashboard if applicable
+          if [ ! -f relife-campaign-dashboard/package-lock.json ] && [ -f relife-campaign-dashboard/bun.lock ]; then
+            cd relife-campaign-dashboard
+            npm install --package-lock-only --ignore-scripts --legacy-peer-deps
+            cd ..
+          fi
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -163,6 +220,25 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Create npm lock file for cache compatibility
+        run: |
+          # Create package-lock.json if it doesn't exist for npm cache compatibility
+          if [ ! -f package-lock.json ] && [ -f bun.lock ]; then
+            echo "Creating package-lock.json for npm cache compatibility..."
+            npm install --package-lock-only --ignore-scripts --legacy-peer-deps
+          fi
+          # Also handle dashboard if applicable
+          if [ ! -f relife-campaign-dashboard/package-lock.json ] && [ -f relife-campaign-dashboard/bun.lock ]; then
+            cd relife-campaign-dashboard
+            npm install --package-lock-only --ignore-scripts --legacy-peer-deps
+            cd ..
+          fi
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -212,6 +288,25 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Create npm lock file for cache compatibility
+        run: |
+          # Create package-lock.json if it doesn't exist for npm cache compatibility
+          if [ ! -f package-lock.json ] && [ -f bun.lock ]; then
+            echo "Creating package-lock.json for npm cache compatibility..."
+            npm install --package-lock-only --ignore-scripts --legacy-peer-deps
+          fi
+          # Also handle dashboard if applicable
+          if [ ! -f relife-campaign-dashboard/package-lock.json ] && [ -f relife-campaign-dashboard/bun.lock ]; then
+            cd relife-campaign-dashboard
+            npm install --package-lock-only --ignore-scripts --legacy-peer-deps
+            cd ..
+          fi
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
