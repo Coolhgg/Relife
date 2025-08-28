@@ -2,14 +2,11 @@
 // Comprehensive view of subscription status, billing, and feature usage
 
 import React, { useState } from 'react';
-import path from 'path';
-import { SubscriptionTier } from '@/types';
 import {
   Calendar,
   CreditCard,
   TrendingUp,
   Alert,
-  AlertTriangle,
   Gift,
   Settings,
   Crown,
@@ -20,7 +17,7 @@ import { Button } from '../ui/button';
 import { Progress } from '../ui/progress';
 import { Badge } from '../ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { AlertDescription } from '../ui/alert';
+import { Alert, AlertDescription } from '../ui/alert';
 import PaymentMethodManager from './PaymentMethodManager';
 import BillingHistory from './BillingHistory';
 import PricingTable from './PricingTable';
@@ -138,8 +135,8 @@ export function SubscriptionDashboard({
       }
 
       setShowUpgradeModal(false);
-    } catch (_error) {
-      console._error('Failed to change plan:', _error);
+    } catch (error) {
+      console.error('Failed to change plan:', error);
     } finally {
       setActionLoading(null);
     }
@@ -149,8 +146,8 @@ export function SubscriptionDashboard({
     try {
       setActionLoading('cancel');
       await onCancelSubscription('User initiated cancellation');
-    } catch (_error) {
-      console._error('Failed to cancel subscription:', _error);
+    } catch (error) {
+      console.error('Failed to cancel subscription:', error);
     } finally {
       setActionLoading(null);
     }
@@ -160,8 +157,8 @@ export function SubscriptionDashboard({
     try {
       setActionLoading('reactivate');
       await onReactivateSubscription();
-    } catch (_error) {
-      console._error('Failed to reactivate subscription:', _error);
+    } catch (error) {
+      console.error('Failed to reactivate subscription:', error);
     } finally {
       setActionLoading(null);
     }
@@ -189,19 +186,19 @@ export function SubscriptionDashboard({
     <div className={`space-y-6 ${className}`}>
       {/* Alert for subscription issues */}
       {data.subscription?.status === 'past_due' && (
-        <Alert className="border-orange-200 bg-orange-50">
-          <AlertTriangle className="h-4 w-4 text-orange-600" />
-          <AlertDescription className="text-orange-600">
+        <AlertCircle className="border-orange-200 bg-orange-50">
+          <AlertCircle className="h-4 w-4 text-orange-600" />
+          <AlertCircleDescription className="text-orange-600">
             Your subscription payment is past due. Please update your payment method to
             continue using premium features.
-          </AlertDescription>
-        </Alert>
+          </AlertCircleDescription>
+        </AlertCircle>
       )}
 
       {data.subscription?.cancelAtPeriodEnd && (
-        <Alert className="border-blue-200 bg-blue-50">
-          <AlertTriangle className="h-4 w-4 text-blue-600" />
-          <AlertDescription className="text-blue-600 flex items-center justify-between">
+        <AlertCircle className="border-blue-200 bg-blue-50">
+          <AlertCircle className="h-4 w-4 text-blue-600" />
+          <AlertCircleDescription className="text-blue-600 flex items-center justify-between">
             <span>
               Your subscription will end on{' '}
               {formatDate(data.subscription.currentPeriodEnd)}.
@@ -214,8 +211,8 @@ export function SubscriptionDashboard({
             >
               {actionLoading === 'reactivate' ? 'Processing...' : 'Reactivate'}
             </Button>
-          </AlertDescription>
-        </Alert>
+          </AlertCircleDescription>
+        </AlertCircle>
       )}
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">

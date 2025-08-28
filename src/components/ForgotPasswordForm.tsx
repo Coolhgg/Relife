@@ -1,13 +1,12 @@
 import React from 'react';
 import { useState } from 'react';
-import { ArrowLeft, ArrowRight, AlertCircle } from 'lucide-react';
-import { Mail } from 'lucide-react'; // auto: restored by scout - verify
+import { Mail, ArrowLeft, ArrowRight, AlertCircle, CheckCircle } from 'lucide-react';
 
 interface ForgotPasswordFormProps {
   onResetPassword: (email: string) => Promise<void>;
   onBackToLogin: () => void;
   isLoading: boolean;
-  _error: string | null;
+  error: string | null;
   success: boolean;
 }
 
@@ -15,7 +14,7 @@ export default function ForgotPasswordForm({
   onResetPassword,
   onBackToLogin,
   isLoading,
-  _error,
+  error,
   success,
 }: ForgotPasswordFormProps) {
   const [email, setEmail] = useState('');
@@ -56,7 +55,7 @@ export default function ForgotPasswordForm({
       <div className="w-full max-w-md mx-auto text-center">
         <div className="mb-8">
           <div className="w-24 h-24 mx-auto bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mb-6">
-            <div
+            <CheckCircle
               className="w-12 h-12 text-green-600 dark:text-green-400"
               aria-hidden="true"
             />
@@ -113,15 +112,15 @@ export default function ForgotPasswordForm({
         </p>
       </div>
 
-      {/* Global Error Alert */}
-      {_error && (
+      {/* Global Error AlertCircle */}
+      {error && (
         <div
           className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
           role="alert"
           aria-live="polite"
         >
           <div className="flex items-start gap-3">
-            <AlertCircle
+            <AlertCircleCircle
               className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0"
               aria-hidden="true"
             />
@@ -129,7 +128,7 @@ export default function ForgotPasswordForm({
               <h3 className="font-medium text-red-800 dark:text-red-200 mb-1">
                 Password Reset Failed
               </h3>
-              <p className="text-sm text-red-700 dark:text-red-300">{_error}</p>
+              <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
             </div>
           </div>
         </div>
@@ -152,9 +151,7 @@ export default function ForgotPasswordForm({
               id="reset-email"
               type="email"
               value={email}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                handleEmailChange(e.target.value)
-              }
+              onChange={e => handleEmailChange(e.target.value)}
               className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                 validationError
                   ? 'border-red-500'
@@ -163,13 +160,13 @@ export default function ForgotPasswordForm({
               placeholder="Enter your email address"
               autoComplete="email"
               aria-invalid={!!validationError}
-              aria-describedby={validationError ? 'email-_error' : undefined}
+              aria-describedby={validationError ? 'email-error' : undefined}
               required
             />
           </div>
           {validationError && (
             <p
-              id="email-_error"
+              id="email-error"
               className="mt-2 text-sm text-red-600 dark:text-red-400"
               role="alert"
               aria-live="polite"

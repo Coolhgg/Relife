@@ -2,9 +2,6 @@
 // Handles subscription cancellation, upgrades, downgrades, and plan changes
 
 import React, { useState } from 'react';
-import path from 'path';
-import { SubscriptionTier } from '@/types';
-import { Textarea } from '../ui/textarea';
 import {
   Alert,
   ArrowUpCircle,
@@ -13,7 +10,6 @@ import {
   Gift,
   Settings,
   X,
-  AlertTriangle,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
@@ -33,7 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { Progress } from './ui/progress';
+import { Textarea } from '../ui/textarea';
 import { Label } from '../ui/label';
 import { Checkbox } from '../ui/checkbox';
 import PricingTable from './PricingTable';
@@ -173,8 +169,8 @@ export function SubscriptionManagement({
       }
 
       setShowUpgradeDialog(false);
-    } catch (_error) {
-      console._error('Failed to change plan:', _error);
+    } catch (error) {
+      console.error('Failed to change plan:', error);
     } finally {
       setActionLoading(null);
     }
@@ -204,8 +200,8 @@ export function SubscriptionManagement({
       await onCancelSubscription(request);
       setShowCancelDialog(false);
       setShowRetentionOffer(false);
-    } catch (_error) {
-      console._error('Failed to cancel subscription:', _error);
+    } catch (error) {
+      console.error('Failed to cancel subscription:', error);
     } finally {
       setActionLoading(null);
     }
@@ -215,15 +211,15 @@ export function SubscriptionManagement({
     try {
       setActionLoading('reactivate');
       await onReactivateSubscription();
-    } catch (_error) {
-      console._error('Failed to reactivate subscription:', _error);
+    } catch (error) {
+      console.error('Failed to reactivate subscription:', error);
     } finally {
       setActionLoading(null);
     }
   };
 
   const handleAcceptRetentionOffer = (offerId: string) => {
-    setCancellationData((prev: unknown) => ({
+    setCancellationData(prev => ({
       ...prev,
       retentionOfferAccepted: true,
     }));
@@ -287,14 +283,14 @@ export function SubscriptionManagement({
 
           {/* Cancellation Notice */}
           {subscription.cancelAtPeriodEnd && (
-            <Alert className="border-orange-200 bg-orange-50">
-              <AlertTriangle className="h-4 w-4 text-orange-600" />
-              <AlertDescription className="text-orange-600">
+            <AlertCircle className="border-orange-200 bg-orange-50">
+              <AlertCircle className="h-4 w-4 text-orange-600" />
+              <AlertCircleDescription className="text-orange-600">
                 Your subscription will end on{' '}
                 {formatDate(subscription.currentPeriodEnd)}. You can reactivate anytime
                 before this date.
-              </AlertDescription>
-            </Alert>
+              </AlertCircleDescription>
+            </AlertCircle>
           )}
 
           <div className="flex flex-wrap gap-3 pt-4">
@@ -342,7 +338,7 @@ export function SubscriptionManagement({
                 <DialogContent className="max-w-md">
                   <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
-                      <AlertTriangle className="w-5 h-5 text-red-600" />
+                      <AlertCircle className="w-5 h-5 text-red-600" />
                       Cancel Subscription
                     </DialogTitle>
                   </DialogHeader>
@@ -358,11 +354,8 @@ export function SubscriptionManagement({
                         <Label htmlFor="reason">Reason for canceling</Label>
                         <Select
                           value={cancellationData.reason}
-                          onValueChange={(value: unknown) =>
-                            setCancellationData((prev: unknown) => ({
-                              ...prev,
-                              reason: value,
-                            }))
+                          onValueChange={value =>
+                            setCancellationData(prev => ({ ...prev, reason: value }))
                           }
                         >
                           <SelectTrigger>
@@ -383,8 +376,8 @@ export function SubscriptionManagement({
                         <Textarea
                           id="feedback"
                           value={cancellationData.feedback}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            setCancellationData((prev: unknown) => ({
+                          onChange={e =>
+                            setCancellationData(prev => ({
                               ...prev,
                               feedback: e.target.value,
                             }))
@@ -404,7 +397,7 @@ export function SubscriptionManagement({
                               name="effectiveDate"
                               checked={cancellationData.effectiveDate === 'period_end'}
                               onChange={() =>
-                                setCancellationData((prev: unknown) => ({
+                                setCancellationData(prev => ({
                                   ...prev,
                                   effectiveDate: 'period_end',
                                 }))
@@ -422,7 +415,7 @@ export function SubscriptionManagement({
                               name="effectiveDate"
                               checked={cancellationData.effectiveDate === 'immediate'}
                               onChange={() =>
-                                setCancellationData((prev: unknown) => ({
+                                setCancellationData(prev => ({
                                   ...prev,
                                   effectiveDate: 'immediate',
                                 }))

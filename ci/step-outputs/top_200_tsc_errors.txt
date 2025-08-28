@@ -1,0 +1,1713 @@
+# Top 200 TypeScript Errors - Staged Remediation Analysis
+
+Total errors found: 23168
+Unique high-priority errors: 200
+
+## Error Categories Summary
+
+- **Module Resolution**: 1000 errors
+- **Implicit Any**: 1955 errors
+- **Type Errors**: 730 errors
+- **Jsx Issues**: 18416 errors
+- **Other**: 1067 errors
+
+## Top Priority Errors (by severity)
+
+
+### Module Resolution
+
+1. **
+
+ 12     <TooltipPrimitive.Provider
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 13       data-slot="tooltip-provider"
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+... 
+ 15       {...props}
+    ~~~~~~~~~~~~~~~~
+ 16     />
+    ~~~~~~
+
+src/components/user-testing/ABTestWrapper.tsx:1:55** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+2. **
+
+ 15     <CheckboxPrimitive.Root
+        ~~~~~~~~~~~~~~~~~~~~~~~
+ 16       data-slot="checkbox"
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~
+... 
+ 28       </CheckboxPrimitive.Indicator>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 29     </CheckboxPrimitive.Root>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/ui/collapsible.tsx:1:19** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+3. **
+
+ 28     <SliderPrimitive.Root
+        ~~~~~~~~~~~~~~~~~~~~~
+ 29       data-slot="slider"
+    ~~~~~~~~~~~~~~~~~~~~~~~~
+... 
+ 59       ))}
+    ~~~~~~~~~
+ 60     </SliderPrimitive.Root>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/ui/sonner.tsx:1:19** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+4. **
+
+ 28     <button
+        ~~~~~~~
+ 29       type="button"
+    ~~~~~~~~~~~~~~~~~~~
+... 
+ 32       {...props}
+    ~~~~~~~~~~~~~~~~
+ 33     >
+    ~~~~~
+
+src/stories/Button.tsx:28:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+5. **
+
+ 32     <StrugglingSamProvider userId={userId}>
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 33       {useDashboard ? (
+    ~~~~~~~~~~~~~~~~~~~~~~~
+... 
+ 43       )}
+    ~~~~~~~~
+ 44     </StrugglingSamProvider>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/SubscriptionModal.tsx:2:33** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+6. **
+
+ 53     <div
+        ~~~~
+ 54       data-slot="alert-description"
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+... 
+ 59       {...props}
+    ~~~~~~~~~~~~~~~~
+ 60     />
+    ~~~~~~
+
+src/components/ui/aspect-ratio.tsx:1:19** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+7. **
+
+ 88     <div
+        ~~~~
+ 89       ref={containerRef}
+    ~~~~~~~~~~~~~~~~~~~~~~~~
+... 
+ 92       onScroll={handleScroll}
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 93     >
+    ~~~~~
+
+src/components/VirtualScroll.tsx:88:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+8. **
+
+ 96       <div
+          ~~~~
+ 97         className={`relative p-4 rounded-lg border cursor-pointer transition-all duration-200 ${
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+... 
+104         onMouseLeave={() => setIsHovered(false)}
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+105       >
+    ~~~~~~~
+
+src/components/PremiumFeatureCard.tsx:96:7** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+9. **
+
+ 99     <Component
+        ~~~~~~~~~~
+100       className={flexClasses}
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+... 
+105       {children}
+    ~~~~~~~~~~~~~~~~
+106     </Component>
+    ~~~~~~~~~~~~~~~~
+
+src/components/RTLLayout/RTLForm.tsx:5:19** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+10. **
+
+1 /// <reference types="node" />
+                        ~~~~
+
+src/analytics/PersonaAnalytics.tsx:3:55** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+11. **
+
+1 /// <reference types="node" />
+                        ~~~~
+
+src/components/AlarmRinging.tsx:2:19** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+12. **
+
+1 /// <reference types="node" />
+                        ~~~~
+
+src/components/NuclearModeBattle.tsx:2:65** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+13. **
+
+1 /// <reference types="node" />
+                        ~~~~
+
+src/components/SoundPreviewSystem.tsx:3:52** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+14. **
+
+1 /// <reference types="node" />
+                        ~~~~
+
+src/components/VoiceCloning.tsx:2:54** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+15. **
+
+1 /// <reference types="node" />
+                        ~~~~
+
+src/hooks/useAudioLazyLoading.ts:2:58** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+16. **
+
+1 /// <reference types="node" />
+                        ~~~~
+
+src/hooks/useAuth.ts:3:45** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+17. **
+
+1 /// <reference types="node" />
+                        ~~~~
+
+src/hooks/useCriticalPreloading.ts:2:58** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+18. **
+
+1 /// <reference types="node" />
+                        ~~~~
+
+src/hooks/useDynamicFocus.ts:8:48** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+19. **
+
+1 /// <reference types="node" />
+                        ~~~~
+
+src/hooks/useEnhancedCaching.ts:2:58** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+20. **
+
+1 /// <reference types="node" />
+                        ~~~~
+
+src/hooks/useFormAnnouncements.ts:3:48** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+21. **
+
+1 /// <reference types="node" />
+                        ~~~~
+
+src/hooks/useMobilePerformance.ts:3:58** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+22. **
+
+1 /// <reference types="node" />
+                        ~~~~
+
+src/hooks/useScreenReaderAnnouncements.ts:3:48** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+23. **
+
+1 /// <reference types="node" />
+                        ~~~~
+
+src/hooks/useSubscription.ts:5:58** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+24. **
+
+1 /// <reference types="node" />
+                        ~~~~
+
+src/services/alarm-backup-redundancy.ts:5:29** [TS2307] (Severity: 9)
+   Cannot find module '@capacitor/preferences' or its corresponding type declarations.
+
+25. **
+
+1 /// <reference types="node" />
+                        ~~~~
+
+src/services/alarm-enhanced.ts:7:29** [TS2307] (Severity: 9)
+   Cannot find module '@capacitor/preferences' or its corresponding type declarations.
+
+26. **
+
+1 /// <reference types="node" />
+                        ~~~~
+
+src/services/alarm-rate-limiting.ts:5:29** [TS2307] (Severity: 9)
+   Cannot find module '@capacitor/preferences' or its corresponding type declarations.
+
+27. **
+
+1 /// <reference types="node" />
+                        ~~~~
+
+src/services/secure-alarm-storage.ts:5:29** [TS2307] (Severity: 9)
+   Cannot find module '@capacitor/preferences' or its corresponding type declarations.
+
+28. **
+
+1 /// <reference types="node" />
+                        ~~~~
+
+src/services/security-monitoring-forensics.ts:5:29** [TS2307] (Severity: 9)
+   Cannot find module '@capacitor/preferences' or its corresponding type declarations.
+
+29. **
+
+1 import React from 'react';
+                    ~~~~~~~
+
+src/components/AlarmList.tsx:2:50** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+30. **
+
+1 import React from 'react';
+                    ~~~~~~~
+
+src/components/Dashboard.tsx:17:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+31. **
+
+1 import React from 'react';
+                    ~~~~~~~
+
+src/components/EnhancedDashboard.tsx:18:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+32. **
+
+1 import React from 'react';
+                    ~~~~~~~
+
+src/components/ForgotPasswordForm.tsx:2:26** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+33. **
+
+1 import React from 'react';
+                    ~~~~~~~
+
+src/components/LoginForm.tsx:2:26** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+34. **
+
+1 import React from 'react';
+                    ~~~~~~~
+
+src/components/OnboardingFlow.tsx:2:45** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+35. **
+
+1 import React from 'react';
+                    ~~~~~~~
+
+src/components/PersonalizationSettings.tsx:2:37** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+36. **
+
+1 import React from 'react';
+                    ~~~~~~~
+
+src/components/SettingsPage.tsx:2:37** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+37. **
+
+1 import React from 'react';
+                    ~~~~~~~
+
+src/components/SignUpForm.tsx:2:26** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+38. **
+
+1 import React from 'react';
+                    ~~~~~~~
+
+src/components/ThemeSelector.tsx:3:32** [TS2307] (Severity: 9)
+   Cannot find module 'react-i18next' or its corresponding type declarations.
+
+39. **
+
+1 import React from 'react';
+                    ~~~~~~~
+
+src/components/UpgradePrompt.tsx:15:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+40. **
+
+1 import React from 'react';
+                    ~~~~~~~
+
+src/components/ui/aspect-ratio.tsx:2:39** [TS2307] (Severity: 9)
+   Cannot find module '@radix-ui/react-aspect-ratio' or its corresponding type declarations.
+
+41. **
+
+1 import React from 'react';
+                    ~~~~~~~
+
+src/components/ui/collapsible.tsx:2:39** [TS2307] (Severity: 9)
+   Cannot find module '@radix-ui/react-collapsible' or its corresponding type declarations.
+
+42. **
+
+1 import React from 'react';
+                    ~~~~~~~
+
+src/components/ui/skeleton.tsx:6:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+43. **
+
+1 import React from 'react';
+                    ~~~~~~~
+
+src/components/ui/sonner.tsx:2:26** [TS2307] (Severity: 9)
+   Cannot find module 'next-themes' or its corresponding type declarations.
+
+44. **
+
+1 import React from 'react';
+                    ~~~~~~~
+
+src/hooks/useDeviceCapabilities.tsx:2:50** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+45. **
+
+1 import React, { Component, type ReactNode, type ErrorInfo } from 'react';
+                                                                   ~~~~~~~
+
+src/components/ErrorBoundary.tsx:2:40** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+46. **
+
+1 import React, { Component, type ReactNode, type ErrorInfo } from 'react';
+                                                                   ~~~~~~~
+
+src/components/RootErrorBoundary.tsx:2:57** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+47. **
+
+1 import React, { Component, type ReactNode, type ErrorInfo } from 'react';
+                                                                   ~~~~~~~
+
+src/components/SpecializedErrorBoundaries.tsx:10:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+48. **
+
+1 import React, { lazy, Suspense, memo, useCallback, useMemo } from 'react';
+                                                                    ~~~~~~~
+
+src/utils/lazy-loading.tsx:2:57** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+49. **
+
+1 import React, { memo, useMemo, useCallback, useRef, useEffect } from 'react';
+                                                                       ~~~~~~~
+
+src/components/AdaptiveAlarmList.tsx:2:56** [TS2307] (Severity: 9)
+   Cannot find module 'react-window' or its corresponding type declarations.
+
+50. **
+
+1 import React, { useEffect, useState } from 'react';
+                                             ~~~~~~~
+
+src/components/TabProtectionWarning.tsx:2:47** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+51. **
+
+1 import React, { useState } from 'react';
+                                  ~~~~~~~
+
+src/components/AIAutomation.tsx:32:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+52. **
+
+1 import React, { useState } from 'react';
+                                  ~~~~~~~
+
+src/components/AchievementBadges.tsx:2:41** [TS2307] (Severity: 9)
+   Cannot find module 'framer-motion' or its corresponding type declarations.
+
+53. **
+
+1 import React, { useState } from 'react';
+                                  ~~~~~~~
+
+src/components/AdvancedAnalytics.tsx:33:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+54. **
+
+1 import React, { useState } from 'react';
+                                  ~~~~~~~
+
+src/components/EnhancedBattles.tsx:24:69** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+55. **
+
+1 import React, { useState } from 'react';
+                                  ~~~~~~~
+
+src/components/EnhancedSettings.tsx:9:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+56. **
+
+1 import React, { useState } from 'react';
+                                  ~~~~~~~
+
+src/components/ErrorBoundaryTest.tsx:2:65** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+57. **
+
+1 import React, { useState } from 'react';
+                                  ~~~~~~~
+
+src/components/FeatureLockOverlay.tsx:2:74** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+58. **
+
+1 import React, { useState } from 'react';
+                                  ~~~~~~~
+
+src/components/FriendsManager.tsx:29:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+59. **
+
+1 import React, { useState } from 'react';
+                                  ~~~~~~~
+
+src/components/GamingHub.tsx:2:38** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+60. **
+
+1 import React, { useState } from 'react';
+                                  ~~~~~~~
+
+src/components/LanguageSelector.tsx:2:43** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+61. **
+
+1 import React, { useState } from 'react';
+                                  ~~~~~~~
+
+src/components/Statistics.tsx:28:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+62. **
+
+1 import React, { useState } from 'react';
+                                  ~~~~~~~
+
+src/components/TabProtectionSettings.tsx:15:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+63. **
+
+1 import React, { useState } from 'react';
+                                  ~~~~~~~
+
+src/components/ThemeDemo.tsx:18:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+64. **
+
+1 import React, { useState } from 'react';
+                                  ~~~~~~~
+
+src/components/ThemeStudio.tsx:13:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+65. **
+
+1 import React, { useState, useCallback } from 'react';
+                                               ~~~~~~~
+
+src/components/PushNotificationSettings.tsx:17:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+66. **
+
+1 import React, { useState, useCallback } from 'react';
+                                               ~~~~~~~
+
+src/components/PushNotificationTester.tsx:15:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+67. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/ActiveAlarm.tsx:17:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+68. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/AdvancedAlarmScheduling.tsx:35:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+69. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/AlarmManagement.tsx:26:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+70. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/AlarmTester.tsx:12:39** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+71. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/AnalyticsDashboard.tsx:11:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+72. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/CommunityChallenge.tsx:2:41** [TS2307] (Severity: 9)
+   Cannot find module 'framer-motion' or its corresponding type declarations.
+
+73. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/CustomSoundThemeCreator.tsx:20:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+74. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/CustomThemeManager.tsx:24:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+75. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/EmotionalNudgeModal.tsx:2:41** [TS2307] (Severity: 9)
+   Cannot find module 'framer-motion' or its corresponding type declarations.
+
+76. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/EnhancedSmartAlarmSettings.tsx:22:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+77. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/MediaContent.tsx:38:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+78. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/NuclearModeResults.tsx:28:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+79. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/OfflineDiagnostics.tsx:14:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+80. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/PWAStatusDashboard.tsx:19:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+81. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/PremiumDashboard.tsx:2:41** [TS2307] (Severity: 9)
+   Cannot find module 'framer-motion' or its corresponding type declarations.
+
+82. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/PremiumThemeSettings.tsx:2:41** [TS2307] (Severity: 9)
+   Cannot find module 'framer-motion' or its corresponding type declarations.
+
+83. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/PremiumUsageTracker.tsx:2:24** [TS2307] (Severity: 9)
+   Cannot find module 'framer-motion' or its corresponding type declarations.
+
+84. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/QuickAlarmSetup.tsx:13:36** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+85. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/SleepTracker.tsx:13:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+86. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/SmartAlarmDashboard.tsx:21:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+87. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/SmartAlarmSettings.tsx:14:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+88. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/SmartFeatures.tsx:31:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+89. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/SmartUpgradePrompt.tsx:2:41** [TS2307] (Severity: 9)
+   Cannot find module 'framer-motion' or its corresponding type declarations.
+
+90. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/SocialProof.tsx:2:41** [TS2307] (Severity: 9)
+   Cannot find module 'framer-motion' or its corresponding type declarations.
+
+91. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/SoundThemeDemo.tsx:11:61** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+92. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/StreakCounter.tsx:2:41** [TS2307] (Severity: 9)
+   Cannot find module 'framer-motion' or its corresponding type declarations.
+
+93. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/SubscriptionStatus.tsx:15:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+94. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/SyncStatus.tsx:12:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+95. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/ThemeGallery.tsx:26:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+96. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/ThemeManager.tsx:19:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+97. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/VoicePersonalitySelector.tsx:2:41** [TS2307] (Severity: 9)
+   Cannot find module 'framer-motion' or its corresponding type declarations.
+
+98. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/VoiceSelector.tsx:2:68** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+99. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/WakeUpFeedbackModal.tsx:12:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+100. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/premium/EnhancedUpgradePrompt.tsx:2:31** [TS2307] (Severity: 9)
+   Cannot find module '../types/timers' or its corresponding type declarations.
+
+101. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/premium/PremiumFeaturePreview.tsx:21:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+102. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/premium/PsychologyDrivenCTA.tsx:2:31** [TS2307] (Severity: 9)
+   Cannot find module '../types/timers' or its corresponding type declarations.
+
+103. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/user-testing/BetaTestingProgram.tsx:29:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+104. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/user-testing/FeedbackWidget.tsx:14:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+105. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/user-testing/RedesignedFeedbackWidget.tsx:22:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+106. **
+
+1 import React, { useState, useEffect } from 'react';
+                                             ~~~~~~~
+
+src/components/user-testing/UsabilityAnalyticsDashboard.tsx:20:8** [TS2307] (Severity: 9)
+   Cannot find module 'recharts' or its corresponding type declarations.
+
+107. **
+
+1 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+                                                                   ~~~~~~~
+
+src/components/ThemeCreator.tsx:32:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+108. **
+
+1 import React, { useState, useEffect, useMemo } from 'react';
+                                                      ~~~~~~~
+
+src/components/PersonaAnalyticsDashboard.tsx:16:8** [TS2307] (Severity: 9)
+   Cannot find module 'recharts' or its corresponding type declarations.
+
+109. **
+
+1 import React, { useState, useEffect, useMemo } from 'react';
+                                                      ~~~~~~~
+
+src/components/PersonaFocusDashboard.tsx:20:8** [TS2307] (Severity: 9)
+   Cannot find module 'recharts' or its corresponding type declarations.
+
+110. **
+
+1 import React, { useState, useEffect, useRef } from 'react';
+                                                     ~~~~~~~
+
+src/components/CommunityHub.tsx:17:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+111. **
+
+1 import React, { useState, useEffect, useRef } from 'react';
+                                                     ~~~~~~~
+
+src/components/Gamification.tsx:24:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+112. **
+
+1 import React, { useState, useEffect, useRef } from 'react';
+                                                     ~~~~~~~
+
+src/components/HabitCelebration.tsx:2:41** [TS2307] (Severity: 9)
+   Cannot find module 'framer-motion' or its corresponding type declarations.
+
+113. **
+
+1 import React, { useState, useEffect, useRef } from 'react';
+                                                     ~~~~~~~
+
+src/components/RewardsDashboard.tsx:17:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+114. **
+
+1 import React, { useState, useEffect, useRef, useCallback } from 'react';
+                                                                  ~~~~~~~
+
+src/components/EnhancedMediaContent.tsx:40:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+115. **
+
+1 import React, { useState, useRef } from 'react';
+                                          ~~~~~~~
+
+src/components/MobileNavigation.tsx:2:51** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+116. **
+
+1 import React, { useState, useRef, useEffect } from 'react';
+                                                     ~~~~~~~
+
+src/components/MobileAlarmCard.tsx:2:57** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+117. **
+
+1 import i18n from 'i18next';
+                   ~~~~~~~~~
+
+src/config/i18n.ts:2:34** [TS2307] (Severity: 9)
+   Cannot find module 'react-i18next' or its corresponding type declarations.
+
+118. **
+
+1 import type { Meta, StoryObj } from '@storybook/react-vite';
+                                      ~~~~~~~~~~~~~~~~~~~~~~~
+
+src/stories/Button.stories.ts:3:20** [TS2307] (Severity: 9)
+   Cannot find module 'storybook/test' or its corresponding type declarations.
+
+119. **
+
+1 import type { Meta, StoryObj } from '@storybook/react-vite';
+                                      ~~~~~~~~~~~~~~~~~~~~~~~
+
+src/stories/Header.stories.ts:3:20** [TS2307] (Severity: 9)
+   Cannot find module 'storybook/test' or its corresponding type declarations.
+
+120. **
+
+1 import type { Meta, StoryObj } from '@storybook/react-vite';
+                                      ~~~~~~~~~~~~~~~~~~~~~~~
+
+src/stories/Page.stories.ts:3:43** [TS2307] (Severity: 9)
+   Cannot find module 'storybook/test' or its corresponding type declarations.
+
+121. **
+
+1 import { Capacitor } from '@capacitor/core';
+                            ~~~~~~~~~~~~~~~~~
+
+src/services/capacitor-enhanced.ts:7:8** [TS2307] (Severity: 9)
+   Cannot find module '@capacitor/local-notifications' or its corresponding type declarations.
+
+122. **
+
+1 import { Capacitor } from '@capacitor/core';
+                            ~~~~~~~~~~~~~~~~~
+
+src/services/capacitor.ts:2:34** [TS2307] (Severity: 9)
+   Cannot find module '@capacitor/status-bar' or its corresponding type declarations.
+
+123. **
+
+1 import { clsx, type ClassValue } from 'clsx';
+                                        ~~~~~~
+
+src/lib/utils.ts:2:25** [TS2307] (Severity: 9)
+   Cannot find module 'tailwind-merge' or its corresponding type declarations.
+
+124. **
+
+1 import { createClient, SupabaseClient, RealtimeChannel } from '@supabase/supabase-js';
+                                                                ~~~~~~~~~~~~~~~~~~~~~~~
+
+src/services/supabase.ts:2:27** [TS2307] (Severity: 9)
+   Cannot find module '@supabase/supabase-js' or its corresponding type declarations.
+
+125. **
+
+1 import { useCallback } from 'react';
+                              ~~~~~~~
+
+src/hooks/useCapacitor.ts:1:50** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+126. **
+
+1 import { useCallback } from 'react';
+                              ~~~~~~~
+
+src/hooks/useFeatureGate.ts:4:50** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+127. **
+
+1 import { useCallback } from 'react';
+                              ~~~~~~~
+
+src/hooks/usePWA.ts:1:50** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+128. **
+
+1 import { useEffect, useRef } from 'react';
+                                    ~~~~~~~
+
+src/hooks/useTabProtectionSettings.ts:2:50** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+129. **
+
+1 import { useState, useEffect, useCallback } from 'react';
+                                                   ~~~~~~~
+
+src/hooks/useCulturalTheme.tsx:147:61** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+130. **
+
+10 import { I18nextProvider } from 'react-i18next';
+                                   ~~~~~~~~~~~~~~~
+
+src/utils/rtl-testing.tsx:11:44** [TS2307] (Severity: 9)
+   Cannot find module 'vitest' or its corresponding type declarations.
+
+131. **
+
+10 import { SplashScreen } from '@capacitor/splash-screen';
+                                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/services/capacitor-enhanced.ts:12:36** [TS2307] (Severity: 9)
+   Cannot find module '@capacitor/device' or its corresponding type declarations.
+
+132. **
+
+1006     </div>
+         ~~~~~~
+
+src/utils/performance-profiler.ts:8:24** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+133. **
+
+102     <div className={`space-y-6 ${className}`}>
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/CloudSyncControls.tsx:102:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+134. **
+
+105     <div className="max-w-2xl mx-auto p-6 space-y-8">
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/UserProfile.tsx:105:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+135. **
+
+105     <div className="relative">
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/MobileAlarmCard.tsx:105:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+136. **
+
+105     <div className={`space-y-4 ${className}`}>
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/SocialProof.tsx:105:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+137. **
+
+106     </div>
+        ~~~~~~
+
+src/components/HabitCelebration.tsx:1:52** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+138. **
+
+1063     <div className="space-y-6">
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/AdvancedAlarmScheduling.tsx:1063:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+139. **
+
+1092     </div>
+         ~~~~~~
+
+src/components/AdvancedSchedulingDashboard.tsx:2:33** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+140. **
+
+11 import { Play, Volume2, VolumeX, Palette, Music, Zap } from 'lucide-react';
+                                                               ~~~~~~~~~~~~~~
+
+src/components/SoundThemeDemo.tsx:13:24** [TS2307] (Severity: 9)
+   Cannot find module 'framer-motion' or its corresponding type declarations.
+
+141. **
+
+11 import { Preferences } from '@capacitor/preferences';
+                               ~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/services/ml-alarm-optimizer.ts:12:29** [TS2307] (Severity: 9)
+   Cannot find module '@capacitor/geolocation' or its corresponding type declarations.
+
+142. **
+
+11 import { vi, expect, describe, test } from 'vitest';
+                                              ~~~~~~~~
+
+src/utils/rtl-testing.tsx:50:7** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+143. **
+
+11 } from '@testing-library/react';
+          ~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/__tests__/utils/hook-testing-utils.tsx:12:50** [TS2307] (Severity: 9)
+   Cannot find module '@tanstack/react-query' or its corresponding type declarations.
+
+144. **
+
+111       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/WakeUpFeedbackModal.tsx:111:7** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+145. **
+
+1133     </div>
+         ~~~~~~
+
+src/components/AdvancedAnalytics.tsx:1:33** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+146. **
+
+117       <div className="bg-white/5 rounded-lg p-6 border border-white/10 text-center">
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/SmartAlarmDashboard.tsx:117:7** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+147. **
+
+118       </div>
+          ~~~~~~
+
+src/components/user-testing/BetaTestingProgram.tsx:1:44** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+148. **
+
+118     </div>
+        ~~~~~~
+
+src/components/EnhancedSmartAlarmSettings.tsx:1:44** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+149. **
+
+12 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+                                                    ~~~~~~~~~~~~~~~~~~~~~~~
+
+src/__tests__/utils/hook-testing-utils.tsx:13:31** [TS2307] (Severity: 9)
+   Cannot find module 'react-router-dom' or its corresponding type declarations.
+
+150. **
+
+12 } from 'framer-motion';
+          ~~~~~~~~~~~~~~~
+
+src/hooks/useAnimations.ts:13:54** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+151. **
+
+12 } from 'lucide-react';
+          ~~~~~~~~~~~~~~
+
+src/components/premium/PaymentFlow.tsx:20:31** [TS2307] (Severity: 9)
+   Cannot find module '../types/timers' or its corresponding type declarations.
+
+152. **
+
+12 } from 'lucide-react';
+          ~~~~~~~~~~~~~~
+
+src/components/premium/SubscriptionPage.tsx:25:31** [TS2307] (Severity: 9)
+   Cannot find module '../types/timers' or its corresponding type declarations.
+
+153. **
+
+120       setOptimizations(prev => ({
+                           ~~~~
+
+src/hooks/useMobileTouch.ts:2:48** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+154. **
+
+120     <div
+        ~~~~
+121       className={`advanced-scheduling-dashboard bg-gray-50 min-h-screen ${className}`}
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+122     >
+    ~~~~~
+
+src/components/AdvancedSchedulingDashboard.tsx:120:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+155. **
+
+1238       </main>
+           ~~~~~~~
+
+src/components/SignUpForm.tsx:1:19** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+156. **
+
+125       <div className={`max-w-4xl mx-auto p-6 ${className}`}>
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/premium/SubscriptionPage.tsx:125:7** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+157. **
+
+126       <div className={`space-y-4 ${className}`}>
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/premium/PaymentMethodManager.tsx:126:7** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+158. **
+
+126     document.body.style.webkitTapHighlightColor = 'transparent';
+                            ~~~~~~~~~~~~~~~~~~~~~~~
+
+src/hooks/useNavigationAnnouncements.ts:1:29** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+159. **
+
+1270       await OfflineStorage.set('soundEffectSettings', this.settings);
+                                ~~~
+
+src/services/stripe-service.ts:4:24** [TS2307] (Severity: 9)
+   Cannot find module '@stripe/stripe-js' or its corresponding type declarations.
+
+160. **
+
+129     <div className="w-full max-w-md mx-auto">
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/SignUpForm.tsx:129:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+161. **
+
+13     <div className="space-y-4">
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/animations/LoadingStates.tsx:13:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+162. **
+
+13 import { BrowserRouter } from 'react-router-dom';
+                                 ~~~~~~~~~~~~~~~~~~
+
+src/__tests__/utils/hook-testing-utils.tsx:14:21** [TS2307] (Severity: 9)
+   Cannot find module '@testing-library/react' or its corresponding type declarations.
+
+163. **
+
+13 } from 'react-hook-form';
+          ~~~~~~~~~~~~~~~~~
+
+src/components/ui/form.tsx:79:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+164. **
+
+130       setState(prev => ({
+                   ~~~~
+
+src/hooks/useABTesting.tsx:270:12** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+165. **
+
+135       <main className="p-4 space-y-6" role="main" aria-labelledby="dashboard-heading">
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/EnhancedDashboard.tsx:135:7** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+166. **
+
+135       const challenge = challengeTypes.find(c => c.type === challengeType);
+                                                ~
+
+src/components/NuclearModeSelector.tsx:145:7** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+167. **
+
+136       return defaultLanguage;
+          ~~~~~~
+
+src/contexts/LanguageContext.tsx:335:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+168. **
+
+138     <Component
+        ~~~~~~~~~~
+139       className={textClasses}
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+... 
+145       {children}
+    ~~~~~~~~~~~~~~~~
+146     </Component>
+    ~~~~~~~~~~~~~~~~
+
+src/components/RTLText.tsx:1:19** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+169. **
+
+1384     </div>
+         ~~~~~~
+
+src/components/AlarmList.tsx:1:19** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+170. **
+
+139     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/SmartAlarmSettings.tsx:139:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+171. **
+
+14     <article>
+       ~~~~~~~~~
+
+src/stories/Page.tsx:14:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+172. **
+
+14 import { Bell, Clock, Settings, Star, Users } from 'lucide-react';
+                                                      ~~~~~~~~~~~~~~
+
+src/stories/ui/Card.stories.tsx:36:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+173. **
+
+14 import { act } from '@testing-library/react';
+                       ~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/__tests__/utils/hook-testing-utils.tsx:15:20** [TS2307] (Severity: 9)
+   Cannot find module 'vitest' or its corresponding type declarations.
+
+174. **
+
+14 } from 'lucide-react';
+          ~~~~~~~~~~~~~~
+
+src/components/ServiceWorkerStatus.tsx:59:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+175. **
+
+14 } from 'lucide-react';
+          ~~~~~~~~~~~~~~
+
+src/components/user-testing/FeedbackWidget.tsx:18:31** [TS2307] (Severity: 9)
+   Cannot find module '../types/timers' or its corresponding type declarations.
+
+176. **
+
+140       <div className={`space-y-4 ${className}`}>
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/premium/BillingHistory.tsx:140:7** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+177. **
+
+141       <div className={`flex items-center gap-2 ${className}`}>
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/SyncStatus.tsx:141:7** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+178. **
+
+142     <div className="space-y-6">
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/Statistics.tsx:142:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+179. **
+
+146     <div
+        ~~~~
+147       className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4"
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+... 
+151       onKeyDown={handleKeyDown}
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+152     >
+    ~~~~~
+
+src/components/AccessibilityTester.tsx:146:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+180. **
+
+147       <div className={`${className}`}>
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/PremiumUsageTracker.tsx:147:7** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+181. **
+
+148     </div>
+        ~~~~~~
+
+src/components/SubscriptionStatus.tsx:1:44** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+182. **
+
+148     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/SleepTracker.tsx:148:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+183. **
+
+15     <div className="theme-selector">
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/ThemeSelector.tsx:15:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+184. **
+
+150     <div
+        ~~~~
+151       className={`fixed ${positionClasses[settings.visualSettings.position]} max-w-sm z-50 transition-all duration-300 ${className}`}
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+... 
+154       aria-atomic="true"
+    ~~~~~~~~~~~~~~~~~~~~~~~~
+155     >
+    ~~~~~
+
+src/components/TabProtectionWarning.tsx:150:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+185. **
+
+150     return this.props.children;
+                    ~~~~~
+
+src/components/ErrorBoundaryTest.tsx:1:33** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+186. **
+
+153     <div className="w-full max-w-lg">
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/stories/components/AlarmForm.stories.tsx:153:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+187. **
+
+154       <div className={finalClasses} role="status" aria-label={label}>
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/AdaptiveSpinner.tsx:154:7** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+188. **
+
+154       setRecentFeedbackCount(prev => prev + 1);
+                                 ~~~~
+
+src/components/user-testing/RedesignedFeedbackWidget.tsx:190:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+189. **
+
+154     </div>
+        ~~~~~~
+
+src/components/LoginForm.tsx:1:19** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+190. **
+
+154     <div
+        ~~~~
+155       className={cn(
+    ~~~~~~~~~~~~~~~~~~~~
+... 
+158       )}
+    ~~~~~~~~
+159     >
+    ~~~~~
+
+src/components/NuclearModeResults.tsx:154:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+191. **
+
+155   const config = PROMPT_TYPE_CONFIGS[prompt.promptType];
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/SmartUpgradePrompt.tsx:161:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+192. **
+
+156     <div className={`${className}`}>
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/ThemeStudio.tsx:156:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+193. **
+
+157     if (!alarm.days || alarm.days.length === 0) {
+                                 ~~~~
+
+src/utils/analysis-worker.ts:348:35** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+194. **
+
+157   children,
+      ~~~~~~~~
+
+src/hooks/useCulturalTheme.tsx:171:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+195. **
+
+158         navigator.vibrate(pattern);
+            ~~~~~~~~~~~~~~~~~
+
+src/hooks/useAdvancedAlarms.ts:1:37** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
+196. **
+
+158       <div className="flex items-center justify-center min-h-screen bg-gray-50">
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/TranslationDashboard.tsx:158:7** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+197. **
+
+159     <div className="space-y-6">
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/components/NuclearModeChallenge.tsx:159:5** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+198. **
+
+16   Alert,
+     ~~~~~
+
+src/components/NuclearModeChallenge.tsx:30:8** [TS2307] (Severity: 9)
+   Cannot find module 'lucide-react' or its corresponding type declarations.
+
+199. **
+
+16   onInvalidToken,
+     ~~~~~~~~~~~~~~
+
+src/components/CSRFProtection.tsx:53:10** [TS2875] (Severity: 9)
+   This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+200. **
+
+160     </div>
+        ~~~~~~
+
+src/components/AlarmForm.tsx:2:19** [TS2307] (Severity: 9)
+   Cannot find module 'react' or its corresponding type declarations.
+
