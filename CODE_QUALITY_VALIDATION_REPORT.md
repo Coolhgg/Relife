@@ -49,6 +49,78 @@ Blocking Issues: 0
 Build Status: ✅ WORKING
 ```
 
+## Environment Issues Investigation — August 28, 12:40 PM
+
+### Updated Status Assessment
+**CRITICAL DISCOVERY**: The original "successful" fixes above were incomplete. Build process still failing due to environmental and dependency issues rather than simple syntax errors.
+
+### Current Build Status
+- `tsc --noEmit`: ✅ PASSES (0 errors)
+- `tsc -b` (used by build): ❌ FAILS (17 errors) 
+- `vite build`: ❌ FAILS (Node.js version + dependency issues)
+- **Overall Build**: ❌ BROKEN
+
+### Root Cause Analysis
+The TypeScript syntax errors are symptoms of deeper environmental issues:
+
+1. **Node.js Version Incompatibility**
+   - Current: 20.12.1
+   - Required: 20.19+ or 22.12+
+   - Impact: Vite build completely fails
+
+2. **TypeScript Environment Corruption**
+   - Namespace conflicts (JSX, BroadcastChannel, etc.)
+   - Type definition overlaps between @types packages
+   - 25+ type definition errors across the project
+
+3. **Dependency Issues**
+   - Missing: redux-devtools-extension
+   - Conflicting: @types/mdx with built-in TypeScript libs
+   - Browser API type definition conflicts
+
+4. **Build Configuration Mismatch**
+   - `tsc --noEmit` works (lenient mode)
+   - `tsc -b` fails (strict project references mode)
+   - Different TypeScript compilation behaviors
+
+### Files Still Reporting Errors
+
+#### OnboardingFlow.tsx (Line 493)
+- **Error**: "Declaration or statement expected"
+- **File Content**: ✅ Actually correct (matches previous successful fix)
+- **Cause**: TypeScript parser confusion due to environment issues
+
+#### alarm-conversion.ts (Multiple Lines)
+- **Lines 65, 72, 88, 220, 221**: Various syntax errors
+- **Fix Applied**: ✅ Restored validateAdvancedAlarm method signature  
+- **Remaining Cause**: Environment parsing issues affecting class structure detection
+
+### Priority Actions Required
+
+#### Immediate (Deployment Blocking)
+1. **Upgrade Node.js** to 20.19+ or 22.12+
+2. **Resolve Missing Dependencies**: `bun install redux-devtools-extension`
+3. **Clean Type Definitions**: Remove conflicting @types packages
+4. **Fresh Dependency Install**: `rm -rf node_modules && bun install`
+
+#### Build System (Critical)
+1. **Review tsconfig Project References**: Investigate stricter `tsc -b` behavior
+2. **Vite Configuration**: Update for Node.js compatibility
+3. **TypeScript Version**: Consider compatibility adjustments
+
+### Impact Assessment
+- **Deployment**: ❌ Currently impossible due to build failures
+- **Development**: ⚠️ Limited - `tsc --noEmit` works but build doesn't
+- **Code Quality**: ⚠️ False positive syntax errors masking real issues
+
+### Recommended Next Steps
+1. Fix environmental prerequisites (Node.js, dependencies)
+2. Re-run build validation after environment fixes
+3. If issues persist, investigate build configuration
+4. Consider temporary build workarounds for urgent deployment needs
+
+**Status**: Environment fixes required before syntax error resolution can be completed.
+
 ### Fix Statistics
 - **Files Auto-Fixed**: 2/2 (100% success rate)
 - **Files Still Failing**: 0/2 (0% failure rate) 
