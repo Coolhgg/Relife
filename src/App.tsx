@@ -1,23 +1,29 @@
 /// <reference lib="dom" />
 import React from 'react';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useReducer } from 'react';
+import { Provider } from 'react-redux';
+// Removed stub imports - using actual implementations
 import {
+  Bell,
   Plus,
   Clock,
   Settings,
-  Bell,
   Brain,
   Gamepad2,
   LogOut,
   Crown,
+  Gift,
 } from 'lucide-react';
 import type { Alarm, AppState, VoiceMood, User, Battle, DayOfWeek } from './types';
-import { INITIAL_APP_STATE } from './constants/initialState';
+import { INITIAL_DOMAIN_APP_STATE } from './constants/initialDomainState';
+import { rootReducer } from './reducers/rootReducer';
 
 // i18n imports
 import { LanguageProvider } from './contexts/LanguageContext';
 import { useI18n } from './hooks/useI18n';
 import { useTheme } from './hooks/useTheme';
+import store from './store';
+import { initializeStoreWithPersistedState } from './store';
 
 import AlarmList from './components/AlarmList';
 import AlarmForm from './components/AlarmForm';
@@ -32,6 +38,8 @@ import PWAInstallPrompt from './components/PWAInstallPrompt';
 import GamingHub from './components/GamingHub';
 import EnhancedSettings from './components/EnhancedSettings';
 import PricingPage from './components/PricingPage';
+import RewardManager from './components/RewardManager';
+import GiftShop from './components/GiftShop';
 import { ScreenReaderProvider } from './components/ScreenReaderProvider';
 import TabProtectionWarning from './components/TabProtectionWarning';
 import { ThemeProvider } from './hooks/useTheme';
@@ -48,6 +56,7 @@ import EnhancedFocusService from './utils/enhanced-focus';
 import { PerformanceMonitor } from './services/performance-monitor';
 import AppAnalyticsService from './services/app-analytics';
 import AIRewardsService from './services/ai-rewards';
+import RewardService from './services/reward-service';
 import { SupabaseService } from './services/supabase';
 import { PushNotificationService } from './services/push-notifications';
 import useAuth from './hooks/useAuth';
@@ -69,66 +78,8 @@ import AdvancedSchedulingDashboard from './components/AdvancedSchedulingDashboar
 import { useUISound } from './hooks/useSoundEffects';
 import './App.css';
 
-// Email Campaign Integration
+// Email Campaign Integration - now using DI service
 import { PersonaType, PersonaDetectionResult } from './types';
-class EmailCampaignService {
-  private static instance: EmailCampaignService;
-  private isInitialized = false;
-
-  static getInstance() {
-    if (!this.instance) {
-      this.instance = new EmailCampaignService();
-    }
-    return this.instance;
-  }
-
-  async initialize() {
-    this.isInitialized = true;
-    console.log('Email campaign service initialized');
-  }
-
-  async detectPersona(user: any): Promise<PersonaDetectionResult> {
-    let persona: PersonaType = 'struggling_sam';
-    const tier = user?.subscriptionTier || user?.subscription?.tier || 'free';
-
-    switch (tier) {
-      case 'free':
-        persona = 'struggling_sam';
-        break;
-      case 'basic':
-        persona = 'busy_ben';
-        break;
-      case 'premium':
-        persona = 'professional_paula';
-        break;
-      case 'pro':
-        persona = 'enterprise_emma';
-        break;
-      case 'student':
-        persona = 'student_sarah';
-        break;
-    }
-
-    if (user?.email?.includes('.edu')) {
-      persona = 'student_sarah';
-    }
-
-    return {
-      persona,
-      confidence: 0.8,
-      factors: [
-        { factor: 'subscription_tier', weight: 0.8, value: tier, influence: 0.8 },
-      ],
-      updatedAt: new Date(),
-    };
-  }
-
-  async addUserToCampaign(user: any, persona: PersonaType) {
-    console.log(`Adding user ${user.email} to ${persona} campaign`);
-    // Integration with email platform would go here
-    return true;
-  }
-}
 
 // Inner App component that uses i18n hooks
 function AppContent() {
@@ -172,7 +123,7 @@ function AppContent() {
   const {
     alarms: advancedAlarms,
     loading: _advancedAlarmsLoading,
-    error: _advancedAlarmsError,
+    _error: _advancedAlarmsError,
   } = useAdvancedAlarms();
 
   // Enhanced Service Worker Hook for alarm reliability
@@ -212,7 +163,23 @@ function AppContent() {
     createErrorHandler,
   } = useUISound();
 
-  const [appState, setAppState] = useState<AppState>(INITIAL_APP_STATE);
+  const [appState, dispatch] = useReducer(rootReducer, INITIAL_DOMAIN_APP_STATE);
+
+  // Helper function to simulate old setState behavior for gradual migration
+  // Wrapped with useCallback to prevent unnecessary re-renders in dependent hooks
+  const setAppState = useCallback(
+    (updater: (prev: AppState) => AppState | AppState) => {
+      if (typeof updater === 'function') {
+        const newState = updater(appState);
+        // For now, we'll use a generic APP_UPDATE action
+        // TODO: Convert to specific domain actions
+        dispatch({ type: 'APP_UPDATE' as unknown, payload: newState });
+      } else {
+        dispatch({ type: 'APP_UPDATE' as unknown, payload: updater });
+      }
+    },
+    [appState, dispatch]
+  );
 
   const [showAlarmForm, setShowAlarmForm] = useState(false);
   const [editingAlarm, setEditingAlarm] = useState<Alarm | null>(null);
@@ -232,25 +199,27 @@ function AppContent() {
 
   // Sync alarms with enhanced service worker when they change
   useEffect(() => {
-    if (serviceWorkerState.isInitialized && appState.alarms) {
+    if (serviceWorkerState.isInitialized && appState.alarm.alarms) {
       console.log(
-        `App: Syncing ${appState.alarms.length} alarms with enhanced service worker`
+        `App: Syncing ${appState.alarm.alarms.length} alarms with enhanced service worker`
       );
-      updateServiceWorkerAlarms(appState.alarms);
+      updateServiceWorkerAlarms(appState.alarm.alarms);
     }
-  }, [appState.alarms, serviceWorkerState.isInitialized, updateServiceWorkerAlarms]);
+  }, [appState.alarm.alarms, serviceWorkerState.isInitialized, updateServiceWorkerAlarms]);
 
   // Emotional Intelligence Notifications Hook
   const [_emotionalState, emotionalActions] = useEmotionalNotifications({
     userId: auth.user?.id || '',
-    enabled: !!auth.user && appState.permissions.notifications.granted,
+    enabled: !!auth.user && appState.alarm.settings?.vibrationEnabled,
   });
 
   // Tab Protection Announcements Hook
   const tabProtectionSettings = useTabProtectionSettings();
   const { announceProtectionWarning } = useTabProtectionAnnouncements({
-    activeAlarm: appState.activeAlarm,
-    enabledAlarms: appState.alarms.filter((alarm: any) => alarm.enabled),
+    activeAlarm: appState.alarm.currentlyTriggering.length > 0 ? appState.alarm.alarms.find(a => appState.alarm.currentlyTriggering.includes(a.id)) || null : null,
+    // TODO: Performance optimization - Move to useMemo to prevent re-renders
+    // const enabledAlarms = useMemo(() => appState.alarms.filter(alarm => alarm.enabled), [appState.alarms]);
+    enabledAlarms: appState.alarms.filter((alarm: unknown) => alarm.enabled),
     settings: tabProtectionSettings.settings,
   });
 
@@ -265,12 +234,45 @@ function AppContent() {
   };
 
   const refreshRewardsSystem = useCallback(
-    async (alarms: Alarm[] = appState.alarms) => {
+    async (alarms: Alarm[] = appState.alarm.alarms) => {
       try {
-        const aiRewards = AIRewardsService.getInstance();
-        const rewardSystem = await aiRewards.analyzeAndGenerateRewards(alarms);
+        // Get the database-backed reward service
+        const rewardService = RewardService.getInstance();
 
-        setAppState((prev: AppState) => ({ // type-safe replacement
+        // Update user habits based on current alarms
+        // Update user habits based on current alarms
+        if (alarms.length > 0) {
+          const habitData = {
+            habit_name: "daily_alarms",
+            current_count: alarms.filter(a => a.enabled).length,
+            target_count: alarms.length,
+            last_activity: new Date().toISOString()
+          };
+          await rewardService.updateUserHabits(auth.user?.id!, habitData);
+        }
+
+        // Check and unlock any new rewards
+        await rewardService.checkAndUnlockRewards(auth.user?.id!);
+
+        // Get the comprehensive reward system data from database
+        const rewards = await rewardService.getRewards();
+        const userRewards = await rewardService.getUserRewards(auth.user?.id!);
+        const insights = await rewardService.getUserInsights(auth.user?.id!);
+        const analytics = await rewardService.getUserAnalytics(auth.user?.id!);
+        const habits = await rewardService.getUserHabits(auth.user?.id!);
+        const nicheProfile = await rewardService.getUserNicheProfile(auth.user?.id!);
+
+        // Build comprehensive reward system object
+        const rewardSystem = {
+          points: analytics?.total_points || 0,
+          level: analytics?.current_level || 1,
+          experience: analytics?.total_points || 0, // Using points as experience
+          streakDays: analytics?.current_streak || 0,
+          unlockedRewards: (userRewards || []).map(r => r.reward_id || r.id || String(r)),
+        };
+
+        setAppState((prev: AppState) => ({
+          // type-safe replacement
           ...prev,
           rewardSystem,
         }));
@@ -282,15 +284,15 @@ function AppContent() {
           level: rewardSystem.level,
           currentStreak: rewardSystem.currentStreak,
         });
-      } catch (error) {
+      } catch (_error) {
         ErrorHandler.handleError(
-          error instanceof Error ? error : new Error(String(error)),
+          _error instanceof Error ? _error : new Error(String(_error)),
           'Failed to refresh rewards system',
           { context: 'rewards_refresh' }
         );
       }
     },
-    [appState.alarms, setAppState]
+    [appState.alarm.alarms, setAppState, auth.user?.id]
   );
 
   const loadUserAlarms = useCallback(async () => {
@@ -300,8 +302,8 @@ function AppContent() {
       // Load alarms from offline storage first (faster)
       const offlineAlarms = await OfflineStorage.getAlarms();
       if (offlineAlarms.length > 0) {
-        setAppState((prev: AppState) => ({ // type-safe replacement
-          
+        setAppState((prev: AppState) => ({
+          // type-safe replacement
 
           ...prev,
           alarms: offlineAlarms,
@@ -315,8 +317,8 @@ function AppContent() {
           const { alarms: savedAlarms } = await SupabaseService.loadUserAlarms(
             auth.user.id
           );
-          setAppState((prev: AppState) => ({ // type-safe replacement
-            
+          setAppState((prev: AppState) => ({
+            // type-safe replacement
 
             ...prev,
             alarms: savedAlarms,
@@ -333,9 +335,9 @@ function AppContent() {
 
           // Initialize rewards system
           await refreshRewardsSystem(savedAlarms);
-        } catch (error) {
+        } catch (_error) {
           ErrorHandler.handleError(
-            error instanceof Error ? error : new Error(String(error)),
+            _error instanceof Error ? _error : new Error(String(_error)),
             'Remote alarm loading failed, using offline alarms',
             { context: 'load_remote_alarms', metadata: { userId: auth.user.id } }
           );
@@ -345,8 +347,8 @@ function AppContent() {
           await refreshRewardsSystem(offlineAlarms);
         }
       } else {
-        setAppState((prev: AppState) => ({ // type-safe replacement
-          
+        setAppState((prev: AppState) => ({
+          // type-safe replacement
 
           ...prev,
           alarms: offlineAlarms,
@@ -356,9 +358,9 @@ function AppContent() {
         // Initialize rewards system with offline alarms
         await refreshRewardsSystem(offlineAlarms);
       }
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        _error instanceof Error ? _error : new Error(String(_error)),
         'Failed to load user alarms',
         { context: 'load_user_alarms', metadata: { userId: auth.user.id } }
       );
@@ -382,27 +384,28 @@ function AppContent() {
         analytics.trackAlarmAction('snooze', alarmId, { success: true, duration });
         analytics.trackFeatureUsage('alarm_snooze', 'completed', { duration });
 
-        setAppState((prev: AppState) => ({ // type-safe replacement
-           ...prev,
+        setAppState((prev: AppState) => ({
+          // type-safe replacement
+          ...prev,
           activeAlarm: null,
           currentView: 'dashboard',
         }));
-      } catch (error) {
+      } catch (_error) {
         const duration = performance.now() - startTime;
         analytics.trackAlarmAction('snooze', alarmId, {
           success: false,
-          error: error instanceof Error ? error.message : String(error),
+          error: _error instanceof Error ? _error.message : String(_error),
           duration,
         });
         analytics.trackError(
-          error instanceof Error ? error : new Error(String(error)),
+          error instanceof Error ? error : new Error(String(_error)),
           {
             action: 'snooze_alarm',
           }
         );
 
         ErrorHandler.handleError(
-          error instanceof Error ? error : new Error(String(error)),
+          error instanceof Error ? error : new Error(String(_error)),
           'Failed to snooze alarm',
           {
             context: 'snooze_alarm',
@@ -410,8 +413,9 @@ function AppContent() {
           }
         );
         // Fallback: still hide the alarm even if snooze fails
-        setAppState((prev: AppState) => ({ // type-safe replacement
-           ...prev,
+        setAppState((prev: AppState) => ({
+          // type-safe replacement
+          ...prev,
           activeAlarm: null,
           currentView: 'dashboard',
         }));
@@ -422,15 +426,16 @@ function AppContent() {
 
   // Handle service worker messages
   const handleServiceWorkerMessage = useCallback(
-    (event: MessageEvent) => {
+    (_event: MessageEvent) => {
       const { type, data } = event.data;
 
       switch (type) {
         case 'ALARM_TRIGGERED':
           if (data.alarm) {
-            setAppState((prev: AppState) => ({ // type-safe replacement
-              ...prev, 
-              activeAlarm: data.alarm 
+            setAppState((prev: AppState) => ({
+              // type-safe replacement
+              ...prev,
+              activeAlarm: data.alarm,
             }));
           }
           break;
@@ -441,9 +446,9 @@ function AppContent() {
           setSyncStatus('synced');
           break;
         case 'SYNC_ERROR':
-          setSyncStatus('error');
+          setSyncStatus('_error');
           ErrorHandler.handleError(
-            new Error(data.error || 'Sync failed'),
+            new Error(data._error || 'Sync failed'),
             'Background sync failed'
           );
           break;
@@ -469,9 +474,10 @@ function AppContent() {
 
             // Handle specific actions
             if (data.action === 'dismiss' && appState.activeAlarm) {
-              setAppState((prev: AppState) => ({ // type-safe replacement
-                ...prev, 
-                activeAlarm: null 
+              setAppState((prev: AppState) => ({
+                // type-safe replacement
+                ...prev,
+                activeAlarm: null,
               }));
             } else if (data.action === 'snooze' && appState.activeAlarm) {
               // Trigger snooze functionality
@@ -505,10 +511,7 @@ function AppContent() {
       console.log('App: Handling service worker alarm trigger:', alarm.id);
 
       // Update app state to show alarm as triggered
-      setAppState((prev: AppState
-) => ({
-        
-
+      setAppState((prev: AppState) => ({
         ...prev,
         activeAlarm: alarm,
         alarmTriggeredAt: new Date(),
@@ -571,27 +574,27 @@ function AppContent() {
         const readyRegistration = await navigator.serviceWorker.ready;
 
         // Send alarms to service worker
-        if (readyRegistration.active && appState.alarms.length > 0) {
+        if (readyRegistration.active && appState.alarm.alarms.length > 0) {
           console.log(
-            `App: Sending ${appState.alarms.length} alarms to service worker`
+            `App: Sending ${appState.alarm.alarms.length} alarms to service worker`
           );
 
           // Use MessageChannel for reliable communication
           const messageChannel = new MessageChannel();
 
-          messageChannel.port1.onmessage = (event: MessageEvent) => {
-            const { success, message, error } = event.data;
+          messageChannel.port1.onmessage = (_event: MessageEvent) => {
+            const { success, message, _error } = event.data;
             if (success) {
               console.log('App: Service worker response:', message);
             } else {
-              console.error('App: Service worker error:', error);
+              console.error('App: Service worker _error:', _error);
             }
           };
 
           readyRegistration.active.postMessage(
             {
               type: 'UPDATE_ALARMS',
-              data: { alarms: appState.alarms },
+              data: { alarms: appState.alarm.alarms },
             },
             [messageChannel.port2]
           );
@@ -599,7 +602,7 @@ function AppContent() {
 
         // Set up service worker message listener
         navigator.serviceWorker.addEventListener('message', event => {
-          const { type, data } = event.data;
+          const { type, data } = _event.data;
 
           switch (type) {
             case 'ALARM_TRIGGERED':
@@ -662,10 +665,10 @@ function AppContent() {
             });
           }
         });
-      } catch (error) {
-        console.error('App: Service worker registration failed:', error);
+      } catch (_error) {
+        console.error('App: Service worker registration failed:', _error);
         ErrorHandler.handleError(
-          error instanceof Error ? error : new Error(String(error)),
+          _error instanceof Error ? _error : new Error(String(_error)),
           'Enhanced service worker registration failed',
           { context: 'service_worker_registration' }
         );
@@ -673,7 +676,7 @@ function AppContent() {
     } else {
       console.warn('App: Service workers not supported in this browser');
     }
-  }, [appState.alarms, handleServiceWorkerAlarmTrigger]);
+  }, [appState.alarm.alarms, handleServiceWorkerAlarmTrigger]);
 
   const syncOfflineChanges = useCallback(async () => {
     if (!auth.user) return;
@@ -691,22 +694,22 @@ function AppContent() {
               case 'update':
                 if (change.data) {
                   const saveResult = await SupabaseService.saveAlarm(change.data);
-                  if (saveResult.error) {
-                    throw new Error(saveResult.error);
+                  if (saveResult._error) {
+                    throw new Error(saveResult._error);
                   }
                 }
                 break;
               case 'delete': {
                 const deleteResult = await SupabaseService.deleteAlarm(change.id);
-                if (deleteResult.error) {
-                  throw new Error(deleteResult.error);
+                if (deleteResult._error) {
+                  throw new Error(deleteResult._error);
                 }
                 break;
               }
             }
-          } catch (error) {
+          } catch (_error) {
             ErrorHandler.handleError(
-              error instanceof Error ? error : new Error(String(error)),
+              _error instanceof Error ? _error : new Error(String(_error)),
               'Failed to sync offline change',
               {
                 context: 'sync_offline_change',
@@ -724,18 +727,19 @@ function AppContent() {
         const { alarms: updatedAlarms } = await SupabaseService.loadUserAlarms(
           auth.user.id
         );
-        setAppState((prev: AppState) => ({ // type-safe replacement
-           ...prev,
+        setAppState((prev: AppState) => ({
+          // type-safe replacement
+          ...prev,
           alarms: updatedAlarms,
         }));
         await OfflineStorage.saveAlarms(updatedAlarms);
       }
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        _error instanceof Error ? _error : new Error(String(_error)),
         'Failed to sync offline changes'
       );
-      setSyncStatus('error');
+      setSyncStatus('_error');
     }
   }, [auth.user, setSyncStatus]);
 
@@ -804,9 +808,9 @@ function AppContent() {
         mobile: true,
         focus: true,
       });
-    } catch (error) {
+    } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        _error instanceof Error ? _error : new Error(String(_error)),
         'Failed to initialize accessibility services',
         { context: 'accessibility_initialization' }
       );
@@ -819,10 +823,7 @@ function AppContent() {
     const appAnalytics = AppAnalyticsService.getInstance();
     const emailService = EmailCampaignService.getInstance();
 
-    setAppState((prev: AppState
-) => ({
-      
-
+    setAppState((prev: AppState) => ({
       ...prev,
       user: auth.user,
     }));
@@ -863,21 +864,21 @@ function AppContent() {
           await emailService.initialize();
           const personaResult = await emailService.detectPersona(auth.user);
           console.log(
-            `Detected persona: ${personaResult.persona} (confidence: ${personaResult.confidence})`
+            `Detected persona: ${personaResult._persona} (confidence: ${personaResult.confidence})`
           );
 
           // Add user to appropriate email campaign
-          await emailService.addUserToCampaign(auth.user, personaResult.persona);
+          await emailService.addUserToCampaign(auth.user, personaResult._persona);
 
           // Track persona detection for analytics
           track('PERSONA_DETECTED', {
-            persona: personaResult.persona,
+            persona: personaResult._persona,
             confidence: personaResult.confidence,
             factors: personaResult.factors.map(f => f.factor),
             timestamp: new Date().toISOString(),
           });
-        } catch (error) {
-          console.error('Email campaign integration error:', error);
+        } catch (_error) {
+          console.error('Email campaign integration _error:', _error);
         }
       })();
     } else {
@@ -931,7 +932,7 @@ function AppContent() {
 
   // Handle emotional notification events from service worker
   useEffect(() => {
-    const handleEmotionalAction = (event: CustomEvent) => {
+    const handleEmotionalAction = (_event: CustomEvent) => {
       const { action, emotion_type, notification_id, data: actionData } = event.detail;
 
       // Track the action in analytics
@@ -985,10 +986,8 @@ function AppContent() {
     const initialize = async () => {
       try {
         // Initialize performance monitoring and analytics
-        const performanceMonitor = PerformanceMonitor.getInstance();
-        const appAnalytics = AppAnalyticsService.getInstance();
-
-        performanceMonitor.initialize();
+        await performanceService.initialize();
+        await analyticsService.initialize();
 
         // Start performance tracking
         appAnalytics.startPerformanceMarker('app_initialization');
@@ -1024,8 +1023,8 @@ function AppContent() {
         // Initialize Push Notifications
         try {
           await PushNotificationService.initialize();
-        } catch (error) {
-          console.warn('Push notification initialization failed:', error);
+        } catch (_error) {
+          console.warn('Push notification initialization failed:', _error);
         }
 
         // Initialize enhanced service worker
@@ -1040,9 +1039,9 @@ function AppContent() {
         }
 
         setIsInitialized(true);
-      } catch (error) {
+      } catch (_error) {
         ErrorHandler.handleError(
-          error instanceof Error ? error : new Error(String(error)),
+          _error instanceof Error ? _error : new Error(String(_error)),
           'Failed to initialize app',
           {
             context: 'app_initialization',
@@ -1103,7 +1102,7 @@ function AppContent() {
 
   // Prevent accidental tab closure when alarms are active
   useEffect(() => {
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+    const handleBeforeUnload = (_event: BeforeUnloadEvent) => {
       // Only show protection if user has enabled it
       if (!tabProtectionSettings.settings.enabled) {
         return;
@@ -1128,7 +1127,9 @@ function AppContent() {
 
       // Check if there are enabled alarms that could ring soon
       if (tabProtectionSettings.settings.protectionTiming.upcomingAlarmWarning) {
-        const enabledAlarms = appState.alarms.filter((alarm: any) => alarm.enabled);
+        // TODO: Performance optimization - Replace with useMemo for better performance
+        // const enabledAlarms = useMemo(() => appState.alarms.filter(alarm => alarm.enabled), [appState.alarms]);
+        const enabledAlarms = appState.alarms.filter((alarm: unknown) => alarm.enabled);
         if (enabledAlarms.length > 0) {
           // Check if any alarm is within the configured threshold
           const now = new Date();
@@ -1139,7 +1140,7 @@ function AppContent() {
                 1000
           );
 
-          const upcomingAlarms = enabledAlarms.filter((alarm: any) => {
+          const upcomingAlarms = enabledAlarms.filter((alarm: unknown) => {
             const today = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
 
             // Check if alarm is set for today
@@ -1187,8 +1188,8 @@ function AppContent() {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, [
-    appState.activeAlarm,
-    appState.alarms,
+    appState.alarm.currentlyTriggering.length > 0 ? appState.alarm.alarms.find(a => appState.alarm.currentlyTriggering.includes(a.id)) || null : null,
+    appState.alarm.alarms,
     announceProtectionWarning,
     tabProtectionSettings.settings,
   ]); // Re-run when activeAlarm, alarms, announcement function, or protection settings change
@@ -1265,8 +1266,8 @@ function AppContent() {
         };
 
         const saveResult = await SupabaseService.saveAlarm(newAlarm);
-        if (saveResult.error) {
-          throw new Error(saveResult.error);
+        if (saveResult._error) {
+          throw new Error(saveResult._error);
         }
 
         await OfflineStorage.saveAlarm(newAlarm);
@@ -1305,11 +1306,8 @@ function AppContent() {
         await OfflineStorage.saveAlarm(newAlarm);
       }
 
-      const updatedAlarms = [...appState.alarms, newAlarm];
-      setAppState((prev: AppState
-) => ({
-        
-
+      const updatedAlarms = [...appState.alarm.alarms, newAlarm];
+      setAppState((prev: AppState) => ({
         ...prev,
         alarms: updatedAlarms,
       }));
@@ -1342,28 +1340,28 @@ function AppContent() {
       appAnalytics.trackAlarmAction('create', newAlarm.id, { success: true, duration });
 
       // Update service worker
-      updateServiceWorkerAlarms([...appState.alarms, newAlarm]);
+      updateServiceWorkerAlarms([...appState.alarm.alarms, newAlarm]);
 
       // Schedule push notification for new alarm
       try {
         await PushNotificationService.scheduleAlarmPush(newAlarm);
-      } catch (error) {
-        console.warn('Failed to schedule push notification for new alarm:', error);
+      } catch (_error) {
+        console.warn('Failed to schedule push notification for new alarm:', _error);
       }
-    } catch (error) {
+    } catch (_error) {
       // Track error and performance
       const duration = appAnalytics.endPerformanceMarker('alarm_creation', {
         success: false,
-        error: error instanceof Error ? error.message : String(error),
+        error: _error instanceof Error ? _error.message : String(_error),
       });
 
       appAnalytics.trackAlarmAction('create', 'unknown', {
         success: false,
-        error: error instanceof Error ? error.message : String(error),
+        error: _error instanceof Error ? _error.message : String(_error),
         duration,
       });
       appAnalytics.trackError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? error : new Error(String(_error)),
         {
           action: 'create_alarm',
           alarmData,
@@ -1371,7 +1369,7 @@ function AppContent() {
       );
 
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? error : new Error(String(_error)),
         'Failed to create alarm',
         {
           context: 'create_alarm',
@@ -1406,7 +1404,7 @@ function AppContent() {
 
     try {
       analytics.trackAlarmAction('edit', alarmId, { voiceMood: alarmData.voiceMood });
-      const existingAlarm = appState.alarms.find((a: any) => a.id === alarmId);
+      const existingAlarm = appState.alarms.find((a: unknown) => a.id === alarmId);
       if (!existingAlarm) throw new Error('Alarm not found');
 
       const updatedAlarm: Alarm = {
@@ -1418,8 +1416,8 @@ function AppContent() {
       if (isOnline) {
         // Online: update server and local storage
         const saveResult = await SupabaseService.saveAlarm(updatedAlarm);
-        if (saveResult.error) {
-          throw new Error(saveResult.error);
+        if (saveResult._error) {
+          throw new Error(saveResult._error);
         }
         await OfflineStorage.saveAlarm(updatedAlarm);
       } else {
@@ -1427,14 +1425,11 @@ function AppContent() {
         await OfflineStorage.saveAlarm(updatedAlarm);
       }
 
-      const updatedAlarms = appState.alarms.map((alarm: any) =>
+      const updatedAlarms = appState.alarms.map((alarm: unknown) =>
         alarm.id === alarmId ? updatedAlarm : alarm
       );
 
-      setAppState((prev: AppState
-) => ({
-        
-
+      setAppState((prev: AppState) => ({
         ...prev,
         alarms: updatedAlarms,
       }));
@@ -1460,19 +1455,19 @@ function AppContent() {
 
       // Update service worker
       updateServiceWorkerAlarms(updatedAlarms);
-    } catch (error) {
+    } catch (_error) {
       const duration = performance.now() - startTime;
       analytics.trackAlarmAction('edit', editingAlarm?.id || 'unknown', {
         success: false,
-        error: error instanceof Error ? error.message : String(error),
+        error: _error instanceof Error ? _error.message : String(_error),
         duration,
       });
-      analytics.trackError(error instanceof Error ? error : new Error(String(error)), {
+      analytics.trackError(error instanceof Error ? error : new Error(String(_error)), {
         action: 'edit_alarm',
       });
 
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? error : new Error(String(_error)),
         'Failed to edit alarm',
         {
           context: 'edit_alarm',
@@ -1499,8 +1494,8 @@ function AppContent() {
       if (isOnline) {
         // Online: delete from server and local storage
         const deleteResult = await SupabaseService.deleteAlarm(alarmId);
-        if (deleteResult.error) {
-          throw new Error(deleteResult.error);
+        if (deleteResult._error) {
+          throw new Error(deleteResult._error);
         }
         await OfflineStorage.deleteAlarm(alarmId);
       } else {
@@ -1508,10 +1503,11 @@ function AppContent() {
         await OfflineStorage.deleteAlarm(alarmId);
       }
 
-      const alarmToDelete = appState.alarms.find((a: any) => a.id === alarmId);
-      const updatedAlarms = appState.alarms.filter((alarm: any) => alarm.id !== alarmId);
-      setAppState((prev: any) => ({
-          
+      const alarmToDelete = appState.alarms.find((a: unknown) => a.id === alarmId);
+      const updatedAlarms = appState.alarms.filter(
+        (alarm: unknown) => alarm.id !== alarmId
+      );
+      setAppState((prev: unknown) => ({
         ...prev,
         alarms: updatedAlarms,
       }));
@@ -1535,19 +1531,19 @@ function AppContent() {
 
       // Update service worker
       updateServiceWorkerAlarms(updatedAlarms);
-    } catch (error) {
+    } catch (_error) {
       const duration = performance.now() - startTime;
       analytics.trackAlarmAction('delete', alarmId, {
         success: false,
-        error: error instanceof Error ? error.message : String(error),
+        error: _error instanceof Error ? _error.message : String(_error),
         duration,
       });
-      analytics.trackError(error instanceof Error ? error : new Error(String(error)), {
+      analytics.trackError(error instanceof Error ? error : new Error(String(_error)), {
         action: 'delete_alarm',
       });
 
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? error : new Error(String(_error)),
         'Failed to delete alarm',
         {
           context: 'delete_alarm',
@@ -1571,7 +1567,7 @@ function AppContent() {
 
     try {
       analytics.trackAlarmAction('toggle', alarmId, { enabled });
-      const existingAlarm = appState.alarms.find((a: any) => a.id === alarmId);
+      const existingAlarm = appState.alarms.find((a: unknown) => a.id === alarmId);
       if (!existingAlarm) throw new Error('Alarm not found');
 
       const updatedAlarm: Alarm = {
@@ -1583,8 +1579,8 @@ function AppContent() {
       if (isOnline) {
         // Online: update server and local storage
         const saveResult = await SupabaseService.saveAlarm(updatedAlarm);
-        if (saveResult.error) {
-          throw new Error(saveResult.error);
+        if (saveResult._error) {
+          throw new Error(saveResult._error);
         }
         await OfflineStorage.saveAlarm(updatedAlarm);
       } else {
@@ -1592,14 +1588,11 @@ function AppContent() {
         await OfflineStorage.saveAlarm(updatedAlarm);
       }
 
-      const updatedAlarms = appState.alarms.map((alarm: any) =>
+      const updatedAlarms = appState.alarms.map((alarm: unknown) =>
         alarm.id === alarmId ? updatedAlarm : alarm
       );
 
-      setAppState((prev: AppState
-) => ({
-        
-
+      setAppState((prev: AppState) => ({
         ...prev,
         alarms: updatedAlarms,
       }));
@@ -1625,20 +1618,20 @@ function AppContent() {
 
       // Update service worker
       updateServiceWorkerAlarms(updatedAlarms);
-    } catch (error) {
+    } catch (_error) {
       const duration = performance.now() - startTime;
       analytics.trackAlarmAction('toggle', alarmId, {
         success: false,
         enabled,
-        error: error instanceof Error ? error.message : String(error),
+        error: _error instanceof Error ? _error.message : String(_error),
         duration,
       });
-      analytics.trackError(error instanceof Error ? error : new Error(String(error)), {
+      analytics.trackError(error instanceof Error ? error : new Error(String(_error)), {
         action: 'toggle_alarm',
       });
 
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        error instanceof Error ? error : new Error(String(_error)),
         'Failed to toggle alarm',
         {
           context: 'toggle_alarm',
@@ -1658,9 +1651,8 @@ function AppContent() {
       false // Not skipped
     );
 
-    setAppState((prev: AppState
-) => ({
-       ...prev,
+    setAppState((prev: AppState) => ({
+      ...prev,
       isOnboarding: false,
     }));
   };
@@ -1691,26 +1683,27 @@ function AppContent() {
           duration,
         });
 
-        setAppState((prev: AppState) => ({ // type-safe replacement
-           ...prev,
+        setAppState((prev: AppState) => ({
+          // type-safe replacement
+          ...prev,
           activeAlarm: null,
           currentView: 'dashboard',
         }));
-      } catch (error) {
+      } catch (_error) {
         const duration = performance.now() - startTime;
         analytics.trackAlarmAction('dismiss', alarmId, {
           success: false,
           method,
-          error: error instanceof Error ? error.message : String(error),
+          error: _error instanceof Error ? _error.message : String(_error),
           duration,
         });
         analytics.trackError(
-          error instanceof Error ? error : new Error(String(error)),
+          error instanceof Error ? error : new Error(String(_error)),
           { action: 'dismiss_alarm' }
         );
 
         ErrorHandler.handleError(
-          error instanceof Error ? error : new Error(String(error)),
+          error instanceof Error ? error : new Error(String(_error)),
           'Failed to dismiss alarm',
           {
             context: 'dismiss_alarm',
@@ -1718,8 +1711,9 @@ function AppContent() {
           }
         );
         // Fallback: still dismiss the alarm even if logging fails
-        setAppState((prev: AppState) => ({ // type-safe replacement
-           ...prev,
+        setAppState((prev: AppState) => ({
+          // type-safe replacement
+          ...prev,
           activeAlarm: null,
           currentView: 'dashboard',
         }));
@@ -1787,7 +1781,7 @@ function AppContent() {
           onSignIn={auth.signIn}
           onForgotPassword={auth.resetPassword}
           isLoading={auth.isLoading}
-          error={auth.error}
+          error={auth._error}
           forgotPasswordSuccess={auth.forgotPasswordSuccess}
         />
       </ErrorBoundary>
@@ -1819,10 +1813,10 @@ function AppContent() {
                 There was a problem with the alarm. It has been dismissed.
               </p>
               <button
-                onClick={(
-) =>
-                  setAppState((prev: AppState) => ({ // type-safe replacement
-                     ...prev,
+                onClick={() =>
+                  setAppState((prev: AppState) => ({
+                    // type-safe replacement
+                    ...prev,
                     activeAlarm: null,
                   }))
                 }
@@ -1847,16 +1841,18 @@ function AppContent() {
   const renderContent = () => {
     const appAnalytics = AppAnalyticsService.getInstance();
 
-    switch (appState.currentView) {
+    switch (appState.navigation.currentView) {
       case 'dashboard':
         appAnalytics.trackPageView('dashboard', {
+          totalAlarms: appState.alarm.alarms.length,
+          activeAlarms: appState.alarm.alarms.filter((a: any) => a.enabled).length,
           totalAlarms: appState.alarms.length,
-          activeAlarms: appState.alarms.filter((a: any) => a.enabled).length,
+          activeAlarms: appState.alarms.filter((a: unknown) => a.enabled).length,
         });
         return (
           <ErrorBoundary context="Dashboard">
             <Dashboard
-              alarms={appState.alarms}
+              alarms={appState.alarm.alarms}
               onAddAlarm={() => {
                 appAnalytics.trackFeatureUsage('add_alarm', 'button_clicked');
                 setShowAlarmForm(true);
@@ -1867,8 +1863,9 @@ function AppContent() {
                   'navigation',
                   'advanced_scheduling_from_dashboard'
                 );
-                setAppState((prev: AppState) => ({ // type-safe replacement
-                   ...prev,
+                setAppState((prev: AppState) => ({
+                  // type-safe replacement
+                  ...prev,
                   currentView: 'advanced-scheduling',
                 }));
               }}
@@ -1877,14 +1874,14 @@ function AppContent() {
         );
       case 'alarms':
         appAnalytics.trackPageView('alarms', {
-          totalAlarms: appState.alarms.length,
+          totalAlarms: appState.alarm.alarms.length,
         });
         return (
           <ErrorBoundary context="AlarmList">
             <AlarmList
-              alarms={appState.alarms}
+              alarms={appState.alarm.alarms}
               onToggleAlarm={handleToggleAlarm}
-              onEditAlarm={(alarm: any) => {
+              onEditAlarm={(alarm: unknown) => {
                 appAnalytics.trackFeatureUsage('edit_alarm', 'button_clicked', {
                   alarmId: alarm.id,
                   alarmLabel: alarm.label,
@@ -1914,7 +1911,7 @@ function AppContent() {
               rewardSystem={appState.rewardSystem}
               activeBattles={appState.activeBattles || []}
               friends={appState.friends || []}
-              onCreateBattle={(battle: any) => {
+              onCreateBattle={(battle: unknown) => {
                 // Add battle to state with complete Battle object
                 const completeBattle: Battle = {
                   id: battle.id || Math.random().toString(36).substr(2, 9),
@@ -1933,8 +1930,8 @@ function AppContent() {
                   createdAt: battle.createdAt || new Date().toISOString(),
                   ...battle,
                 };
-                setAppState((prev: AppState) => ({ // type-safe replacement
-                  
+                setAppState((prev: AppState) => ({
+                  // type-safe replacement
 
                   ...prev,
                   activeBattles: [...(prev.activeBattles || []), completeBattle],
@@ -1943,7 +1940,7 @@ function AppContent() {
                   battleType: completeBattle.type,
                 });
               }}
-              onJoinBattle={(battleId: any) => {
+              onJoinBattle={(battleId: unknown) => {
                 appAnalytics.trackFeatureUsage('battle_participation', 'joined', {
                   battleId,
                 });
@@ -1995,10 +1992,28 @@ function AppContent() {
                   onUpdateProfile={auth.updateUserProfile}
                   onSignOut={auth.signOut}
                   isLoading={auth.isLoading}
-                  error={auth.error}
+                  error={auth._error}
                 />
               </section>
             </div>
+          </ErrorBoundary>
+        );
+      case 'gift-shop':
+        appAnalytics.trackPageView('gift_shop');
+        appAnalytics.trackFeatureUsage('gift_shop', 'accessed');
+        return (
+          <ErrorBoundary context="GiftShop">
+            <GiftShop
+              userId={auth.user?.id!}
+              onGiftPurchased={() => {
+                // Refresh reward system to update user points
+                refreshRewardsSystem();
+              }}
+              onGiftEquipped={() => {
+                // Could trigger additional effects or notifications
+                appAnalytics.trackFeatureUsage('gift_shop', 'gift_equipped');
+              }}
+            />
           </ErrorBoundary>
         );
       case 'pricing':
@@ -2008,7 +2023,7 @@ function AppContent() {
           <ErrorBoundary context="PricingPage">
             <PricingPage
               user={auth.user as User}
-              onUpgrade={(plan: any) => {
+              onUpgrade={(plan: unknown) => {
                 appAnalytics.trackFeatureUsage('subscription', 'upgraded', {
                   plan: plan.id,
                   price: plan.price,
@@ -2030,378 +2045,434 @@ function AppContent() {
   return (
     <ThemeProvider defaultTheme="light" enableSystem={true}>
       <ScreenReaderProvider enabled={true} verbosity="medium">
-        <div
-          className="min-h-screen flex flex-col safe-top safe-bottom"
-          style={{
-            backgroundColor: 'var(--theme-background)',
-            color: 'var(--theme-text-primary)',
-          }}
-        >
-          {/* Skip to main content */}
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary-600 text-white px-4 py-2 rounded-lg font-medium z-50"
-          >
-            {getA11yLabels().skipToContent}
-          </a>
-
-          {/* Header with Offline Indicator */}
-          <header
-            className="shadow-sm border-b"
+        <RewardManager>
+          <div
+            className="min-h-screen flex flex-col safe-top safe-bottom"
             style={{
-              backgroundColor: 'var(--theme-surface)',
-              borderColor: 'var(--theme-border)',
+              backgroundColor: 'var(--theme-background)',
               color: 'var(--theme-text-primary)',
             }}
-            role="banner"
           >
-            <div className="px-4 py-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <h1
-                    className="text-xl font-bold"
-                    style={{ color: 'var(--theme-text-primary)' }}
-                  >
-                    🚀 {t('common:app.name')}
-                  </h1>
-                  {auth.user && (
-                    <div className="flex items-center gap-2">
-                      <span
-                        className="text-sm"
-                        style={{ color: 'var(--theme-text-secondary)' }}
-                      >
-                        {auth.user.name || auth.user.email}
-                      </span>
-                      {auth.user.level && (
+            {/* Skip to main content */}
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary-600 text-white px-4 py-2 rounded-lg font-medium z-50"
+            >
+              {getA11yLabels().skipToContent}
+            </a>
+
+            {/* Header with Offline Indicator */}
+            <header
+              className="shadow-sm border-b"
+              style={{
+                backgroundColor: 'var(--theme-surface)',
+                borderColor: 'var(--theme-border)',
+                color: 'var(--theme-text-primary)',
+              }}
+              role="banner"
+            >
+              <div className="px-4 py-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <h1
+                      className="text-xl font-bold"
+                      style={{ color: 'var(--theme-text-primary)' }}
+                    >
+                      🚀 {t('common:app.name')}
+                    </h1>
+                    {auth.user && (
+                      <div className="flex items-center gap-2">
                         <span
-                          className="text-xs px-2 py-1 rounded"
-                          style={{
-                            backgroundColor: 'var(--theme-primary-100)',
-                            color: 'var(--theme-primary-800)',
-                          }}
+                          className="text-sm"
+                          style={{ color: 'var(--theme-text-secondary)' }}
                         >
-                          Level {auth.user.level}
+                          {auth.user.name || auth.user.email}
                         </span>
-                      )}
-                    </div>
-                  )}
-                </div>
-                <div
-                  className="flex items-center gap-3"
-                  role="group"
-                  aria-label="Header actions"
-                >
-                  <OfflineIndicator />
-                  {tabProtectionSettings.settings.enabled &&
-                    tabProtectionSettings.settings.visualSettings.showVisualWarning && (
-                      <TabProtectionWarning
-                        activeAlarm={appState.activeAlarm}
-                        enabledAlarms={appState.alarms.filter((alarm: any) => alarm.enabled)}
-                        settings={tabProtectionSettings.settings}
-                      />
+                        {auth.user.level && (
+                          <span
+                            className="text-xs px-2 py-1 rounded"
+                            style={{
+                              backgroundColor: 'var(--theme-primary-100)',
+                              color: 'var(--theme-primary-800)',
+                            }}
+                          >
+                            Level {auth.user.level}
+                          </span>
+                        )}
+                      </div>
                     )}
-                  <button
-                    onClick={createClickHandler(() => setShowAlarmForm(true))}
-                    className="alarm-button alarm-button-primary p-2 rounded-full"
-                    aria-label="Add new alarm"
-                    aria-describedby="add-alarm-desc"
+                  </div>
+                  <div
+                    className="flex items-center gap-3"
+                    role="group"
+                    aria-label="Header actions"
                   >
-                    <Plus className="w-5 h-5" aria-hidden="true" />
-                    <span id="add-alarm-desc" className="sr-only">
-                      Opens the new alarm creation form
-                    </span>
-                  </button>
-                  <button
-                    onClick={auth.signOut}
-                    className="p-2 rounded-full text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2"
-                    aria-label="Sign out"
-                    aria-describedby="sign-out-desc"
-                  >
-                    <LogOut className="w-5 h-5" aria-hidden="true" />
-                    <span id="sign-out-desc" className="sr-only">
-                      Sign out of your account
-                    </span>
-                  </button>
+                    <OfflineIndicator />
+                    {tabProtectionSettings.settings.enabled &&
+                      tabProtectionSettings.settings.visualSettings
+                        .showVisualWarning && (
+                        <TabProtectionWarning
+                          activeAlarm={appState.activeAlarm}
+                          enabledAlarms={appState.alarms.filter(
+                            (alarm: unknown) => alarm.enabled
+                          )}
+                          settings={tabProtectionSettings.settings}
+                        />
+                      )}
+                    <button
+                      onClick={createClickHandler(() => setShowAlarmForm(true))}
+                      className="alarm-button alarm-button-primary p-2 rounded-full"
+                      aria-label="Add new alarm"
+                      aria-describedby="add-alarm-desc"
+                    >
+                      <Plus className="w-5 h-5" aria-hidden="true" />
+                      <span id="add-alarm-desc" className="sr-only">
+                        Opens the new alarm creation form
+                      </span>
+                    </button>
+                    <button
+                      onClick={auth.signOut}
+                      className="p-2 rounded-full text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2"
+                      aria-label="Sign out"
+                      aria-describedby="sign-out-desc"
+                    >
+                      <LogOut className="w-5 h-5" aria-hidden="true" />
+                      <span id="sign-out-desc" className="sr-only">
+                        Sign out of your account
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </header>
+            </header>
 
-          {/* Content */}
-          <main id="main-content" className="flex-1 overflow-y-auto" role="main">
-            {renderContent()}
-          </main>
+            {/* Content */}
+            <main id="main-content" className="flex-1 overflow-y-auto" role="main">
+              {renderContent()}
+            </main>
 
-          {/* Bottom Navigation */}
-          <nav
-            className="border-t"
-            style={{
-              backgroundColor: 'var(--theme-surface)',
-              borderColor: 'var(--theme-border)',
-            }}
-            role="navigation"
-            aria-label="Main navigation"
-          >
-            <div
-              className="grid grid-cols-6 px-1 py-2"
-              role="tablist"
-              aria-label="App sections"
+            {/* Bottom Navigation */}
+            <nav
+              className="border-t"
+              style={{
+                backgroundColor: 'var(--theme-surface)',
+                borderColor: 'var(--theme-border)',
+              }}
+              role="navigation"
+              aria-label="Main navigation"
             >
-              <button
-                onClick={createClickHandler(() => {
-                  const appAnalytics = AppAnalyticsService.getInstance();
-                  appAnalytics.trackFeatureUsage('navigation', 'dashboard_clicked');
-                  setAppState((prev: AppState) => ({ // type-safe replacement
-                     ...prev,
-                    currentView: 'dashboard',
-                  }));
-                  AccessibilityUtils.announcePageChange('Dashboard');
-                })}
-                className="flex flex-col items-center py-2 rounded-lg transition-colors border-2"
-                style={
-                  appState.currentView === 'dashboard'
-                    ? {
-                        color: 'var(--theme-primary-800)',
-                        backgroundColor: 'var(--theme-primary-100)',
-                        borderColor: 'var(--theme-primary-300)',
-                      }
-                    : {
-                        color: 'var(--theme-text-secondary)',
-                        backgroundColor: 'transparent',
-                        borderColor: 'transparent',
-                      }
-                }
-                onMouseEnter={(e: any) => {
-                  if (appState.currentView !== 'dashboard') {
-                    e.currentTarget.style.backgroundColor =
-                      'var(--theme-surface-hover)';
-                    e.currentTarget.style.color = 'var(--theme-text-primary)';
+              <div
+                className="grid grid-cols-6 px-1 py-2"
+                role="tablist"
+                aria-label="App sections"
+              >
+                <button
+                  onClick={createClickHandler(() => {
+                    const appAnalytics = AppAnalyticsService.getInstance();
+                    appAnalytics.trackFeatureUsage('navigation', 'dashboard_clicked');
+                    setAppState((prev: AppState) => ({
+                      // type-safe replacement
+                      ...prev,
+                      currentView: 'dashboard',
+                    }));
+                    AccessibilityUtils.announcePageChange('Dashboard');
+                  })}
+                  className="flex flex-col items-center py-2 rounded-lg transition-colors border-2"
+                  style={
+                    appState.navigation.currentView === 'dashboard'
+                      ? {
+                          color: 'var(--theme-primary-800)',
+                          backgroundColor: 'var(--theme-primary-100)',
+                          borderColor: 'var(--theme-primary-300)',
+                        }
+                      : {
+                          color: 'var(--theme-text-secondary)',
+                          backgroundColor: 'transparent',
+                          borderColor: 'transparent',
+                        }
                   }
-                }}
-                onMouseLeave={(e: any) => {
-                  if (appState.currentView !== 'dashboard') {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.color = 'var(--theme-text-secondary)';
+                  onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    if (appState.navigation.currentView !== 'dashboard') {
+                      e.currentTarget.style.backgroundColor =
+                        'var(--theme-surface-hover)';
+                      e.currentTarget.style.color = 'var(--theme-text-primary)';
+                    }
+                  }}
+                  onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    if (appState.navigation.currentView !== 'dashboard') {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                      e.currentTarget.style.color = 'var(--theme-text-secondary)';
+                    }
+                  }}
+                  role="tab"
+                  aria-selected={appState.navigation.currentView === 'dashboard'}
+                  aria-current={
+                    appState.navigation.currentView === 'dashboard' ? 'page' : undefined
                   }
-                }}
-                role="tab"
-                aria-selected={appState.currentView === 'dashboard'}
-                aria-current={appState.currentView === 'dashboard' ? 'page' : undefined}
-                aria-label="Dashboard - Overview of your alarms"
-                aria-controls="main-content"
-              >
-                <Clock className="w-5 h-5 mb-1" aria-hidden="true" />
-                <span className="text-xs font-medium">
-                  {getNavigationLabels().dashboard}
-                </span>
-              </button>
+                  aria-label="Dashboard - Overview of your alarms"
+                  aria-controls="main-content"
+                >
+                  <Clock className="w-5 h-5 mb-1" aria-hidden="true" />
+                  <span className="text-xs font-medium">
+                    {getNavigationLabels().dashboard}
+                  </span>
+                </button>
 
-              <button
-                onClick={createClickHandler(() => {
-                  const appAnalytics = AppAnalyticsService.getInstance();
-                  appAnalytics.trackFeatureUsage('navigation', 'alarms_clicked', {
-                    totalAlarms: appState.alarms.length,
-                  });
-                  setAppState((prev: AppState) => ({ // type-safe replacement
-                     ...prev,
-                    currentView: 'alarms',
-                  }));
-                  AccessibilityUtils.announcePageChange('Alarms');
-                })}
-                className="flex flex-col items-center py-2 rounded-lg transition-colors border-2"
-                style={
-                  appState.currentView === 'alarms'
-                    ? {
-                        color: 'var(--theme-primary-800)',
-                        backgroundColor: 'var(--theme-primary-100)',
-                        borderColor: 'var(--theme-primary-300)',
-                      }
-                    : {
-                        color: 'var(--theme-text-secondary)',
-                        backgroundColor: 'transparent',
-                        borderColor: 'transparent',
-                      }
-                }
-                onMouseEnter={(e: any) => {
-                  if (appState.currentView !== 'alarms') {
-                    e.currentTarget.style.backgroundColor =
-                      'var(--theme-surface-hover)';
-                    e.currentTarget.style.color = 'var(--theme-text-primary)';
+                <button
+                  onClick={createClickHandler(() => {
+                    const appAnalytics = AppAnalyticsService.getInstance();
+                    appAnalytics.trackFeatureUsage('navigation', 'alarms_clicked', {
+                      totalAlarms: appState.alarm.alarms.length,
+                    });
+                    setAppState((prev: AppState) => ({
+                      // type-safe replacement
+                      ...prev,
+                      currentView: 'alarms',
+                    }));
+                    AccessibilityUtils.announcePageChange('Alarms');
+                  })}
+                  className="flex flex-col items-center py-2 rounded-lg transition-colors border-2"
+                  style={
+                    appState.navigation.currentView === 'alarms'
+                      ? {
+                          color: 'var(--theme-primary-800)',
+                          backgroundColor: 'var(--theme-primary-100)',
+                          borderColor: 'var(--theme-primary-300)',
+                        }
+                      : {
+                          color: 'var(--theme-text-secondary)',
+                          backgroundColor: 'transparent',
+                          borderColor: 'transparent',
+                        }
                   }
-                }}
-                onMouseLeave={(e: any) => {
-                  if (appState.currentView !== 'alarms') {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.color = 'var(--theme-text-secondary)';
+                  onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    if (appState.navigation.currentView !== 'alarms') {
+                      e.currentTarget.style.backgroundColor =
+                        'var(--theme-surface-hover)';
+                      e.currentTarget.style.color = 'var(--theme-text-primary)';
+                    }
+                  }}
+                  onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    if (appState.navigation.currentView !== 'alarms') {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                      e.currentTarget.style.color = 'var(--theme-text-secondary)';
+                    }
+                  }}
+                  role="tab"
+                  aria-selected={appState.navigation.currentView === 'alarms'}
+                  aria-current={appState.navigation.currentView === 'alarms' ? 'page' : undefined}
+                  aria-label="Alarms - Manage your alarm list"
+                  aria-controls="main-content"
+                >
+                  <Bell className="w-5 h-5 mb-1" aria-hidden="true" />
+                  <span className="text-xs font-medium">
+                    {getNavigationLabels().alarms}
+                  </span>
+                </button>
+
+                <button
+                  onClick={createClickHandler(() => {
+                    const appAnalytics = AppAnalyticsService.getInstance();
+                    appAnalytics.trackFeatureUsage(
+                      'navigation',
+                      'advanced_scheduling_clicked'
+                    );
+                    setAppState((prev: AppState) => ({
+                      // type-safe replacement
+
+                      ...prev,
+                      currentView: 'advanced-scheduling',
+                    }));
+                    AccessibilityUtils.announcePageChange('Advanced Scheduling');
+                  })}
+                  className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
+                    appState.navigation.currentView === 'advanced-scheduling'
+                      ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                      : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
+                  }`}
+                  role="tab"
+                  aria-selected={appState.navigation.currentView === 'advanced-scheduling'}
+                  aria-current={
+                    appState.navigation.currentView === 'advanced-scheduling' ? 'page' : undefined
                   }
-                }}
-                role="tab"
-                aria-selected={appState.currentView === 'alarms'}
-                aria-current={appState.currentView === 'alarms' ? 'page' : undefined}
-                aria-label="Alarms - Manage your alarm list"
-                aria-controls="main-content"
-              >
-                <Bell className="w-5 h-5 mb-1" aria-hidden="true" />
-                <span className="text-xs font-medium">
-                  {getNavigationLabels().alarms}
-                </span>
-              </button>
+                  aria-label="Advanced Scheduling - Create smart alarms with AI optimization"
+                  aria-controls="main-content"
+                >
+                  <Brain className="w-5 h-5 mb-1" aria-hidden="true" />
+                  <span className="text-xs font-medium">
+                    {getNavigationLabels().advanced}
+                  </span>
+                </button>
 
-              <button
-                onClick={createClickHandler(() => {
-                  const appAnalytics = AppAnalyticsService.getInstance();
-                  appAnalytics.trackFeatureUsage(
-                    'navigation',
-                    'advanced_scheduling_clicked'
-                  );
-                  setAppState((prev: AppState) => ({ // type-safe replacement
-                    
+                <button
+                  onClick={createClickHandler(() => {
+                    const appAnalytics = AppAnalyticsService.getInstance();
+                    appAnalytics.trackFeatureUsage('navigation', 'gaming_clicked', {
+                      currentLevel: appState.rewardSystem?.level,
+                      hasRewards: !!appState.rewardSystem?.unlockedRewards.length,
+                      activeBattles: appState.activeBattles?.length,
+                    });
+                    setAppState((prev: AppState) => ({
+                      // type-safe replacement
+                      ...prev,
+                      currentView: 'gaming',
+                    }));
+                    AccessibilityUtils.announcePageChange('Gaming Hub');
+                  })}
+                  className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
+                    appState.navigation.currentView === 'gaming'
+                      ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                      : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
+                  }`}
+                  role="tab"
+                  aria-selected={appState.navigation.currentView === 'gaming'}
+                  aria-current={appState.navigation.currentView === 'gaming' ? 'page' : undefined}
+                  aria-label="Gaming - Rewards, battles, and community challenges"
+                  aria-controls="main-content"
+                >
+                  <Gamepad2 className="w-5 h-5 mb-1" aria-hidden="true" />
+                  <span className="text-xs font-medium">
+                    {getNavigationLabels().gaming}
+                  </span>
+                </button>
 
-                    ...prev,
-                    currentView: 'advanced-scheduling',
-                  }));
-                  AccessibilityUtils.announcePageChange('Advanced Scheduling');
-                })}
-                className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
-                  appState.currentView === 'advanced-scheduling'
-                    ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
-                    : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
-                }`}
-                role="tab"
-                aria-selected={appState.currentView === 'advanced-scheduling'}
-                aria-current={
-                  appState.currentView === 'advanced-scheduling' ? 'page' : undefined
-                }
-                aria-label="Advanced Scheduling - Create smart alarms with AI optimization"
-                aria-controls="main-content"
-              >
-                <Brain className="w-5 h-5 mb-1" aria-hidden="true" />
-                <span className="text-xs font-medium">
-                  {getNavigationLabels().advanced}
-                </span>
-              </button>
+                <button
+                  onClick={createClickHandler(() => {
+                    const appAnalytics = AppAnalyticsService.getInstance();
+                    appAnalytics.trackFeatureUsage('navigation', 'gift_shop_clicked', {
+                      currentLevel: appState.rewardSystem?.level,
+                      totalPoints: appState.rewardSystem?.totalPoints,
+                    });
+                    setAppState((prev: AppState) => ({
+                      // type-safe replacement
+                      ...prev,
+                      currentView: 'gift-shop',
+                    }));
+                    AccessibilityUtils.announcePageChange('Gift Shop');
+                  })}
+                  className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
+                    appState.navigation.currentView === 'gift-shop'
+                      ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                      : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
+                  }`}
+                  role="tab"
+                  aria-selected={appState.navigation.currentView === 'gift-shop'}
+                  aria-current={
+                    appState.navigation.currentView === 'gift-shop' ? 'page' : undefined
+                  }
+                  aria-label="Gift Shop - Browse and purchase gifts with your points"
+                  aria-controls="main-content"
+                >
+                  <Gift className="w-5 h-5 mb-1" aria-hidden="true" />
+                  <span className="text-xs font-medium">Shop</span>
+                </button>
 
-              <button
-                onClick={createClickHandler(() => {
-                  const appAnalytics = AppAnalyticsService.getInstance();
-                  appAnalytics.trackFeatureUsage('navigation', 'gaming_clicked', {
-                    currentLevel: appState.rewardSystem?.level,
-                    hasRewards: !!appState.rewardSystem?.unlockedRewards.length,
-                    activeBattles: appState.activeBattles?.length,
-                  });
-                  setAppState((prev: AppState) => ({ // type-safe replacement
-                     ...prev,
-                    currentView: 'gaming',
-                  }));
-                  AccessibilityUtils.announcePageChange('Gaming Hub');
-                })}
-                className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
-                  appState.currentView === 'gaming'
-                    ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
-                    : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
-                }`}
-                role="tab"
-                aria-selected={appState.currentView === 'gaming'}
-                aria-current={appState.currentView === 'gaming' ? 'page' : undefined}
-                aria-label="Gaming - Rewards, battles, and community challenges"
-                aria-controls="main-content"
-              >
-                <Gamepad2 className="w-5 h-5 mb-1" aria-hidden="true" />
-                <span className="text-xs font-medium">
-                  {getNavigationLabels().gaming}
-                </span>
-              </button>
+                <button
+                  onClick={createClickHandler(() => {
+                    const appAnalytics = AppAnalyticsService.getInstance();
+                    appAnalytics.trackFeatureUsage('navigation', 'settings_clicked');
+                    setAppState((prev: AppState) => ({
+                      // type-safe replacement
+                      ...prev,
+                      currentView: 'settings',
+                    }));
+                    AccessibilityUtils.announcePageChange('Settings');
+                  })}
+                  className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
+                    appState.navigation.currentView === 'settings'
+                      ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                      : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
+                  }`}
+                  role="tab"
+                  aria-selected={appState.navigation.currentView === 'settings'}
+                  aria-current={
+                    appState.navigation.currentView === 'settings' ? 'page' : undefined
+                  }
+                  aria-label="Settings - App preferences, analytics, and accessibility"
+                  aria-controls="main-content"
+                >
+                  <Settings className="w-5 h-5 mb-1" aria-hidden="true" />
+                  <span className="text-xs font-medium">
+                    {getNavigationLabels().settings}
+                  </span>
+                </button>
 
-              <button
-                onClick={createClickHandler(() => {
-                  const appAnalytics = AppAnalyticsService.getInstance();
-                  appAnalytics.trackFeatureUsage('navigation', 'settings_clicked');
-                  setAppState((prev: AppState) => ({ // type-safe replacement
-                     ...prev,
-                    currentView: 'settings',
-                  }));
-                  AccessibilityUtils.announcePageChange('Settings');
-                })}
-                className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
-                  appState.currentView === 'settings'
-                    ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
-                    : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
-                }`}
-                role="tab"
-                aria-selected={appState.currentView === 'settings'}
-                aria-current={appState.currentView === 'settings' ? 'page' : undefined}
-                aria-label="Settings - App preferences, analytics, and accessibility"
-                aria-controls="main-content"
-              >
-                <Settings className="w-5 h-5 mb-1" aria-hidden="true" />
-                <span className="text-xs font-medium">
-                  {getNavigationLabels().settings}
-                </span>
-              </button>
+                <button
+                  onClick={() => {
+                    const appAnalytics = AppAnalyticsService.getInstance();
+                    appAnalytics.trackFeatureUsage('navigation', 'pricing_clicked');
+                    setAppState((prev: AppState) => ({
+                      // type-safe replacement
+                      ...prev,
+                      currentView: 'pricing',
+                    }));
+                    AccessibilityUtils.announcePageChange('Premium Plans');
+                  }}
+                  className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
+                    appState.navigation.currentView === 'pricing'
+                      ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                      : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
+                  }`}
+                  role="tab"
+                  aria-selected={appState.navigation.currentView === 'pricing'}
+                  aria-current={appState.navigation.currentView === 'pricing' ? 'page' : undefined}
+                  aria-label="Premium - Subscription plans and premium features"
+                  aria-controls="main-content"
+                >
+                  <Crown className="w-5 h-5 mb-1" aria-hidden="true" />
+                  <span className="text-xs font-medium">
+                    {getNavigationLabels().premium}
+                  </span>
+                </button>
+              </div>
+            </nav>
 
-              <button
-                onClick={() => {
-                  const appAnalytics = AppAnalyticsService.getInstance();
-                  appAnalytics.trackFeatureUsage('navigation', 'pricing_clicked');
-                  setAppState((prev: AppState) => ({ // type-safe replacement
-                     ...prev,
-                    currentView: 'pricing',
-                  }));
-                  AccessibilityUtils.announcePageChange('Premium Plans');
-                }}
-                className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
-                  appState.currentView === 'pricing'
-                    ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
-                    : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
-                }`}
-                role="tab"
-                aria-selected={appState.currentView === 'pricing'}
-                aria-current={appState.currentView === 'pricing' ? 'page' : undefined}
-                aria-label="Premium - Subscription plans and premium features"
-                aria-controls="main-content"
-              >
-                <Crown className="w-5 h-5 mb-1" aria-hidden="true" />
-                <span className="text-xs font-medium">
-                  {getNavigationLabels().premium}
-                </span>
-              </button>
-            </div>
-          </nav>
+            {/* Alarm Form Modal */}
+            {showAlarmForm && (
+              <ErrorBoundary context="AlarmForm">
+                <AlarmForm
+                  alarm={editingAlarm}
+                  onSave={
+                    editingAlarm
+                      ? data => handleEditAlarm(editingAlarm.id, data)
+                      : handleAddAlarm
+                  }
+                  onCancel={() => {
+                    setShowAlarmForm(false);
+                    setEditingAlarm(null);
+                  }}
+                  userId={auth.user?.id || ''}
+                  user={auth.user!}
+                />
+              </ErrorBoundary>
+            )}
 
-          {/* Alarm Form Modal */}
-          {showAlarmForm && (
-            <ErrorBoundary context="AlarmForm">
-              <AlarmForm
-                alarm={editingAlarm}
-                onSave={
-                  editingAlarm
-                    ? data => handleEditAlarm(editingAlarm.id, data)
-                    : handleAddAlarm
-                }
-                onCancel={() => {
-                  setShowAlarmForm(false);
-                  setEditingAlarm(null);
-                }}
-                userId={auth.user?.id || ''}
-                user={auth.user!}
-              />
-            </ErrorBoundary>
-          )}
-
-          {/* PWA Install Prompt */}
-          <PWAInstallPrompt onInstall={handlePWAInstall} onDismiss={handlePWADismiss} />
-        </div>
+            {/* PWA Install Prompt */}
+            <PWAInstallPrompt
+              onInstall={handlePWAInstall}
+              onDismiss={handlePWADismiss}
+            />
+          </div>
+        </RewardManager>
       </ScreenReaderProvider>
     </ThemeProvider>
   );
 }
 
-// Main App component that provides the LanguageProvider
+// Main App component that provides the Redux store and LanguageProvider
 function App() {
+  // Initialize Redux store with persisted state on app start
+  React.useEffect(() => {
+    initializeStoreWithPersistedState();
+    console.log('🏪 Redux store initialized with DevTools and persistence');
+  }, []);
+
   return (
-    <LanguageProvider defaultLanguage="en" enableAutoDetect={true}>
-      <AppContent />
-    </LanguageProvider>
+    <Provider store={store}>
+      <LanguageProvider defaultLanguage="en" enableAutoDetect={true}>
+        <AppContent />
+      </LanguageProvider>
+    </Provider>
   );
 }
 
