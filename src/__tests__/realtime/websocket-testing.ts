@@ -3,8 +3,6 @@
  * Mock WebSocket implementation and testing utilities for real-time features
  */
 
-import { AnyFn } from 'src/types/utility-types';
-
 // WebSocket Mock Implementation
 export class MockWebSocket {
   static instances: MockWebSocket[] = [];
@@ -13,8 +11,8 @@ export class MockWebSocket {
   public url: string;
   public readyState: number;
   public id: string;
-
-  private eventListeners: Map<string, AnyFn[]> = new Map();
+  
+  private eventListeners: Map<string, Function[]> = new Map();
   private messageQueue: any[] = [];
 
   static readonly CONNECTING = 0;
@@ -37,19 +35,19 @@ export class MockWebSocket {
     }, 100);
   }
 
-  addEventListener(type: string, listener: AnyFn) {
+  addEventListener(type: string, listener: Function) {
     if (!this.eventListeners.has(type)) {
       this.eventListeners.set(type, []);
     }
     this.eventListeners.get(type)!.push(listener);
   }
 
-  removeEventListener(type: string, listener: AnyFn) {
+  removeEventListener(type: string, listener: Function) {
     const listeners = this.eventListeners.get(type);
     if (listeners) {
-      const _index = listeners.indexOf(listener);
-      if (_index > -1) {
-        listeners.splice(_index, 1);
+      const index = listeners.indexOf(listener);
+      if (index > -1) {
+        listeners.splice(index, 1);
       }
     }
   }
@@ -71,22 +69,14 @@ export class MockWebSocket {
     this.readyState = MockWebSocket.CLOSING;
     setTimeout(() => {
       this.readyState = MockWebSocket.CLOSED;
-      this.trigger('close', {
-        type: 'close',
-        code: code || 1000,
-        reason: reason || '',
-      });
+      this.trigger('close', { type: 'close', code: code || 1000, reason: reason || '' });
     }, 50);
   }
 
-  private trigger(type: string, _event: any) {
+  private trigger(type: string, event: any) {
     const listeners = this.eventListeners.get(type) || [];
-    listeners.forEach(listener => listener(_event));
-    MockWebSocket.events.push({
-      type: `event_${type}`,
-      data: _event,
-      timestamp: Date.now(),
-    });
+    listeners.forEach(listener => listener(event));
+    MockWebSocket.events.push({ type: `event_${type}`, data: event, timestamp: Date.now() });
   }
 
   private triggerMessage(data: any) {
@@ -94,7 +84,7 @@ export class MockWebSocket {
       type: 'message',
       data: typeof data === 'string' ? data : JSON.stringify(data),
     };
-    this.trigger('message', _event);
+    this.trigger('message', event);
   }
 
   private processQueue() {
@@ -103,15 +93,9 @@ export class MockWebSocket {
   }
 
   // Test utilities
-  simulateMessage(data: any) {
-    this.triggerMessage(data);
-  }
-  simulateError(_error?: any) {
-    this.trigger('error', { error: _error || new Error('Mock _error') });
-  }
-  simulateClose() {
-    this.close();
-  }
+  simulateMessage(data: any) { this.triggerMessage(data); }
+  simulateError(error?: any) { this.trigger('error', { error: error || new Error('Mock error') }); }
+  simulateClose() { this.close(); }
 
   static reset() {
     this.instances.forEach(ws => ws.close());
@@ -119,12 +103,8 @@ export class MockWebSocket {
     this.events = [];
   }
 
-  static getEvents() {
-    return [...this.events];
-  }
-  static findByUrl(url: string) {
-    return this.instances.find(ws => ws.url === url);
-  }
+  static getEvents() { return [...this.events]; }
+  static findByUrl(url: string) { return this.instances.find(ws => ws.url === url); }
 }
 
 // Real-time Battle Testing
@@ -140,34 +120,22 @@ export class BattleRealTimeTester {
 
   async simulateBattle() {
     const ws = new MockWebSocket(`wss://test/battles/${this.battleId}`);
-
-    ws.addEventListener('message', (_event: any) => {
-      this.events.push(JSON.parse(_event.data));
+    
+    ws.addEventListener('message', (event: any) => {
+      this.events.push(JSON.parse(event.data));
     });
 
     await this.waitForConnection(ws);
 
     // Join battle
-    ws.send(
-      JSON.stringify({
-        type: 'join',
-        battleId: this.battleId,
-        userId: this.participants[0],
-      })
-    );
-
+    ws.send(JSON.stringify({ type: 'join', battleId: this.battleId, userId: this.participants[0] }));
+    
     // Submit wake proof
     await this.delay(200);
-    ws.send(
-      JSON.stringify({
-        type: 'wake_proof',
-        battleId: this.battleId,
-        userId: this.participants[0],
-      })
-    );
+    ws.send(JSON.stringify({ type: 'wake_proof', battleId: this.battleId, userId: this.participants[0] }));
 
     await this.delay(500);
-
+    
     return {
       events: this.events,
       websocket: ws,
@@ -178,7 +146,7 @@ export class BattleRealTimeTester {
   private waitForConnection(ws: MockWebSocket): Promise<void> {
     return new Promise((resolve, reject) => {
       ws.addEventListener('open', () => resolve());
-      ws.addEventListener('_error', reject);
+      ws.addEventListener('error', reject);
       setTimeout(reject, 1000);
     });
   }
@@ -191,7 +159,7 @@ export class BattleRealTimeTester {
 // Setup for tests
 export const setupWebSocketTesting = () => {
   const originalWebSocket = global.WebSocket;
-
+  
   beforeAll(() => {
     global.WebSocket = MockWebSocket as any;
   });

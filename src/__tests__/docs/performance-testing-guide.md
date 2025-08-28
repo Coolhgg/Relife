@@ -1,12 +1,10 @@
 # Performance Testing Guide
 
-This guide covers performance testing, monitoring, and optimization techniques for the Relife
-application.
+This guide covers performance testing, monitoring, and optimization techniques for the Relife application.
 
 ## Overview
 
 Performance is critical for the Relife alarm app because:
-
 - **Alarm reliability**: Alarms must trigger on time with minimal latency
 - **Mobile performance**: App must work well on low-end devices
 - **Real-time features**: Battles require low-latency communication
@@ -28,12 +26,12 @@ describe('Application Performance', () => {
       includeApi: true,
       includeRealTime: true,
       includeMobile: true,
-      duration: 30000,
+      duration: 30000
     });
 
     expect(results.passed).toBe(true);
     expect(results.violations).toHaveLength(0);
-
+    
     console.log('Performance Report:', results.summary);
     console.log('Recommendations:', results.recommendations);
   });
@@ -53,7 +51,7 @@ describe('Alarm Performance', () => {
   it('should trigger alarms within 100ms', async () => {
     const results = await alarmPerformanceTester.testAlarmTriggerLatency({
       iterations: 50,
-      acceptableLatency: 100,
+      acceptableLatency: 100
     });
 
     expect(results.passed).toBe(true);
@@ -64,7 +62,7 @@ describe('Alarm Performance', () => {
   it('should handle multiple alarms efficiently', async () => {
     const results = await alarmPerformanceTester.testAlarmTriggerLatency({
       alarmConfig: { multiple_alarms: true },
-      iterations: 30,
+      iterations: 30
     });
 
     expect(results.averageLatency).toBeLessThan(200); // Allow more time for multiple alarms
@@ -97,11 +95,15 @@ import { apiPerformanceTester } from '../performance/performance-testing-utiliti
 
 describe('API Endpoint Performance', () => {
   it('should load user alarms quickly', async () => {
-    const results = await apiPerformanceTester.testEndpointPerformance('/api/alarms', 'GET', {
-      iterations: 100,
-      concurrent: 5,
-      acceptableResponseTime: 500,
-    });
+    const results = await apiPerformanceTester.testEndpointPerformance(
+      '/api/alarms',
+      'GET',
+      {
+        iterations: 100,
+        concurrent: 5,
+        acceptableResponseTime: 500
+      }
+    );
 
     expect(results.passed).toBe(true);
     expect(results.averageResponseTime).toBeLessThan(500);
@@ -110,11 +112,15 @@ describe('API Endpoint Performance', () => {
   });
 
   it('should handle alarm creation under load', async () => {
-    const results = await apiPerformanceTester.testEndpointPerformance('/api/alarms', 'POST', {
-      iterations: 50,
-      concurrent: 3,
-      acceptableResponseTime: 1000,
-    });
+    const results = await apiPerformanceTester.testEndpointPerformance(
+      '/api/alarms',
+      'POST',
+      {
+        iterations: 50,
+        concurrent: 3,
+        acceptableResponseTime: 1000
+      }
+    );
 
     expect(results.passed).toBe(true);
   });
@@ -128,17 +134,14 @@ Test the most important API endpoints together:
 ```typescript
 describe('Critical Path Performance', () => {
   it('should meet performance requirements for all critical paths', async () => {
-    const results = await apiPerformanceTester.benchmarkCriticalPaths(
-      [
-        { name: 'load_alarms', endpoint: '/api/alarms', method: 'GET' },
-        { name: 'create_alarm', endpoint: '/api/alarms', method: 'POST' },
-        { name: 'update_alarm', endpoint: '/api/alarms/1', method: 'PUT' },
-        { name: 'delete_alarm', endpoint: '/api/alarms/1', method: 'DELETE' },
-        { name: 'join_battle', endpoint: '/api/battles/join', method: 'POST' },
-        { name: 'user_profile', endpoint: '/api/user/profile', method: 'GET' },
-      ],
-      { acceptableResponseTime: 800 }
-    );
+    const results = await apiPerformanceTester.benchmarkCriticalPaths([
+      { name: 'load_alarms', endpoint: '/api/alarms', method: 'GET' },
+      { name: 'create_alarm', endpoint: '/api/alarms', method: 'POST' },
+      { name: 'update_alarm', endpoint: '/api/alarms/1', method: 'PUT' },
+      { name: 'delete_alarm', endpoint: '/api/alarms/1', method: 'DELETE' },
+      { name: 'join_battle', endpoint: '/api/battles/join', method: 'POST' },
+      { name: 'user_profile', endpoint: '/api/user/profile', method: 'GET' },
+    ], { acceptableResponseTime: 800 });
 
     Object.entries(results).forEach(([path, result]) => {
       expect(result.passed).toBe(true);
@@ -162,7 +165,7 @@ describe('Real-time Performance', () => {
     const results = await realTimePerformanceTester.testWebSocketPerformance({
       duration: 30000, // 30 seconds
       messageRate: 10, // 10 messages per second
-      acceptableLatency: 150, // 150ms
+      acceptableLatency: 150 // 150ms
     });
 
     expect(results.passed).toBe(true);
@@ -198,7 +201,7 @@ describe('Mobile Device Performance', () => {
       memoryLimitation: 200,
       cpuThrottling: 1.0,
       networkCondition: 'wifi',
-      batteryOptimization: false,
+      batteryOptimization: false
     });
 
     expect(results.performanceScore).toBeGreaterThan(90);
@@ -213,7 +216,7 @@ describe('Mobile Device Performance', () => {
       memoryLimitation: 50,
       cpuThrottling: 2.5,
       networkCondition: '3g',
-      batteryOptimization: true,
+      batteryOptimization: true
     });
 
     expect(results.performanceScore).toBeGreaterThan(70); // Lower threshold for low-end
@@ -295,7 +298,7 @@ import { reactPerformance } from '../utils/performance-helpers';
 
 describe('Component Render Performance', () => {
   it('should render alarm list quickly', async () => {
-    const alarms = Array.from({ length: 20 }, (_, i) =>
+    const alarms = Array.from({ length: 20 }, (_, i) => 
       MockDataFactory.createAlarm({ label: `Alarm ${i}` })
     );
 
@@ -395,9 +398,9 @@ describe('Lazy Loading Performance', () => {
   it('should load components on demand', async () => {
     const { result, renderTime } = await testHelpers.measureRenderTime(async () => {
       render(<LazyDashboard />);
-
+      
       // Wait for lazy components to load
-      await testHelpers.waitForElement(() =>
+      await testHelpers.waitForElement(() => 
         screen.queryByTestId('dashboard-content')
       );
     });
@@ -462,9 +465,10 @@ describe('Performance Under Various Conditions', () => {
 ```typescript
 describe('Statistical Performance Analysis', () => {
   it('should have consistent performance', async () => {
-    const results = await performanceCore.benchmark(() => relifeTestUtils.createTestAlarm(), {
-      iterations: 100,
-    });
+    const results = await performanceCore.benchmark(
+      () => relifeTestUtils.createTestAlarm(),
+      { iterations: 100 }
+    );
 
     expect(results.standardDeviation).toBeLessThan(results.averageTime * 0.2); // Low variance
     expect(results.successRate).toBeGreaterThan(0.99); // High reliability
@@ -483,7 +487,9 @@ describe('Performance Regression Detection', () => {
     const currentResults = await performanceTestSuite.runComprehensiveTest();
 
     // Compare with baseline (allow 10% regression)
-    expect(currentResults.summary.averageLatency).toBeLessThan(baseline.averageLatency * 1.1);
+    expect(currentResults.summary.averageLatency).toBeLessThan(
+      baseline.averageLatency * 1.1
+    );
   });
 });
 ```
@@ -498,7 +504,7 @@ if (process.env.CI) {
   describe('CI Performance Tests', () => {
     it('should meet performance requirements in CI', async () => {
       const results = await performanceTestSuite.runComprehensiveTest({
-        duration: 10000, // Shorter duration for CI
+        duration: 10000 // Shorter duration for CI
       });
 
       // Fail build if performance requirements not met
@@ -534,11 +540,11 @@ const detailedResults = await performanceCore.benchmark(
     console.time('step-1');
     await step1();
     console.timeEnd('step-1');
-
+    
     console.time('step-2');
     await step2();
     console.timeEnd('step-2');
-
+    
     console.timeEnd('total-operation');
   },
   { iterations: 10 }
@@ -550,8 +556,8 @@ const detailedResults = await performanceCore.benchmark(
 ```typescript
 // Monitor memory throughout test execution
 const memoryProfiler = await memoryTesting.monitor(30000, 500);
-const memorySpikes = memoryProfiler.filter(
-  (snapshot, i) => i > 0 && snapshot.usedJSHeapSize > memoryProfiler[i - 1].usedJSHeapSize * 1.2
+const memorySpikes = memoryProfiler.filter((snapshot, i) => 
+  i > 0 && snapshot.usedJSHeapSize > memoryProfiler[i-1].usedJSHeapSize * 1.2
 );
 
 console.log('Memory spikes detected:', memorySpikes);
@@ -570,12 +576,9 @@ console.log('Performance trends:', trends);
 ## Next Steps
 
 - Review [Integration Testing Guide](./integration-testing-guide.md) for E2E performance testing
-- Check [Mobile Testing Guide](./mobile-testing-guide.md) for mobile-specific performance
-  optimization
+- Check [Mobile Testing Guide](./mobile-testing-guide.md) for mobile-specific performance optimization
 - See [Troubleshooting Guide](./troubleshooting.md) for performance debugging techniques
 
 ---
 
-This guide provides comprehensive coverage of performance testing in the Relife application. Use
-these utilities and patterns to ensure optimal performance across all user scenarios and device
-types.
+This guide provides comprehensive coverage of performance testing in the Relife application. Use these utilities and patterns to ensure optimal performance across all user scenarios and device types.

@@ -11,7 +11,6 @@ This guide helps you diagnose and resolve common issues when using the Relife te
 **Problem**: Tests don't execute or throw setup errors.
 
 **Diagnosis**:
-
 ```bash
 # Check test configuration
 bun test --verbose
@@ -24,7 +23,6 @@ bun test --listTests
 ```
 
 **Solutions**:
-
 1. Verify test files match the pattern in `vitest.config.ts`
 2. Check that all dependencies are installed
 3. Ensure test files have proper imports
@@ -43,7 +41,6 @@ import { render, screen } from '@testing-library/react';
 **Problem**: API requests are not being intercepted by MSW.
 
 **Diagnosis**:
-
 ```typescript
 // Add MSW request logging
 import { setupServer } from 'msw/node';
@@ -53,13 +50,12 @@ const server = setupServer(...enhancedHandlers);
 
 beforeAll(() => {
   server.listen({
-    onUnhandledRequest: 'warn', // This will show unhandled requests
+    onUnhandledRequest: 'warn' // This will show unhandled requests
   });
 });
 ```
 
 **Solutions**:
-
 1. Ensure MSW server is started in test setup
 2. Check that request URLs match handler patterns exactly
 3. Verify handlers are imported correctly
@@ -81,7 +77,6 @@ afterAll(() => server.close());
 **Problem**: Mock services retain state between tests.
 
 **Diagnosis**:
-
 ```typescript
 import { MockAlarmService } from '../mocks/service-mocks';
 
@@ -91,7 +86,6 @@ beforeEach(() => {
 ```
 
 **Solutions**:
-
 1. Always reset mocks in `beforeEach`
 2. Use proper cleanup in `afterEach`
 
@@ -113,7 +107,6 @@ afterEach(() => {
 **Problem**: Capacitor plugin calls fail or don't trigger mocks.
 
 **Diagnosis**:
-
 ```typescript
 import { Capacitor } from '@capacitor/core';
 
@@ -123,7 +116,6 @@ console.log('Native:', Capacitor.isNativePlatform());
 ```
 
 **Solutions**:
-
 1. Ensure Capacitor mocks are imported before components
 2. Check platform detection configuration
 
@@ -144,7 +136,6 @@ import '../mocks/capacitor.mock'; // Too late
 **Problem**: Tests hang or timeout on async operations.
 
 **Diagnosis**:
-
 ```typescript
 // Add timeout logging
 const timeout = setTimeout(() => {
@@ -161,14 +152,15 @@ try {
 ```
 
 **Solutions**:
-
 1. Use proper waiting utilities instead of arbitrary timeouts
 2. Ensure async operations complete properly
 3. Check for infinite loops or unresolved promises
 
 ```typescript
 // ✅ Proper async testing
-await testHelpers.waitForElement(() => screen.queryByText('Expected content'));
+await testHelpers.waitForElement(() => 
+  screen.queryByText('Expected content')
+);
 
 // ❌ Arbitrary timeout
 setTimeout(() => {
@@ -181,7 +173,6 @@ setTimeout(() => {
 **Problem**: Tests pass sometimes and fail other times.
 
 **Diagnosis**:
-
 ```typescript
 // Run test multiple times to identify flakiness
 describe.each(Array.from({ length: 10 }, (_, i) => i))('Run %i', (run) => {
@@ -192,14 +183,16 @@ describe.each(Array.from({ length: 10 }, (_, i) => i))('Run %i', (run) => {
 ```
 
 **Solutions**:
-
 1. Use proper waiting mechanisms
 2. Avoid race conditions
 3. Ensure proper cleanup between tests
 
 ```typescript
 // ✅ Stable test with proper waiting
-await testHelpers.clickAndWaitForResponse(button, () => screen.queryByText(/success/i) !== null);
+await testHelpers.clickAndWaitForResponse(
+  button,
+  () => screen.queryByText(/success/i) !== null
+);
 
 // ❌ Flaky test with race condition
 await testHelpers.user.click(button);
@@ -213,7 +206,6 @@ expect(screen.getByText(/success/i)).toBeInTheDocument(); // May not be ready ye
 **Problem**: `screen.getByText()` or similar queries fail to find elements.
 
 **Diagnosis**:
-
 ```typescript
 // Debug what's actually rendered
 import { screen } from '@testing-library/react';
@@ -227,15 +219,14 @@ console.log(container.container.innerHTML);
 ```
 
 **Solutions**:
-
 1. Use more flexible queries
 2. Wait for elements to appear
 3. Check for correct text content
 
 ```typescript
 // ✅ Flexible and robust queries
-await testHelpers.waitForElement(
-  () => screen.queryByText(/alarm created/i) // Case insensitive regex
+await testHelpers.waitForElement(() => 
+  screen.queryByText(/alarm created/i) // Case insensitive regex
 );
 
 // ❌ Brittle exact match
@@ -247,7 +238,6 @@ expect(screen.getByText('Alarm Created Successfully')).toBeInTheDocument();
 **Problem**: `act()` warnings or state update issues.
 
 **Diagnosis**:
-
 ```typescript
 // Check for unwrapped state updates
 console.warn = jest.fn((message) => {
@@ -258,7 +248,6 @@ console.warn = jest.fn((message) => {
 ```
 
 **Solutions**:
-
 1. Wrap state updates in `act()`
 2. Use React Testing Library's async utilities
 3. Ensure proper component cleanup
@@ -280,19 +269,17 @@ await testHelpers.clickAndWaitForResponse(button, expectedChange);
 **Problem**: Performance tests pass locally but fail in CI.
 
 **Diagnosis**:
-
 ```typescript
 // Add environment detection
 console.log('Environment:', {
   CI: process.env.CI,
   NODE_ENV: process.env.NODE_ENV,
   platform: process.platform,
-  memory: process.memoryUsage(),
+  memory: process.memoryUsage()
 });
 ```
 
 **Solutions**:
-
 1. Adjust thresholds for CI environment
 2. Use relative performance measurements
 3. Mock time-sensitive operations
@@ -310,17 +297,19 @@ expect(renderTime).toBeLessThan(maxRenderTime);
 **Problem**: Performance measurements vary significantly between runs.
 
 **Solutions**:
-
 1. Use statistical analysis over multiple iterations
 2. Warm up performance testing
 3. Control external factors
 
 ```typescript
 // ✅ Statistical performance testing
-const results = await performanceCore.benchmark(testFunction, {
-  iterations: 100,
-  warmup: 10, // Warm up runs
-});
+const results = await performanceCore.benchmark(
+  testFunction,
+  {
+    iterations: 100,
+    warmup: 10 // Warm up runs
+  }
+);
 
 expect(results.standardDeviation).toBeLessThan(results.averageTime * 0.2);
 ```
@@ -332,12 +321,11 @@ expect(results.standardDeviation).toBeLessThan(results.averageTime * 0.2);
 **Problem**: End-to-end tests fail with navigation or interaction issues.
 
 **Diagnosis**:
-
 ```typescript
 // Add detailed logging
 const testContext = await e2eUtils.createBrowserContext({
   enableLogging: true,
-  screenshots: true,
+  screenshots: true
 });
 
 // Take screenshots at each step
@@ -345,7 +333,6 @@ await testContext.page.screenshot({ path: 'step-1.png' });
 ```
 
 **Solutions**:
-
 1. Add explicit waits for page loads
 2. Use data-testid attributes for reliable element selection
 3. Handle dynamic content properly
@@ -366,17 +353,16 @@ await testContext.page.click('.btn.btn-primary'); // CSS classes can change
 **Problem**: Native plugin calls fail in test environment.
 
 **Diagnosis**:
-
 ```typescript
 import { Capacitor } from '@capacitor/core';
 import { LocalNotifications } from '@capacitor/local-notifications';
 
 // Check plugin availability
-console.log('LocalNotifications available:', Capacitor.isPluginAvailable('LocalNotifications'));
+console.log('LocalNotifications available:', 
+  Capacitor.isPluginAvailable('LocalNotifications'));
 ```
 
 **Solutions**:
-
 1. Ensure all required plugins are mocked
 2. Check platform-specific behavior
 3. Verify mock implementations match plugin APIs
@@ -389,8 +375,8 @@ jest.mock('@capacitor/local-notifications', () => ({
     getPending: jest.fn().mockResolvedValue({ notifications: [] }),
     cancel: jest.fn().mockResolvedValue(undefined),
     addListener: jest.fn().mockReturnValue({ remove: jest.fn() }),
-    removeAllListeners: jest.fn().mockResolvedValue(undefined),
-  },
+    removeAllListeners: jest.fn().mockResolvedValue(undefined)
+  }
 }));
 ```
 
@@ -424,10 +410,10 @@ describe('My Component', () => {
   it('should work correctly', async () => {
     testConsole.debug('Rendering component');
     render(<MyComponent />);
-
+    
     testConsole.debug('Clicking button');
     await testHelpers.user.click(screen.getByRole('button'));
-
+    
     testConsole.log('Test completed successfully');
   });
 });
@@ -453,9 +439,12 @@ const handlers = [
   rest.get('/api/alarms', (req, res, ctx) => {
     console.log('MSW: Handling GET /api/alarms');
     console.log('Request:', req.url.toString());
-
-    return res(ctx.status(200), ctx.json({ alarms: [] }));
-  }),
+    
+    return res(
+      ctx.status(200),
+      ctx.json({ alarms: [] })
+    );
+  })
 ];
 ```
 
@@ -466,7 +455,6 @@ const handlers = [
 **Problem**: Tests fail with Node.js version incompatibilities.
 
 **Solutions**:
-
 1. Use the correct Node.js version (18+)
 2. Check package compatibility
 3. Update dependencies if needed
@@ -484,7 +472,6 @@ nvm use 18
 **Problem**: Type errors in test files.
 
 **Solutions**:
-
 1. Ensure test files are included in tsconfig
 2. Check type definitions for testing libraries
 3. Verify proper module resolution
@@ -495,7 +482,10 @@ nvm use 18
   "compilerOptions": {
     "types": ["vitest/globals", "@testing-library/jest-dom"]
   },
-  "include": ["src/**/*", "src/__tests__/**/*"]
+  "include": [
+    "src/**/*",
+    "src/__tests__/**/*"
+  ]
 }
 ```
 
@@ -504,7 +494,6 @@ nvm use 18
 **Problem**: Imports fail or modules not found.
 
 **Solutions**:
-
 1. Check path mappings in tsconfig
 2. Verify relative import paths
 3. Ensure proper file extensions
@@ -532,8 +521,7 @@ await testOperation();
 const memoryAfter = process.memoryUsage();
 const memoryDiff = memoryAfter.heapUsed - memoryBefore.heapUsed;
 
-if (memoryDiff > 10 * 1024 * 1024) {
-  // 10MB threshold
+if (memoryDiff > 10 * 1024 * 1024) { // 10MB threshold
   console.warn('Potential memory leak detected:', memoryDiff);
 }
 ```
@@ -544,9 +532,12 @@ if (memoryDiff > 10 * 1024 * 1024) {
 // Profile slow operations
 console.time('slow-operation');
 
-const result = await performanceCore.timeFunction(async () => {
-  return await slowOperation();
-}, 'detailed-timing');
+const result = await performanceCore.timeFunction(
+  async () => {
+    return await slowOperation();
+  },
+  'detailed-timing'
+);
 
 console.timeEnd('slow-operation');
 console.log('Detailed timing:', result.duration);
@@ -572,7 +563,7 @@ describe('Minimal reproduction', () => {
 expect(alarmCount).toBe(5); // "expected 3 to be 5"
 
 // ✅ Even better with custom message
-expect(alarmCount).toBe(5);
+expect(alarmCount).toBe(5); 
 // Add context: expect(alarmCount, 'Number of user alarms').toBe(5);
 ```
 
@@ -643,6 +634,4 @@ bun test --grep "pattern"
 
 ---
 
-This troubleshooting guide covers the most common issues you'll encounter when using the Relife
-testing framework. Remember to start with the simplest solutions and gradually work toward more
-complex debugging techniques.
+This troubleshooting guide covers the most common issues you'll encounter when using the Relife testing framework. Remember to start with the simplest solutions and gradually work toward more complex debugging techniques.
