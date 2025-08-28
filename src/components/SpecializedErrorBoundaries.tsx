@@ -1,6 +1,5 @@
 import React, { Component, type ReactNode, type ErrorInfo } from 'react';
 import {
-  AlertTriangle,
   Alert,
   RefreshCw,
   BarChart3,
@@ -13,13 +12,13 @@ import { ErrorHandler } from '../services/error-handler';
 
 interface SpecializedErrorBoundaryProps {
   children: ReactNode;
-  onError?: (_error: Error, errorInfo: ErrorInfo) => void;
+  onError?: (error: Error, errorInfo: ErrorInfo) => void;
   onRetry?: () => void;
 }
 
 interface SpecializedErrorBoundaryState {
   hasError: boolean;
-  _error: Error | null;
+  error: Error | null;
   errorInfo: ErrorInfo | null;
   errorId: string | null;
 }
@@ -38,25 +37,25 @@ abstract class BaseSpecializedErrorBoundary extends Component<
     super(props);
     this.state = {
       hasError: false,
-      _error: null,
+      error: null,
       errorInfo: null,
       errorId: null,
     };
   }
 
-  static getDerivedStateFromError(_error: Error): SpecializedErrorBoundaryState {
+  static getDerivedStateFromError(error: Error): SpecializedErrorBoundaryState {
     return {
       hasError: true,
-      _error,
+      error,
       errorInfo: null,
       errorId: null,
     };
   }
 
-  componentDidCatch(_error: Error, errorInfo: ErrorInfo) {
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     const errorId = ErrorHandler.handleError(
-      _error,
-      'Specialized component _error occurred',
+      error,
+      'Specialized component error occurred',
       {
         context: this.errorContext,
         componentStack: errorInfo.componentStack,
@@ -66,18 +65,18 @@ abstract class BaseSpecializedErrorBoundary extends Component<
     );
 
     this.setState({
-      _error,
+      error,
       errorInfo,
       errorId,
     });
 
-    this.props.onError?.(_error, errorInfo);
+    this.props.onError?.(error, errorInfo);
   }
 
   handleRetry = () => {
     this.setState({
       hasError: false,
-      _error: null,
+      error: null,
       errorInfo: null,
       errorId: null,
     });
@@ -118,13 +117,13 @@ abstract class BaseSpecializedErrorBoundary extends Component<
                 Try Again
               </button>
 
-              {process.env.NODE_ENV === 'development' && this.state._error && (
+              {process.env.NODE_ENV === 'development' && this.state.error && (
                 <details className="mt-4">
                   <summary className="cursor-pointer text-sm text-red-500 hover:text-red-700">
                     Developer Details
                   </summary>
                   <div className="mt-2 p-3 bg-red-100 dark:bg-red-900/20 rounded border text-xs">
-                    <strong>Error:</strong> {this.state._error.toString()}
+                    <strong>Error:</strong> {this.state.error.toString()}
                     {this.state.errorInfo && (
                       <>
                         <br />
@@ -196,9 +195,7 @@ export class DataErrorBoundary extends BaseSpecializedErrorBoundary {
 // Form Error Boundary with enhanced recovery
 export class FormErrorBoundary extends BaseSpecializedErrorBoundary {
   protected errorContext = 'Form';
-  protected icon = (
-    <AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400" />
-  );
+  protected icon = (<AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400" />);
   protected title = 'Form Error';
   protected description =
     'There was a problem with the form. Please try refreshing or filling it out again.';
@@ -241,13 +238,13 @@ export class FormErrorBoundary extends BaseSpecializedErrorBoundary {
                 </button>
               </div>
 
-              {process.env.NODE_ENV === 'development' && this.state._error && (
+              {process.env.NODE_ENV === 'development' && this.state.error && (
                 <details className="mt-4">
                   <summary className="cursor-pointer text-sm text-yellow-500 hover:text-yellow-700">
                     Developer Details
                   </summary>
                   <div className="mt-2 p-3 bg-yellow-100 dark:bg-yellow-900/20 rounded border text-xs">
-                    <strong>Error:</strong> {this.state._error.toString()}
+                    <strong>Error:</strong> {this.state.error.toString()}
                     {this.state.errorInfo && (
                       <>
                         <br />

@@ -364,7 +364,7 @@ export function Statistics({ userId }: StatisticsProps) {
 
         <TabsContent value="achievements" className="space-y-4">
           <div className="space-y-4">
-            {achievements.map(achievement => (
+            {achievements.map((achievement: any) => (
               <Card
                 key={achievement.id}
                 className={

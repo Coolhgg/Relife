@@ -855,7 +855,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                           : 'bg-theme-info-100 dark:bg-theme-info-900/30'
                     }`}
                   >
-                    <AlertCircle
+                    <AlertCircleCircle
                       className={`w-4 h-4 ${
                         insight.priority === 'high'
                           ? 'text-theme-error-600'

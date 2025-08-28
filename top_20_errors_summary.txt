@@ -1,0 +1,30 @@
+## Top 20 TypeScript Errors Summary
+
+1. src/components/user-testing/ABTestWrapper.tsx:1:55 [TS2307] - Cannot find module 'react'
+2. src/components/ui/collapsible.tsx:1:19 [TS2307] - Cannot find module 'react'  
+3. src/components/ui/sonner.tsx:1:19 [TS2307] - Cannot find module 'react'
+4. src/stories/Button.tsx:28:5 [TS2875] - JSX tag requires module path 'react/jsx-runtime'
+5. src/components/SubscriptionModal.tsx:2:33 [TS2307] - Cannot find module 'react'
+6. src/components/ui/aspect-ratio.tsx:1:19 [TS2307] - Cannot find module 'react'
+7. src/components/VirtualScroll.tsx:88:5 [TS2875] - JSX tag requires module path 'react/jsx-runtime'
+8. src/components/PremiumFeatureCard.tsx:96:7 [TS2875] - JSX tag requires module path 'react/jsx-runtime'
+9. src/components/RTLLayout/RTLForm.tsx:5:19 [TS2307] - Cannot find module 'react'
+10. src/analytics/PersonaAnalytics.tsx:3:55 [TS2307] - Cannot find module 'react'
+11. src/components/AlarmRinging.tsx:2:19 [TS2307] - Cannot find module 'react'
+12. src/components/NuclearModeBattle.tsx:2:65 [TS2307] - Cannot find module 'react'
+13. src/components/SoundPreviewSystem.tsx:3:52 [TS2307] - Cannot find module 'react'
+14. src/components/VoiceCloning.tsx:2:54 [TS2307] - Cannot find module 'react'
+15. src/hooks/useAudioLazyLoading.ts:2:58 [TS2307] - Cannot find module 'react'
+16. src/hooks/useAuth.ts:3:45 [TS2307] - Cannot find module 'react'
+17. src/hooks/useCriticalPreloading.ts:2:58 [TS2307] - Cannot find module 'react'
+18. src/hooks/useDynamicFocus.ts:8:48 [TS2307] - Cannot find module 'react'
+19. src/hooks/useEnhancedCaching.ts:2:58 [TS2307] - Cannot find module 'react'
+20. src/hooks/useFormAnnouncements.ts:3:48 [TS2307] - Cannot find module 'react'
+
+## Error Pattern Analysis
+- **16/20** errors are TS2307 (Cannot find module 'react') - Core dependency resolution issue
+- **3/20** errors are TS2875 (Missing jsx-runtime) - JSX compilation configuration issue  
+- **1/20** error is related to other missing dependencies
+
+## Primary Root Cause
+The majority of errors stem from TypeScript being unable to locate the 'react' module and its type declarations, indicating a fundamental module resolution or dependency installation problem that affects the entire React application.

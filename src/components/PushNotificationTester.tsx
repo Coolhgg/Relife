@@ -1,7 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { ErrorHandler } from '../services/error-handler';
 import {
-  AlertTriangle,
   TestTube,
   Send,
   Clock,
@@ -25,7 +23,7 @@ interface TestResult {
   title: string;
   status: 'pending' | 'success' | 'error';
   timestamp: Date;
-  _error?: string;
+  error?: string;
   duration?: number;
 }
 
@@ -81,7 +79,7 @@ export const PushNotificationTester: React.FC = () => {
       type: string,
       title: string,
       status: 'success' | 'error',
-      _error?: string,
+      error?: string,
       duration?: number
     ) => {
       const result: TestResult = {
@@ -90,11 +88,11 @@ export const PushNotificationTester: React.FC = () => {
         title,
         status,
         timestamp: new Date(),
-        _error,
+        error,
         duration,
       };
 
-      setTestResults((prev: any) => [result, ...prev.slice(0, 9)]); // Keep last 10 results
+      setTestResults(prev => [result, ...prev.slice(0, 9)]); // Keep last 10 results
     },
     []
   );
@@ -148,22 +146,22 @@ export const PushNotificationTester: React.FC = () => {
           testType,
           duration,
         });
-      } catch (_error) {
+      } catch (error) {
         const duration = Date.now() - startTime;
         const testTypeData = testTypes.find(t => t.id === testType);
-        const errorMessage = error instanceof Error ? error.message : 'Unknown _error';
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
         addTestResult(
           testType,
           testTypeData?.title || 'Unknown Test',
-          '_error',
+          'error',
           errorMessage,
           duration
         );
 
         track('push_notification_test_error', {
           testType,
-          _error: errorMessage,
+          error: errorMessage,
           duration,
         });
       }
@@ -194,9 +192,9 @@ export const PushNotificationTester: React.FC = () => {
       }
 
       track('push_notification_test_suite_complete');
-    } catch (_error) {
+    } catch (error) {
       track('push_notification_test_suite_error', {
-        error: error instanceof Error ? _error.message : 'Unknown _error',
+        error: error instanceof Error ? error.message : 'Unknown error',
       });
     } finally {
       setIsRunningTests(false);
@@ -212,14 +210,14 @@ export const PushNotificationTester: React.FC = () => {
     switch (status) {
       case 'success':
         return <CheckCircle className="w-4 h-4 text-green-500" />;
-      case '_error':
+      case 'error':
         return <XCircle className="w-4 h-4 text-red-500" />;
       case 'pending':
         return (
           <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
         );
       default:
-        return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
+        return <AlertCircle className="w-4 h-4 text-yellow-500" />;
     }
   };
 
@@ -244,7 +242,7 @@ export const PushNotificationTester: React.FC = () => {
     return (
       <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
         <div className="flex items-center gap-3">
-          <AlertTriangle className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
+          <AlertCircle className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
           <div>
             <h3 className="font-semibold text-yellow-800 dark:text-yellow-300">
               Push Notification Testing Not Available
@@ -390,13 +388,13 @@ export const PushNotificationTester: React.FC = () => {
           <div className="grid grid-cols-3 gap-4 mb-6">
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                {testResults.filter((r: any) => r.status === 'success').length}
+                {testResults.filter(r => r.status === 'success').length}
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Success</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-red-600 dark:text-red-400">
-                {testResults.filter((r: any) => r.status === '_error').length}
+                {testResults.filter(r => r.status === 'error').length}
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Errors</div>
             </div>
@@ -418,7 +416,7 @@ export const PushNotificationTester: React.FC = () => {
 
           {/* Results List */}
           <div className="space-y-3">
-            {testResults.map((result: any) => (
+            {testResults.map(result => (
               <div
                 key={result.id}
                 className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-600 rounded-lg"
@@ -435,9 +433,9 @@ export const PushNotificationTester: React.FC = () => {
                         <span className="ml-2">({result.duration}ms)</span>
                       )}
                     </div>
-                    {result._error && (
+                    {result.error && (
                       <div className="text-sm text-red-600 dark:text-red-400 mt-1">
-                        {result._error}
+                        {result.error}
                       </div>
                     )}
                   </div>
@@ -448,7 +446,7 @@ export const PushNotificationTester: React.FC = () => {
                     className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                       result.status === 'success'
                         ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300'
-                        : result.status === '_error'
+                        : result.status === 'error'
                           ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300'
                           : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300'
                     }`}

@@ -7,7 +7,6 @@ import { Progress } from './ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
-import { Users } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -22,7 +21,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from './ui/dialog';
-import { Trophy, Crown, Award, Shield, Plus } from 'lucide-react';
+import { Trophy, Users, Crown, Calendar, Award, Shield, Plus } from 'lucide-react';
 import { useGamingAnnouncements } from '../hooks/useGamingAnnouncements';
 import type { Tournament, Team, Season, User as UserType } from '../types/index';
 
@@ -90,7 +89,7 @@ const MOCK_TEAMS: Team[] = [
           experience: 3200,
           joinDate: '2023-12-01',
           lastActive: new Date().toISOString(),
-          preferences: {} as unknown,
+          preferences: {} as any,
           createdAt: '2023-12-01',
         },
         role: 'captain',
@@ -136,12 +135,7 @@ const MOCK_SEASON: Season = {
       badge: 'Golden Sun',
       exclusiveContent: 'Champion Avatar Frame',
     },
-    {
-      rank: 2,
-      experience: 3000,
-      title: 'Summer Runner-up',
-      badge: 'Silver Moon',
-    },
+    { rank: 2, experience: 3000, title: 'Summer Runner-up', badge: 'Silver Moon' },
     { rank: 3, experience: 2000, title: 'Summer Bronze', badge: 'Bronze Star' },
   ],
   theme: 'Summer Vibes',
@@ -345,7 +339,7 @@ export function EnhancedBattles({
                         className="h-6 w-6 border-2 border-background"
                       >
                         <AvatarFallback className="text-xs">
-                          {member._user.displayName[0]}
+                          {member.user.displayName[0]}
                         </AvatarFallback>
                       </Avatar>
                     ))}
@@ -391,7 +385,7 @@ export function EnhancedBattles({
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              {MOCK_SEASON.rewards.map((reward: unknown) => (
+              {MOCK_SEASON.rewards.map((reward: any) => (
                 <div
                   key={reward.rank}
                   className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"

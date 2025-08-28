@@ -113,7 +113,7 @@ const SyncStatus: React.FC<SyncStatusProps> = ({
     }
 
     if (status.failedOperations > 0) {
-      return <AlertCircle className="w-4 h-4 text-red-400" />;
+      return <AlertCircleCircle className="w-4 h-4 text-red-400" />;
     }
 
     return <CheckCircle className="w-4 h-4 text-green-400" />;
@@ -259,7 +259,7 @@ const SyncStatus: React.FC<SyncStatusProps> = ({
                 {capabilities.alarmProcessing ? (
                   <CheckCircle className="w-3 h-3" />
                 ) : (
-                  <AlertCircle className="w-3 h-3" />
+                  <AlertCircleCircle className="w-3 h-3" />
                 )}
                 Alarm Processing
               </div>
@@ -274,7 +274,7 @@ const SyncStatus: React.FC<SyncStatusProps> = ({
                 {capabilities.voicePlayback ? (
                   <CheckCircle className="w-3 h-3" />
                 ) : (
-                  <AlertCircle className="w-3 h-3" />
+                  <AlertCircleCircle className="w-3 h-3" />
                 )}
                 Voice Playback
               </div>
@@ -289,7 +289,7 @@ const SyncStatus: React.FC<SyncStatusProps> = ({
                 {capabilities.dataStorage ? (
                   <CheckCircle className="w-3 h-3" />
                 ) : (
-                  <AlertCircle className="w-3 h-3" />
+                  <AlertCircleCircle className="w-3 h-3" />
                 )}
                 Data Storage
               </div>
@@ -304,7 +304,7 @@ const SyncStatus: React.FC<SyncStatusProps> = ({
                 {capabilities.backgroundSync ? (
                   <CheckCircle className="w-3 h-3" />
                 ) : (
-                  <AlertCircle className="w-3 h-3" />
+                  <AlertCircleCircle className="w-3 h-3" />
                 )}
                 Background Sync
               </div>

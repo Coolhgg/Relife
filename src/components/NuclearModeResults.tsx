@@ -18,7 +18,6 @@ import {
   Timer,
   CheckCircle,
   XCircle,
-  AlertTriangle,
   BarChart3,
   Share2,
   RefreshCw,
@@ -65,8 +64,8 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
       try {
         const userStats = await nuclearModeService.getNuclearStats(session.userId);
         setStats(userStats);
-      } catch (_error) {
-        console._error('Error loading nuclear stats:', _error);
+      } catch (error) {
+        console.error('Error loading nuclear stats:', error);
       } finally {
         setIsLoading(false);
       }
@@ -135,20 +134,12 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
     if (score >= 90)
       return { label: 'Nuclear Master', color: 'text-purple-600', icon: Crown };
     if (score >= 80)
-      return {
-        label: 'Explosive Expert',
-        color: 'text-orange-600',
-        icon: Medal,
-      };
+      return { label: 'Explosive Expert', color: 'text-orange-600', icon: Medal };
     if (score >= 70)
       return { label: 'Bomb Specialist', color: 'text-blue-600', icon: Award };
     if (score >= 60)
       return { label: 'Blast Rookie', color: 'text-green-600', icon: Star };
-    return {
-      label: 'Training Needed',
-      color: 'text-gray-600',
-      icon: RefreshCw,
-    };
+    return { label: 'Training Needed', color: 'text-gray-600', icon: RefreshCw };
   };
 
   const formatDuration = (ms: number) => {
@@ -221,7 +212,7 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
 
         {/* Performance Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {performanceMetrics.map((metric, _index) => {
+          {performanceMetrics.map((metric, index) => {
             const Icon = metric.icon;
             return (
               <Card key={metric.label} className="text-center">
@@ -347,7 +338,7 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
             </CardHeader>
             <CardContent>
               <div className="flex flex-wrap gap-2">
-                {performance.achievements.map((achievement, _index) => (
+                {performance.achievements.map((achievement, index) => (
                   <Badge
                     key={achievement}
                     className="bg-yellow-100 text-yellow-800 px-3 py-2"
@@ -382,9 +373,9 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {session.challenges.map((attempt: NuclearChallengeAttempt, _index) => (
+              {session.challenges.map((attempt: NuclearChallengeAttempt, index) => (
                 <div
-                  key={_index}
+                  key={index}
                   className={cn(
                     'p-4 rounded-lg border',
                     attempt.successful
@@ -466,14 +457,14 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
 
         {/* Tips for Improvement */}
         {!isSuccess && (
-          <Alert className="border-blue-200 bg-blue-50">
-            <AlertTriangle className="w-4 h-4 text-blue-600" />
-            <AlertDescription className="text-blue-800">
+          <AlertCircle className="border-blue-200 bg-blue-50">
+            <Brain className="w-4 h-4 text-blue-600" />
+            <AlertCircleDescription className="text-blue-800">
               <strong>Tips for next time:</strong> Practice math problems, memory games,
               and speed challenges. Consider adjusting difficulty or selecting fewer
               challenges to build confidence.
-            </AlertDescription>
-          </Alert>
+            </AlertCircleDescription>
+          </AlertCircle>
         )}
       </div>
     </div>
