@@ -1,6 +1,8 @@
 # Complete Webhook Configuration Guide
 
-This comprehensive guide will help you configure all notification webhooks for your Relife Alarm application. The app supports multiple webhook types for payments, push notifications, monitoring alerts, and custom integrations.
+This comprehensive guide will help you configure all notification webhooks for your Relife Alarm
+application. The app supports multiple webhook types for payments, push notifications, monitoring
+alerts, and custom integrations.
 
 ## 📋 Quick Start
 
@@ -20,7 +22,7 @@ npm run webhook:deploy
 Your Relife app supports these webhook types:
 
 - **💳 Stripe Payment Webhooks** - Handle subscription and payment events
-- **📱 Push Notification Webhooks** - Mobile and web push notifications  
+- **📱 Push Notification Webhooks** - Mobile and web push notifications
 - **📊 Monitoring Alert Webhooks** - Slack, Discord, Email, PagerDuty alerts
 - **🔒 Security & Audit Webhooks** - Security events and compliance logging
 - **🛠️ Custom Webhooks** - Integration with third-party services
@@ -68,7 +70,7 @@ npm run db:verify
 4. Select these events:
    ```
    ✓ customer.subscription.created
-   ✓ customer.subscription.updated  
+   ✓ customer.subscription.updated
    ✓ customer.subscription.deleted
    ✓ customer.subscription.trial_will_end
    ✓ invoice.payment_succeeded
@@ -180,12 +182,12 @@ PushNotificationService.testPushNotification('test-user-id');
 
 Choose your email provider:
 
-| Provider | SMTP Host | Port | Security |
-|----------|-----------|------|----------|
-| Gmail | smtp.gmail.com | 587 | TLS |
-| Outlook | smtp.office365.com | 587 | TLS |
-| SendGrid | smtp.sendgrid.net | 587 | TLS |
-| Mailgun | smtp.mailgun.org | 587 | TLS |
+| Provider | SMTP Host          | Port | Security |
+| -------- | ------------------ | ---- | -------- |
+| Gmail    | smtp.gmail.com     | 587  | TLS      |
+| Outlook  | smtp.office365.com | 587  | TLS      |
+| SendGrid | smtp.sendgrid.net  | 587  | TLS      |
+| Mailgun  | smtp.mailgun.org   | 587  | TLS      |
 
 #### Step 5.4: PagerDuty Setup
 
@@ -205,7 +207,7 @@ SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK
 SLACK_CHANNEL=#alerts
 SLACK_USERNAME=Relife Bot
 
-# Discord Configuration  
+# Discord Configuration
 DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/YOUR/DISCORD/WEBHOOK
 
 # Email Configuration
@@ -373,7 +375,7 @@ npm run test:webhooks:security
 - [ ] Stripe webhooks receive and process test events
 - [ ] Push notifications work on iOS, Android, and web
 - [ ] Slack receives test alerts
-- [ ] Discord receives test alerts  
+- [ ] Discord receives test alerts
 - [ ] Email alerts are delivered
 - [ ] PagerDuty incidents are created
 - [ ] Webhook logs are stored in database
@@ -436,10 +438,12 @@ npm run webhook:update-configs
 #### 1. Stripe Webhook Signature Validation Fails
 
 **Symptoms:**
+
 - HTTP 400 errors in Stripe dashboard
 - "Invalid webhook signature" in logs
 
 **Solutions:**
+
 ```bash
 # Verify webhook secret is correct
 echo $STRIPE_WEBHOOK_SECRET | head -c 20
@@ -454,10 +458,12 @@ stripe listen --forward-to https://yourdomain.com/api/stripe/webhooks
 #### 2. Push Notifications Not Working
 
 **Symptoms:**
+
 - No notifications received on devices
 - Firebase errors in logs
 
 **Solutions:**
+
 ```bash
 # Verify Firebase configuration
 node -e "console.log('Server key valid:', process.env.FIREBASE_SERVER_KEY?.startsWith('AAAA'))"
@@ -474,10 +480,12 @@ npm run push:check-registration
 #### 3. Monitoring Alerts Not Received
 
 **Symptoms:**
+
 - No alerts in Slack/Discord/email
 - Webhook tests pass but real alerts fail
 
 **Solutions:**
+
 ```bash
 # Test webhook URLs directly
 curl -X POST $SLACK_WEBHOOK_URL \
@@ -494,12 +502,14 @@ npm run webhook:simulate-alert
 #### 4. High Response Times
 
 **Symptoms:**
+
 - Slow webhook processing
 - Timeouts in webhook logs
 
 **Solutions:**
+
 ```bash
-# Check database performance  
+# Check database performance
 npm run db:analyze-webhook-queries
 
 # Monitor webhook processing
@@ -529,17 +539,20 @@ tail -f logs/webhook.log | grep ERROR
 ## 📚 Additional Resources
 
 ### Documentation
+
 - [Stripe Webhook Guide](./STRIPE_WEBHOOK_PRODUCTION_GUIDE.md)
 - [Push Notification Setup](./docs/push-notification-setup.md)
 - [Security Best Practices](./SECURITY.md)
 - [API Documentation](./docs/api-reference.md)
 
 ### Monitoring Dashboards
+
 - Webhook Management: `/admin/webhooks`
 - Analytics Dashboard: `/admin/analytics`
 - Security Events: `/admin/security`
 
 ### Support Scripts
+
 - `scripts/configure-webhooks.js` - Interactive configuration
 - `scripts/test-webhooks.js` - Comprehensive testing
 - `scripts/monitor-webhooks.js` - Health monitoring
@@ -549,7 +562,8 @@ tail -f logs/webhook.log | grep ERROR
 
 ## 🎉 Congratulations!
 
-You've successfully configured comprehensive webhook notifications for your Relife application! Your users will now receive:
+You've successfully configured comprehensive webhook notifications for your Relife application! Your
+users will now receive:
 
 - ✅ **Reliable payment and subscription notifications**
 - ✅ **Real-time push notifications for alarms and motivation**
@@ -565,11 +579,12 @@ You've successfully configured comprehensive webhook notifications for your Reli
 4. **User Feedback**: Monitor user engagement with notifications
 5. **Scale Planning**: Prepare for increased webhook volume as you grow
 
-**Need Help?** 
+**Need Help?**
+
 - Check the troubleshooting section above
 - Review logs in `/admin/webhooks`
 - Run `node scripts/configure-webhooks.js --help`
 
 ---
 
-*Generated by Relife Webhook Configuration System v1.0*
+_Generated by Relife Webhook Configuration System v1.0_

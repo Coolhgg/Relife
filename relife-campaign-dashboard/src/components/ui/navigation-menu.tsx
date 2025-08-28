@@ -7,7 +7,10 @@ import { ChevronDownIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 function NavigationMenu({
-  className, children, _viewport = true, ...props
+  className,
+  children,
+  _viewport = true,
+  ...props
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Root> & {
   viewport?: boolean;
 }) {
@@ -28,7 +31,8 @@ function NavigationMenu({
 }
 
 function NavigationMenuList({
-  className, ...props
+  className,
+  ...props
 }: React.ComponentProps<typeof NavigationMenuPrimitive.List>) {
   return (
     <NavigationMenuPrimitive.List
@@ -43,7 +47,8 @@ function NavigationMenuList({
 }
 
 function NavigationMenuItem({
-  className, ...props
+  className,
+  ...props
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Item>) {
   return (
     <NavigationMenuPrimitive.Item
@@ -59,7 +64,9 @@ const navigationMenuTriggerStyle = cva(
 );
 
 function NavigationMenuTrigger({
-  className, children, ...props
+  className,
+  children,
+  ...props
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Trigger>) {
   return (
     <NavigationMenuPrimitive.Trigger
@@ -77,7 +84,8 @@ function NavigationMenuTrigger({
 }
 
 function NavigationMenuContent({
-  className, ...props
+  className,
+  ...props
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Content>) {
   return (
     <NavigationMenuPrimitive.Content
@@ -93,7 +101,8 @@ function NavigationMenuContent({
 }
 
 function NavigationMenuViewport({
-  className, ...props
+  className,
+  ...props
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Viewport>) {
   return (
     <div className={cn('absolute top-full left-0 isolate z-50 flex justify-center')}>
@@ -110,7 +119,8 @@ function NavigationMenuViewport({
 }
 
 function NavigationMenuLink({
-  className, ...props
+  className,
+  ...props
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Link>) {
   return (
     <NavigationMenuPrimitive.Link
@@ -125,7 +135,8 @@ function NavigationMenuLink({
 }
 
 function NavigationMenuIndicator({
-  className, ...props
+  className,
+  ...props
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Indicator>) {
   return (
     <NavigationMenuPrimitive.Indicator

@@ -36,7 +36,13 @@ export function useSidebar() {
 }
 
 export function SidebarProvider({
-  defaultOpen = true, _open: openProp, _onOpenChange: setOpenProp, _className, _style, _children, ...props
+  defaultOpen = true,
+  _open: openProp,
+  _onOpenChange: setOpenProp,
+  _className,
+  _style,
+  _children,
+  ...props
 }: React.ComponentProps<'div'> & {
   defaultOpen?: boolean;
   open?: boolean;
@@ -49,7 +55,8 @@ export function SidebarProvider({
   // We use openProp and setOpenProp for control from outside the component.
   const [_open, _setOpen] = React.useState(defaultOpen);
   const open = openProp ?? _open;
-  const setOpen = React.useCallback((value: boolean | ((value: boolean) => boolean)) => {
+  const setOpen = React.useCallback(
+    (value: boolean | ((value: boolean) => boolean)) => {
       const openState = typeof value === 'function' ? value(open) : value;
       if (setOpenProp) {
         setOpenProp(openState);
@@ -85,7 +92,8 @@ export function SidebarProvider({
   // This makes it easier to style the sidebar with Tailwind classes.
   const state = open ? 'expanded' : 'collapsed';
 
-  const contextValue = React.useMemo<SidebarContextProps>(() => ({
+  const contextValue = React.useMemo<SidebarContextProps>(
+    () => ({
       state,
       open,
       setOpen,

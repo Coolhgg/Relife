@@ -65,6 +65,7 @@ Object.defineProperty(global, 'URL', {
 
   const mockBasicAlarm = createMockAlarm();
 
+  const mockAdvancedAlarm = {
     ...mockBasicAlarm,
     scheduleType: 'daily',
     recurrencePattern: undefined,

@@ -18,23 +18,9 @@ export { axe };
  * Automatically wraps components with necessary providers
  */
 export async function axeRender(
-  ui: React.ReactElement,
-  options?: RenderOptions & {
-    /**
-     * Axe configuration options
-     */
-    axeOptions?: {
-      rules?: Record<string, any>;
-      tags?: string[];
-      exclude?: string[];
-      include?: string[];
-    };
-    /**
-     * Skip automatic axe test (useful when you want to run axe manually)
-     */
-    skipAxeTest?: boolean;
-  }
-): Promise<RenderResult & { axeResults?: AxeResults }> {
+  ui,
+  options = {}
+) {
   // Import providers dynamically to avoid circular dependencies
   const { TestProviders } = await import('../../src/__tests__/providers/test-providers');
   

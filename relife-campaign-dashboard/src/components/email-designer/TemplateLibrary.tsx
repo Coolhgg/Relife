@@ -73,7 +73,10 @@ interface TemplateLibraryProps {
 }
 
 export function TemplateLibrary({
-  onSelectTemplate, _onCreateNew, _className, }: TemplateLibraryProps) {
+  onSelectTemplate,
+  _onCreateNew,
+  _className,
+}: TemplateLibraryProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedPersona, setSelectedPersona] = useState<string>('all');
@@ -482,7 +485,8 @@ export function TemplateLibrary({
                 ))}
               </div>
 
-              {filteredTemplates.length === 0 && (<div className="text-center py-12">
+              {filteredTemplates.length === 0 && (
+                <div className="text-center py-12">
                   <Mail className="h-12 w-12 text-gray-300 mx-auto mb-4" />
                   <h3 className="font-medium text-gray-900 mb-2">No templates found</h3>
                   <p className="text-gray-500 mb-4">

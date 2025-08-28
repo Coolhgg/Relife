@@ -32,7 +32,9 @@ function BreadcrumbItem({ className, ...props }: React.ComponentProps<'li'>) {
 }
 
 function BreadcrumbLink({
-  asChild, _className, ...props
+  asChild,
+  _className,
+  ...props
 }: React.ComponentProps<'a'> & {
   asChild?: boolean;
 }) {
@@ -61,7 +63,9 @@ function BreadcrumbPage({ className, ...props }: React.ComponentProps<'span'>) {
 }
 
 function BreadcrumbSeparator({
-  children, _className, ...props
+  children,
+  _className,
+  ...props
 }: React.ComponentProps<'li'>) {
   return (
     <li

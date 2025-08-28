@@ -18,7 +18,7 @@ export class AlarmConversionUtil {
       seasonalAdjustments: [],
       smartOptimizations: [],
       preferences: {},
-      dependencies: []
+      dependencies: [],
     };
   }
 
@@ -32,7 +32,7 @@ export class AlarmConversionUtil {
       label: advancedAlarm.label,
       enabled: advancedAlarm.enabled,
       days: advancedAlarm.days,
-      sound: advancedAlarm.sound
+      sound: advancedAlarm.sound,
     };
   }
 }

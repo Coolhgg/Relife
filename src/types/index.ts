@@ -6,12 +6,12 @@ export * from './browser-apis';
 
 // Email Campaign Types
 export type PersonaType =
-  | 'struggling_sam'     // Free-focused users
-  | 'busy_ben'           // Efficiency-driven professionals
+  | 'struggling_sam' // Free-focused users
+  | 'busy_ben' // Efficiency-driven professionals
   | 'professional_paula' // Feature-rich seekers
-  | 'enterprise_emma'    // Team-oriented decision makers
-  | 'student_sarah'      // Budget-conscious students
-  | 'lifetime_larry';    // One-time payment preferrers
+  | 'enterprise_emma' // Team-oriented decision makers
+  | 'student_sarah' // Budget-conscious students
+  | 'lifetime_larry'; // One-time payment preferrers
 
 export interface PersonaProfile {
   id: PersonaType;
@@ -19,26 +19,20 @@ export interface PersonaProfile {
   description: string;
   primaryColor: string;
   messagingTone:
-    | "supportive"
-    | "efficient"
-    | "sophisticated"
-    | "business_focused"
-    | "casual"
-    | "value_focused";
+    | 'supportive'
+    | 'efficient'
+    | 'sophisticated'
+    | 'business_focused'
+    | 'casual'
+    | 'value_focused';
   ctaStyle:
-    | "friendly"
-    | "urgent"
-    | "professional"
-    | "corporate"
-    | "youthful"
-    | "exclusive";
-  targetPlan:
-    | "free"
-    | "basic"
-    | "premium"
-    | "pro"
-    | "student"
-    | "lifetime";
+    | 'friendly'
+    | 'urgent'
+    | 'professional'
+    | 'corporate'
+    | 'youthful'
+    | 'exclusive';
+  targetPlan: 'free' | 'basic' | 'premium' | 'pro' | 'student' | 'lifetime';
 }
 
 export interface PersonaDetectionResult {
@@ -135,7 +129,7 @@ export interface Alarm {
   weatherEnabled?: boolean;
   nuclearChallenges?: string[];
   smartFeatures?: SmartAlarmSettings;
-  
+
   // Advanced scheduling properties
   recurrencePattern?: RecurrencePattern;
   smartOptimizations?: SmartOptimization[];
@@ -170,7 +164,14 @@ export interface VoiceMoodConfig {
 }
 
 // Enhanced Battles alarm types
-export type DayOfWeek = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
+export type DayOfWeek =
+  | 'monday'
+  | 'tuesday'
+  | 'wednesday'
+  | 'thursday'
+  | 'friday'
+  | 'saturday'
+  | 'sunday';
 export type AlarmDifficulty = 'easy' | 'medium' | 'hard' | 'extreme' | 'nuclear';
 
 export interface AlarmInstance {
@@ -338,7 +339,14 @@ export interface AppState {
    * Current active view/screen in the application.
    * Determines which main component to render.
    */
-  currentView: 'dashboard' | 'alarms' | 'advanced-scheduling' | 'gaming' | 'settings' | 'alarm-ringing' | 'pricing';
+  currentView:
+    | 'dashboard'
+    | 'alarms'
+    | 'advanced-scheduling'
+    | 'gaming'
+    | 'settings'
+    | 'alarm-ringing'
+    | 'pricing';
 
   /**
    * Optional rewards and gamification system state.
@@ -484,7 +492,13 @@ export interface RewardProgress {
 
 export interface UserHabit {
   id: string;
-  pattern: 'morning_routine' | 'evening_routine' | 'workout_time' | 'work_schedule' | 'weekend_vibes' | 'custom';
+  pattern:
+    | 'morning_routine'
+    | 'evening_routine'
+    | 'workout_time'
+    | 'work_schedule'
+    | 'weekend_vibes'
+    | 'custom';
   frequency: number; // times per week
   consistency: number; // 0-1 score
   improvement: number; // trend score
@@ -493,7 +507,15 @@ export interface UserHabit {
 }
 
 export interface UserNiche {
-  primary: 'fitness' | 'work' | 'study' | 'creative' | 'family' | 'health' | 'social' | 'spiritual';
+  primary:
+    | 'fitness'
+    | 'work'
+    | 'study'
+    | 'creative'
+    | 'family'
+    | 'health'
+    | 'social'
+    | 'spiritual';
   secondary?: UserNiche['primary'];
   confidence: number; // AI confidence 0-1
   traits: string[]; // AI-detected personality traits
@@ -507,7 +529,11 @@ export interface UserNiche {
 
 export interface AIInsight {
   id: string;
-  type: 'habit_analysis' | 'improvement_suggestion' | 'pattern_recognition' | 'reward_recommendation';
+  type:
+    | 'habit_analysis'
+    | 'improvement_suggestion'
+    | 'pattern_recognition'
+    | 'reward_recommendation';
   title: string;
   message: string;
   confidence: number;
@@ -920,7 +946,11 @@ export interface CommunityStats {
 
 export interface RealtimeActivity {
   id: string;
-  type: 'streak_started' | 'achievement_unlocked' | 'challenge_joined' | 'milestone_reached';
+  type:
+    | 'streak_started'
+    | 'achievement_unlocked'
+    | 'challenge_joined'
+    | 'milestone_reached';
   message: string;
   timestamp: Date;
   anonymous: boolean;
@@ -932,13 +962,13 @@ export interface RealtimeActivity {
 
 // Subscription tiers - consolidated definition
 export type SubscriptionTier =
-  | "free"
-  | "basic"
-  | "student"
-  | "premium"
-  | "pro"
-  | "ultimate"
-  | "lifetime";
+  | 'free'
+  | 'basic'
+  | 'student'
+  | 'premium'
+  | 'pro'
+  | 'ultimate'
+  | 'lifetime';
 
 // Subscription status values
 export type SubscriptionStatus =
@@ -955,7 +985,7 @@ export interface PremiumFeature {
   id: string;
   name: string;
   description: string;
-  category: "alarm" | "voice" | "analytics" | "customization" | "ai";
+  category: 'alarm' | 'voice' | 'analytics' | 'customization' | 'ai';
   isEnabled?: boolean;
   beta?: boolean;
 }
@@ -1482,7 +1512,14 @@ export interface ThemeConfig {
   rating?: number;
 }
 
-export type ThemeCategory = 'system' | 'nature' | 'abstract' | 'gradient' | 'accessibility' | 'premium' | 'custom';
+export type ThemeCategory =
+  | 'system'
+  | 'nature'
+  | 'abstract'
+  | 'gradient'
+  | 'accessibility'
+  | 'premium'
+  | 'custom';
 
 export interface ThemeColors {
   // Base colors
@@ -1893,8 +1930,20 @@ export interface ThemeImportResult {
 }
 
 // Battle Types
-export type BattleType = 'speed' | 'consistency' | 'tasks' | 'bragging' | 'group' | 'tournament' | 'team';
-export type BattleStatus = 'pending' | 'active' | 'completed' | 'cancelled' | 'registration';
+export type BattleType =
+  | 'speed'
+  | 'consistency'
+  | 'tasks'
+  | 'bragging'
+  | 'group'
+  | 'tournament'
+  | 'team';
+export type BattleStatus =
+  | 'pending'
+  | 'active'
+  | 'completed'
+  | 'cancelled'
+  | 'registration';
 
 export interface Battle {
   id: string;
@@ -1998,8 +2047,20 @@ export interface Achievement {
   requirements: AchievementRequirement[];
 }
 
-export type AchievementCategory = 'wakeup' | 'battles' | 'social' | 'consistency' | 'challenges' | 'special';
-export type AchievementType = 'milestone' | 'streak' | 'challenge' | 'social' | 'seasonal' | 'rare';
+export type AchievementCategory =
+  | 'wakeup'
+  | 'battles'
+  | 'social'
+  | 'consistency'
+  | 'challenges'
+  | 'special';
+export type AchievementType =
+  | 'milestone'
+  | 'streak'
+  | 'challenge'
+  | 'social'
+  | 'seasonal'
+  | 'rare';
 export type AchievementRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
 
 export interface AchievementProgress {
@@ -2015,7 +2076,13 @@ export interface AchievementReward {
 }
 
 export interface AchievementRequirement {
-  type: 'battles_won' | 'streak_days' | 'early_wake' | 'friends_added' | 'tournaments_won' | 'tasks_completed';
+  type:
+    | 'battles_won'
+    | 'streak_days'
+    | 'early_wake'
+    | 'friends_added'
+    | 'tournaments_won'
+    | 'tasks_completed';
   value: number;
   description: string;
 }
@@ -2035,7 +2102,14 @@ export interface DailyChallenge {
   expiresAt: string;
 }
 
-export type ChallengeType = 'wake_early' | 'no_snooze' | 'battle_win' | 'friend_challenge' | 'task_master' | 'consistency' | 'social';
+export type ChallengeType =
+  | 'wake_early'
+  | 'no_snooze'
+  | 'battle_win'
+  | 'friend_challenge'
+  | 'task_master'
+  | 'consistency'
+  | 'social';
 export type ChallengeDifficulty = 'easy' | 'medium' | 'hard' | 'expert';
 
 export interface ChallengeReward {
@@ -2081,7 +2155,15 @@ export interface ExperienceGain {
   timestamp: string;
 }
 
-export type ExperienceSource = 'alarm_complete' | 'battle_win' | 'battle_participate' | 'challenge_complete' | 'achievement_unlock' | 'streak_bonus' | 'friend_referral' | 'daily_login';
+export type ExperienceSource =
+  | 'alarm_complete'
+  | 'battle_win'
+  | 'battle_participate'
+  | 'challenge_complete'
+  | 'achievement_unlock'
+  | 'streak_bonus'
+  | 'friend_referral'
+  | 'daily_login';
 
 export interface StreakBonus {
   days: number;
@@ -2414,12 +2496,7 @@ export interface CalendarIntegration {
   isActive: boolean;
 }
 
-export type CalendarProvider =
-  | 'google'
-  | 'outlook'
-  | 'apple'
-  | 'ics_url'
-  | 'caldav';
+export type CalendarProvider = 'google' | 'outlook' | 'apple' | 'ics_url' | 'caldav';
 
 export interface CalendarAdjustmentRule {
   eventType: string;
@@ -2471,11 +2548,7 @@ export interface AlarmDependency {
   action: string;
 }
 
-export type DependencyType =
-  | 'sequential'
-  | 'conditional'
-  | 'alternative'
-  | 'backup';
+export type DependencyType = 'sequential' | 'conditional' | 'alternative' | 'backup';
 
 // Advanced Scheduling Configuration
 export interface SchedulingConfig {
@@ -2573,7 +2646,12 @@ export interface LocationChallenge {
   progress: LocationProgress;
 }
 
-export type LocationChallengeType = 'visit_place' | 'stay_duration' | 'distance_from_home' | 'elevation_gain' | 'speed_challenge';
+export type LocationChallengeType =
+  | 'visit_place'
+  | 'stay_duration'
+  | 'distance_from_home'
+  | 'elevation_gain'
+  | 'speed_challenge';
 
 export interface Location {
   latitude: number;
@@ -2601,8 +2679,20 @@ export interface FitnessIntegration {
   data: FitnessData;
 }
 
-export type FitnessProvider = 'apple_health' | 'google_fit' | 'fitbit' | 'garmin' | 'strava' | 'polar';
-export type FitnessPermission = 'steps' | 'sleep' | 'heart_rate' | 'activity' | 'distance' | 'calories';
+export type FitnessProvider =
+  | 'apple_health'
+  | 'google_fit'
+  | 'fitbit'
+  | 'garmin'
+  | 'strava'
+  | 'polar';
+export type FitnessPermission =
+  | 'steps'
+  | 'sleep'
+  | 'heart_rate'
+  | 'activity'
+  | 'distance'
+  | 'calories';
 
 export interface FitnessData {
   steps: number;
@@ -2671,7 +2761,15 @@ export interface CustomSound {
   rating?: number;
 }
 
-export type SoundCategory = 'nature' | 'music' | 'voice' | 'mechanical' | 'ambient' | 'energetic' | 'calm' | 'custom';
+export type SoundCategory =
+  | 'nature'
+  | 'music'
+  | 'voice'
+  | 'mechanical'
+  | 'ambient'
+  | 'energetic'
+  | 'calm'
+  | 'custom';
 
 // Sound selection types
 export interface SoundOption {
@@ -2726,7 +2824,15 @@ export interface MotivationalQuote {
   uses: number;
 }
 
-export type QuoteCategory = 'motivation' | 'inspiration' | 'success' | 'health' | 'productivity' | 'mindfulness' | 'humor' | 'custom';
+export type QuoteCategory =
+  | 'motivation'
+  | 'inspiration'
+  | 'success'
+  | 'health'
+  | 'productivity'
+  | 'mindfulness'
+  | 'humor'
+  | 'custom';
 
 export interface PhotoChallenge {
   id: string;
@@ -2744,7 +2850,15 @@ export interface PhotoChallenge {
   completionRate: number;
 }
 
-export type PhotoChallengeCategory = 'selfie' | 'environment' | 'task_proof' | 'creative' | 'location' | 'fitness' | 'food' | 'pets';
+export type PhotoChallengeCategory =
+  | 'selfie'
+  | 'environment'
+  | 'task_proof'
+  | 'creative'
+  | 'location'
+  | 'fitness'
+  | 'food'
+  | 'pets';
 
 export interface PhotoPrompt {
   id: string;
@@ -2755,7 +2869,12 @@ export interface PhotoPrompt {
 }
 
 export interface PhotoValidationRule {
-  type: 'face_detection' | 'object_detection' | 'location_check' | 'timestamp_check' | 'lighting_check';
+  type:
+    | 'face_detection'
+    | 'object_detection'
+    | 'location_check'
+    | 'timestamp_check'
+    | 'lighting_check';
   parameters: Record<string, any>;
   required: boolean;
 }
@@ -2814,14 +2933,25 @@ export interface Notification {
   createdAt: string;
 }
 
-export type NotificationType = 'battle_challenge' | 'battle_result' | 'friend_request' | 'achievement' | 'quest_complete' | 'reminder';
+export type NotificationType =
+  | 'battle_challenge'
+  | 'battle_result'
+  | 'friend_request'
+  | 'achievement'
+  | 'quest_complete'
+  | 'reminder';
 
 // API Response Types
 // AI & ML Types for Enhanced Features
 export interface AIOptimization {
   id: string;
   userId: string;
-  type: 'sleep_pattern' | 'wake_time' | 'mood_prediction' | 'task_scheduling' | 'difficulty_adjustment';
+  type:
+    | 'sleep_pattern'
+    | 'wake_time'
+    | 'mood_prediction'
+    | 'task_scheduling'
+    | 'difficulty_adjustment';
   suggestion: string;
   confidence: number; // 0-1
   impact: 'low' | 'medium' | 'high';
@@ -2855,14 +2985,24 @@ export interface AIRecommendation {
   acceptedAt?: Date;
   rejectedAt?: Date;
   createdAt: Date;
-  type: 'sleep_pattern' | 'wake_time' | 'mood_prediction' | 'task_scheduling' | 'difficulty_adjustment';
+  type:
+    | 'sleep_pattern'
+    | 'wake_time'
+    | 'mood_prediction'
+    | 'task_scheduling'
+    | 'difficulty_adjustment';
   appliedAt?: Date;
   impact: 'low' | 'medium' | 'high';
   action: string;
 }
 
 export interface AIRecommendationSource {
-  type: 'sleep_data' | 'behavior_pattern' | 'performance_metrics' | 'user_preferences' | 'community_trends';
+  type:
+    | 'sleep_data'
+    | 'behavior_pattern'
+    | 'performance_metrics'
+    | 'user_preferences'
+    | 'community_trends';
   dataPoints: number;
   timeRange: string;
   relevance: number; // 0-1
@@ -2891,7 +3031,12 @@ export interface PersonalizedChallenge {
 }
 
 export interface PersonalizationFactor {
-  type: 'user_niche' | 'sleep_pattern' | 'skill_level' | 'availability' | 'motivation_style';
+  type:
+    | 'user_niche'
+    | 'sleep_pattern'
+    | 'skill_level'
+    | 'availability'
+    | 'motivation_style';
   value: string | number;
   weight: number; // influence on challenge design
 }
@@ -2929,7 +3074,11 @@ export interface ChallengeProgress {
 
 export interface ChallengeAdaptation {
   id: string;
-  reason: 'difficulty_adjustment' | 'time_constraint' | 'motivation_boost' | 'personalization_update';
+  reason:
+    | 'difficulty_adjustment'
+    | 'time_constraint'
+    | 'motivation_boost'
+    | 'personalization_update';
   originalValue: any;
   newValue: any;
   appliedAt: Date;
@@ -2940,7 +3089,11 @@ export interface SmartAutomation {
   id: string;
   userId: string;
   name: string;
-  type: 'alarm_optimization' | 'routine_adjustment' | 'challenge_creation' | 'reminder_timing';
+  type:
+    | 'alarm_optimization'
+    | 'routine_adjustment'
+    | 'challenge_creation'
+    | 'reminder_timing';
   triggers: AutomationTrigger[];
   actions: AutomationAction[];
   conditions: AutomationCondition[];
@@ -2963,7 +3116,12 @@ export interface AutomationTrigger {
 }
 
 export interface AutomationAction {
-  type: 'adjust_alarm' | 'send_notification' | 'create_challenge' | 'update_settings' | 'log_data';
+  type:
+    | 'adjust_alarm'
+    | 'send_notification'
+    | 'create_challenge'
+    | 'update_settings'
+    | 'log_data';
   parameters: Record<string, any>;
   priority: number;
   reversible: boolean;
@@ -3025,7 +3183,14 @@ export interface SleepInterruption {
 }
 
 export interface SleepFactor {
-  type: 'caffeine' | 'alcohol' | 'exercise' | 'stress' | 'screen_time' | 'meal_timing' | 'room_temperature';
+  type:
+    | 'caffeine'
+    | 'alcohol'
+    | 'exercise'
+    | 'stress'
+    | 'screen_time'
+    | 'meal_timing'
+    | 'room_temperature';
   value: string | number;
   timing: string; // when the factor occurred
   impact: 'positive' | 'negative' | 'neutral';
@@ -3042,7 +3207,11 @@ export interface SleepAnalysis {
 }
 
 export interface SleepTrend {
-  metric: 'sleep_duration' | 'bedtime_consistency' | 'wake_time_consistency' | 'sleep_quality';
+  metric:
+    | 'sleep_duration'
+    | 'bedtime_consistency'
+    | 'wake_time_consistency'
+    | 'sleep_quality';
   direction: 'improving' | 'declining' | 'stable';
   magnitude: number; // how significant the trend is
   timeframe: string; // e.g., "last 2 weeks"
@@ -3212,7 +3381,11 @@ export interface MotivationProfile {
 export interface LearningData {
   id: string;
   userId: string;
-  subject: 'user_behavior' | 'performance_patterns' | 'preferences' | 'optimal_settings';
+  subject:
+    | 'user_behavior'
+    | 'performance_patterns'
+    | 'preferences'
+    | 'optimal_settings';
   dataPoints: LearningDataPoint[];
   insights: LearningInsight[];
   confidence: number; // 0-1
@@ -3309,14 +3482,33 @@ export interface KVNamespace {
   get(key: string, type: 'json'): Promise<any>;
   get(key: string, type: 'arrayBuffer'): Promise<ArrayBuffer | null>;
   get(key: string, type: 'stream'): Promise<ReadableStream | null>;
-  put(key: string, value: string | ArrayBuffer | ReadableStream, options?: KVPutOptions): Promise<void>;
+  put(
+    key: string,
+    value: string | ArrayBuffer | ReadableStream,
+    options?: KVPutOptions
+  ): Promise<void>;
   delete(key: string): Promise<void>;
   list(options?: KVListOptions): Promise<KVListResult>;
-  getWithMetadata<Metadata = any>(key: string, options?: KVGetWithMetadataOptions): Promise<KVGetWithMetadataResult<string, Metadata>>;
-  getWithMetadata<Metadata = any>(key: string, type: 'text'): Promise<KVGetWithMetadataResult<string, Metadata>>;
-  getWithMetadata<Metadata = any>(key: string, type: 'json'): Promise<KVGetWithMetadataResult<any, Metadata>>;
-  getWithMetadata<Metadata = any>(key: string, type: 'arrayBuffer'): Promise<KVGetWithMetadataResult<ArrayBuffer, Metadata>>;
-  getWithMetadata<Metadata = any>(key: string, type: 'stream'): Promise<KVGetWithMetadataResult<ReadableStream, Metadata>>;
+  getWithMetadata<Metadata = any>(
+    key: string,
+    options?: KVGetWithMetadataOptions
+  ): Promise<KVGetWithMetadataResult<string, Metadata>>;
+  getWithMetadata<Metadata = any>(
+    key: string,
+    type: 'text'
+  ): Promise<KVGetWithMetadataResult<string, Metadata>>;
+  getWithMetadata<Metadata = any>(
+    key: string,
+    type: 'json'
+  ): Promise<KVGetWithMetadataResult<any, Metadata>>;
+  getWithMetadata<Metadata = any>(
+    key: string,
+    type: 'arrayBuffer'
+  ): Promise<KVGetWithMetadataResult<ArrayBuffer, Metadata>>;
+  getWithMetadata<Metadata = any>(
+    key: string,
+    type: 'stream'
+  ): Promise<KVGetWithMetadataResult<ReadableStream, Metadata>>;
 }
 
 export interface KVGetOptions {
@@ -3360,10 +3552,17 @@ export interface KVGetWithMetadataResult<Value, Metadata> {
 export interface R2Bucket {
   head(key: string): Promise<R2Object | null>;
   get(key: string, options?: R2GetOptions): Promise<R2ObjectBody | null>;
-  put(key: string, value: ReadableStream | ArrayBuffer | string, options?: R2PutOptions): Promise<R2Object>;
+  put(
+    key: string,
+    value: ReadableStream | ArrayBuffer | string,
+    options?: R2PutOptions
+  ): Promise<R2Object>;
   delete(key: string | string[]): Promise<void>;
   list(options?: R2ListOptions): Promise<R2Objects>;
-  createMultipartUpload(key: string, options?: R2CreateMultipartUploadOptions): Promise<R2MultipartUpload>;
+  createMultipartUpload(
+    key: string,
+    options?: R2CreateMultipartUploadOptions
+  ): Promise<R2MultipartUpload>;
 }
 
 export interface R2Object {
@@ -3455,7 +3654,10 @@ export interface R2MultipartUpload {
   uploadId: string;
   abort(): Promise<void>;
   complete(uploadedParts: R2UploadedPart[]): Promise<R2Object>;
-  uploadPart(partNumber: number, value: ReadableStream | ArrayBuffer | string): Promise<R2UploadedPart>;
+  uploadPart(
+    partNumber: number,
+    value: ReadableStream | ArrayBuffer | string
+  ): Promise<R2UploadedPart>;
 }
 
 export interface R2UploadedPart {
@@ -3646,7 +3848,7 @@ export const DEFAULT_FEATURE_LIMITS: Record<SubscriptionTier, FeatureLimits> = {
     customVoiceMessagesPerDay: 0,
     customSoundsStorage: 0,
     themesAllowed: 3,
-    battlesPerDay: 5
+    battlesPerDay: 5,
   },
   premium: {
     elevenlabsCallsPerMonth: 100,
@@ -3654,7 +3856,7 @@ export const DEFAULT_FEATURE_LIMITS: Record<SubscriptionTier, FeatureLimits> = {
     customVoiceMessagesPerDay: 5,
     customSoundsStorage: 50,
     themesAllowed: 10,
-    battlesPerDay: 20
+    battlesPerDay: 20,
   },
   pro: {
     elevenlabsCallsPerMonth: 500,
@@ -3662,7 +3864,7 @@ export const DEFAULT_FEATURE_LIMITS: Record<SubscriptionTier, FeatureLimits> = {
     customVoiceMessagesPerDay: 20,
     customSoundsStorage: 200,
     themesAllowed: -1, // unlimited
-    battlesPerDay: -1 // unlimited
+    battlesPerDay: -1, // unlimited
   },
   ultimate: {
     elevenlabsCallsPerMonth: 1000,
@@ -3670,7 +3872,7 @@ export const DEFAULT_FEATURE_LIMITS: Record<SubscriptionTier, FeatureLimits> = {
     customVoiceMessagesPerDay: -1, // unlimited
     customSoundsStorage: 500,
     themesAllowed: -1, // unlimited
-    battlesPerDay: -1 // unlimited
+    battlesPerDay: -1, // unlimited
   },
   lifetime: {
     elevenlabsCallsPerMonth: 1000,
@@ -3678,8 +3880,8 @@ export const DEFAULT_FEATURE_LIMITS: Record<SubscriptionTier, FeatureLimits> = {
     customVoiceMessagesPerDay: -1, // unlimited
     customSoundsStorage: 500,
     themesAllowed: -1, // unlimited
-    battlesPerDay: -1 // unlimited
-  }
+    battlesPerDay: -1, // unlimited
+  },
 };
 
 export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
@@ -3695,7 +3897,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       'Basic themes',
       '5 battles per day',
       'Standard voice options',
-      'Basic customization'
+      'Basic customization',
     ],
     featureAccess: {
       elevenlabsVoices: false,
@@ -3722,8 +3924,8 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       premiumSoundLibrary: false,
       exclusiveContent: false,
       adFree: false,
-      prioritySupport: false
-    }
+      prioritySupport: false,
+    },
   },
   {
     id: 'premium',
@@ -3741,7 +3943,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       '20 battles per day',
       'Premium sound library',
       'Advanced customization',
-      'Ad-free experience'
+      'Ad-free experience',
     ],
     featureAccess: {
       elevenlabsVoices: true,
@@ -3768,9 +3970,9 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       premiumSoundLibrary: true,
       exclusiveContent: true,
       adFree: true,
-      prioritySupport: false
+      prioritySupport: false,
     },
-    stripePriceId: 'price_premium_monthly'
+    stripePriceId: 'price_premium_monthly',
   },
   {
     id: 'pro',
@@ -3789,7 +3991,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       'Custom battle rules',
       'Smart scheduling',
       'Unlimited customization',
-      'Priority support'
+      'Priority support',
     ],
     featureAccess: {
       elevenlabsVoices: true,
@@ -3815,9 +4017,9 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       premiumSoundLibrary: true,
       exclusiveContent: true,
       adFree: true,
-      prioritySupport: true
+      prioritySupport: true,
     },
-    stripePriceId: 'price_pro_monthly'
+    stripePriceId: 'price_pro_monthly',
   },
   {
     id: 'lifetime',
@@ -3832,7 +4034,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       'Unlimited custom voice messages',
       'All premium features',
       'Lifetime updates',
-      'Priority support'
+      'Priority support',
     ],
     featureAccess: {
       elevenlabsVoices: true,
@@ -3858,8 +4060,8 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       premiumSoundLibrary: true,
       exclusiveContent: true,
       adFree: true,
-      prioritySupport: true
+      prioritySupport: true,
     },
-    stripePriceId: 'price_lifetime'
-  }
+    stripePriceId: 'price_lifetime',
+  },
 ];

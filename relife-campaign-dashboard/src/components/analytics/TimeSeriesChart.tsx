@@ -207,5 +207,3 @@ export function TimeSeriesChart({
     </Card>
   );
 }
-
-

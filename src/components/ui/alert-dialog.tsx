@@ -16,13 +16,17 @@ function AlertDialog({
 function AlertDialogTrigger({
   ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Trigger>) {
-  return <AlertCircleDialogPrimitive.Trigger data-slot="alert-dialog-trigger" {...props} />;
+  return (
+    <AlertCircleDialogPrimitive.Trigger data-slot="alert-dialog-trigger" {...props} />
+  );
 }
 
 function AlertDialogPortal({
   ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Portal>) {
-  return <AlertCircleDialogPrimitive.Portal data-slot="alert-dialog-portal" {...props} />;
+  return (
+    <AlertCircleDialogPrimitive.Portal data-slot="alert-dialog-portal" {...props} />
+  );
 }
 
 function AlertDialogOverlay({

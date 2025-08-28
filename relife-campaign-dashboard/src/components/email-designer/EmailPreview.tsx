@@ -308,7 +308,8 @@ export function EmailPreview({ template, _onSendTest, _className }: EmailPreview
     );
   };
 
-  return (<div className={className}>
+  return (
+    <div className={className}>
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">

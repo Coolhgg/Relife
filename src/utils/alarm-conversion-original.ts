@@ -57,6 +57,8 @@ export class AlarmConversionUtil {
   /**
    * Convert an array of basic alarms to advanced alarms
    */
+  static convertArrayToAdvanced(basicAlarms: Alarm[]): AdvancedAlarm[] {
+    return basicAlarms.map((alarm) => this.convertToAdvanced(alarm));
   }
 
   /**

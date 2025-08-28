@@ -233,7 +233,10 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
                     <div className="flex items-center gap-1">
                       <Brain size={12} />
                       <span>
-                        {alarm.smartOptimizations.filter((o: any) => o.isEnabled).length}{' '}
+                        {
+                          alarm.smartOptimizations.filter((o: any) => o.isEnabled)
+                            .length
+                        }{' '}
                         optimizations
                       </span>
                     </div>

@@ -1,10 +1,12 @@
 # API Testing Guide
 
-This guide covers testing API endpoints, service integrations, and backend functionality in the Relife application.
+This guide covers testing API endpoints, service integrations, and backend functionality in the
+Relife application.
 
 ## Overview
 
 Relife uses a hybrid API architecture:
+
 - **Cloudflare Workers** for edge API endpoints
 - **Supabase** for database operations and real-time features
 - **Stripe** for payment processing
@@ -46,11 +48,11 @@ describe('Alarm API', () => {
     const alarmData = {
       label: 'Test Alarm',
       time: '07:00',
-      days: [1, 2, 3, 4, 5]
+      days: [1, 2, 3, 4, 5],
     };
 
     const response = await apiClient.request('POST', '/api/alarms', alarmData);
-    
+
     expect(response.status).toBe(201);
     expect(response.data.alarm).toMatchObject(alarmData);
   });
@@ -64,9 +66,9 @@ describe('Alarm API', () => {
 ```typescript
 it('should handle successful API responses', async () => {
   apiClient.setScenario('success');
-  
+
   const response = await apiClient.request('GET', '/api/alarms');
-  
+
   expect(response.status).toBe(200);
   expect(response.data.alarms).toHaveLength(5); // Default mock data
 });
@@ -77,9 +79,9 @@ it('should handle successful API responses', async () => {
 ```typescript
 it('should handle API errors gracefully', async () => {
   apiClient.setScenario('error');
-  
+
   const response = await apiClient.request('GET', '/api/alarms');
-  
+
   expect(response.status).toBe(500);
   expect(response.data.error).toBeDefined();
 });
@@ -90,11 +92,11 @@ it('should handle API errors gracefully', async () => {
 ```typescript
 it('should handle slow network conditions', async () => {
   apiClient.setScenario('slow');
-  
+
   const startTime = performance.now();
   const response = await apiClient.request('GET', '/api/alarms');
   const duration = performance.now() - startTime;
-  
+
   expect(duration).toBeGreaterThan(2000); // Should be slow
   expect(response.status).toBe(200);
 });
@@ -105,10 +107,8 @@ it('should handle slow network conditions', async () => {
 ```typescript
 it('should handle offline conditions', async () => {
   apiClient.setScenario('offline');
-  
-  await expect(
-    apiClient.request('GET', '/api/alarms')
-  ).rejects.toThrow(/network error/i);
+
+  await expect(apiClient.request('GET', '/api/alarms')).rejects.toThrow(/network error/i);
 });
 ```
 
@@ -122,11 +122,11 @@ describe('User Management API', () => {
     const userData = {
       email: 'test@example.com',
       password: 'SecurePassword123!',
-      name: 'Test User'
+      name: 'Test User',
     };
 
     const response = await apiClient.request('POST', '/api/auth/register', userData);
-    
+
     expect(response.status).toBe(201);
     expect(response.data.user.email).toBe(userData.email);
     expect(response.data.token).toBeDefined();
@@ -134,7 +134,7 @@ describe('User Management API', () => {
 
   it('should authenticate user', async () => {
     await apiClient.authenticateUser('test@example.com', 'password');
-    
+
     const response = await apiClient.request('GET', '/api/user/profile');
     expect(response.status).toBe(200);
     expect(response.data.user.email).toBe('test@example.com');
@@ -154,7 +154,7 @@ describe('Alarm Management API', () => {
     const alarm = await apiClient.createTestAlarm({
       label: 'API Test Alarm',
       time: '08:00',
-      difficulty: 'hard'
+      difficulty: 'hard',
     });
 
     expect(alarm.id).toBeDefined();
@@ -163,9 +163,9 @@ describe('Alarm Management API', () => {
 
   it('should update alarm', async () => {
     const alarm = await apiClient.createTestAlarm();
-    
+
     const response = await apiClient.request('PUT', `/api/alarms/${alarm.id}`, {
-      label: 'Updated Alarm'
+      label: 'Updated Alarm',
     });
 
     expect(response.status).toBe(200);
@@ -174,7 +174,7 @@ describe('Alarm Management API', () => {
 
   it('should delete alarm', async () => {
     const alarm = await apiClient.createTestAlarm();
-    
+
     const response = await apiClient.request('DELETE', `/api/alarms/${alarm.id}`);
     expect(response.status).toBe(204);
 
@@ -196,7 +196,7 @@ describe('Battle System API', () => {
   it('should join quick battle', async () => {
     const response = await apiClient.request('POST', '/api/battles/join', {
       type: 'quick',
-      difficulty: 'medium'
+      difficulty: 'medium',
     });
 
     expect(response.status).toBe(200);
@@ -205,10 +205,10 @@ describe('Battle System API', () => {
 
   it('should submit battle challenge answer', async () => {
     const battle = await apiClient.createTestBattle();
-    
+
     const response = await apiClient.request('POST', `/api/battles/${battle.id}/answer`, {
       challengeId: 'challenge-1',
-      answer: '42'
+      answer: '42',
     });
 
     expect(response.status).toBe(200);
@@ -226,15 +226,11 @@ import { apiPerformanceTester } from '../performance/performance-testing-utiliti
 
 describe('API Performance', () => {
   it('should meet response time requirements', async () => {
-    const results = await apiPerformanceTester.testEndpointPerformance(
-      '/api/alarms',
-      'GET',
-      {
-        iterations: 100,
-        concurrent: 5,
-        acceptableResponseTime: 500
-      }
-    );
+    const results = await apiPerformanceTester.testEndpointPerformance('/api/alarms', 'GET', {
+      iterations: 100,
+      concurrent: 5,
+      acceptableResponseTime: 500,
+    });
 
     expect(results.passed).toBe(true);
     expect(results.averageResponseTime).toBeLessThan(500);
@@ -242,11 +238,9 @@ describe('API Performance', () => {
   });
 
   it('should handle concurrent requests', async () => {
-    const results = await apiPerformanceTester.testEndpointPerformance(
-      '/api/alarms',
-      'GET',
-      { concurrent: 10 }
-    );
+    const results = await apiPerformanceTester.testEndpointPerformance('/api/alarms', 'GET', {
+      concurrent: 10,
+    });
 
     expect(results.successRate).toBeGreaterThan(0.95); // 95% success rate
   });
@@ -258,13 +252,16 @@ describe('API Performance', () => {
 ```typescript
 describe('API Load Testing', () => {
   it('should handle high request volume', async () => {
-    const results = await apiPerformanceTester.benchmarkCriticalPaths([
-      { name: 'load_alarms', endpoint: '/api/alarms', method: 'GET' },
-      { name: 'create_alarm', endpoint: '/api/alarms', method: 'POST' },
-      { name: 'join_battle', endpoint: '/api/battles/join', method: 'POST' }
-    ], { acceptableResponseTime: 1000 });
+    const results = await apiPerformanceTester.benchmarkCriticalPaths(
+      [
+        { name: 'load_alarms', endpoint: '/api/alarms', method: 'GET' },
+        { name: 'create_alarm', endpoint: '/api/alarms', method: 'POST' },
+        { name: 'join_battle', endpoint: '/api/battles/join', method: 'POST' },
+      ],
+      { acceptableResponseTime: 1000 }
+    );
 
-    Object.values(results).forEach(result => {
+    Object.values(results).forEach((result) => {
       expect(result.passed).toBe(true);
     });
   });
@@ -289,7 +286,7 @@ describe('Supabase Integration', () => {
     const alarm = await mockSupabase.from('alarms').insert({
       label: 'Test Alarm',
       time: '07:00',
-      user_id: 'user-123'
+      user_id: 'user-123',
     });
 
     expect(alarm.data).toBeDefined();
@@ -300,16 +297,20 @@ describe('Supabase Integration', () => {
     const channel = mockSupabase.channel('alarms');
     const updateHandler = jest.fn();
 
-    channel.on('postgres_changes', {
-      event: 'UPDATE',
-      schema: 'public',
-      table: 'alarms'
-    }, updateHandler);
+    channel.on(
+      'postgres_changes',
+      {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'alarms',
+      },
+      updateHandler
+    );
 
     // Simulate update
     await mockSupabase.simulateRealtimeUpdate('alarms', {
       id: '1',
-      label: 'Updated Alarm'
+      label: 'Updated Alarm',
     });
 
     expect(updateHandler).toHaveBeenCalled();
@@ -332,7 +333,7 @@ describe('Stripe Integration', () => {
   it('should process subscription payment', async () => {
     const result = await paymentTester.testSubscriptionFlow('premium', {
       customer: { email: 'test@example.com' },
-      paymentMethod: 'pm_card_visa'
+      paymentMethod: 'pm_card_visa',
     });
 
     expect(result.success).toBe(true);
@@ -342,7 +343,7 @@ describe('Stripe Integration', () => {
   it('should handle webhook events', async () => {
     const result = await paymentTester.testWebhookReliability([
       'invoice.payment_succeeded',
-      'customer.subscription.updated'
+      'customer.subscription.updated',
     ]);
 
     expect(result.allProcessed).toBe(true);
@@ -363,7 +364,7 @@ describe('Real-time Features', () => {
     const results = await realTimePerformanceTester.testWebSocketPerformance({
       duration: 10000,
       messageRate: 5,
-      acceptableLatency: 200
+      acceptableLatency: 200,
     });
 
     expect(results.passed).toBe(true);
@@ -402,18 +403,18 @@ expect(response.status).toBe(500); // Server error
 ```typescript
 it('should return properly structured response', async () => {
   const response = await apiClient.request('GET', '/api/alarms');
-  
+
   expect(response.data).toMatchObject({
     alarms: expect.arrayContaining([
       expect.objectContaining({
         id: expect.any(String),
         label: expect.any(String),
         time: expect.any(String),
-        enabled: expect.any(Boolean)
-      })
+        enabled: expect.any(Boolean),
+      }),
     ]),
     total: expect.any(Number),
-    page: expect.any(Number)
+    page: expect.any(Number),
   });
 });
 ```
@@ -447,7 +448,7 @@ describe('API Security', () => {
 it('should validate required fields', async () => {
   const response = await apiClient.request('POST', '/api/alarms', {
     // Missing required fields
-    time: '07:00'
+    time: '07:00',
   });
 
   expect(response.status).toBe(400);
@@ -457,7 +458,7 @@ it('should validate required fields', async () => {
 it('should validate field formats', async () => {
   const response = await apiClient.request('POST', '/api/alarms', {
     label: 'Test Alarm',
-    time: 'invalid-time-format'
+    time: 'invalid-time-format',
   });
 
   expect(response.status).toBe(400);
@@ -469,12 +470,10 @@ it('should validate field formats', async () => {
 
 ```typescript
 it('should enforce rate limits', async () => {
-  const requests = Array.from({ length: 101 }, () =>
-    apiClient.request('GET', '/api/alarms')
-  );
+  const requests = Array.from({ length: 101 }, () => apiClient.request('GET', '/api/alarms'));
 
   const responses = await Promise.all(requests);
-  const rateLimitedResponses = responses.filter(r => r.status === 429);
+  const rateLimitedResponses = responses.filter((r) => r.status === 429);
 
   expect(rateLimitedResponses.length).toBeGreaterThan(0);
 });
@@ -489,7 +488,7 @@ import { ApiTestClient } from '../api/api-testing-utilities';
 
 const apiClient = new ApiTestClient({
   enableLogging: true,
-  logLevel: 'debug'
+  logLevel: 'debug',
 });
 ```
 
@@ -503,10 +502,7 @@ it('should handle specific error case', async () => {
   // Override default handler for this test
   server.use(
     rest.get('/api/alarms', (req, res, ctx) => {
-      return res(
-        ctx.status(503),
-        ctx.json({ error: 'Service temporarily unavailable' })
-      );
+      return res(ctx.status(503), ctx.json({ error: 'Service temporarily unavailable' }));
     })
   );
 
@@ -522,27 +518,29 @@ import { ApiAssertions } from '../api/api-testing-utilities';
 
 it('should make correct API calls', async () => {
   const mockFetch = jest.spyOn(global, 'fetch');
-  
+
   await apiClient.request('GET', '/api/alarms');
-  
+
   ApiAssertions.expectApiToHaveBeenCalled(mockFetch, 1, [
     '/api/alarms',
     expect.objectContaining({
       method: 'GET',
       headers: expect.objectContaining({
-        'Authorization': expect.stringMatching(/Bearer .+/)
-      })
-    })
+        Authorization: expect.stringMatching(/Bearer .+/),
+      }),
+    }),
   ]);
 });
 ```
 
 ## Next Steps
 
-- Review [Performance Testing Guide](./performance-testing-guide.md) for API performance optimization
+- Review [Performance Testing Guide](./performance-testing-guide.md) for API performance
+  optimization
 - Check [Integration Testing Guide](./integration-testing-guide.md) for E2E API testing
 - See [Troubleshooting Guide](./troubleshooting.md) for common API testing issues
 
 ---
 
-This guide covers the comprehensive API testing capabilities available in the Relife testing framework. Use these patterns and utilities to ensure robust API functionality and performance.
+This guide covers the comprehensive API testing capabilities available in the Relife testing
+framework. Use these patterns and utilities to ensure robust API functionality and performance.
