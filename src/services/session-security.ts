@@ -130,13 +130,7 @@ class SessionSecurityService {
   }
 }
 
-export default SessionSecurityService.getInstance();ror)),
-        'Failed to create secure session',
-        { context: 'session_creation', userId }
-      );
-      throw error;
-    }
-  }
+export default SessionSecurityService.getInstance();
 
   /**
    * Validate and update session
