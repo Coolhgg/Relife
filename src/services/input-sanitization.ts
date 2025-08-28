@@ -28,20 +28,20 @@ export interface SanitizationResult {
   isValid: boolean;
 }
 
-export type InputType =
-  | 'text'
-  | 'email'
-  | 'password'
-  | 'url'
-  | 'phone'
-  | 'number'
-  | 'html'
-  | 'markdown'
-  | 'json'
-  | 'name'
-  | 'message'
-  | 'code'
-  | 'search'
+export type InputType = 
+  | 'text' 
+  | 'email' 
+  | 'password' 
+  | 'url' 
+  | 'phone' 
+  | 'number' 
+  | 'html' 
+  | 'markdown' 
+  | 'json' 
+  | 'name' 
+  | 'message' 
+  | 'code' 
+  | 'search' 
   | 'username';
 
 class InputSanitizationService {
@@ -87,9 +87,9 @@ class InputSanitizationService {
     /Function\s*\(/gi,
     /require\s*\(/gi,
     /import\s+.*from/gi,
-    /<%[\s\S]*%>/gi, // Server-side includes
-    /<\?php[\s\S]*\?>/gi, // PHP code
-    /<%=[\s\S]*%>/gi, // ASP/JSP code
+    /<%[\s\S]*%>/gi,  // Server-side includes
+    /<\?php[\s\S]*\?>/gi,  // PHP code
+    /<%=[\s\S]*%>/gi,  // ASP/JSP code
   ];
 
   // Default configurations for different input types
@@ -109,7 +109,7 @@ class InputSanitizationService {
       preventXSS: true,
       preventSQL: true,
       preventCodeInjection: true,
-      customValidation: input => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input),
+      customValidation: (input) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input),
     },
     password: {
       allowHtml: false,
@@ -126,7 +126,7 @@ class InputSanitizationService {
       preventXSS: true,
       preventSQL: true,
       preventCodeInjection: true,
-      customValidation: input => {
+      customValidation: (input) => {
         try {
           const url = new URL(input);
           return ['http:', 'https:', 'mailto:', 'tel:'].includes(url.protocol);
@@ -142,7 +142,7 @@ class InputSanitizationService {
       preventXSS: true,
       preventSQL: true,
       preventCodeInjection: true,
-      customTransformation: input => input.replace(/[^\d\s\-\+\(\)]/g, ''),
+      customTransformation: (input) => input.replace(/[^\d\s\-\+\(\)]/g, ''),
     },
     number: {
       allowHtml: false,
@@ -151,28 +151,11 @@ class InputSanitizationService {
       preventXSS: true,
       preventSQL: true,
       preventCodeInjection: true,
-      customTransformation: input => input.replace(/[^\d\.\-\+e]/gi, ''),
+      customTransformation: (input) => input.replace(/[^\d\.\-\+e]/gi, ''),
     },
     html: {
       allowHtml: true,
-      allowedTags: [
-        'p',
-        'br',
-        'strong',
-        'em',
-        'u',
-        'h1',
-        'h2',
-        'h3',
-        'h4',
-        'h5',
-        'h6',
-        'ul',
-        'ol',
-        'li',
-        'a',
-        'blockquote',
-      ],
+      allowedTags: ['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'a', 'blockquote'],
       allowedAttributes: ['href', 'title', 'alt'],
       maxLength: 10000,
       preventXSS: true,
@@ -194,7 +177,7 @@ class InputSanitizationService {
       preventXSS: true,
       preventSQL: true,
       preventCodeInjection: true,
-      customValidation: input => {
+      customValidation: (input) => {
         try {
           JSON.parse(input);
           return true;
@@ -211,7 +194,7 @@ class InputSanitizationService {
       preventXSS: true,
       preventSQL: true,
       preventCodeInjection: true,
-      customTransformation: input => input.replace(/[^\p{L}\p{M}\s\-\.\']/gu, ''),
+      customTransformation: (input) => input.replace(/[^\p{L}\p{M}\s\-\.\']/gu, ''),
     },
     message: {
       allowHtml: false,
@@ -245,8 +228,8 @@ class InputSanitizationService {
       preventXSS: true,
       preventSQL: true,
       preventCodeInjection: true,
-      customTransformation: input => input.replace(/[^\w\-\.]/g, ''),
-      customValidation: input => /^[a-zA-Z0-9._-]+$/.test(input) && input.length >= 3,
+      customTransformation: (input) => input.replace(/[^\w\-\.]/g, ''),
+      customValidation: (input) => /^[a-zA-Z0-9._-]+$/.test(input) && input.length >= 3,
     },
   };
 
@@ -332,10 +315,10 @@ class InputSanitizationService {
         SANITIZE_DOM: true,
         SANITIZE_NAMED_PROPS: true,
       };
-
+      
       const beforeHtmlSanitization = sanitized;
       sanitized = DOMPurify.sanitize(sanitized, domPurifyOptions);
-
+      
       if (beforeHtmlSanitization !== sanitized) {
         violations.push('HTML content was sanitized');
       }
@@ -347,7 +330,7 @@ class InputSanitizationService {
         ALLOWED_ATTR: [],
         KEEP_CONTENT: true,
       });
-
+      
       if (beforeStripHtml !== sanitized) {
         violations.push('HTML tags were removed');
       }
@@ -360,7 +343,7 @@ class InputSanitizationService {
         /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu,
         ''
       );
-
+      
       if (beforeStripEmojis !== sanitized) {
         violations.push('Emojis were removed');
       }
@@ -370,7 +353,7 @@ class InputSanitizationService {
     if (options.normalizeWhitespace) {
       const beforeNormalize = sanitized;
       sanitized = sanitized.replace(/\s+/g, ' ').trim();
-
+      
       if (beforeNormalize !== sanitized) {
         violations.push('Whitespace was normalized');
       }
@@ -378,9 +361,7 @@ class InputSanitizationService {
 
     // Step 8: Enforce length limits
     if (options.maxLength && sanitized.length > options.maxLength) {
-      violations.push(
-        `Input truncated from ${sanitized.length} to ${options.maxLength} characters`
-      );
+      violations.push(`Input truncated from ${sanitized.length} to ${options.maxLength} characters`);
       sanitized = sanitized.substring(0, options.maxLength).trim();
     }
 
@@ -404,17 +385,14 @@ class InputSanitizationService {
    * Batch sanitize multiple inputs
    */
   sanitizeBatch(
-    inputs: Record<
-      string,
-      { value: any; type: InputType; options?: SanitizationOptions }
-    >
+    inputs: Record<string, { value: any; type: InputType; options?: SanitizationOptions }>
   ): Record<string, SanitizationResult> {
     const results: Record<string, SanitizationResult> = {};
-
+    
     for (const [key, { value, type, options }] of Object.entries(inputs)) {
       results[key] = this.sanitize(value, type, options);
     }
-
+    
     return results;
   }
 
@@ -428,11 +406,7 @@ class InputSanitizationService {
   /**
    * Validate input without modification
    */
-  validate(
-    input: string,
-    type: InputType = 'text',
-    options?: SanitizationOptions
-  ): {
+  validate(input: string, type: InputType = 'text', options?: SanitizationOptions): {
     isValid: boolean;
     violations: string[];
   } {
@@ -459,7 +433,7 @@ class InputSanitizationService {
       ...this.SQL_PATTERNS,
       ...this.CODE_PATTERNS,
     ];
-
+    
     return allPatterns.some(pattern => pattern.test(input));
   }
 
@@ -469,26 +443,22 @@ class InputSanitizationService {
   sanitizeFileName(fileName: string): string {
     // Remove path traversal attempts
     let sanitized = fileName.replace(/[/\\]/g, '');
-
+    
     // Remove dangerous characters
     sanitized = sanitized.replace(/[<>:"|?*\x00-\x1f]/g, '');
-
+    
     // Limit length
     if (sanitized.length > 255) {
       const extension = sanitized.split('.').pop() || '';
-      const nameWithoutExt = sanitized.substring(
-        0,
-        sanitized.lastIndexOf('.') || sanitized.length
-      );
-      sanitized =
-        nameWithoutExt.substring(0, 255 - extension.length - 1) + '.' + extension;
+      const nameWithoutExt = sanitized.substring(0, sanitized.lastIndexOf('.') || sanitized.length);
+      sanitized = nameWithoutExt.substring(0, 255 - extension.length - 1) + '.' + extension;
     }
-
+    
     // Ensure it's not empty
     if (!sanitized.trim()) {
       sanitized = 'untitled';
     }
-
+    
     return sanitized;
   }
 
@@ -497,16 +467,16 @@ class InputSanitizationService {
    */
   sanitizeUrlParams(params: Record<string, any>): Record<string, string> {
     const sanitized: Record<string, string> = {};
-
+    
     for (const [key, value] of Object.entries(params)) {
       const sanitizedKey = this.quickSanitize(String(key), 'text');
       const sanitizedValue = this.quickSanitize(String(value), 'text');
-
+      
       if (sanitizedKey && sanitizedValue) {
         sanitized[sanitizedKey] = sanitizedValue;
       }
     }
-
+    
     return sanitized;
   }
 
@@ -518,12 +488,12 @@ class InputSanitizationService {
     fieldTypes: Record<string, InputType> = {}
   ): Record<string, any> {
     const sanitized: Record<string, any> = {};
-
+    
     for (const [field, value] of Object.entries(formData)) {
       const type = fieldTypes[field] || 'text';
       sanitized[field] = this.quickSanitize(String(value), type);
     }
-
+    
     return sanitized;
   }
 }
