@@ -18,7 +18,6 @@ import type {
   AlarmEvent,
   Battle,
   BattleParticipant,
-  BattleParticipantStats,
   BattleSettings,
   ThemeConfig,
   ThemeColors,
@@ -61,7 +60,7 @@ const createTestSubscription = (
 
   return {
     id: generateId('sub'),
-    userId: generateId('_user'),
+    userId: generateId('user'),
     stripeSubscriptionId: `sub_${faker.string.alphanumeric(14)}`,
     stripeCustomerId: `cus_${faker.string.alphanumeric(14)}`,
     tier: premiumTier,
@@ -79,9 +78,7 @@ const createTestSubscription = (
   };
 };
 
-const createTestPremiumFeatureAccess = (
-  tier: Subscription['tier'] = 'premium'
-): PremiumFeatureAccess => ({
+const createTestPremiumFeatureAccess = (): PremiumFeatureAccess => ({
   // Voice Features
   elevenlabsVoices: tier !== 'free',
   customVoiceMessages: tier !== 'free',
@@ -252,7 +249,7 @@ export const _createTestUser = <T extends CreateUserOptions = CreateUserOptions>
     premium = tier !== 'free',
   } = options;
 
-  const userId = generateId('_user');
+  const userId = generateId('user');
   const joinDate = generateTimestamp({ past: 365 });
   const experience = level
     ? level * 100 + faker.number.int({ min: 0, max: 99 })
@@ -281,23 +278,7 @@ export const _createTestUser = <T extends CreateUserOptions = CreateUserOptions>
         ? undefined
         : faker.helpers.arrayElement(COMMON_DATA.subscriptionStatuses),
     createdAt: joinDate,
-    subscription:
-      tier !== 'free'
-        ? ({
-            id: generateId('sub'),
-            userId,
-            tier,
-            status: faker.helpers.arrayElement(['active', 'trialing']) as unknown,
-            billingInterval: faker.helpers.arrayElement(['month', 'year']) as unknown,
-            amount: tier === 'premium' ? 999 : tier === 'ultimate' ? 1999 : 499,
-            currency: 'usd',
-            currentPeriodStart: new Date(),
-            currentPeriodEnd: faker.date.future(),
-            cancelAtPeriodEnd: false,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          } as Subscription)
-        : undefined,
+    subscription: tier !== 'free' ? ({ id: generateId('sub') } as any) : undefined,
     stripeCustomerId:
       tier !== 'free' ? `cus_${faker.string.alphanumeric(14)}` : undefined,
     trialEndsAt: tier === 'free' ? undefined : faker.date.soon({ days: 14 }),
@@ -317,7 +298,7 @@ export const _createTestUser = <T extends CreateUserOptions = CreateUserOptions>
           battlePremium: true,
           prioritySupport: tier === 'premium' || tier === 'pro',
           apiAccess: tier === 'pro' || tier === 'enterprise',
-        } as unknown)
+        } as any)
       : undefined,
     usage: premium ? createTestPremiumUsage() : undefined,
   };
@@ -346,7 +327,7 @@ export const _createTestUserPreferences = (
       theme: faker.helpers.arrayElement(['light', 'dark', 'auto', 'system']),
       language: faker.helpers.arrayElement(['en', 'es', 'fr', 'de', 'ja', 'hi']),
       timezone: faker.location.timeZone(),
-    } as unknown,
+    } as any,
     notificationsEnabled: faker.datatype.boolean({ probability: 0.8 }),
     soundEnabled: faker.datatype.boolean({ probability: 0.9 }),
     voiceDismissalSensitivity: faker.number.int({ min: 1, max: 10 }),
@@ -369,7 +350,7 @@ export const _createTestUserPreferences = (
     locationChallenges: faker.datatype.boolean({ probability: 0.6 }),
     photoChallenges: faker.datatype.boolean({ probability: 0.5 }),
     theme: faker.helpers.arrayElement(['light', 'dark', 'auto', 'system']),
-    gameTheme: { id: generateId('theme') } as unknown,
+    gameTheme: { id: generateId('theme') } as any,
   };
 };
 
@@ -418,7 +399,7 @@ export const _createTestAlarm = <T extends CreateAlarmOptions = CreateAlarmOptio
   options: T = {} as T
 ): Alarm => {
   const {
-    userId = generateId('_user'),
+    userId = generateId('user'),
     enabled = faker.datatype.boolean({ probability: 0.8 }),
     difficulty,
     premium = false,
@@ -456,13 +437,13 @@ export const _createTestAlarm = <T extends CreateAlarmOptions = CreateAlarmOptio
         ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][
           day
         ]
-    ) as unknown,
+    ) as any,
     recurringDays: days.map(
       day =>
         ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][
           day
         ]
-    ) as unknown,
+    ) as any,
     voiceMood: faker.helpers.arrayElement(
       premium ? [...COMMON_DATA.voiceMoods] : COMMON_DATA.voiceMoods.slice(0, 6) // Free tier only
     ) as VoiceMood,
@@ -496,7 +477,7 @@ export const _createTestAlarm = <T extends CreateAlarmOptions = CreateAlarmOptio
           adaptiveVolume: faker.datatype.boolean({ probability: 0.7 }),
           sleepCycleDetection: faker.datatype.boolean({ probability: 0.5 }),
           contextualMessages: faker.datatype.boolean({ probability: 0.8 }),
-        } as unknown)
+        } as any)
       : undefined,
   };
 };
@@ -522,7 +503,7 @@ export const _createTestAlarmInstance = (alarmId: string): AlarmInstance => ({
 });
 
 export const _createTestAlarmEvent = (alarmId: string): AlarmEvent => ({
-  id: generateId('_event'),
+  id: generateId('event'),
   alarmId,
   firedAt: faker.date.recent({ days: 7 }),
   dismissed: faker.datatype.boolean({ probability: 0.8 }),
@@ -548,7 +529,7 @@ export const _createTestBattle = (options: CreateBattleOptions = {}): Battle => 
     type = faker.helpers.arrayElement(COMMON_DATA.battleTypes) as BattleType,
     status = faker.helpers.arrayElement(COMMON_DATA.battleStatuses) as BattleStatus,
     participantCount = faker.number.int({ min: 2, max: 10 }),
-    creatorId = generateId('_user'),
+    creatorId = generateId('user'),
     premium = false,
   } = options;
 
@@ -595,7 +576,7 @@ export const _createTestBattle = (options: CreateBattleOptions = {}): Battle => 
 };
 
 export const _createTestBattleParticipant = (userId?: string): BattleParticipant => {
-  const participantUserId = userId || generateId('_user');
+  const participantUserId = userId || generateId('user');
 
   return {
     userId: participantUserId,
@@ -611,7 +592,7 @@ export const _createTestBattleParticipant = (userId?: string): BattleParticipant
       accuracy: faker.number.float({ min: 0.5, max: 1.0, multipleOf: 0.01 }),
       streakDays: faker.number.int({ min: 0, max: 30 }),
       bonusPoints: faker.number.int({ min: 0, max: 500 }),
-    } as unknown,
+    } as any,
   };
 };
 
@@ -650,7 +631,7 @@ const createTestBattleSettings = (options: {
               allowedMisses: faker.number.int({ min: 0, max: 3 }),
             }
           : {},
-  } as unknown;
+  } as any;
 };
 
 const createTestBattlePrize = (options: { premium: boolean }) => {
@@ -661,7 +642,7 @@ const createTestBattlePrize = (options: { premium: boolean }) => {
     badges: randomSubset(['early-bird', 'consistent', 'warrior', 'champion'], 1, 2),
     premiumDays: premium ? faker.number.int({ min: 1, max: 30 }) : 0,
     customization: premium ? randomSubset(['theme', 'voice', 'sound'], 0, 2) : [],
-  } as unknown;
+  } as any;
 };
 
 // ===============================
@@ -714,7 +695,7 @@ export const _createTestTheme = (options: CreateThemeOptions = {}): ThemeConfig 
     previewImage: faker.image.url({ width: 400, height: 300 }),
     isCustom,
     isPremium,
-    createdBy: isCustom ? createdBy || generateId('_user') : undefined,
+    createdBy: isCustom ? createdBy || generateId('user') : undefined,
     createdAt: generateTimestamp({ past: 365 }),
     popularity: generateRating() * 20, // 0-100
     rating: generateRating(),
@@ -728,7 +709,7 @@ const createTestThemeColors = (): ThemeColors => ({
   neutral: createTestColorPalette(),
   success: createTestColorPalette('#22c55e'),
   warning: createTestColorPalette('#f59e0b'),
-  _error: createTestColorPalette('#ef4444'),
+  error: createTestColorPalette('#ef4444'),
   info: createTestColorPalette('#3b82f6'),
   background: {
     primary: generateHexColor(),
@@ -776,7 +757,7 @@ const createTestColorPalette = (baseColor?: string) => ({
 
 const createTestThemeTypography = () => ({
   fontFamily: {
-    primary: faker.helpers.arrayElement(['Inter', 'Boto', 'Open Sans', 'Lato']),
+    primary: faker.helpers.arrayElement(['Inter', 'Roboto', 'Open Sans', 'Lato']),
     secondary: faker.helpers.arrayElement(['Poppins', 'Montserrat', 'Source Sans Pro']),
     mono: faker.helpers.arrayElement(['Monaco', 'Consolas', 'Source Code Pro']),
   },
@@ -951,5 +932,5 @@ export const _createCompletedBattle = () =>
   createFlexibleBattle({
     status: 'completed',
     endTime: new Date(),
-    winner: generateId('_user'),
+    winner: generateId('user'),
   });

@@ -11,6 +11,9 @@ import { handlers } from './msw-handlers';
 // Setup MSW server
 export const server = setupServer(...handlers);
 
+// Alias export without underscore
+export const server = _server;
+
 // Establish API mocking before all tests
 beforeAll(() => {
   server.listen({
@@ -37,7 +40,7 @@ export const mockApiError = (
 ) => {
   server.use(
     http.all(endpoint, () => {
-      return HttpResponse.json({ _error: message }, { status });
+      return HttpResponse.json({ error: message }, { status });
     })
   );
 };
