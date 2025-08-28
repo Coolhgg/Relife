@@ -12,7 +12,7 @@ const CACHES = {
   API: `${CACHE_PREFIX}-api-v${APP_VERSION}`,
   ASSETS: `${CACHE_PREFIX}-assets-v${APP_VERSION}`,
   ANALYTICS: `${CACHE_PREFIX}-analytics-v${APP_VERSION}`,
-  EMOTIONAL: `${CACHE_PREFIX}-emotional-v${APP_VERSION}`,
+  EMOTIONAL: `${CACHE_PREFIX}-emotional-v${APP_VERSION}`
 };
 
 // Cache size limits (in bytes)
@@ -22,7 +22,7 @@ const CACHE_LIMITS = {
   API: 10 * 1024 * 1024, // 10MB
   ASSETS: 200 * 1024 * 1024, // 200MB
   ANALYTICS: 5 * 1024 * 1024, // 5MB
-  EMOTIONAL: 5 * 1024 * 1024, // 5MB
+  EMOTIONAL: 5 * 1024 * 1024 // 5MB
 };
 
 // Cache performance tracking
@@ -31,7 +31,7 @@ let cacheStats = {
   misses: 0,
   size: 0,
   lastCleanup: Date.now(),
-  hitRatio: 0,
+  hitRatio: 0
 };
 
 // Static files to cache immediately
@@ -43,17 +43,22 @@ const STATIC_FILES = [
   '/icon-72x72.png',
   '/icon-192x192.png',
   '/icon-512x512.png',
-  '/offline.html',
+  '/offline.html'
 ];
 
 // Cache strategies for different URL patterns
 const CACHE_STRATEGIES = {
-  NETWORK_FIRST: [/\/api\/auth/, /\/api\/users/, /\/api\/sync/, /\/api\/realtime/],
+  NETWORK_FIRST: [
+    /\/api\/auth/,
+    /\/api\/users/,
+    /\/api\/sync/,
+    /\/api\/realtime/
+  ],
   CACHE_FIRST: [
     /\.(js|css|png|jpg|jpeg|svg|ico|woff2?)$/,
     /\/static\//,
     /\/assets\//,
-    /\/icons\//,
+    /\/icons\//
   ],
   STALE_WHILE_REVALIDATE: [
     /\/api\/alarms/,
@@ -61,8 +66,8 @@ const CACHE_STRATEGIES = {
     /\/api\/sleep/,
     /\/api\/analytics/,
     /\/api\/gaming/,
-    /\/api\/rewards/,
-  ],
+    /\/api\/rewards/
+  ]
 };
 
 // Background sync tags
@@ -74,7 +79,7 @@ const SYNC_TAGS = {
   SETTINGS: 'settings-sync',
   USER_DATA: 'user-data-sync',
   GAMING: 'gaming-sync',
-  EMOTIONAL: 'emotional-sync',
+  EMOTIONAL: 'emotional-sync'
 };
 
 // Notification tags and emotional system
@@ -84,7 +89,7 @@ const NOTIFICATION_TAGS = {
   BATTLE: 'battle-notification',
   ACHIEVEMENT: 'achievement-notification',
   UPDATE: 'app-update-notification',
-  EMOTIONAL: 'emotional-notification',
+  EMOTIONAL: 'emotional-notification'
 };
 
 // Emotional Intelligence System
@@ -93,50 +98,50 @@ const EMOTIONS = {
     icon: '💪',
     color: '#10B981',
     vibration: [200, 100, 200],
-    sound: 'encouraging.mp3',
+    sound: 'encouraging.mp3'
   },
   GENTLE: {
     icon: '🌸',
     color: '#F59E0B',
     vibration: [100, 50, 100, 50, 100],
-    sound: 'gentle.mp3',
+    sound: 'gentle.mp3'
   },
   MOTIVATIONAL: {
     icon: '🚀',
     color: '#3B82F6',
     vibration: [300, 200, 300],
-    sound: 'motivational.mp3',
+    sound: 'motivational.mp3'
   },
   SUPPORTIVE: {
     icon: '💝',
     color: '#EC4899',
     vibration: [150, 100, 150, 100, 150],
-    sound: 'supportive.mp3',
+    sound: 'supportive.mp3'
   },
   ENERGETIC: {
     icon: '⚡',
     color: '#F59E0B',
     vibration: [100, 50, 100, 50, 100, 50, 100],
-    sound: 'energetic.mp3',
+    sound: 'energetic.mp3'
   },
   CELEBRATORY: {
     icon: '🎉',
     color: '#7C3AED',
     vibration: [200, 100, 200, 100, 200, 100, 200],
-    sound: 'celebratory.mp3',
+    sound: 'celebratory.mp3'
   },
   CALMING: {
     icon: '🧘',
     color: '#059669',
     vibration: [300, 200, 300, 200],
-    sound: 'calming.mp3',
-  },
+    sound: 'calming.mp3'
+  }
 };
 
 // ==================== ADVANCED CACHE MANAGEMENT ====================
 
 // Cache performance metrics
-function updateCacheStats(_hit, _cacheSize = 0) {
+function updateCacheStats(hit, cacheSize = 0) {
   if (hit) {
     cacheStats.hits++;
   } else {
@@ -144,17 +149,16 @@ function updateCacheStats(_hit, _cacheSize = 0) {
   }
 
   const total = cacheStats.hits + cacheStats.misses;
-  cacheStats.hitRatio = total > 0 ? cacheStats.hits / total : 0;
+  cacheStats.hitRatio = total > 0 ? (cacheStats.hits / total) : 0;
   cacheStats.size = cacheSize;
 }
 
 // Intelligent cache cleanup based on usage and age
-async function performCacheCleanup(_cacheName) {
+async function performCacheCleanup(cacheName) {
   try {
     const cache = await caches.open(cacheName);
     const requests = await cache.keys();
-    const limit =
-      CACHE_LIMITS[cacheName.split('-').pop().toUpperCase()] || 50 * 1024 * 1024;
+    const limit = CACHE_LIMITS[cacheName.split('-').pop().toUpperCase()] || 50 * 1024 * 1024;
 
     if (requests.length === 0) return;
 
@@ -165,8 +169,7 @@ async function performCacheCleanup(_cacheName) {
     for (const request of requests) {
       const response = await cache.match(request);
       if (response) {
-        const size =
-          parseInt(response.headers.get('content-length') || '0', 10) || 1024; // Default 1KB
+        const size = parseInt(response.headers.get('content-length') || '0', 10) || 1024; // Default 1KB
         const lastModified = response.headers.get('last-modified');
         const cacheDate = response.headers.get('date');
 
@@ -175,7 +178,7 @@ async function performCacheCleanup(_cacheName) {
           size,
           lastModified: lastModified ? new Date(lastModified).getTime() : 0,
           cacheDate: cacheDate ? new Date(cacheDate).getTime() : Date.now(),
-          accessCount: parseInt(response.headers.get('x-access-count') || '0', 10),
+          accessCount: parseInt(response.headers.get('x-access-count') || '0', 10)
         });
 
         totalSize += size;
@@ -184,9 +187,7 @@ async function performCacheCleanup(_cacheName) {
 
     // Clean if over limit
     if (totalSize > limit) {
-      console.log(
-        `🧹 Cache ${cacheName} exceeds limit (${totalSize}/${limit}), cleaning...`
-      );
+      console.log(`🧹 Cache ${cacheName} exceeds limit (${totalSize}/${limit}), cleaning...`);
 
       // Sort by least recently used and lowest access count
       cacheEntries.sort((a, b) => {
@@ -215,7 +216,7 @@ async function performCacheCleanup(_cacheName) {
 }
 
 // Enhanced cache put with access tracking
-async function smartCachePut(_cache, _request, _response) {
+async function smartCachePut(cache, request, response) {
   if (!response || !response.ok) return response;
 
   const clonedResponse = response.clone();
@@ -228,7 +229,7 @@ async function smartCachePut(_cache, _request, _response) {
   const enhancedResponse = new Response(await clonedResponse.blob(), {
     status: clonedResponse.status,
     statusText: clonedResponse.statusText,
-    headers: headers,
+    headers: headers
   });
 
   try {
@@ -241,7 +242,7 @@ async function smartCachePut(_cache, _request, _response) {
 }
 
 // Enhanced cache match with access tracking
-async function smartCacheMatch(_cache, _request) {
+async function smartCacheMatch(cache, request) {
   const response = await cache.match(request);
 
   if (response) {
@@ -254,7 +255,7 @@ async function smartCacheMatch(_cache, _request) {
     const updatedResponse = new Response(await response.clone().blob(), {
       status: response.status,
       statusText: response.statusText,
-      headers: headers,
+      headers: headers
     });
 
     // Re-cache with updated headers (don't await to avoid blocking)
@@ -275,7 +276,7 @@ async function warmCriticalCaches() {
   const criticalResources = [
     '/api/user/profile',
     '/api/alarms/active',
-    '/api/settings/current',
+    '/api/settings/current'
   ];
 
   const cache = await caches.open(CACHES.API);
@@ -299,7 +300,7 @@ async function warmCriticalCaches() {
 }
 
 // Conditional caching based on response headers
-function shouldCache(_request, _response) {
+function shouldCache(request, response) {
   // Don't cache if explicitly told not to
   const cacheControl = response.headers.get('cache-control');
   if (cacheControl && cacheControl.includes('no-cache')) {
@@ -326,15 +327,15 @@ function shouldCache(_request, _response) {
 }
 
 // App state
-const alarmTimeouts = new Map();
-const pushSubscription = null;
+let alarmTimeouts = new Map();
+let pushSubscription = null;
 let analyticsQueue = [];
 let emotionalQueue = [];
 let isOnline = false;
 let lastSyncTime = null;
 
 // ==================== INSTALL EVENT ====================
-self.addEventListener('install', event => {
+self.addEventListener('install', (event) => {
   console.log('🚀 Unified SW: Installing version', APP_VERSION);
 
   event.waitUntil(
@@ -352,7 +353,7 @@ self.addEventListener('install', event => {
       warmCriticalCaches(),
 
       // Skip waiting to activate immediately
-      self.skipWaiting(),
+      self.skipWaiting()
     ]).catch(error => {
       console.error('❌ SW Install error:', error);
     })
@@ -360,7 +361,7 @@ self.addEventListener('install', event => {
 });
 
 // ==================== ACTIVATE EVENT ====================
-self.addEventListener('activate', event => {
+self.addEventListener('activate', (event) => {
   console.log('⚡ Unified SW: Activating version', APP_VERSION);
 
   event.waitUntil(
@@ -387,14 +388,14 @@ self.addEventListener('activate', event => {
       setupPushNotifications(),
 
       // Process any queued data
-      processOfflineQueues(),
+      processOfflineQueues()
     ])
   );
 });
 
 // ==================== FETCH EVENT ====================
-self.addEventListener('fetch', event => {
-  const { _request } = event;
+self.addEventListener('fetch', (event) => {
+  const {request} = event;
   const url = new URL(request.url);
 
   // Skip non-GET requests and chrome-extension requests
@@ -435,7 +436,7 @@ self.addEventListener('fetch', event => {
 });
 
 // ==================== BACKGROUND SYNC EVENT ====================
-self.addEventListener('sync', event => {
+self.addEventListener('sync', (event) => {
   console.log('🔄 Background sync triggered:', event.tag);
 
   switch (_event.tag) {
@@ -469,7 +470,7 @@ self.addEventListener('sync', event => {
 });
 
 // ==================== PUSH NOTIFICATION EVENT ====================
-self.addEventListener('push', event => {
+self.addEventListener('push', (event) => {
   console.log('📱 Push notification received');
 
   let data = {};
@@ -486,7 +487,7 @@ self.addEventListener('push', event => {
 });
 
 // ==================== NOTIFICATION CLICK EVENT ====================
-self.addEventListener('notificationclick', event => {
+self.addEventListener('notificationclick', (event) => {
   console.log('🖱️ Notification clicked:', event.action, event.notification.tag);
 
   event.notification.close();
@@ -498,8 +499,8 @@ self.addEventListener('notificationclick', event => {
 });
 
 // ==================== MESSAGE EVENT ====================
-self.addEventListener('message', async event => {
-  const { _type, _data } = event.data;
+self.addEventListener('message', async (event) => {
+  const {type, data} = event.data;
 
   switch (type) {
     case 'SCHEDULE_ALARM':
@@ -541,10 +542,7 @@ self.addEventListener('message', async event => {
       break;
     case 'OPTIMIZE_CACHE':
       await optimizeAllCaches();
-      event.ports[0]?.postMessage({
-        success: true,
-        message: 'Cache optimization complete',
-      });
+      event.ports[0]?.postMessage({ success: true, message: 'Cache optimization complete' });
       break;
     default:
       console.log('❓ Unknown message type:', type);
@@ -556,7 +554,7 @@ self.addEventListener('message', async event => {
 
 // ==================== CACHING STRATEGIES ====================
 
-async function networkFirst(_request) {
+async function networkFirst(request) {
   const cache = await caches.open(CACHES.API);
 
   try {
@@ -566,8 +564,7 @@ async function networkFirst(_request) {
       await smartCachePut(cache, request, networkResponse);
 
       // Trigger cleanup if needed (don't block response)
-      if (Date.now() - cacheStats.lastCleanup > 30 * 60 * 1000) {
-        // Every 30 minutes
+      if (Date.now() - cacheStats.lastCleanup > 30 * 60 * 1000) { // Every 30 minutes
         performCacheCleanup(CACHES.API).catch(error => {
           console.error('❌ Background cache cleanup failed:', error);
         });
@@ -588,7 +585,7 @@ async function networkFirst(_request) {
       return new Response(await cachedResponse.blob(), {
         status: cachedResponse.status,
         statusText: cachedResponse.statusText,
-        headers: headers,
+        headers: headers
       });
     }
 
@@ -596,7 +593,7 @@ async function networkFirst(_request) {
   }
 }
 
-async function cacheFirst(_request) {
+async function cacheFirst(request) {
   const cache = await caches.open(CACHES.ASSETS);
   const cachedResponse = await smartCacheMatch(cache, request);
 
@@ -612,15 +609,13 @@ async function cacheFirst(_request) {
       if (age > refreshThreshold) {
         console.log(`🔄 Background refresh for: ${request.url}`);
         // Update in background (don't block response)
-        fetch(request)
-          .then(async response => {
-            if (response.ok && shouldCache(request, response)) {
-              await smartCachePut(cache, request, response);
-            }
-          })
-          .catch(error => {
-            console.log('❌ Background refresh failed:', error);
-          });
+        fetch(request).then(async response => {
+          if (response.ok && shouldCache(request, response)) {
+            await smartCachePut(cache, request, response);
+          }
+        }).catch(error => {
+          console.log('❌ Background refresh failed:', error);
+        });
       }
     }
 
@@ -654,30 +649,27 @@ function getRefreshThreshold(contentType) {
   return 6 * 60 * 60 * 1000; // 6 hours for other content
 }
 
-async function staleWhileRevalidate(_request) {
+async function staleWhileRevalidate(request) {
   const cache = await caches.open(CACHES.DYNAMIC);
   const cachedResponse = await smartCacheMatch(cache, request);
 
   // Always try to update cache in background with intelligent timing
-  const fetchPromise = fetch(request)
-    .then(async response => {
-      if (response.ok && shouldCache(request, response)) {
-        await smartCachePut(cache, request, response);
+  const fetchPromise = fetch(request).then(async response => {
+    if (response.ok && shouldCache(request, response)) {
+      await smartCachePut(cache, request, response);
 
-        // Periodic cache cleanup
-        if (Math.random() < 0.1) {
-          // 10% chance per request
-          performCacheCleanup(CACHES.DYNAMIC).catch(error => {
-            console.error('❌ Background cache cleanup failed:', error);
-          });
-        }
+      // Periodic cache cleanup
+      if (Math.random() < 0.1) { // 10% chance per request
+        performCacheCleanup(CACHES.DYNAMIC).catch(error => {
+          console.error('❌ Background cache cleanup failed:', error);
+        });
       }
-      return response;
-    })
-    .catch(error => {
-      console.log('🔄 Background fetch failed:', error);
-      return null;
-    });
+    }
+    return response;
+  }).catch(error => {
+    console.log('🔄 Background fetch failed:', error);
+    return null;
+  });
 
   // Return cached response immediately if available
   if (cachedResponse) {
@@ -689,7 +681,7 @@ async function staleWhileRevalidate(_request) {
     return new Response(await cachedResponse.blob(), {
       status: cachedResponse.status,
       statusText: cachedResponse.statusText,
-      headers: headers,
+      headers: headers
     });
   }
 
@@ -702,16 +694,12 @@ async function staleWhileRevalidate(_request) {
   }
 }
 
-async function networkWithFallback(_request) {
+async function networkWithFallback(request) {
   try {
     const networkResponse = await fetch(request);
 
     // Cache successful responses with intelligent caching
-    if (
-      networkResponse.ok &&
-      request.method === 'GET' &&
-      shouldCache(request, networkResponse)
-    ) {
+    if (networkResponse.ok && request.method === 'GET' && shouldCache(request, networkResponse)) {
       const cache = await caches.open(CACHES.DYNAMIC);
       await smartCachePut(cache, request, networkResponse);
     }
@@ -732,7 +720,7 @@ async function networkWithFallback(_request) {
         return new Response(await cachedResponse.blob(), {
           status: cachedResponse.status,
           statusText: cachedResponse.statusText,
-          headers: headers,
+          headers: headers
         });
       }
     }
@@ -743,7 +731,7 @@ async function networkWithFallback(_request) {
 
 // ==================== ANALYTICS HANDLING ====================
 
-async function handleAnalyticsRequest(_request) {
+async function handleAnalyticsRequest(request) {
   try {
     // Try network first
     const response = await fetch(request);
@@ -757,21 +745,21 @@ async function handleAnalyticsRequest(_request) {
         method: request.method,
         headers: Object.fromEntries(request.headers.entries()),
         body: body,
-        timestamp: Date.now(),
+        timestamp: Date.now()
       });
 
       // Store in IndexedDB
       await storeOfflineEvent('analytics', {
         url: request.url,
         data: body,
-        timestamp: Date.now(),
+        timestamp: Date.now()
       });
     }
 
     // Return empty response to prevent errors
     return new Response('{}', {
       status: 200,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' }
     });
   }
 }
@@ -828,18 +816,18 @@ async function triggerAlarm(alarm) {
         {
           action: 'dismiss',
           title: '⏹️ Dismiss',
-          icon: '/icons/dismiss.png',
+          icon: '/icons/dismiss.png'
         },
         {
           action: 'snooze',
           title: '😴 Snooze 5min',
-          icon: '/icons/snooze.png',
+          icon: '/icons/snooze.png'
         },
         {
           action: 'voice',
           title: '🎤 Voice Response',
-          icon: '/icons/voice.png',
-        },
+          icon: '/icons/voice.png'
+        }
       ],
       data: {
         alarmId: alarm.id,
@@ -848,19 +836,16 @@ async function triggerAlarm(alarm) {
         emotionalContext: emotionalContext,
         voiceMood: alarm.voiceMood,
         type: 'alarm',
-        triggeredAt: Date.now(),
-      },
+        triggeredAt: Date.now()
+      }
     };
 
-    await self.registration.showNotification(
-      notificationOptions.title,
-      notificationOptions
-    );
+    await self.registration.showNotification(notificationOptions.title, notificationOptions);
 
     // Try to open the app or send message to existing clients
     const clients = await self.clients.matchAll({
       type: 'window',
-      includeUncontrolled: true,
+      includeUncontrolled: true
     });
 
     if (clients.length > 0) {
@@ -869,7 +854,7 @@ async function triggerAlarm(alarm) {
         type: 'ALARM_TRIGGERED',
         alarm: alarm,
         emotionalContext: emotionalContext,
-        timestamp: Date.now(),
+        timestamp: Date.now()
       });
 
       // Focus the window
@@ -886,12 +871,13 @@ async function triggerAlarm(alarm) {
     if (alarm.days && alarm.days.length > 0) {
       await scheduleAlarm(alarm);
     }
+
   } catch (_error) {
     console.error('❌ Error triggering alarm:', error);
   }
 }
 
-function cancelAlarm(_alarmId) {
+function cancelAlarm(alarmId) {
   if (alarmTimeouts.has(alarmId)) {
     clearTimeout(alarmTimeouts.get(alarmId));
     alarmTimeouts.delete(alarmId);
@@ -905,11 +891,9 @@ function updateAlarmSchedule(alarms) {
   alarmTimeouts.clear();
 
   // Schedule new alarms
-  alarms
-    .filter(alarm => alarm.enabled)
-    .forEach(alarm => {
-      scheduleAlarm(alarm);
-    });
+  alarms.filter(alarm => alarm.enabled).forEach(alarm => {
+    scheduleAlarm(alarm);
+  });
 }
 
 // ==================== EMOTIONAL INTELLIGENCE ====================
@@ -937,15 +921,15 @@ function determineEmotionalContext(alarm) {
   return 'CALMING';
 }
 
-function getEmotionalMessage(_emotionalContext) {
+function getEmotionalMessage(emotionalContext) {
   const messages = {
     ENCOURAGING: "You've got this! Time to conquer your day! 💪",
-    GENTLE: 'Good morning, beautiful soul. Rise gently and shine. 🌸',
+    GENTLE: "Good morning, beautiful soul. Rise gently and shine. 🌸",
     MOTIVATIONAL: "Your goals are calling! Let's make today amazing! 🚀",
     SUPPORTIVE: "You're doing great. Time for your next step! 💝",
-    ENERGETIC: 'Energy up! Today is full of possibilities! ⚡',
-    CELEBRATORY: 'Time to celebrate another moment in your journey! 🎉',
-    CALMING: 'Peaceful reminder. Take your time. 🧘',
+    ENERGETIC: "Energy up! Today is full of possibilities! ⚡",
+    CELEBRATORY: "Time to celebrate another moment in your journey! 🎉",
+    CALMING: "Peaceful reminder. Take your time. 🧘"
   };
 
   return messages[emotionalContext] || messages.ENCOURAGING;
@@ -953,7 +937,7 @@ function getEmotionalMessage(_emotionalContext) {
 
 // ==================== PUSH NOTIFICATION HANDLING ====================
 
-async function handlePushNotification(data, _type) {
+async function handlePushNotification(data, type) {
   let notificationOptions;
 
   switch (type) {
@@ -969,9 +953,9 @@ async function handlePushNotification(data, _type) {
         vibrate: emotion.vibration,
         actions: [
           { action: 'dismiss', title: 'Dismiss' },
-          { action: 'snooze', title: 'Snooze' },
+          { action: 'snooze', title: 'Snooze' }
         ],
-        data: data,
+        data: data
       };
       break;
 
@@ -984,9 +968,9 @@ async function handlePushNotification(data, _type) {
         tag: NOTIFICATION_TAGS.BATTLE,
         actions: [
           { action: 'accept', title: 'Accept' },
-          { action: 'decline', title: 'Decline' },
+          { action: 'decline', title: 'Decline' }
         ],
-        data: data,
+        data: data
       };
       break;
 
@@ -998,7 +982,7 @@ async function handlePushNotification(data, _type) {
         badge: '/icon-72x72.png',
         tag: NOTIFICATION_TAGS.ACHIEVEMENT,
         vibrate: EMOTIONS.CELEBRATORY.vibration,
-        data: data,
+        data: data
       };
       break;
 
@@ -1016,9 +1000,9 @@ async function handlePushNotification(data, _type) {
         actions: [
           { action: 'positive', title: '😊 Good' },
           { action: 'neutral', title: '😐 Okay' },
-          { action: 'negative', title: '😔 Not great' },
+          { action: 'negative', title: '😔 Not great' }
         ],
-        data: { ...data, emotionalType },
+        data: { ...data, emotionalType }
       };
       break;
 
@@ -1031,9 +1015,9 @@ async function handlePushNotification(data, _type) {
         tag: NOTIFICATION_TAGS.UPDATE,
         actions: [
           { action: 'update', title: 'Update Now' },
-          { action: 'later', title: 'Later' },
+          { action: 'later', title: 'Later' }
         ],
-        data: data,
+        data: data
       };
       break;
 
@@ -1042,19 +1026,16 @@ async function handlePushNotification(data, _type) {
         title: data.title || 'Relife',
         body: data.body || 'You have a notification',
         icon: '/icon-192x192.png',
-        data: data,
+        data: data
       };
   }
 
-  await self.registration.showNotification(
-    notificationOptions.title,
-    notificationOptions
-  );
+  await self.registration.showNotification(notificationOptions.title, notificationOptions);
 }
 
 // ==================== NOTIFICATION CLICK HANDLING ====================
 
-async function handleNotificationClick(_action, data) {
+async function handleNotificationClick(action, data) {
   const clients = await self.clients.matchAll({ type: 'window' });
 
   switch (action) {
@@ -1064,7 +1045,7 @@ async function handleNotificationClick(_action, data) {
         if (clients.length > 0) {
           clients[0].postMessage({
             type: 'ALARM_DISMISSED',
-            alarmId: data.alarmId,
+            alarmId: data.alarmId
           });
         }
       }
@@ -1077,7 +1058,7 @@ async function handleNotificationClick(_action, data) {
           clients[0].postMessage({
             type: 'ALARM_SNOOZED',
             alarmId: data.alarmId,
-            snoozeTime: new Date(Date.now() + 5 * 60 * 1000),
+            snoozeTime: new Date(Date.now() + 5 * 60 * 1000)
           });
         }
       }
@@ -1093,7 +1074,7 @@ async function handleNotificationClick(_action, data) {
         clients[0].postMessage({
           type: 'BATTLE_ACTION',
           action: action,
-          data: data,
+          data: data
         });
       }
       break;
@@ -1106,7 +1087,7 @@ async function handleNotificationClick(_action, data) {
         type: 'notification_feedback',
         response: action,
         emotionalType: data.emotionalType,
-        timestamp: Date.now(),
+        timestamp: Date.now()
       });
       break;
 
@@ -1127,19 +1108,19 @@ const SYNC_CONFIG = {
   retryDelays: [1000, 5000, 15000], // Progressive backoff
   batchSize: 20,
   conflictResolution: 'merge', // 'client', 'server', 'merge'
-  enableConflictDetection: true,
+  enableConflictDetection: true
 };
 
 // Sync state tracking
-const syncState = {
+let syncState = {
   activeSync: null,
   syncHistory: [],
   conflicts: [],
-  lastSuccessfulSync: null,
+  lastSuccessfulSync: null
 };
 
 // Enhanced data sync with conflict resolution
-async function performDataSync(dataType, _options = {}) {
+async function performDataSync(dataType, options = {}) {
   const startTime = Date.now();
   const syncId = `sync_${dataType}_${startTime}`;
 
@@ -1155,7 +1136,7 @@ async function performDataSync(dataType, _options = {}) {
       return { success: true, synced: 0, conflicts: 0 };
     }
 
-    const syncResults = { success: 0, failed: 0, conflicts: 0 };
+    let syncResults = { success: 0, failed: 0, conflicts: 0 };
 
     // Process in batches to avoid overwhelming the server
     for (let i = 0; i < localData.length; i += SYNC_CONFIG.batchSize) {
@@ -1190,7 +1171,7 @@ async function performDataSync(dataType, _options = {}) {
       startTime,
       endTime: Date.now(),
       duration: Date.now() - startTime,
-      results: syncResults,
+      results: syncResults
     });
 
     // Keep only last 50 sync records
@@ -1200,14 +1181,10 @@ async function performDataSync(dataType, _options = {}) {
 
     console.log(`✅ ${dataType} sync completed:`, syncResults);
     return syncResults;
+
   } catch (_error) {
     console.error(`❌ ${dataType} sync failed:`, error);
-    return {
-      success: 0,
-      failed: localData?.length || 0,
-      conflicts: 0,
-      error: error.message,
-    };
+    return { success: 0, failed: localData?.length || 0, conflicts: 0, error: error.message };
   } finally {
     syncState.activeSync = null;
   }
@@ -1245,7 +1222,7 @@ async function getLocalDataForSync(dataType) {
 }
 
 // Enhanced batch sync with retry mechanism
-async function syncBatch(dataType, batch, _options = {}) {
+async function syncBatch(dataType, batch, options = {}) {
   const results = { success: 0, failed: 0, conflicts: 0, conflictDetails: [] };
 
   for (const item of batch) {
@@ -1270,15 +1247,10 @@ async function syncBatch(dataType, batch, _options = {}) {
         retryCount++;
         if (retryCount <= SYNC_CONFIG.maxRetries) {
           const delay = SYNC_CONFIG.retryDelays[retryCount - 1] || 15000;
-          console.log(
-            `🔄 Retrying ${dataType} sync for item ${item.id} in ${delay}ms (attempt ${retryCount})`
-          );
+          console.log(`🔄 Retrying ${dataType} sync for item ${item.id} in ${delay}ms (attempt ${retryCount})`);
           await new Promise(resolve => setTimeout(resolve, delay));
         } else {
-          console.error(
-            `❌ Failed to sync ${dataType} item ${item.id} after ${SYNC_CONFIG.maxRetries} retries:`,
-            error
-          );
+          console.error(`❌ Failed to sync ${dataType} item ${item.id} after ${SYNC_CONFIG.maxRetries} retries:`, error);
           results.failed++;
         }
       }
@@ -1289,7 +1261,7 @@ async function syncBatch(dataType, batch, _options = {}) {
 }
 
 // Sync individual item with conflict detection
-async function syncSingleItem(dataType, _item, _options = {}) {
+async function syncSingleItem(dataType, item, options = {}) {
   // Simulate API call to sync individual item
   console.log(`📤 Syncing ${dataType} item:`, item.id);
 
@@ -1306,8 +1278,8 @@ async function syncSingleItem(dataType, _item, _options = {}) {
         itemId: item.id,
         localData: item,
         serverData: response.serverData,
-        conflictType: response.conflictType,
-      },
+        conflictType: response.conflictType
+      }
     };
   }
 
@@ -1315,7 +1287,7 @@ async function syncSingleItem(dataType, _item, _options = {}) {
 }
 
 // Simulate API sync response (replace with real API calls)
-async function simulateApiSync(dataType, _item) {
+async function simulateApiSync(dataType, item) {
   // Simulate network delay
   await new Promise(resolve => setTimeout(resolve, 50 + Math.random() * 200));
 
@@ -1327,8 +1299,8 @@ async function simulateApiSync(dataType, _item) {
       serverData: {
         ...item,
         lastModified: new Date(Date.now() - 60000).toISOString(), // Modified 1 minute ago
-        conflictValue: 'server_value',
-      },
+        conflictValue: 'server_value'
+      }
     };
   }
 
@@ -1341,7 +1313,7 @@ async function simulateApiSync(dataType, _item) {
 }
 
 // Handle sync conflicts with configurable resolution strategies
-async function handleSyncConflicts(dataType, _conflicts) {
+async function handleSyncConflicts(dataType, conflicts) {
   console.log(`⚠️ Handling ${conflicts.length} conflicts for ${dataType}`);
 
   for (const conflict of conflicts) {
@@ -1358,10 +1330,7 @@ async function handleSyncConflicts(dataType, _conflicts) {
           break;
 
         case 'merge':
-          resolvedData = await mergeConflictData(
-            conflict.localData,
-            conflict.serverData
-          );
+          resolvedData = await mergeConflictData(conflict.localData, conflict.serverData);
           break;
 
         default:
@@ -1373,7 +1342,7 @@ async function handleSyncConflicts(dataType, _conflicts) {
             localData: conflict.localData,
             serverData: conflict.serverData,
             timestamp: new Date().toISOString(),
-            resolved: false,
+            resolved: false
           });
           continue;
       }
@@ -1381,26 +1350,20 @@ async function handleSyncConflicts(dataType, _conflicts) {
       // Apply resolved data
       await updateLocalData(dataType, conflict.itemId, resolvedData);
       console.log(`✅ Conflict resolved for ${dataType} item ${conflict.itemId}`);
+
     } catch (_error) {
-      console.error(
-        `❌ Failed to resolve conflict for ${dataType} item ${conflict.itemId}:`,
-        error
-      );
+      console.error(`❌ Failed to resolve conflict for ${dataType} item ${conflict.itemId}:`, error);
     }
   }
 }
 
 // Intelligent data merging for conflicts
-async function mergeConflictData(localData, _serverData) {
+async function mergeConflictData(localData, serverData) {
   const merged = { ...localData };
 
   // Merge based on timestamps - newer wins for most fields
-  const localTime = new Date(
-    localData.lastModified || localData.createdAt || 0
-  ).getTime();
-  const serverTime = new Date(
-    serverData.lastModified || serverData.createdAt || 0
-  ).getTime();
+  const localTime = new Date(localData.lastModified || localData.createdAt || 0).getTime();
+  const serverTime = new Date(serverData.lastModified || serverData.createdAt || 0).getTime();
 
   if (serverTime > localTime) {
     // Server data is newer, use server values but preserve local-only fields
@@ -1415,9 +1378,8 @@ async function mergeConflictData(localData, _serverData) {
   ['tags', 'participants', 'achievements'].forEach(field => {
     if (Array.isArray(localData[field]) && Array.isArray(serverData[field])) {
       const combined = [...localData[field], ...serverData[field]];
-      merged[field] = [...new Set(combined.map(item => JSON.stringify(item)))].map(
-        item => JSON.parse(item)
-      );
+      merged[field] = [...new Set(combined.map(item => JSON.stringify(item)))]
+        .map(item => JSON.parse(item));
     }
   });
 
@@ -1432,7 +1394,7 @@ async function syncAlarms() {
   console.log('⏰ Starting enhanced alarm sync...');
   const results = await performDataSync('alarms', {
     priority: 'high',
-    validateData: true,
+    validateData: true
   });
 
   // Send sync status to main thread
@@ -1444,7 +1406,7 @@ async function syncSleepData() {
   console.log('😴 Starting enhanced sleep data sync...');
   const results = await performDataSync('sleep', {
     priority: 'medium',
-    includeAnalytics: true,
+    includeAnalytics: true
   });
 
   await notifyMainThread('sleep-sync', results);
@@ -1455,7 +1417,7 @@ async function syncVoiceData() {
   console.log('🎤 Starting enhanced voice data sync...');
   const results = await performDataSync('voice', {
     priority: 'low',
-    compressData: true,
+    compressData: true
   });
 
   await notifyMainThread('voice-sync', results);
@@ -1478,7 +1440,7 @@ async function syncSettings() {
   console.log('⚙️ Starting enhanced settings sync...');
   const results = await performDataSync('settings', {
     priority: 'high',
-    validateSchema: true,
+    validateSchema: true
   });
 
   await notifyMainThread('settings-sync', results);
@@ -1489,7 +1451,7 @@ async function syncUserData() {
   console.log('👤 Starting enhanced user data sync...');
   const results = await performDataSync('userData', {
     priority: 'high',
-    encryptSensitiveData: true,
+    encryptSensitiveData: true
   });
 
   await notifyMainThread('user-data-sync', results);
@@ -1500,7 +1462,7 @@ async function syncGamingData() {
   console.log('🎮 Starting enhanced gaming data sync...');
   const results = await performDataSync('gaming', {
     priority: 'medium',
-    includeLeaderboards: true,
+    includeLeaderboards: true
   });
 
   await notifyMainThread('gaming-sync', results);
@@ -1529,18 +1491,11 @@ async function openIndexedDB() {
     request.onerror = () => reject(request.error);
     request.onsuccess = () => resolve(request.result);
 
-    request.onupgradeneeded = _event => {
+    request.onupgradeneeded = (_event) => {
       const db = event.target.result;
 
       // Create object stores if they don't exist
-      const stores = [
-        'alarms',
-        'sleepSessions',
-        'battles',
-        'voiceRecordings',
-        'userSettings',
-        'userData',
-      ];
+      const stores = ['alarms', 'sleepSessions', 'battles', 'voiceRecordings', 'userSettings', 'userData'];
       stores.forEach(storeName => {
         if (!db.objectStoreNames.contains(storeName)) {
           const store = db.createObjectStore(storeName, { keyPath: 'id' });
@@ -1553,7 +1508,7 @@ async function openIndexedDB() {
 }
 
 // Get unsynced records from IndexedDB
-async function getUnsyncedRecords(db, _storeName) {
+async function getUnsyncedRecords(db, storeName) {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction([storeName], 'readonly');
     const store = transaction.objectStore(storeName);
@@ -1566,7 +1521,7 @@ async function getUnsyncedRecords(db, _storeName) {
 }
 
 // Mark item as synced in local storage
-async function markItemAsSynced(dataType, _itemId) {
+async function markItemAsSynced(dataType, itemId) {
   try {
     const db = await openIndexedDB();
     const transaction = db.transaction([getStoreName(dataType)], 'readwrite');
@@ -1587,7 +1542,7 @@ async function markItemAsSynced(dataType, _itemId) {
 }
 
 // Update local data after conflict resolution
-async function updateLocalData(dataType, _itemId, _newData) {
+async function updateLocalData(dataType, itemId, newData) {
   try {
     const db = await openIndexedDB();
     const transaction = db.transaction([getStoreName(dataType)], 'readwrite');
@@ -1606,12 +1561,12 @@ async function updateLocalData(dataType, _itemId, _newData) {
 // Get appropriate store name for data type
 function getStoreName(dataType) {
   const storeMap = {
-    alarms: 'alarms',
-    sleep: 'sleepSessions',
-    gaming: 'battles',
-    voice: 'voiceRecordings',
-    settings: 'userSettings',
-    userData: 'userData',
+    'alarms': 'alarms',
+    'sleep': 'sleepSessions',
+    'gaming': 'battles',
+    'voice': 'voiceRecordings',
+    'settings': 'userSettings',
+    'userData': 'userData'
   };
   return storeMap[dataType] || dataType;
 }
@@ -1697,13 +1652,13 @@ async function simulateEmotionalDataUpload(_event) {
 }
 
 // Notify main thread of sync results
-async function notifyMainThread(syncType, _results) {
+async function notifyMainThread(syncType, results) {
   const clients = await self.clients.matchAll();
   const message = {
     type: 'SYNC_COMPLETE',
     syncType,
     results,
-    timestamp: Date.now(),
+    timestamp: Date.now()
   };
 
   clients.forEach(client => {
@@ -1713,7 +1668,7 @@ async function notifyMainThread(syncType, _results) {
   // Dispatch custom event
   self.postMessage({
     type: `${syncType.toUpperCase()}_SYNC_COMPLETE`,
-    ...results,
+    ...results
   });
 }
 
@@ -1726,9 +1681,9 @@ function getSyncStatus() {
     syncHistory: syncState.syncHistory.slice(0, 10), // Last 10 syncs
     queueSizes: {
       analytics: analyticsQueue.filter(e => !e.synced).length,
-      emotional: emotionalQueue.filter(e => !e.synced).length,
+      emotional: emotionalQueue.filter(e => !e.synced).length
     },
-    configuration: SYNC_CONFIG,
+    configuration: SYNC_CONFIG
   };
 }
 
@@ -1742,7 +1697,7 @@ async function focusOrOpenApp(url = '/') {
     if (url !== '/') {
       clients[0].postMessage({
         type: 'NAVIGATE',
-        url: url,
+        url: url
       });
     }
   } else {
@@ -1786,32 +1741,26 @@ function getNextAlarmTime(alarm) {
   return null;
 }
 
-function createOfflineResponse(_request) {
+function createOfflineResponse(request) {
   const url = new URL(request.url);
 
   if (url.pathname.includes('/api/')) {
-    return new Response(
-      JSON.stringify({
-        error: 'Offline',
-        message: 'This feature requires an internet connection',
-        cached: false,
-      }),
-      {
-        status: 503,
-        headers: { 'Content-Type': 'application/json' },
-      }
-    );
+    return new Response(JSON.stringify({
+      error: 'Offline',
+      message: 'This feature requires an internet connection',
+      cached: false
+    }), {
+      status: 503,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 
   // Return cached offline page
   return caches.match('/offline.html').then(response => {
-    return (
-      response ||
-      new Response('You are offline', {
-        status: 503,
-        headers: { 'Content-Type': 'text/plain' },
-      })
-    );
+    return response || new Response('You are offline', {
+      status: 503,
+      headers: { 'Content-Type': 'text/plain' }
+    });
   });
 }
 
@@ -1825,7 +1774,7 @@ function getServiceWorkerStatus() {
     queuedEmotional: emotionalQueue.length,
     pushSubscribed: !!pushSubscription,
     caches: Object.keys(CACHES),
-    emotions: Object.keys(EMOTIONS),
+    emotions: Object.keys(EMOTIONS)
   };
 }
 
@@ -1877,7 +1826,9 @@ async function processOfflineQueues() {
   }
 }
 
-async function notifyClients(_type, data) {
+
+
+async function notifyClients(type, data) {
   const clients = await self.clients.matchAll();
   clients.forEach(client => {
     client.postMessage({ type, data });
@@ -1885,9 +1836,7 @@ async function notifyClients(_type, data) {
 }
 
 // Stub implementations for additional features
-async function storeScheduledAlarm(alarm, _nextTime) {
-  /* Implementation */
-}
+async function storeScheduledAlarm(alarm, nextTime) { /* Implementation */ }
 async function performCompleteSync() {
   await Promise.all([
     syncAlarms(),
@@ -1897,7 +1846,7 @@ async function performCompleteSync() {
     syncSettings(),
     syncUserData(),
     syncGamingData(),
-    syncEmotionalData(),
+    syncEmotionalData()
   ]);
 }
 
@@ -1910,9 +1859,9 @@ async function getCacheStatistics() {
         hits: cacheStats.hits,
         misses: cacheStats.misses,
         hitRatio: cacheStats.hitRatio,
-        lastCleanup: new Date(cacheStats.lastCleanup).toISOString(),
+        lastCleanup: new Date(cacheStats.lastCleanup).toISOString()
       },
-      caches: {},
+      caches: {}
     };
 
     for (const [cacheName, cacheKey] of Object.entries(CACHES)) {
@@ -1943,10 +1892,9 @@ async function getCacheStatistics() {
         entries: requests.length,
         totalSize: totalSize,
         limit: CACHE_LIMITS[cacheName] || 0,
-        utilization: CACHE_LIMITS[cacheName] ? totalSize / CACHE_LIMITS[cacheName] : 0,
-        oldestEntry:
-          oldestEntry < Date.now() ? new Date(oldestEntry).toISOString() : null,
-        newestEntry: newestEntry > 0 ? new Date(newestEntry).toISOString() : null,
+        utilization: CACHE_LIMITS[cacheName] ? (totalSize / CACHE_LIMITS[cacheName]) : 0,
+        oldestEntry: oldestEntry < Date.now() ? new Date(oldestEntry).toISOString() : null,
+        newestEntry: newestEntry > 0 ? new Date(newestEntry).toISOString() : null
       };
     }
 
@@ -1975,7 +1923,7 @@ async function clearAllCaches() {
       misses: 0,
       size: 0,
       lastCleanup: Date.now(),
-      hitRatio: 0,
+      hitRatio: 0
     };
 
     console.log('✅ All caches cleared successfully');
@@ -2007,8 +1955,7 @@ async function optimizeAllCaches() {
   }
 }
 
-console.log(
-  `🎉 Unified Service Worker v${APP_VERSION} loaded and ready with comprehensive offline support!`
-);
+
+console.log(`🎉 Unified Service Worker v${APP_VERSION} loaded and ready with comprehensive offline support!`);
 console.log('📊 Cache statistics:', cacheStats);
 console.log('🎯 Cache limits:', CACHE_LIMITS);
