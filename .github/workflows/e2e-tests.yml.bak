@@ -70,10 +70,11 @@ jobs:
             cd ..
           fi
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
@@ -155,10 +156,11 @@ jobs:
             cd ..
           fi
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
@@ -208,10 +210,11 @@ jobs:
             cd ..
           fi
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
@@ -264,10 +267,11 @@ jobs:
             cd ..
           fi
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
