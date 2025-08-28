@@ -6,7 +6,7 @@
  */
 
 import { configureStore } from '@reduxjs/toolkit';
-import { composeWithDevTools } from 'redux-devtools-extension';
+import { _devToolsEnhancer } from '@redux-devtools/extension';
 import { rootReducer } from '../reducers/rootReducer';
 import type { AppState, AppAction } from '../types/app-state';
 
@@ -77,8 +77,7 @@ export const store = configureStore({
         },
       },
     }),
-  devTools:
-    process.env.NODE_ENV !== 'production' && composeWithDevTools(devToolsOptions),
+  devTools: process.env.NODE_ENV !== 'production' ? devToolsOptions : false,
   preloadedState: undefined, // Will be populated from localStorage if available
   enhancers: defaultEnhancers => {
     // Add any custom enhancers here
