@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Progress } from './ui/progress';
-import { config } from '../config/environment';
 import {
   Trophy,
   Share2,
@@ -153,17 +152,17 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
   const [hoveredAchievement, setHoveredAchievement] = useState<string | null>(null);
 
   const unlockedAchievements = achievements.filter((a: any) => a.unlockedAt);
-  const lockedAchievements = achievements.filter((a: any) => !a.unlockedAt);
+  const lockedAchievements = achievements.filter((a: any) => !
 
   const getBadgeVariant = (rarity: string) => {
     const config = RARITY_CONFIGS[rarity as keyof typeof RARITY_CONFIGS];
-    return _config ? 'secondary' : 'default';
+    return config ? 'secondary' : 'default';
   };
 
   const AchievementCard = ({ achievement }: { achievement: SamAchievement }) => {
     const config = ACHIEVEMENT_CONFIGS[achievement.achievementType];
     const rarityConfig = RARITY_CONFIGS[achievement.rarity];
-    const IconComponent = _config.icon;
+    const IconComponent = config.icon;
     const isUnlocked = !!achievement.unlockedAt;
     const isHovered = hoveredAchievement === achievement.id;
 
@@ -217,7 +216,7 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
               className={`
                 ${compact ? 'w-8 h-8 p-1.5' : 'w-12 h-12 p-2'}
                 rounded-full mb-2 flex items-center justify-center
-                ${isUnlocked ? `bg-gradient-to-br ${_config.gradient}` : 'bg-muted'}
+                ${isUnlocked ? `bg-gradient-to-br ${config.gradient}` : 'bg-muted'}
               `}
               animate={{
                 rotate: isUnlocked && isHovered ? [0, -5, 5, 0] : 0,
@@ -288,7 +287,7 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
             exit={{ opacity: 0, y: 10 }}
           >
             <div className="font-medium">{achievement.title}</div>
-            <div className="text-muted-foreground">{_config.description}</div>
+            <div className="text-muted-foreground">{config.description}</div>
             {achievement.progress && !isUnlocked && (
               <div className="text-primary">
                 Progress: {achievement.progress.current}/{achievement.progress.target}
@@ -406,7 +405,7 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e: React.MouseEvent) => e.stopPropagation()}
+              onClick={(e: any) => e.stopPropagation()}
             >
               <div className="text-center">
                 <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center">

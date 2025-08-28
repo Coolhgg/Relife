@@ -45,13 +45,7 @@ const Dashboard: React.FC<DashboardProps> = ({
   onQuickSetup,
   onNavigateToAdvanced,
 }) => {
-  // TODO: Performance optimization - Expensive computations should be memoized
-  // const nextAlarmData = useMemo(() => getTimeUntilNextAlarm(alarms), [alarms]);
-  // const { alarm: nextAlarm, timeUntil } = nextAlarmData;
   const { alarm: nextAlarm, timeUntil } = getTimeUntilNextAlarm(alarms);
-
-  // TODO: Performance optimization - Filter operation creates new array every render
-  // const enabledAlarms = useMemo(() => alarms.filter(a => a.enabled), [alarms]);
   const enabledAlarms = alarms.filter((a: any) => a.enabled);
   const [smartInsights, setSmartInsights] = useState<any[]>([]);
   const [optimizationSuggestions, setOptimizationSuggestions] = useState<any[]>([]);
@@ -81,8 +75,8 @@ const Dashboard: React.FC<DashboardProps> = ({
         const suggestions = await MLAlarmOptimizer.getOptimizationSuggestions(userId);
         setOptimizationSuggestions(suggestions.slice(0, 2));
       }
-    } catch (_error) {
-      console._error('Error loading smart insights:', _error);
+    } catch (error) {
+      console.error('Error loading smart insights:', error);
     }
   };
 
@@ -337,9 +331,9 @@ const Dashboard: React.FC<DashboardProps> = ({
 
           <div className="space-y-3">
             {/* Optimization Suggestions */}
-            {optimizationSuggestions.map((suggestion, _index) => (
+            {optimizationSuggestions.map((suggestion, index) => (
               <div
-                key={_index}
+                key={index}
                 className="bg-white dark:bg-dark-800 rounded-lg p-3 border border-blue-200 dark:border-blue-700"
               >
                 <div className="flex items-start gap-3">

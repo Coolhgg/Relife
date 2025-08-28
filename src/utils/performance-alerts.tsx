@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 /**
  * Enhanced Performance Monitoring with Real-Time Alerts
  * Provides intelligent alerting, performance degradation detection, and automated optimization
@@ -6,8 +5,6 @@
 
 import React from 'react';
 import { TimeoutHandle } from '../types/timers';
-// Replaced stub import with proper implementation // auto: restored by scout - verify
-// Replaced stub import with proper implementation // auto: restored by scout - verify
 
 export interface PerformanceAlert {
   id: string;
@@ -17,11 +14,11 @@ export interface PerformanceAlert {
   threshold: number;
   message: string;
   timestamp: number;
-  category: 'webvitals' | 'memory' | 'network' | '_error' | 'custom';
+  category: 'webvitals' | 'memory' | 'network' | 'error' | 'custom';
   severity: 1 | 2 | 3 | 4 | 5; // 1 = low, 5 = critical
   resolved?: boolean;
   autoResolve?: boolean;
-  metadata?: Record<string, unknown>;
+  metadata?: Record<string, any>;
 }
 
 export interface AlertRule {
@@ -40,7 +37,7 @@ export interface AlertRule {
 
 export interface AlertAction {
   type: 'notification' | 'console' | 'storage' | 'callback' | 'optimization';
-  _config: Record<string, unknown>;
+  config: Record<string, any>;
 }
 
 export interface PerformanceTrend {
@@ -97,9 +94,9 @@ class PerformanceAlertManager {
         actions: [
           {
             type: 'notification',
-            _config: { title: 'LCP Performance Issue', persistent: false },
+            config: { title: 'LCP Performance Issue', persistent: false },
           },
-          { type: 'console', _config: { level: 'warn' } },
+          { type: 'console', config: { level: 'warn' } },
         ],
       },
       {
@@ -116,9 +113,9 @@ class PerformanceAlertManager {
         actions: [
           {
             type: 'notification',
-            _config: { title: 'Input Responsiveness Issue' },
+            config: { title: 'Input Responsiveness Issue' },
           },
-          { type: 'console', _config: { level: 'warn' } },
+          { type: 'console', config: { level: 'warn' } },
         ],
       },
       {
@@ -133,7 +130,7 @@ class PerformanceAlertManager {
         cooldownPeriod: 5,
         autoResolve: false,
         actions: [
-          { type: 'notification', _config: { title: 'Layout Stability Issue' } },
+          { type: 'notification', config: { title: 'Layout Stability Issue' } },
         ],
       },
       {
@@ -148,8 +145,8 @@ class PerformanceAlertManager {
         cooldownPeriod: 10,
         autoResolve: true,
         actions: [
-          { type: 'notification', _config: { title: 'High Memory Usage' } },
-          { type: 'optimization', _config: { type: 'memory_cleanup' } },
+          { type: 'notification', config: { title: 'High Memory Usage' } },
+          { type: 'optimization', config: { type: 'memory_cleanup' } },
         ],
       },
       {
@@ -157,7 +154,7 @@ class PerformanceAlertManager {
         name: 'Network Error Rate',
         metric: 'network_error_rate',
         condition: 'gt',
-        threshold: 0.1, // 10% _error rate
+        threshold: 0.1, // 10% error rate
         enabled: true,
         category: 'network',
         severity: 4,
@@ -166,7 +163,7 @@ class PerformanceAlertManager {
         actions: [
           {
             type: 'notification',
-            _config: { title: 'Network Issues Detected' },
+            config: { title: 'Network Issues Detected' },
           },
         ],
       },
@@ -177,16 +174,16 @@ class PerformanceAlertManager {
         condition: 'gt',
         threshold: 5, // More than 5 errors in monitoring period
         enabled: true,
-        category: '_error',
+        category: 'error',
         severity: 5,
         cooldownPeriod: 2,
         autoResolve: false,
         actions: [
           {
             type: 'notification',
-            _config: { title: 'Critical Error Frequency' },
+            config: { title: 'Critical Error Frequency' },
           },
-          { type: 'storage', _config: { key: 'critical_errors' } },
+          { type: 'storage', config: { key: 'critical_errors' } },
         ],
       },
     ];
@@ -201,10 +198,10 @@ class PerformanceAlertManager {
     if ('Notification' in window && Notification.permission === 'default') {
       try {
         await Notification.requestPermission();
-      } catch (_error) {
+      } catch (error) {
         console.warn(
           '[PerformanceAlerts] Could not request notification permission:',
-          _error
+          error
         );
       }
     }
@@ -238,7 +235,7 @@ class PerformanceAlertManager {
   /**
    * Record performance metric and check for alerts
    */
-  recordMetric(name: string, value: number, metadata?: Record<string, unknown>) {
+  recordMetric(name: string, value: number, metadata?: Record<string, any>) {
     // Store metric history
     if (!this.metricHistory.has(name)) {
       this.metricHistory.set(name, []);
@@ -262,7 +259,7 @@ class PerformanceAlertManager {
   private checkMetricAlerts(
     metric: string,
     value: number,
-    metadata?: Record<string, unknown>
+    metadata?: Record<string, any>
   ) {
     this.alertRules.forEach(rule => {
       if (rule.metric !== metric || !rule.enabled) return;
@@ -312,11 +309,7 @@ class PerformanceAlertManager {
   /**
    * Create and process alert
    */
-  private createAlert(
-    rule: AlertRule,
-    value: number,
-    metadata?: Record<string, unknown>
-  ) {
+  private createAlert(rule: AlertRule, value: number, metadata?: Record<string, any>) {
     const alertId = `${rule.id}-${Date.now()}`;
 
     const alert: PerformanceAlert = {
@@ -358,7 +351,7 @@ class PerformanceAlertManager {
       case 3:
         return 'warning';
       case 4:
-        return '_error';
+        return 'error';
       case 5:
         return 'critical';
       default:
@@ -408,20 +401,20 @@ class PerformanceAlertManager {
       try {
         switch (action.type) {
           case 'notification':
-            this.showNotification(alert, action._config);
+            this.showNotification(alert, action.config);
             break;
           case 'console':
-            this.logToConsole(alert, action._config);
+            this.logToConsole(alert, action.config);
             break;
           case 'storage':
-            this.storeAlert(alert, action._config);
+            this.storeAlert(alert, action.config);
             break;
           case 'optimization':
-            this.triggerOptimization(alert, action._config);
+            this.triggerOptimization(alert, action.config);
             break;
         }
-      } catch (_error) {
-        console._error(`[PerformanceAlert] Action ${action.type} failed:`, _error);
+      } catch (error) {
+        console.error(`[PerformanceAlert] Action ${action.type} failed:`, error);
       }
     });
   }
@@ -429,19 +422,19 @@ class PerformanceAlertManager {
   /**
    * Show browser notification
    */
-  private showNotification(alert: PerformanceAlert, _config: Record<string, unknown>) {
+  private showNotification(alert: PerformanceAlert, config: Record<string, any>) {
     if ('Notification' in window && Notification.permission === 'granted') {
-      const notification = new Notification(_config.title || 'Performance Alert', {
+      const notification = new Notification(config.title || 'Performance Alert', {
         body: alert.message,
         icon: '/icon-192x192.png',
         badge: '/icon-72x72.png',
         tag: `perf-alert-${alert.category}`,
-        requireInteraction: _config.persistent || alert.severity >= 4,
+        requireInteraction: config.persistent || alert.severity >= 4,
         data: { alertId: alert.id },
       });
 
       // Auto-close after 10 seconds unless persistent
-      if (!_config.persistent && alert.severity < 4) {
+      if (!config.persistent && alert.severity < 4) {
         setTimeout(() => notification.close(), 10000);
       }
 
@@ -456,8 +449,8 @@ class PerformanceAlertManager {
   /**
    * Log alert to console
    */
-  private logToConsole(alert: PerformanceAlert, _config: Record<string, unknown>) {
-    const level = _config.level || 'warn';
+  private logToConsole(alert: PerformanceAlert, config: Record<string, any>) {
+    const level = config.level || 'warn';
     const method = console[level as keyof Console] as Function;
 
     if (typeof method === 'function') {
@@ -468,28 +461,25 @@ class PerformanceAlertManager {
   /**
    * Store alert for persistence
    */
-  private storeAlert(alert: PerformanceAlert, _config: Record<string, unknown>) {
+  private storeAlert(alert: PerformanceAlert, config: Record<string, any>) {
     try {
-      const key = _config.key || 'performance-alerts';
+      const key = config.key || 'performance-alerts';
       const stored = JSON.parse(localStorage.getItem(key) || '[]');
       stored.push(alert);
 
       // Keep only last 50 alerts
       const recent = stored.slice(-50);
       localStorage.setItem(key, JSON.stringify(recent));
-    } catch (_error) {
-      console._error('[PerformanceAlert] Failed to store alert:', _error);
+    } catch (error) {
+      console.error('[PerformanceAlert] Failed to store alert:', error);
     }
   }
 
   /**
    * Trigger optimization based on alert
    */
-  private triggerOptimization(
-    alert: PerformanceAlert,
-    _config: Record<string, unknown>
-  ) {
-    switch (_config.type) {
+  private triggerOptimization(alert: PerformanceAlert, config: Record<string, any>) {
+    switch (config.type) {
       case 'memory_cleanup':
         this.triggerMemoryCleanup();
         break;
@@ -534,7 +524,7 @@ class PerformanceAlertManager {
    */
   private forceGarbageCollection() {
     if (typeof window !== 'undefined' && 'gc' in window) {
-      (window as unknown).gc();
+      (window as any).gc();
     }
   }
 
@@ -544,7 +534,7 @@ class PerformanceAlertManager {
   private checkAllMetrics() {
     // Get current performance data
     if (typeof performance !== 'undefined' && 'memory' in performance) {
-      const memory = (performance as unknown).memory;
+      const memory = (performance as any).memory;
       this.recordMetric('memory_used', memory.usedJSHeapSize);
     }
 
@@ -717,7 +707,7 @@ class PerformanceAlertManager {
         case 'network':
           suggestions.push(...this.getNetworkOptimizations(alert));
           break;
-        case '_error':
+        case 'error':
           suggestions.push(...this.getErrorOptimizations(alert));
           break;
       }
@@ -725,7 +715,7 @@ class PerformanceAlertManager {
 
     // Remove duplicates and sort by priority
     const unique = suggestions.filter(
-      (suggestion, _index, arr) => arr.findIndex(s => s.id === suggestion.id) === index
+      (suggestion, index, arr) => arr.findIndex(s => s.id === suggestion.id) === index
     );
 
     return unique.sort((a, b) => {
@@ -747,7 +737,7 @@ class PerformanceAlertManager {
         priority: 'high',
         title: 'Optimize Largest Contentful Paint',
         description:
-          'Your largest contentful paint is too slow, affecting _user experience',
+          'Your largest contentful paint is too slow, affecting user experience',
         impact: 'Improves perceived loading performance',
         implementation:
           'Optimize images, use CDN, implement preloading for critical resources',
@@ -762,9 +752,9 @@ class PerformanceAlertManager {
         priority: 'high',
         title: 'Reduce First Input Delay',
         description: 'Users are experiencing delays when interacting with your app',
-        impact: 'Improves interactivity and _user satisfaction',
+        impact: 'Improves interactivity and user satisfaction',
         implementation:
-          'Use web workers, defer non-critical JavaScript, optimize _event handlers',
+          'Use web workers, defer non-critical JavaScript, optimize event handlers',
         estimatedGain: '60-80% improvement in responsiveness',
       });
     }
@@ -801,7 +791,7 @@ class PerformanceAlertManager {
         category: 'Network',
         priority: 'medium',
         title: 'Optimize Network Requests',
-        description: 'High network _error rate affecting user experience',
+        description: 'High network error rate affecting user experience',
         impact: 'Improves reliability and reduces errors',
         implementation: 'Implement retry logic, request batching, and caching',
         estimatedGain: '50-70% reduction in network errors',
@@ -822,7 +812,7 @@ class PerformanceAlertManager {
         description: 'High frequency of JavaScript errors detected',
         impact: 'Prevents crashes and improves user experience',
         implementation: 'Add error boundaries, improve validation, fix critical bugs',
-        estimatedGain: '80-90% reduction in _error frequency',
+        estimatedGain: '80-90% reduction in error frequency',
       },
     ];
   }
@@ -838,9 +828,9 @@ class PerformanceAlertManager {
    * Remove alert observer
    */
   removeObserver(observer: (alert: PerformanceAlert) => void) {
-    const _index = this.observers.indexOf(observer);
-    if (_index >= 0) {
-      this.observers.splice(_index, 1);
+    const index = this.observers.indexOf(observer);
+    if (index >= 0) {
+      this.observers.splice(index, 1);
     }
   }
 
@@ -889,7 +879,7 @@ export function usePerformanceAlerts() {
   }, []);
 
   const recordMetric = React.useCallback(
-    (name: string, value: number, metadata?: Record<string, unknown>) => {
+    (name: string, value: number, metadata?: Record<string, any>) => {
       performanceAlertManager.recordMetric(name, value, metadata);
     },
     []
@@ -924,7 +914,7 @@ export const PerformanceAlertDisplay: React.FC<PerformanceAlertDisplayProps> = (
   const { alerts, suggestions, resolveAlert } = usePerformanceAlerts();
 
   const displayAlerts = alerts.slice(0, maxAlerts);
-  const criticalAlerts = alerts.filter((alert: unknown) => a.lert.severity >= 4);
+  const criticalAlerts = alerts.filter((alert: any) => a.lert.severity >= 4);
 
   if (displayAlerts.length === 0 && (!showSuggestions || suggestions.length === 0)) {
     return null;
@@ -945,13 +935,13 @@ export const PerformanceAlertDisplay: React.FC<PerformanceAlertDisplayProps> = (
         <div className="active-alerts mb-4">
           <h4 className="font-semibold text-gray-800 mb-2">Performance Alerts</h4>
           <div className="space-y-2">
-            {displayAlerts.map((alert: unknown) => (
+            {displayAlerts.map((alert: any) => (
               <div
                 key={alert.id}
                 className={`alert-item p-3 rounded border-l-4 ${
                   alert.type === 'critical'
                     ? 'bg-red-50 border-red-500'
-                    : alert.type === '_error'
+                    : alert.type === 'error'
                       ? 'bg-orange-50 border-orange-500'
                       : alert.type === 'warning'
                         ? 'bg-yellow-50 border-yellow-500'
@@ -984,7 +974,7 @@ export const PerformanceAlertDisplay: React.FC<PerformanceAlertDisplayProps> = (
         <div className="optimization-suggestions">
           <h4 className="font-semibold text-gray-800 mb-2">Optimization Suggestions</h4>
           <div className="space-y-2">
-            {suggestions.slice(0, 3).map((suggestion: unknown) => (
+            {suggestions.slice(0, 3).map((suggestion: any) => (
               <div
                 key={suggestion.id}
                 className={`suggestion-item p-3 rounded border ${

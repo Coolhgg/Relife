@@ -457,8 +457,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
       >
         <div className="text-center">
           <div className="text-sm text-gray-600 dark:text-gray-400">
-            {alarms.filter((a: any) => a.enabled).length} of {alarms.length} alarms
-            active
+            {alarms.filter((a: any) => a.enabled).length} of {alarms.length} alarms active
           </div>
         </div>
       </div>

@@ -181,7 +181,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ _user, onClose }) => {
   };
 
   const removeSample = (sampleId: string) => {
-    setSamples((prev: any) => prev.filter((s: any) => s.id !== sampleId));
+    setSamples((prev: any) => prev.filter((s: any) => s
 
     // Clean up audio and URL
     const audio = audioRefs.current.get(sampleId);

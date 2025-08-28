@@ -1,7 +1,6 @@
 /// <reference lib="dom" />
 import React from 'react';
 import { useState, useEffect, useRef } from 'react';
-// Replaced stub import with proper implementation
 import {
   X,
   Clock,
@@ -53,7 +52,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
   onSave,
   onCancel,
   userId,
-  _user,
+  user,
 }) => {
   const [formData, setFormData] = useState({
     time: alarm?.time || '07:00',
@@ -92,18 +91,17 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
 
   useEffect(() => {
     checkNuclearAccess();
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: checkNuclearAccess
   }, [user.id]);
 
   const checkNuclearAccess = async () => {
     try {
       const access = await PremiumService.getInstance().hasFeatureAccess(
-        _user.id,
+        user.id,
         'nuclear_mode'
       );
       setHasNuclearAccess(access);
-    } catch (_error) {
-      console._error('Error checking nuclear mode access:', _error);
+    } catch (error) {
+      console.error('Error checking nuclear mode access:', error);
       setHasNuclearAccess(false);
     }
   };
@@ -162,7 +160,6 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
     };
 
     loadCustomSounds();
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: customSoundManager
   }, [userId]);
 
   // Enhanced cleanup for preview audio on unmount
@@ -179,10 +176,10 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
           previewAudio.currentTime = 0;
           previewAudio.removeAttribute('src'); // Release resource
           previewAudio.load(); // Force garbage collection
-        } catch (_error) {
+        } catch (error) {
           // Silently handle cleanup errors in production
           if (process.env.NODE_ENV === 'development') {
-            console.warn('Error during audio cleanup:', _error);
+            console.warn('Error during audio cleanup:', error);
           }
         }
       }
@@ -284,9 +281,9 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
   };
 
   const toggleDay = (dayId: number) => {
-    setFormData((prev: unknown) => {
+    setFormData((prev: any) => {
       const newDays = prev.days.includes(dayId)
-        ? prev.days.filter((d: unknown) => d !== dayId)
+        ? prev.days.filter((d: any) => d !== dayId)
         : [...prev.days, dayId].sort();
 
       // Announce the day toggle
@@ -309,7 +306,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
   const selectedMoodConfig = VOICE_MOODS.find(vm => vm.id === selectedVoiceMood);
 
   // Custom sound handlers
-  const handleFileUpload = async (_event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -330,8 +327,9 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
       );
 
       if (result.success && result.customSound) {
-        setCustomSounds((prev: unknown) => [result.customSound!, ...prev]);
-        setFormData((prev: unknown) => ({
+        setCustomSounds((prev: boolean) => [result.customSound!, ...prev]);
+        setFormData((prev: any
+) => ({ 
           ...prev,
           soundType: 'custom',
           customSoundId: result.customSound!.id,
@@ -340,11 +338,11 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
           `Custom sound "${result.customSound.name}" uploaded successfully`
         );
       } else {
-        announceError(`Upload failed: ${result._error}`);
+        announceError(`Upload failed: ${result.error}`);
       }
-    } catch (_error) {
+    } catch (error) {
       announceError(
-        `Upload failed: ${error instanceof Error ? _error.message : 'Unknown _error'}`
+        `Upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
     } finally {
       setIsUploadingSound(false);
@@ -357,7 +355,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
   };
 
   const handleSoundTypeChange = (soundType: 'built-in' | 'custom' | 'voice-only') => {
-    setFormData((prev: unknown) => ({
+    setFormData((prev: any) => ({
       ...prev,
       soundType,
       customSoundId: soundType === 'custom' ? prev.customSoundId : '',
@@ -365,7 +363,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
   };
 
   const handleCustomSoundSelect = (soundId: string) => {
-    setFormData((prev: unknown) => ({
+    setFormData((prev: any) => ({
       ...prev,
       soundType: 'custom',
       customSoundId: soundId,
@@ -423,14 +421,14 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
           announceError('Audio playback failed');
         };
 
-        audio.addEventListener('_error', errorHandler);
+        audio.addEventListener('error', errorHandler);
 
         setPreviewingSound(sound.id);
         setPreviewAudio(audio);
         audio.play();
-      } catch (_error) {
+      } catch (error) {
         announceError(
-          `Failed to preview sound: ${error instanceof Error ? _error.message : 'Unknown _error'}`
+          `Failed to preview sound: ${error instanceof Error ? error.message : 'Unknown error'}`
         );
         setPreviewingSound(null);
         setPreviewAudio(null);
@@ -442,12 +440,10 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
     if (confirm(`Are you sure you want to delete "${sound.name}"?`)) {
       const success = await customSoundManager.deleteCustomSound(sound.id, userId);
       if (success) {
-        setCustomSounds((prev: unknown) =>
-          prev.filter((s: unknown) => s.id !== sound.id)
-        );
+        setCustomSounds((prev: any) => prev.filter((s: any) => s
         // If the deleted sound was selected, reset to voice-only
         if (formData.customSoundId === sound.id) {
-          setFormData((prev: unknown) => ({
+          setFormData((prev: any) => ({
             ...prev,
             soundType: 'voice-only',
             customSoundId: '',
@@ -540,15 +536,10 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
               id="alarm-time"
               type="time"
               value={formData.time}
-              // TODO: Performance optimization - Use useCallback for event handlers
-              // const handleTimeChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-              //   const newTime = e.target.value;
-              //   setFormData(prev => ({ ...prev, time: newTime }));
-              //   announceFieldChange(...)
-              // }, []);
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              onChange={(e: React.ChangeEvent<HTMLInputElement>
+) => { // auto: implicit any
                 const newTime = e.target.value;
-                setFormData((prev: unknown) => ({ ...prev, time: newTime }));
+                setFormData((prev: any) => ({ ...prev, time: newTime }));
                 announceFieldChange(
                   {
                     fieldName: 'Alarm time',
@@ -564,7 +555,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                   announceFieldValidation('Time', true);
                 }
               }}
-              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+              onKeyDown={(e: any) => {
                 if (e.key === 'F1') {
                   e.preventDefault();
                   announceFieldDescription(
@@ -577,7 +568,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
               className={`alarm-input text-2xl font-mono ${errors.time ? 'border-red-500 focus:border-red-500' : ''}`}
               required
               aria-invalid={errors.time ? 'true' : 'false'}
-              aria-describedby={errors.time ? 'time-_error' : 'time-help'}
+              aria-describedby={errors.time ? 'time-error' : 'time-help'}
               ref={errors.time ? firstErrorRef : undefined}
             />
             <div id="time-help" className="sr-only">
@@ -585,7 +576,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
             </div>
             {errors.time && (
               <div
-                id="time-_error"
+                id="time-error"
                 className="text-sm text-red-600 dark:text-red-400 mt-1"
                 role="alert"
                 aria-live="polite"
@@ -608,9 +599,10 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
               id="alarm-label"
               type="text"
               value={formData.label}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              onChange={(e: React.ChangeEvent<HTMLInputElement>
+) => { // auto: implicit any
                 const newLabel = e.target.value;
-                setFormData((prev: unknown) => ({ ...prev, label: newLabel }));
+                setFormData((prev: any) => ({ ...prev, label: newLabel }));
                 announceFieldChange(
                   {
                     fieldName: 'Alarm label',
@@ -628,7 +620,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                   announceFieldValidation('Label', false, 'Label is required');
                 }
               }}
-              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+              onKeyDown={(e: any) => {
                 if (e.key === 'F1') {
                   e.preventDefault();
                   announceFieldDescription(
@@ -644,7 +636,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
               maxLength={100}
               required
               aria-invalid={errors.label ? 'true' : 'false'}
-              aria-describedby={errors.label ? 'label-_error' : 'label-help'}
+              aria-describedby={errors.label ? 'label-error' : 'label-help'}
               ref={errors.label && !errors.time ? firstErrorRef : undefined}
             />
             <div id="label-help" className="sr-only">
@@ -653,7 +645,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
             </div>
             {errors.label && (
               <div
-                id="label-_error"
+                id="label-error"
                 className="text-sm text-red-600 dark:text-red-400 mt-1"
                 role="alert"
                 aria-live="polite"
@@ -673,7 +665,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
               className="grid grid-cols-7 gap-2"
               role="group"
               aria-labelledby="days-legend"
-              aria-describedby={errors.days ? 'days-_error' : undefined}
+              aria-describedby={errors.days ? 'days-error' : undefined}
               aria-invalid={errors.days ? 'true' : 'false'}
             >
               <div id="days-legend" className="sr-only">
@@ -684,7 +676,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                   key={day.id}
                   type="button"
                   onClick={() => toggleDay(day.id)}
-                  onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
+                  onKeyDown={(e: any) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
                       toggleDay(day.id);
@@ -718,7 +710,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
             </div>
             {errors.days && (
               <div
-                id="days-_error"
+                id="days-error"
                 className="text-sm text-red-600 dark:text-red-400 mt-1"
                 role="alert"
                 aria-live="polite"
@@ -760,7 +752,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
               className="grid grid-cols-2 gap-3"
               role="radiogroup"
               aria-labelledby="voice-mood-legend"
-              aria-describedby={errors.voiceMood ? 'voice-mood-_error' : undefined}
+              aria-describedby={errors.voiceMood ? 'voice-mood-error' : undefined}
               aria-invalid={errors.voiceMood ? 'true' : 'false'}
             >
               <div id="voice-mood-legend" className="sr-only">
@@ -771,7 +763,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                   key={mood.id}
                   type="button"
                   onClick={() => handleVoiceMoodSelect(mood.id)}
-                  onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
+                  onKeyDown={(e: any) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
                       handleVoiceMoodSelect(mood.id);
@@ -817,7 +809,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
             </div>
             {errors.voiceMood && (
               <div
-                id="voice-mood-_error"
+                id="voice-mood-error"
                 className="text-sm text-red-600 dark:text-red-400 mt-1"
                 role="alert"
                 aria-live="polite"
@@ -866,16 +858,13 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                   key={difficulty.id}
                   type="button"
                   onClick={() => {
-                    setFormData((prev: unknown) => ({
+                    setFormData((prev: any) => ({
                       ...prev,
                       difficulty: difficulty.id as AlarmDifficulty,
                     }));
                     // Clear nuclear challenges when changing difficulty
                     if (difficulty.id !== 'nuclear') {
-                      setFormData((prev: unknown) => ({
-                        ...prev,
-                        nuclearChallenges: [],
-                      }));
+                      setFormData((prev: any) => ({ ...prev, nuclearChallenges: [] }));
                     }
                   }}
                   className={`p-3 rounded-lg border-2 text-left transition-all ${
@@ -907,7 +896,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                 type="button"
                 onClick={() => {
                   if (hasNuclearAccess) {
-                    setFormData((prev: unknown) => ({
+                    setFormData((prev: any) => ({
                       ...prev,
                       difficulty:
                         formData.difficulty === 'nuclear' ? 'extreme' : 'nuclear',
@@ -1000,15 +989,16 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                           checked={
                             formData.nuclearChallenges?.includes(challenge.id) || false
                           }
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>
+) => { // auto: implicit any
                             const challenges = formData.nuclearChallenges || [];
                             if (e.target.checked) {
-                              setFormData((prev: unknown) => ({
+                              setFormData((prev: any) => ({
                                 ...prev,
                                 nuclearChallenges: [...challenges, challenge.id],
                               }));
                             } else {
-                              setFormData((prev: unknown) => ({
+                              setFormData((prev: any) => ({
                                 ...prev,
                                 nuclearChallenges: challenges.filter(
                                   c => c !== challenge.id
@@ -1142,7 +1132,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                       Your Custom Sounds
                     </div>
                     <div className="max-h-40 overflow-y-auto space-y-2">
-                      {customSounds.map((sound: unknown) => (
+                      {customSounds.map((sound: any) => (
                         <div
                           key={sound.id}
                           className={`flex items-center gap-3 p-3 rounded-lg border transition-all ${
@@ -1263,7 +1253,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                 id="snooze-enabled"
                 onClick={() => {
                   if (formData.difficulty !== 'nuclear') {
-                    setFormData((prev: unknown) => ({
+                    setFormData((prev: any) => ({
                       ...prev,
                       snoozeEnabled: !prev.snoozeEnabled,
                     }));
@@ -1309,12 +1299,14 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                   <select
                     id="snooze-interval"
                     value={formData.snoozeInterval}
-                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                      setFormData((prev: unknown) => ({
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>
+) => 
+                      setFormData((prev: any
+) => ({ 
                         ...prev,
                         snoozeInterval: parseInt(e.target.value),
                       }));
-                    }}
+                    }
                     className="alarm-input text-sm"
                   >
                     <option value={1}>1 minute</option>
@@ -1339,12 +1331,14 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                   <select
                     id="max-snoozes"
                     value={formData.maxSnoozes}
-                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                      setFormData((prev: unknown) => ({
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>
+) => 
+                      setFormData((prev: any
+) => ({ 
                         ...prev,
                         maxSnoozes: parseInt(e.target.value),
                       }));
-                    }}
+                    }
                     className="alarm-input text-sm"
                   >
                     <option value={1}>1 time</option>
@@ -1387,7 +1381,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
       {showNuclearModeUpgrade && (
         <UpgradePrompt
           feature="nuclear_mode"
-          onUpgrade={(tier: unknown) => {
+          onUpgrade={(tier: any) => {
             setShowNuclearModeUpgrade(false);
             // In a real app, redirect to upgrade flow
             console.log(`Upgrading to ${tier} for Nuclear Mode`);

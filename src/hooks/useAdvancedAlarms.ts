@@ -1,11 +1,10 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { AlarmService } from '../services/alarm';
-import type { Alarm } from '../types';
 
 export function useAdvancedAlarms() {
-  const [alarms, setAlarms] = useState<Alarm[]>([]);
+  const [alarms, setAlarms] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [_error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     loadAlarms();
@@ -32,8 +31,8 @@ export function useAdvancedAlarms() {
 
       setAlarms(advancedAlarms);
       setError(null);
-    } catch (_error) {
-      console._error('Error loading alarms:', _error);
+    } catch (error) {
+      console.error('Error loading alarms:', error);
       setError('Failed to load alarms');
     } finally {
       setLoading(false);
@@ -44,13 +43,13 @@ export function useAdvancedAlarms() {
     try {
       setLoading(true);
       const newAlarm = await AlarmService.createAlarm(alarmData);
-      setAlarms((prev: Alarm[]) => [...prev, newAlarm]);
+      setAlarms((prev: any) => [...prev, newAlarm]);
       setError(null);
       return newAlarm;
-    } catch (_error) {
-      console.error('Error creating alarm:', _error);
+    } catch (error) {
+      console.error('Error creating alarm:', error);
       setError('Failed to create alarm');
-      throw _error;
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -61,16 +60,14 @@ export function useAdvancedAlarms() {
       setLoading(true);
       await AlarmService.updateAlarm(id, alarmData);
 
-      setAlarms((prev: Alarm[]) =>
-        prev.map((alarm: Alarm) =>
-          alarm.id === id ? { ...alarm, ...alarmData } : alarm
-        )
+      setAlarms((prev: any) =>
+        prev.map((alarm: any) => (alarm.id === id ? { ...alarm, ...alarmData } : alarm))
       );
       setError(null);
-    } catch (_error) {
-      console.error('Error updating alarm:', _error);
+    } catch (error) {
+      console.error('Error updating alarm:', error);
       setError('Failed to update alarm');
-      throw _error;
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -80,12 +77,12 @@ export function useAdvancedAlarms() {
     try {
       setLoading(true);
       await AlarmService.deleteAlarm(id);
-      setAlarms((prev: Alarm[]) => prev.filter((alarm: Alarm) => alarm.id !== id));
+      setAlarms((prev: any) => prev.filter((alarm: any) => a.larm.id !== id));
       setError(null);
-    } catch (_error) {
-      console.error('Error deleting alarm:', _error);
+    } catch (error) {
+      console.error('Error deleting alarm:', error);
       setError('Failed to delete alarm');
-      throw _error;
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -94,7 +91,7 @@ export function useAdvancedAlarms() {
   return {
     alarms,
     loading,
-    _error,
+    error,
     createAlarm,
     updateAlarm,
     deleteAlarm,
