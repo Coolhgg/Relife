@@ -5,17 +5,16 @@
  * Based on the ESLint violations found in the codebase
  */
 
-import fs from 'src/shims/fs'; // auto: converted require to shim
-import path from 'src/shims/path'; // auto: converted require to shim
-import { __cjs as _child_process } from 'src/shims/child_process';
-const { execSync } = _child_process; // auto: converted require to shim
+const fs = require('fs');
+const path = require('path');
+const { execSync } = require('child_process');
 
 // Track statistics
 const stats = {
   filesProcessed: 0,
   importsRemoved: 0,
   variablesFixed: 0,
-  errorsFixed: 0,
+  errorsFixed: 0
 };
 
 console.log('🧹 Starting unused code cleanup...');
@@ -26,46 +25,15 @@ console.log('🧹 Starting unused code cleanup...');
 function removeUnusedImports(filePath, content) {
   let modified = content;
   let changes = 0;
-
+  
   // Common unused imports that appear multiple times in the codebase
   const commonUnusedImports = [
-    'Users',
-    'Target',
-    'CheckCircle',
-    'TrendingUp',
-    'BarChart3',
-    'MessageSquare',
-    'Type',
-    'AlertTriangle',
-    'Progress',
-    'TrendingDown',
-    'Mail',
-    'Card',
-    'CardContent',
-    'CardDescription',
-    'CardHeader',
-    'CardTitle',
-    'Tabs',
-    'TabsContent',
-    'TabsList',
-    'TabsTrigger',
-    'Palette',
-    'AlignLeft',
-    'AlignCenter',
-    'AlignRight',
-    'Bold',
-    'Italic',
-    'Link',
-    'Zap',
-    'Textarea',
-    'Dialog',
-    'DialogContent',
-    'DialogDescription',
-    'DialogHeader',
-    'DialogTitle',
-    'DialogTrigger',
-    'Filter',
-    'Calendar',
+    'Users', 'Target', 'CheckCircle', 'TrendingUp', 'BarChart3', 'MessageSquare', 
+    'Type', 'AlertTriangle', 'Progress', 'TrendingDown', 'Mail', 'Card', 'CardContent',
+    'CardDescription', 'CardHeader', 'CardTitle', 'Tabs', 'TabsContent', 'TabsList',
+    'TabsTrigger', 'Palette', 'AlignLeft', 'AlignCenter', 'AlignRight', 'Bold', 'Italic',
+    'Link', 'Zap', 'Textarea', 'Dialog', 'DialogContent', 'DialogDescription', 
+    'DialogHeader', 'DialogTitle', 'DialogTrigger', 'Filter', 'Calendar'
   ];
 
   // Remove imports that are completely unused
@@ -73,14 +41,12 @@ function removeUnusedImports(filePath, content) {
     // Pattern: remove specific import from destructuring
     const destructurePattern = new RegExp(`\\s*,?\\s*${importName}\\s*,?`, 'g');
     const beforeRemoval = modified;
-
+    
     // First, check if this import is actually used in the file
     const importUsagePattern = new RegExp(`(?<!import.*?)\\b${importName}\\b`, 'g');
     const usagesInContent = (modified.match(importUsagePattern) || []).length;
-    const usagesInImports = (
-      modified.match(new RegExp(`import.*?${importName}`, 'g')) || []
-    ).length;
-
+    const usagesInImports = (modified.match(new RegExp(`import.*?${importName}`, 'g')) || []).length;
+    
     // If the import appears only in import statements, remove it
     if (usagesInContent === usagesInImports) {
       // Remove from destructured imports
@@ -89,14 +55,14 @@ function removeUnusedImports(filePath, content) {
         (match, before, after) => {
           const cleanedBefore = before.replace(/,\s*$/, '');
           const cleanedAfter = after.replace(/^\s*,/, '');
-
+          
           if (cleanedBefore === '{' && cleanedAfter === '}') {
             return ''; // Remove entire import line if empty
           }
           return cleanedBefore + cleanedAfter;
         }
       );
-
+      
       if (modified !== beforeRemoval) {
         changes++;
       }
@@ -215,17 +181,12 @@ function getFilesToProcess() {
   const reportContent = fs.readFileSync(eslintReportPath, 'utf8');
   const filePathRegex = /^\/project\/workspace\/Coolhgg\/Relife\/(.+)$/gm;
   const files = new Set();
-
+  
   let match;
   while ((match = filePathRegex.exec(reportContent)) !== null) {
     const relativePath = match[1];
-    if (
-      relativePath &&
-      (relativePath.endsWith('.ts') ||
-        relativePath.endsWith('.tsx') ||
-        relativePath.endsWith('.js') ||
-        relativePath.endsWith('.jsx'))
-    ) {
+    if (relativePath && (relativePath.endsWith('.ts') || relativePath.endsWith('.tsx') || 
+        relativePath.endsWith('.js') || relativePath.endsWith('.jsx'))) {
       files.add(relativePath);
     }
   }
@@ -239,19 +200,16 @@ function getFilesToProcess() {
 function scanDirectory(dir) {
   const files = [];
   const items = fs.readdirSync(dir, { withFileTypes: true });
-
+  
   for (const item of items) {
     const fullPath = path.join(dir, item.name);
-    if (
-      item.isDirectory() &&
-      !['node_modules', '.git', 'dist', 'build'].includes(item.name)
-    ) {
+    if (item.isDirectory() && !['node_modules', '.git', 'dist', 'build'].includes(item.name)) {
       files.push(...scanDirectory(fullPath));
     } else if (item.isFile() && /\.(ts|tsx|js|jsx)$/.test(item.name)) {
       files.push(fullPath);
     }
   }
-
+  
   return files;
 }
 
@@ -269,9 +227,8 @@ try {
   console.log(`Imports removed: ${stats.importsRemoved}`);
   console.log(`Variables fixed: ${stats.variablesFixed}`);
   console.log(`Errors fixed: ${stats.errorsFixed}`);
-  console.log(
-    `Total fixes: ${stats.importsRemoved + stats.variablesFixed + stats.errorsFixed}`
-  );
+  console.log(`Total fixes: ${stats.importsRemoved + stats.variablesFixed + stats.errorsFixed}`);
+
 } catch (error) {
   console.error('❌ Cleanup script failed:', error);
   process.exit(1);
