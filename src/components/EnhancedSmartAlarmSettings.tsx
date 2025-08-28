@@ -672,7 +672,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                               }`}
                             >
                               {rec.impact === 'high' ? (
-                                <AlertCircle className="w-4 h-4 text-red-400" />
+                                <AlertCircleCircle className="w-4 h-4 text-red-400" />
                               ) : rec.impact === 'medium' ? (
                                 <Info className="w-4 h-4 text-yellow-400" />
                               ) : (

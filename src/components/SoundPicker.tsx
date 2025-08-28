@@ -101,9 +101,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
     const matchesSearch =
       sound.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       sound.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      sound.tags?.some((tag: unknown) =>
-        tag.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+      sound.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
 
     const matchesCategory =
       filterCategory === 'all' || sound.category === filterCategory;
@@ -137,13 +135,13 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
 
       await audio.play();
       setPlayingSound(soundId);
-    } catch (_error) {
-      console._error('Error playing sound:', _error);
+    } catch (error) {
+      console.error('Error playing sound:', error);
     }
   };
 
   const stopAllSounds = () => {
-    audioRefs.current.forEach((audio: unknown) => {
+    audioRefs.current.forEach(audio => {
       if (!audio.paused) {
         audio.pause();
         audio.currentTime = 0;
@@ -297,9 +295,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                       <Input
                         placeholder="Search sounds..."
                         value={searchQuery}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          setSearchQuery(e.target.value)
-                        }
+                        onChange={e => setSearchQuery(e.target.value)}
                         className="pl-10"
                       />
                     </div>
@@ -322,9 +318,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                 {/* Sound Type Tabs */}
                 <Tabs
                   value={activeTab}
-                  onValueChange={(value: unknown) =>
-                    setActiveTab(value as CustomSoundType)
-                  }
+                  onValueChange={value => setActiveTab(value as CustomSoundType)}
                 >
                   <TabsList>
                     {allowedSoundTypes.includes('uploaded') && (
@@ -404,7 +398,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                               <Button
                                 size="sm"
                                 variant="outline"
-                                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                                onClick={(e: React.MouseEvent) => {
                                   e.stopPropagation();
                                   playSound(sound.id, sound.fileUrl);
                                 }}
@@ -446,7 +440,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                              onClick={(e: React.MouseEvent) => {
                                 e.stopPropagation();
                                 playSound(sound.id, sound.url);
                               }}
@@ -477,8 +471,8 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                             </label>
                             <Select
                               value={generatedSoundConfig.type}
-                              onValueChange={(value: unknown) =>
-                                setGeneratedSoundConfig((prev: unknown) => ({
+                              onValueChange={(value: any) =>
+                                setGeneratedSoundConfig(prev => ({
                                   ...prev,
                                   type: value,
                                 }))
@@ -510,8 +504,8 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                               min="100"
                               max="2000"
                               value={generatedSoundConfig.frequency}
-                              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                setGeneratedSoundConfig((prev: unknown) => ({
+                              onChange={e =>
+                                setGeneratedSoundConfig(prev => ({
                                   ...prev,
                                   frequency: parseInt(e.target.value),
                                 }))
@@ -530,8 +524,8 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                               max="10"
                               step="0.5"
                               value={generatedSoundConfig.duration}
-                              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                setGeneratedSoundConfig((prev: unknown) => ({
+                              onChange={e =>
+                                setGeneratedSoundConfig(prev => ({
                                   ...prev,
                                   duration: parseFloat(e.target.value),
                                 }))
@@ -567,9 +561,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                           <Input
                             placeholder="https://example.com/sound.mp3"
                             value={urlInput}
-                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                              setUrlInput(e.target.value)
-                            }
+                            onChange={e => setUrlInput(e.target.value)}
                           />
                         </div>
 

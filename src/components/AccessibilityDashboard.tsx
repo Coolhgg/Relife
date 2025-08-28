@@ -399,7 +399,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
       {/* Announce Errors */}
       <div className="setting-group">
         <label className="setting-label" htmlFor="announce-errors">
-          <AlertCircle className="w-5 h-5" aria-hidden="true" />
+          <AlertCircleCircle className="w-5 h-5" aria-hidden="true" />
           Announce Errors
         </label>
         <p className="setting-description">

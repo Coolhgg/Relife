@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TimeoutHandle } from '../types/timers';
-// Removed generic stub import - using specific implementations as needed
 import {
-  AlertTriangle,
   Brain,
   Clock,
   Activity,
@@ -68,19 +66,19 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
       // Load optimal times for each alarm
       const timesMap = new Map<string, OptimalTimeSlot[]>();
 
-      for (const alarm of alarms.filter((a: any) => a.smartEnabled)) {
+      for (const alarm of alarms.filter(a => a.smartEnabled)) {
         try {
           const times =
             await EnhancedSmartAlarmScheduler.calculateOptimalTimeSlots(alarm);
           timesMap.set(alarm.id, times);
-        } catch (_error) {
-          console._error(`Error loading optimal times for alarm ${alarm.id}:`, _error);
+        } catch (error) {
+          console.error(`Error loading optimal times for alarm ${alarm.id}:`, error);
         }
       }
 
       setOptimalTimes(timesMap);
-    } catch (_error) {
-      console._error('Error loading dashboard data:', _error);
+    } catch (error) {
+      console.error('Error loading dashboard data:', error);
     } finally {
       setLoading(false);
     }
@@ -109,10 +107,10 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
   const getConfidenceIcon = (confidence: number) => {
     if (confidence >= 0.8) return <CheckCircle className="w-4 h-4 text-green-400" />;
     if (confidence >= 0.6) return <Eye className="w-4 h-4 text-yellow-400" />;
-    return <AlertTriangle className="w-4 h-4 text-red-400" />;
+    return <AlertCircle className="w-4 h-4 text-red-400" />;
   };
 
-  const smartAlarms = alarms.filter((alarm: any) => a.larm.smartEnabled);
+  const smartAlarms = alarms.filter(alarm => alarm.smartEnabled);
 
   if (smartAlarms.length === 0) {
     return (
@@ -181,7 +179,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
           </button>
         </div>
 
-        {smartAlarms.map((alarm: any) => {
+        {smartAlarms.map(alarm => {
           const status = alarmStatuses.get(alarm.id);
           const optimal = optimalTimes.get(alarm.id) || [];
           const isExpanded = selectedAlarm === alarm.id;
@@ -240,7 +238,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
 
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={(e: any) => {
+                      onClick={e => {
                         e.stopPropagation();
                         onEditAlarm(alarm);
                       }}
@@ -312,9 +310,9 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                         Active Factors
                       </h5>
                       <div className="space-y-1">
-                        {status.factors.map((factor, _index) => (
+                        {status.factors.map((factor, index) => (
                           <div
-                            key={_index}
+                            key={index}
                             className="text-white/70 text-sm flex items-start gap-2"
                           >
                             <div className="w-1 h-1 bg-white/40 rounded-full mt-2 flex-shrink-0" />
@@ -334,9 +332,9 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                       </h5>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-                        {optimal.slice(0, 6).map((slot, _index) => (
+                        {optimal.slice(0, 6).map((slot, index) => (
                           <div
-                            key={_index}
+                            key={index}
                             className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10"
                           >
                             <div className="flex items-center gap-2">
@@ -378,7 +376,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                             alarm.realTimeAdaptation ? 'text-green-400' : 'text-red-400'
                           }
                         >
-                          alarm.realTimeAdaptation ? 'ON' : 'OFF'
+                          {alarm.realTimeAdaptation ? 'ON' : 'OFF'}
                         </span>
                       </div>
 
@@ -390,7 +388,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                             alarm.dynamicWakeWindow ? 'text-green-400' : 'text-red-400'
                           }
                         >
-                          alarm.dynamicWakeWindow ? 'ON' : 'OFF'
+                          {alarm.dynamicWakeWindow ? 'ON' : 'OFF'}
                         </span>
                       </div>
 
@@ -414,8 +412,8 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
 
                   {/* Active Conditions */}
                   {alarm.conditionBasedAdjustments &&
-                    alarm.conditionBasedAdjustments.filter((c: any) => c.isEnabled)
-                      .length > 0 && (
+                    alarm.conditionBasedAdjustments.filter(c => c.isEnabled).length >
+                      0 && (
                       <div className="bg-white/5 rounded-lg p-3">
                         <h5 className="text-white font-medium mb-3 flex items-center gap-2">
                           <Eye className="w-4 h-4 text-yellow-400" />
@@ -424,9 +422,8 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           {alarm.conditionBasedAdjustments
-                            .filter((c: any) => c.isEnabled)
-
-                            .map((condition: any) => (
+                            .filter(c => c.isEnabled)
+                            .map(condition => (
                               <div
                                 key={condition.id}
                                 className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10"

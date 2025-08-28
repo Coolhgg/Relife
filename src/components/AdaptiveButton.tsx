@@ -159,7 +159,7 @@ export const AdaptiveButton = memo<AdaptiveButtonProps>(
 
         // Add haptic feedback on supported devices
         if ('vibrate' in navigator && !isLowEnd) {
-          navigator.vibrate(10);
+          navigator?.vibrate?.(10);
         }
 
         // Add ripple effect for enhanced devices
