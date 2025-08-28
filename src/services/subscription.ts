@@ -1,14 +1,12 @@
 import { supabase, createClient } from './supabase';
-import path from 'path';
-import { SubscriptionTier } from '../types';
 import type {
   Subscription,
   SubscriptionStatus,
   PremiumFeatureAccess,
   PremiumUsage,
   FeatureLimits,
-  SubscriptionLimits,
-  SUBSCRIPTION_PLANS,
+  SUBSCRIPTION_LIMITS,
+  SUBSCRIPTION_PLANS
 } from '../types';
 import { ErrorHandler } from './error-handler';
 
@@ -22,7 +20,7 @@ interface SubscriptionCheckResult {
 
 export class SubscriptionService {
   private static cache = new Map<string, any>();
-  private static cacheExpiry = new Map<string, TimeoutHandle>();
+  private static cacheExpiry = new Map<string, number>();
   private static readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
   private static isAvailable = createClient() !== null;
@@ -42,45 +40,42 @@ export class SubscriptionService {
     }
 
     try {
-      const { data, _error } = await supabase
+      const { data, error } = await supabase
         .from('subscriptions')
         .select('*')
         .eq('user_id', userId)
         .eq('status', 'active')
         .single();
 
-      if (error && _error.code !== 'PGRST116') {
-        // PGRST116 is "no rows returned"
-        throw new Error(`Failed to get subscription: ${_error.message}`);
+      if (error && error.code !== 'PGRST116') { // PGRST116 is "no rows returned"
+        throw new Error(`Failed to get subscription: ${error.message}`);
       }
 
-      const subscription = data
-        ? ({
-            id: data.id,
-            userId: data.user_id,
-            tier: data.tier,
-            status: data.status,
-            currentPeriodStart: new Date(data.current_period_start),
-            currentPeriodEnd: new Date(data.current_period_end),
-            trialEnd: data.trial_end ? new Date(data.trial_end) : undefined,
-            cancelAtPeriodEnd: data.cancel_at_period_end,
-            canceledAt: data.canceled_at ? new Date(data.canceled_at) : undefined,
-            createdAt: new Date(data.created_at),
-            updatedAt: new Date(data.updated_at),
-            stripeCustomerId: data.stripe_customer_id,
-            stripeSubscriptionId: data.stripe_subscription_id,
-            stripePriceId: data.stripe_price_id,
-          } as Subscription)
-        : null;
+      const subscription = data ? {
+        id: data.id,
+        userId: data.user_id,
+        tier: data.tier,
+        status: data.status,
+        currentPeriodStart: new Date(data.current_period_start),
+        currentPeriodEnd: new Date(data.current_period_end),
+        trialEnd: data.trial_end ? new Date(data.trial_end) : undefined,
+        cancelAtPeriodEnd: data.cancel_at_period_end,
+        canceledAt: data.canceled_at ? new Date(data.canceled_at) : undefined,
+        createdAt: new Date(data.created_at),
+        updatedAt: new Date(data.updated_at),
+        stripeCustomerId: data.stripe_customer_id,
+        stripeSubscriptionId: data.stripe_subscription_id,
+        stripePriceId: data.stripe_price_id
+      } as Subscription : null;
 
       if (subscription) {
         this.setCachedData(cacheKey, subscription);
       }
 
       return subscription;
-    } catch (_error) {
+    } catch (error) {
       ErrorHandler.handleError(
-        error instanceof Error ? _error : new Error(String(_error)),
+        error instanceof Error ? error : new Error(String(error)),
         'Failed to get user subscription',
         { context: 'getUserSubscription', userId }
       );
@@ -110,7 +105,7 @@ export class SubscriptionService {
    */
   static async getFeatureLimits(userId: string): Promise<SubscriptionLimits> {
     const tier = await this.getUserTier(userId);
-    return SubscriptionLimits[tier];
+    return SUBSCRIPTION_LIMITS[tier];
   }
 
   /**
@@ -153,8 +148,7 @@ export class SubscriptionService {
         break;
     }
 
-    if (limit === -1) {
-      // Unlimited
+    if (limit === -1) { // Unlimited
       return { hasAccess: true };
     }
 
@@ -164,7 +158,7 @@ export class SubscriptionService {
         reason: `Daily/monthly limit exceeded`,
         upgradeRequired: true,
         currentUsage,
-        limit,
+        limit
       };
     }
 
@@ -187,37 +181,35 @@ export class SubscriptionService {
     }
 
     try {
-      const { data, _error } = await supabase
+      const { data, error } = await supabase
         .from('premium_usage')
         .select('*')
         .eq('user_id', userId)
         .eq('month', currentMonth)
         .single();
 
-      if (error && _error.code !== 'PGRST116') {
-        throw new Error(`Failed to get usage: ${_error.message}`);
+      if (error && error.code !== 'PGRST116') {
+        throw new Error(`Failed to get usage: ${error.message}`);
       }
 
-      const usage = data
-        ? ({
-            userId: data.user_id,
-            month: data.month,
-            elevenlabsApiCalls: data.elevenlabs_api_calls,
-            aiInsightsGenerated: data.ai_insights_generated,
-            customVoiceMessages: data.custom_voice_messages,
-            premiumThemesUsed: data.premium_themes_used,
-            lastUpdated: new Date(data.last_updated),
-          } as PremiumUsage)
-        : null;
+      const usage = data ? {
+        userId: data.user_id,
+        month: data.month,
+        elevenlabsApiCalls: data.elevenlabs_api_calls,
+        aiInsightsGenerated: data.ai_insights_generated,
+        customVoiceMessages: data.custom_voice_messages,
+        premiumThemesUsed: data.premium_themes_used,
+        lastUpdated: new Date(data.last_updated)
+      } as PremiumUsage : null;
 
       if (usage) {
         this.setCachedData(cacheKey, usage, 1 * 60 * 1000); // Cache for 1 minute for usage data
       }
 
       return usage;
-    } catch (_error) {
+    } catch (error) {
       ErrorHandler.handleError(
-        error instanceof Error ? _error : new Error(String(_error)),
+        error instanceof Error ? error : new Error(String(error)),
         'Failed to get usage data',
         { context: 'getCurrentUsage', userId }
       );
@@ -240,23 +232,23 @@ export class SubscriptionService {
     const currentMonth = new Date().toISOString().slice(0, 7);
 
     try {
-      const { _error } = await supabase.rpc('increment_premium_usage', {
+      const { error } = await supabase.rpc('increment_premium_usage', {
         p_user_id: userId,
         p_month: currentMonth,
         p_feature: feature,
-        p_increment: increment,
+        p_increment: increment
       });
 
-      if (_error) {
-        throw new Error(`Failed to increment usage: ${_error.message}`);
+      if (error) {
+        throw new Error(`Failed to increment usage: ${error.message}`);
       }
 
       // Invalidate cache
       const cacheKey = `usage_${userId}_${currentMonth}`;
       this.invalidateCache(cacheKey);
-    } catch (_error) {
+    } catch (error) {
       ErrorHandler.handleError(
-        error instanceof Error ? _error : new Error(String(_error)),
+        error instanceof Error ? error : new Error(String(error)),
         'Failed to increment usage',
         { context: 'incrementUsage', userId, feature, increment }
       );
@@ -272,8 +264,9 @@ export class SubscriptionService {
     }
 
     try {
-      const { _error } = await supabase.from('subscriptions').upsert([
-        {
+      const { error } = await supabase
+        .from('subscriptions')
+        .upsert([{
           id: subscription.id,
           user_id: subscription.userId,
           tier: subscription.tier,
@@ -287,19 +280,18 @@ export class SubscriptionService {
           updated_at: subscription.updatedAt.toISOString(),
           stripe_customer_id: subscription.stripeCustomerId,
           stripe_subscription_id: subscription.stripeSubscriptionId,
-          stripe_price_id: subscription.stripePriceId,
-        },
-      ]);
+          stripe_price_id: subscription.stripePriceId
+        }]);
 
-      if (_error) {
-        throw new Error(`Failed to upsert subscription: ${_error.message}`);
+      if (error) {
+        throw new Error(`Failed to upsert subscription: ${error.message}`);
       }
 
       // Invalidate cache
       this.invalidateCache(`subscription_${subscription.userId}`);
-    } catch (_error) {
+    } catch (error) {
       ErrorHandler.handleError(
-        error instanceof Error ? _error : new Error(String(_error)),
+        error instanceof Error ? error : new Error(String(error)),
         'Failed to upsert subscription',
         { context: 'upsertSubscription', subscriptionId: subscription.id }
       );
@@ -309,10 +301,7 @@ export class SubscriptionService {
   /**
    * Cancel a subscription
    */
-  static async cancelSubscription(
-    userId: string,
-    cancelAtPeriodEnd: boolean = true
-  ): Promise<void> {
+  static async cancelSubscription(userId: string, cancelAtPeriodEnd: boolean = true): Promise<void> {
     if (!this.isAvailable) {
       return;
     }
@@ -320,7 +309,7 @@ export class SubscriptionService {
     try {
       const updates: any = {
         cancel_at_period_end: cancelAtPeriodEnd,
-        updated_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
       };
 
       if (!cancelAtPeriodEnd) {
@@ -328,21 +317,21 @@ export class SubscriptionService {
         updates.canceled_at = new Date().toISOString();
       }
 
-      const { _error } = await supabase
+      const { error } = await supabase
         .from('subscriptions')
         .update(updates)
         .eq('user_id', userId)
         .eq('status', 'active');
 
-      if (_error) {
-        throw new Error(`Failed to cancel subscription: ${_error.message}`);
+      if (error) {
+        throw new Error(`Failed to cancel subscription: ${error.message}`);
       }
 
       // Invalidate cache
       this.invalidateCache(`subscription_${userId}`);
-    } catch (_error) {
+    } catch (error) {
       ErrorHandler.handleError(
-        error instanceof Error ? _error : new Error(String(_error)),
+        error instanceof Error ? error : new Error(String(error)),
         'Failed to cancel subscription',
         { context: 'cancelSubscription', userId }
       );
@@ -362,16 +351,16 @@ export class SubscriptionService {
     }
 
     try {
-      const { data, _error } = await supabase.rpc('get_subscription_analytics');
+      const { data, error } = await supabase.rpc('get_subscription_analytics');
 
-      if (_error) {
-        throw new Error(`Failed to get subscription analytics: ${_error.message}`);
+      if (error) {
+        throw new Error(`Failed to get subscription analytics: ${error.message}`);
       }
 
       return data;
-    } catch (_error) {
+    } catch (error) {
       ErrorHandler.handleError(
-        error instanceof Error ? _error : new Error(String(_error)),
+        error instanceof Error ? error : new Error(String(error)),
         'Failed to get subscription analytics',
         { context: 'getSubscriptionAnalytics' }
       );
