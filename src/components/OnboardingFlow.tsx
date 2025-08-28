@@ -490,7 +490,6 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                   )}
                 </li>
               );
-              }
             )}
           </ol>
         </nav>
