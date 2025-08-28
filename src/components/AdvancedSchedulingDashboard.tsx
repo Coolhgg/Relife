@@ -1,25 +1,22 @@
 // Advanced Scheduling Dashboard - Simplified Version
 import React, { useState } from 'react';
-import { Calendar, Clock, Settings } from 'lucide-react';
-import type { Alarm } from '../types';
+import { Calendar, Clock, Settings, TrendingUp } from 'lucide-react';
 
 interface AdvancedSchedulingDashboardProps {
   userId?: string;
   onScheduleAlarm?: (alarmData: any) => void;
   className?: string;
-  alarms?: Alarm[];
 }
 
 const AdvancedSchedulingDashboard: React.FC<AdvancedSchedulingDashboardProps> = ({
   userId,
   onScheduleAlarm,
   className = '',
-  alarms, // auto: added for prop compatibility
 }) => {
   const [activeTab, setActiveTab] = useState('overview');
 
   const tabs = [
-    { id: 'overview', label: 'Overview', icon: Calendar },
+    { id: 'overview', label: 'Overview', icon: TrendingUp },
     { id: 'calendar', label: 'Calendar', icon: Calendar },
     { id: 'smart-alarms', label: 'Smart Alarms', icon: Clock },
     { id: 'settings', label: 'Settings', icon: Settings },

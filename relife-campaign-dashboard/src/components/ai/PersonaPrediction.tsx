@@ -7,7 +7,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -226,8 +225,9 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
     let reasons: string[] = [];
     let recommendedCampaigns: string[] = [];
 
-    const {subscriptionStatus, featureUsage, engagementMetrics} = userData;
-    const totalFeatureUsage = Object.values(featureUsage).reduce((sum, _usage) => sum + _usage,
+    const { subscriptionStatus, featureUsage, engagementMetrics } = userData;
+    const totalFeatureUsage = Object.values(featureUsage).reduce(
+      (sum, usage) => sum + usage,
       0
     );
 
@@ -294,9 +294,9 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
     };
   };
 
-  const handleAnalyzeUser = async (_userData: UserData) => {
-    setSelectedUser(_userData);
-    const result = await predictPersona(_userData);
+  const handleAnalyzeUser = async (userData: UserData) => {
+    setSelectedUser(userData);
+    const result = await predictPersona(userData);
     setPrediction(result);
   };
 
@@ -455,9 +455,9 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                             Why this prediction?
                           </h4>
                           <ul className="space-y-2">
-                            {prediction.reasons.map((reason, _index) => (
+                            {prediction.reasons.map((reason, index) => (
                               <li
-                                key={_index}
+                                key={index}
                                 className="flex items-start gap-2 text-sm"
                               >
                                 <div className="w-1 h-1 bg-gray-400 rounded-full mt-2 flex-shrink-0" />
@@ -476,9 +476,9 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                             Recommended Campaigns
                           </h4>
                           <div className="space-y-2">
-                            {prediction.recommendedCampaigns.map((campaign, _index) => (
+                            {prediction.recommendedCampaigns.map((campaign, index) => (
                               <div
-                                key={_index}
+                                key={index}
                                 className="flex items-center justify-between p-2 bg-gray-50 rounded"
                               >
                                 <span className="text-sm font-medium">{campaign}</span>
@@ -535,7 +535,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                   </div>
 
                   <div className="space-y-2">
-                    {batchPredictions.map(({ user, _prediction }, _index) => (
+                    {batchPredictions.map(({ user, prediction }, index) => (
                       <Card key={user.id}>
                         <CardContent className="p-4">
                           <div className="flex items-center justify-between">

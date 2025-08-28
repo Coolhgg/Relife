@@ -135,6 +135,16 @@ export interface Alarm {
   weatherEnabled?: boolean;
   nuclearChallenges?: string[];
   smartFeatures?: SmartAlarmSettings;
+  
+  // Advanced scheduling properties
+  recurrencePattern?: RecurrencePattern;
+  smartOptimizations?: SmartOptimization[];
+  seasonalAdjustments?: SeasonalAdjustment[];
+  locationTriggers?: LocationTrigger[];
+  conditionalRules?: ConditionalRule[];
+  sunSchedule?: SunSchedule;
+  alarmDependencies?: AlarmDependency[];
+  calendarIntegration?: CalendarIntegration;
 }
 
 export type VoiceMood =
@@ -2328,6 +2338,7 @@ export interface AlarmCondition {
 
 export type ConditionType =
   | 'weather'
+  | 'calendar'
   | 'calendar_event'
   | 'sleep_quality'
   | 'day_of_week'
@@ -2365,7 +2376,9 @@ export type ActionType =
   | 'delay_by'
   | 'change_volume'
   | 'change_voice_mood'
-  | 'trigger_other_alarm';
+  | 'trigger_other_alarm'
+  | 'enable_alarm'
+  | 'disable_alarm';
 
 // Location-Based Alarms
 export interface LocationTrigger {
@@ -2526,6 +2539,7 @@ export interface ScheduleFilter {
 export interface ScheduleExport {
   version: string;
   exportDate: string;
+  alarms: Alarm[];
   settings: SchedulingConfig;
   metadata: Record<string, any>;
 }

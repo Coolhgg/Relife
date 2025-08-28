@@ -439,7 +439,7 @@ class EnhancedCommitValidator {
 if (import.meta.url === `file://${process.argv[1]}`) {
   const args = process.argv.slice(2);
   const options = {};
-  let messageFile = args[0];
+  const messageFile = args[0];
   
   // Parse options
   for (let i = 1; i < args.length; i++) {

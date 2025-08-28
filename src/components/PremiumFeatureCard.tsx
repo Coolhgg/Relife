@@ -27,7 +27,7 @@ interface PremiumFeatureCardProps {
 
 const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
   feature,
-  _user,
+  user,
   hasAccess,
   onClick,
   onUpgrade,
@@ -167,7 +167,7 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
         <div className="flex items-center justify-between">
           {hasAccess ? (
             <button
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+              onClick={e => {
                 e.stopPropagation();
                 onClick?.();
               }}
@@ -178,7 +178,7 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
             </button>
           ) : (
             <button
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+              onClick={e => {
                 e.stopPropagation();
                 handleUpgrade();
               }}

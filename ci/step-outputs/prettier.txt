@@ -1,0 +1,6 @@
+Prettier found syntax errors in test files:
+- useAdvancedAlarms.edge.test.ts: SyntaxError at line 507
+- useAdvancedAlarms.integration.test.tsx: SyntaxError at line 191  
+- useAdvancedAlarms.test.ts: SyntaxError at line 68
+
+Other files were processed successfully with no changes needed.
