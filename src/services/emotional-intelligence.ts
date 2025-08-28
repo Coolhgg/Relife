@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import { AnalyticsService } from './analytics';
+import AnalyticsService from './analytics';
 import type {
   // Note: User data should come from auth context or be passed as parameter
   EmotionalState,

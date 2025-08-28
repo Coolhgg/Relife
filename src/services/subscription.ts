@@ -1,4 +1,5 @@
-import { supabase, createClient } from './supabase';
+import { supabase } from './supabase';
+import { createClient } from '@supabase/supabase-js';
 import type {
   Subscription,
   SubscriptionStatus,
