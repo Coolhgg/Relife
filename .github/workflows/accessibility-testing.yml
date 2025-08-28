@@ -56,11 +56,10 @@ jobs:
             cd ..
           fi
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: "18"
-          cache: "npm"
+          bun-version: latest
 
       - name: Install dependencies
         run: bun install
@@ -107,11 +106,10 @@ jobs:
             cd ..
           fi
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: "18"
-          cache: "npm"
+          bun-version: latest
 
       - name: Install dependencies
         run: bun install
@@ -175,11 +173,10 @@ jobs:
             cd ..
           fi
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: "18"
-          cache: "npm"
+          bun-version: latest
 
       - name: Install dependencies
         run: bun install
@@ -240,11 +237,10 @@ jobs:
             cd ..
           fi
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: "18"
-          cache: "npm"
+          bun-version: latest
 
       - name: Install dependencies
         run: bun install
@@ -308,11 +304,10 @@ jobs:
             cd ..
           fi
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: "18"
-          cache: "npm"
+          bun-version: latest
 
       - name: Install dependencies
         run: bun install

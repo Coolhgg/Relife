@@ -381,7 +381,9 @@ export function PaymentFlow({
             {error && (
               <AlertCircle className="border-red-200 bg-red-50">
                 <AlertCircleCircle className="h-4 w-4 text-red-600" />
-                <AlertCircleDescription className="text-red-600">{error}</AlertCircleDescription>
+                <AlertCircleDescription className="text-red-600">
+                  {error}
+                </AlertCircleDescription>
               </AlertCircle>
             )}
 

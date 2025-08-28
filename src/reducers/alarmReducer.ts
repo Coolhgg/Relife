@@ -91,7 +91,7 @@ export const alarmReducer = (
       const updatedAlarms = state.alarms.map(alarm =>
         alarm.id === action.payload.id ? action.payload : alarm
       );
-      
+
       return {
         ...state,
         isSaving: false,
@@ -116,7 +116,7 @@ export const alarmReducer = (
       };
 
     // =============================================================================
-    // ALARM MANAGEMENT ACTIONS  
+    // ALARM MANAGEMENT ACTIONS
     // =============================================================================
     case 'ALARM_DELETE': {
       const filteredAlarms = state.alarms.filter(alarm => alarm.id !== action.payload);
@@ -125,7 +125,9 @@ export const alarmReducer = (
         alarms: filteredAlarms,
         activeAlarms: filteredAlarms.filter(alarm => alarm.enabled),
         // Remove from currently triggering if it was
-        currentlyTriggering: state.currentlyTriggering.filter(id => id !== action.payload),
+        currentlyTriggering: state.currentlyTriggering.filter(
+          id => id !== action.payload
+        ),
         // Remove from snoozing if it was
         snoozing: Object.fromEntries(
           Object.entries(state.snoozing).filter(([id]) => id !== action.payload)
@@ -139,7 +141,7 @@ export const alarmReducer = (
           ? { ...alarm, enabled: action.payload.enabled }
           : alarm
       );
-      
+
       return {
         ...state,
         alarms: updatedAlarms,
@@ -162,11 +164,16 @@ export const alarmReducer = (
 
     case 'ALARM_SNOOZE': {
       const { id, snoozeUntil } = action.payload;
-      const currentSnoozeInfo = state.snoozing[id] || { snoozeCount: 0, snoozeUntil: new Date() };
-      
+      const currentSnoozeInfo = state.snoozing[id] || {
+        snoozeCount: 0,
+        snoozeUntil: new Date(),
+      };
+
       return {
         ...state,
-        currentlyTriggering: state.currentlyTriggering.filter(triggerId => triggerId !== id),
+        currentlyTriggering: state.currentlyTriggering.filter(
+          triggerId => triggerId !== id
+        ),
         snoozing: {
           ...state.snoozing,
           [id]: {

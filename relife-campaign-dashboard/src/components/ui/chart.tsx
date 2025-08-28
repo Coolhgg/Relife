@@ -34,7 +34,11 @@ function useChart() {
 }
 
 function ChartContainer({
-  id, _className, children, _config, ...props
+  id,
+  _className,
+  children,
+  _config,
+  ...props
 }: React.ComponentProps<'div'> & {
   config: ChartConfig;
   children: React.ComponentProps<
@@ -65,7 +69,8 @@ function ChartContainer({
 }
 
 const ChartStyle = ({ id, _config }: { id: string; config: ChartConfig }) => {
-  const colorConfig = Object.entries(config).filter(([, _config]) => config.theme || config.color
+  const colorConfig = Object.entries(config).filter(
+    ([, _config]) => config.theme || config.color
   );
 
   if (!colorConfig.length) {
@@ -76,7 +81,8 @@ const ChartStyle = ({ id, _config }: { id: string; config: ChartConfig }) => {
     <style
       dangerouslySetInnerHTML={{
         __html: Object.entries(THEMES)
-          .map(([theme, _prefix]) => `
+          .map(
+            ([theme, _prefix]) => `
 ${prefix} [data-chart=${id}] {
 ${colorConfig
   .map(([key, _itemConfig]) => {
@@ -97,7 +103,20 @@ ${colorConfig
 const ChartTooltip = RechartsPrimitive.Tooltip;
 
 function ChartTooltipContent({
-  active, payload, _className, _indicator = 'dot', _hideLabel = false, _hideIndicator = false, _label, _labelFormatter, _labelClassName, _formatter, color, _nameKey, _labelKey, }: React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
+  active,
+  payload,
+  _className,
+  _indicator = 'dot',
+  _hideLabel = false,
+  _hideIndicator = false,
+  _label,
+  _labelFormatter,
+  _labelClassName,
+  _formatter,
+  color,
+  _nameKey,
+  _labelKey,
+}: React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
   React.ComponentProps<'div'> & {
     hideLabel?: boolean;
     hideIndicator?: boolean;
@@ -105,7 +124,7 @@ function ChartTooltipContent({
     nameKey?: string;
     labelKey?: string;
   }) {
-  const {_config} = useChart();
+  const { _config } = useChart();
 
   const tooltipLabel = React.useMemo(() => {
     if (hideLabel || !payload?.length) {
@@ -222,12 +241,17 @@ function ChartTooltipContent({
 const ChartLegend = RechartsPrimitive.Legend;
 
 function ChartLegendContent({
-  className, _hideIcon = false, payload, _verticalAlign = 'bottom', _nameKey, }: React.ComponentProps<'div'> &
+  className,
+  _hideIcon = false,
+  payload,
+  _verticalAlign = 'bottom',
+  _nameKey,
+}: React.ComponentProps<'div'> &
   Pick<RechartsPrimitive.LegendProps, 'payload' | 'verticalAlign'> & {
     hideIcon?: boolean;
     nameKey?: string;
   }) {
-  const {_config} = useChart();
+  const { _config } = useChart();
 
   if (!payload?.length) {
     return null;
@@ -271,7 +295,11 @@ function ChartLegendContent({
 }
 
 // Helper to extract item config from a payload.
-function getPayloadConfigFromPayload(_config: ChartConfig, payload: unknown, _key: string) {
+function getPayloadConfigFromPayload(
+  _config: ChartConfig,
+  payload: unknown,
+  _key: string
+) {
   if (typeof payload !== 'object' || payload === null) {
     return undefined;
   }

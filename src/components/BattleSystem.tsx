@@ -114,7 +114,7 @@ const MOCK_FRIENDS: UserType[] = [
       personalizedMessagesEnabled: true,
       shareAchievements: true,
       personalization: {
-        theme: "light",
+        theme: 'light',
         colorPreferences: {},
         typographyPreferences: {},
         motionPreferences: {},
@@ -150,7 +150,7 @@ const MOCK_FRIENDS: UserType[] = [
       personalizedMessagesEnabled: true,
       shareAchievements: true,
       personalization: {
-        theme: "light",
+        theme: 'light',
         colorPreferences: {},
         typographyPreferences: {},
         motionPreferences: {},
@@ -186,7 +186,7 @@ const MOCK_FRIENDS: UserType[] = [
       personalizedMessagesEnabled: true,
       shareAchievements: true,
       personalization: {
-        theme: "light",
+        theme: 'light',
         colorPreferences: {},
         typographyPreferences: {},
         motionPreferences: {},
@@ -222,7 +222,7 @@ const MOCK_FRIENDS: UserType[] = [
       personalizedMessagesEnabled: true,
       shareAchievements: true,
       personalization: {
-        theme: "light",
+        theme: 'light',
         colorPreferences: {},
         typographyPreferences: {},
         motionPreferences: {},

@@ -18,7 +18,7 @@ export class AlarmConversionUtil {
       seasonalAdjustments: [],
       smartOptimizations: [],
       preferences: {},
-      dependencies: []
+      dependencies: [],
     };
   }
 
@@ -26,7 +26,7 @@ export class AlarmConversionUtil {
    * Convert an array of advanced alarms to basic alarms
    */
   static convertArrayToBasic(advancedAlarms: AdvancedAlarm[]): Alarm[] {
-    return advancedAlarms.map((alarm) => this.convertToBasic(alarm));
+    return advancedAlarms.map(alarm => this.convertToBasic(alarm));
   }
 }
 

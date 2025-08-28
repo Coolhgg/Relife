@@ -19,7 +19,7 @@ import type {
   AlarmDependency,
   Location,
   AlarmCondition,
-  AlarmAction
+  AlarmAction,
 } from './index';
 
 // Extended interface for capacitor notifications

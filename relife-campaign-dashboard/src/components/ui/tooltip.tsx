@@ -5,7 +5,8 @@ import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import { cn } from '@/lib/utils';
 
 function TooltipProvider({
-  delayDuration = 0, ...props
+  delayDuration = 0,
+  ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Provider>) {
   return (
     <TooltipPrimitive.Provider
@@ -31,7 +32,10 @@ function TooltipTrigger({
 }
 
 function TooltipContent({
-  className, _sideOffset = 0, _children, ...props
+  className,
+  _sideOffset = 0,
+  _children,
+  ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Content>) {
   return (
     <TooltipPrimitive.Portal>

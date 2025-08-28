@@ -23,7 +23,7 @@ class SessionSecurityService {
   private sessions: Map<string, SessionInfo> = new Map();
   private readonly SESSION_TIMEOUT_MS = 30 * 60 * 1000;
   private readonly MAX_SESSIONS_PER_USER = 3;
-  
+
   static getInstance(): SessionSecurityService {
     if (!SessionSecurityService.instance) {
       SessionSecurityService.instance = new SessionSecurityService();
@@ -31,10 +31,13 @@ class SessionSecurityService {
     return SessionSecurityService.instance;
   }
 
-  async createSession(userId: string, requestInfo?: {
-    ipAddress?: string;
-    userAgent?: string;
-  }): Promise<SessionInfo> {
+  async createSession(
+    userId: string,
+    requestInfo?: {
+      ipAddress?: string;
+      userAgent?: string;
+    }
+  ): Promise<SessionInfo> {
     const sessionId = this.generateSecureSessionId();
     const deviceFingerprint = await this.generateDeviceFingerprint(
       requestInfo?.userAgent || navigator.userAgent
@@ -66,7 +69,7 @@ class SessionSecurityService {
     if (!session || !session.isActive || new Date() > session.expiresAt) {
       return { isValid: false };
     }
-    
+
     session.lastActivity = new Date();
     return { isValid: true, session };
   }
@@ -93,12 +96,12 @@ class SessionSecurityService {
       screen.width + 'x' + screen.height,
       new Date().getTimezoneOffset(),
     ];
-    
+
     const fingerprint = await crypto.subtle.digest(
       'SHA-256',
       new TextEncoder().encode(components.join('|'))
     );
-    
+
     return Array.from(new Uint8Array(fingerprint))
       .map(b => b.toString(16).padStart(2, '0'))
       .join('');
@@ -125,8 +128,9 @@ class SessionSecurityService {
   }
 
   getUserSessions(userId: string): SessionInfo[] {
-    return Array.from(this.sessions.values())
-      .filter(session => session.userId === userId && session.isActive);
+    return Array.from(this.sessions.values()).filter(
+      session => session.userId === userId && session.isActive
+    );
   }
 
   /**
@@ -326,7 +330,9 @@ class SessionSecurityService {
     }
 
     // Check for device fingerprint mismatch
-    const existingSession = userSessions.find(s => s.deviceFingerprint !== session.deviceFingerprint);
+    const existingSession = userSessions.find(
+      s => s.deviceFingerprint !== session.deviceFingerprint
+    );
     if (existingSession) {
       riskScore += 15;
       suspiciousFactors.push('device_mismatch');
@@ -415,10 +421,13 @@ class SessionSecurityService {
   /**
    * Calculate distance between session locations
    */
-  private calculateLocationDistance(session1: SessionInfo, session2: SessionInfo): number {
+  private calculateLocationDistance(
+    session1: SessionInfo,
+    session2: SessionInfo
+  ): number {
     // Simplified distance calculation - in real implementation, use proper geolocation
     if (!session1.location || !session2.location) return 0;
-    
+
     // Return a mock distance for demonstration
     return session1.location.country !== session2.location.country ? 2000 : 100;
   }
@@ -439,7 +448,7 @@ class SessionSecurityService {
         timestamp: new Date(),
         sessionId: oldestSession.id,
         userId,
-        details: { 
+        details: {
           activeSessionsCount: userSessions.length,
           limit: this.MAX_SESSIONS_PER_USER,
         },
@@ -485,7 +494,7 @@ class SessionSecurityService {
    */
   private async logSecurityEvent(event: SecurityEvent): Promise<void> {
     this.securityEvents.push(event);
-    
+
     // Keep only recent events (last 1000)
     if (this.securityEvents.length > 1000) {
       this.securityEvents = this.securityEvents.slice(-1000);
@@ -547,8 +556,14 @@ class SessionSecurityService {
       keys.forEach(key => {
         if (key.includes('session_') && key.includes('saa_')) {
           try {
-            const sessionData = SecurityService.secureStorageGet(key.replace('saa_', ''));
-            if (sessionData && sessionData.expiresAt && new Date() < new Date(sessionData.expiresAt)) {
+            const sessionData = SecurityService.secureStorageGet(
+              key.replace('saa_', '')
+            );
+            if (
+              sessionData &&
+              sessionData.expiresAt &&
+              new Date() < new Date(sessionData.expiresAt)
+            ) {
               // Session is still valid, restore it
               const session: SessionInfo = {
                 ...sessionData,
@@ -588,7 +603,7 @@ class SessionSecurityService {
     if (this.monitoringTimer) {
       clearInterval(this.monitoringTimer);
     }
-    
+
     // Terminate all sessions
     for (const sessionId of this.sessions.keys()) {
       this.terminateSession(sessionId, 'service_shutdown');

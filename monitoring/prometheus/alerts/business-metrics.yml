@@ -56,7 +56,7 @@ groups:
           team: product
         annotations:
           summary: "Daily active users declining"
-          description: "DAU is {{ $value }}, down from {{ query \"daily_active_users offset 7d\" | first | value }} last week"
+          description: 'DAU is {{ $value }}, down from {{ query "daily_active_users offset 7d" | first | value }} last week'
           impact: "User engagement declining"
           runbook_url: "https://docs.relife.app/runbooks/business/dau-decline"
 

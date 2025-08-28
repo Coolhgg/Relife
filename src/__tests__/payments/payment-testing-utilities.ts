@@ -45,7 +45,7 @@ export class MockStripeObjects {
       canceled_at: null,
       collection_method: 'charge_automatically',
       created: startTime,
-      current_period_end: startTime + (30 * 24 * 60 * 60), // 30 days
+      current_period_end: startTime + 30 * 24 * 60 * 60, // 30 days
       current_period_start: startTime,
       customer: 'cus_test123',
       days_until_due: null,
@@ -243,7 +243,7 @@ export class MockStripeObjects {
             livemode: false,
             metadata: {},
             period: {
-              end: created + (30 * 24 * 60 * 60),
+              end: created + 30 * 24 * 60 * 60,
               start: created,
             },
             plan: {
@@ -270,7 +270,7 @@ export class MockStripeObjects {
       next_payment_attempt: null,
       paid: true,
       payment_intent: 'pi_test123',
-      period_end: created + (30 * 24 * 60 * 60),
+      period_end: created + 30 * 24 * 60 * 60,
       period_start: created,
       post_payment_credit_notes_amount: 0,
       pre_payment_credit_notes_amount: 0,
@@ -320,7 +320,7 @@ export class MockStripeObjects {
 // Payment Flow Testing Utilities
 export class PaymentFlowTester {
   private events: Array<{ type: string; data: any; timestamp: number }> = [];
-  
+
   reset() {
     this.events = [];
   }
@@ -341,8 +341,8 @@ export class PaymentFlowTester {
     this.logEvent('customer_created', customer);
 
     // Step 2: Create payment method
-    const paymentMethod = MockStripeObjects.createPaymentMethod({ 
-      customer: customer.id 
+    const paymentMethod = MockStripeObjects.createPaymentMethod({
+      customer: customer.id,
     });
     this.logEvent('payment_method_created', paymentMethod);
 
@@ -374,7 +374,7 @@ export class PaymentFlowTester {
       await this.delay(100); // Simulate webhook processing delay
     }
 
-    this.logEvent('flow_completed', { 
+    this.logEvent('flow_completed', {
       customerId: customer.id,
       subscriptionId: subscription.id,
       status: 'active',
@@ -393,7 +393,7 @@ export class PaymentFlowTester {
     this.logEvent('failed_payment_flow_started', {});
 
     const customer = MockStripeObjects.createCustomer();
-    const paymentMethod = MockStripeObjects.createPaymentMethod({ 
+    const paymentMethod = MockStripeObjects.createPaymentMethod({
       customer: customer.id,
       card: { ...MockStripeObjects.createPaymentMethod().card, last4: '0002' }, // Declined card
     });
@@ -417,7 +417,10 @@ export class PaymentFlowTester {
       'payment_intent.payment_failed',
       paymentIntent
     );
-    this.logEvent('webhook_received', { eventType: 'payment_intent.payment_failed', webhook });
+    this.logEvent('webhook_received', {
+      eventType: 'payment_intent.payment_failed',
+      webhook,
+    });
 
     return {
       customer,
@@ -454,7 +457,10 @@ export class PaymentFlowTester {
       'customer.subscription.deleted',
       canceledSubscription
     );
-    this.logEvent('webhook_received', { eventType: 'customer.subscription.deleted', webhook });
+    this.logEvent('webhook_received', {
+      eventType: 'customer.subscription.deleted',
+      webhook,
+    });
 
     return {
       subscription: canceledSubscription,
@@ -464,7 +470,11 @@ export class PaymentFlowTester {
   }
 
   async testSubscriptionUpgradeFlow(subscriptionId: string = 'sub_test123') {
-    this.logEvent('upgrade_flow_started', { subscriptionId, from: 'basic', to: 'premium' });
+    this.logEvent('upgrade_flow_started', {
+      subscriptionId,
+      from: 'basic',
+      to: 'premium',
+    });
 
     // Create prorated invoice for upgrade
     const proratedInvoice = MockStripeObjects.createInvoice({
@@ -498,13 +508,12 @@ export class PaymentFlowTester {
     this.logEvent('subscription_updated', updatedSubscription);
 
     // Webhooks
-    const webhooks = [
-      'customer.subscription.updated',
-      'invoice.payment_succeeded',
-    ];
+    const webhooks = ['customer.subscription.updated', 'invoice.payment_succeeded'];
 
     for (const eventType of webhooks) {
-      const data = eventType.includes('subscription') ? updatedSubscription : proratedInvoice;
+      const data = eventType.includes('subscription')
+        ? updatedSubscription
+        : proratedInvoice;
       const webhook = MockStripeObjects.createWebhookEvent(eventType, data);
       this.logEvent('webhook_received', { eventType, webhook });
     }
@@ -523,10 +532,10 @@ export class PaymentFlowTester {
 
 // Webhook Testing Utilities
 export class WebhookTester {
-  private receivedWebhooks: Array<{ 
-    event: any; 
-    signature: string; 
-    timestamp: number; 
+  private receivedWebhooks: Array<{
+    event: any;
+    signature: string;
+    timestamp: number;
     processed: boolean;
   }> = [];
 
@@ -538,10 +547,14 @@ export class WebhookTester {
     return [...this.receivedWebhooks];
   }
 
-  simulateWebhook(eventType: string, data: any, endpoint: string = '/api/stripe/webhooks') {
+  simulateWebhook(
+    eventType: string,
+    data: any,
+    endpoint: string = '/api/stripe/webhooks'
+  ) {
     const webhook = MockStripeObjects.createWebhookEvent(eventType, data);
     const signature = this.generateWebhookSignature(webhook);
-    
+
     this.receivedWebhooks.push({
       event: webhook,
       signature,
@@ -576,17 +589,17 @@ export class WebhookTester {
 
       while (attempts < maxRetries && !success) {
         attempts++;
-        
+
         try {
           const mockData = this.getMockDataForEventType(eventType);
           const { webhook, signature } = this.simulateWebhook(eventType, mockData);
-          
+
           // Simulate webhook processing
           await new Promise(resolve => setTimeout(resolve, 100));
-          
+
           // Random success/failure for testing
           success = Math.random() > 0.2; // 80% success rate
-          
+
           results.push({
             eventType,
             attempt: attempts,
@@ -597,7 +610,9 @@ export class WebhookTester {
 
           if (!success && attempts < maxRetries) {
             // Exponential backoff
-            await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempts) * 1000));
+            await new Promise(resolve =>
+              setTimeout(resolve, Math.pow(2, attempts) * 1000)
+            );
           }
         } catch (error) {
           results.push({
@@ -619,31 +634,31 @@ export class WebhookTester {
       case 'customer.subscription.updated':
       case 'customer.subscription.deleted':
         return MockStripeObjects.createSubscription();
-      
+
       case 'invoice.payment_succeeded':
       case 'invoice.payment_failed':
       case 'invoice.finalized':
         return MockStripeObjects.createInvoice();
-      
+
       case 'payment_intent.succeeded':
       case 'payment_intent.payment_failed':
         return MockStripeObjects.createPaymentIntent();
-      
+
       case 'payment_method.attached':
         return MockStripeObjects.createPaymentMethod();
-      
+
       default:
         return {};
     }
   }
 }
 
-// Subscription Testing Utilities  
+// Subscription Testing Utilities
 export class SubscriptionTester {
   async testSubscriptionStates() {
     const states = [
       'incomplete',
-      'incomplete_expired', 
+      'incomplete_expired',
       'trialing',
       'active',
       'past_due',
@@ -651,7 +666,7 @@ export class SubscriptionTester {
       'unpaid',
     ];
 
-    const subscriptions = states.map(status => 
+    const subscriptions = states.map(status =>
       MockStripeObjects.createSubscription({ status })
     );
 
@@ -663,7 +678,7 @@ export class SubscriptionTester {
 
   async testTrialFlow() {
     const trialStart = Math.floor(Date.now() / 1000);
-    const trialEnd = trialStart + (14 * 24 * 60 * 60); // 14 days
+    const trialEnd = trialStart + 14 * 24 * 60 * 60; // 14 days
 
     const trialSubscription = MockStripeObjects.createSubscription({
       status: 'trialing',
@@ -679,7 +694,7 @@ export class SubscriptionTester {
       trial_start: null,
       trial_end: null,
       current_period_start: trialEnd,
-      current_period_end: trialEnd + (30 * 24 * 60 * 60),
+      current_period_end: trialEnd + 30 * 24 * 60 * 60,
     };
 
     return {
@@ -720,12 +735,7 @@ export const setupPaymentTesting = () => {
   };
 };
 
-export {
-  MockStripeObjects,
-  PaymentFlowTester,
-  WebhookTester,
-  SubscriptionTester,
-};
+export { MockStripeObjects, PaymentFlowTester, WebhookTester, SubscriptionTester };
 
 export default {
   MockStripeObjects,

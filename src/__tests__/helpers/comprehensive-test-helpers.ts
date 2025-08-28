@@ -94,19 +94,20 @@ export class TestHelpers {
     options: TestAssertionOptions = {}
   ): Promise<HTMLElement> {
     const { timeout = 5000, interval = 100, retries = 3 } = options;
-    
+
     for (let attempt = 0; attempt < retries; attempt++) {
       try {
         return await waitFor(
           () => {
-            const element = typeof selector === 'string' 
-              ? document.querySelector(selector) as HTMLElement
-              : selector();
-            
+            const element =
+              typeof selector === 'string'
+                ? (document.querySelector(selector) as HTMLElement)
+                : selector();
+
             if (!element) {
               throw new Error(`Element not found: ${selector}`);
             }
-            
+
             return element;
           },
           { timeout, interval }
@@ -116,12 +117,16 @@ export class TestHelpers {
         await this.wait(1000); // Wait 1 second between retries
       }
     }
-    
+
     throw new Error(`Element not found after ${retries} retries: ${selector}`);
   }
 
   // Advanced user interactions with realistic delays
-  async typeWithDelay(element: HTMLElement, text: string, delay: number = 50): Promise<void> {
+  async typeWithDelay(
+    element: HTMLElement,
+    text: string,
+    delay: number = 50
+  ): Promise<void> {
     await act(async () => {
       for (const char of text) {
         await this.user.type(element, char);
@@ -136,17 +141,20 @@ export class TestHelpers {
     options: TestAssertionOptions = {}
   ): Promise<void> {
     const { timeout = 5000 } = options;
-    
+
     await act(async () => {
       await this.user.click(element);
     });
 
-    await waitFor(async () => {
-      const result = await expectedChange();
-      if (!result) {
-        throw new Error('Expected change did not occur after click');
-      }
-    }, { timeout });
+    await waitFor(
+      async () => {
+        const result = await expectedChange();
+        if (!result) {
+          throw new Error('Expected change did not occur after click');
+        }
+      },
+      { timeout }
+    );
   }
 
   async fillFormWithValidation(
@@ -154,9 +162,10 @@ export class TestHelpers {
     validateField?: (fieldName: string, value: string) => Promise<boolean>
   ): Promise<void> {
     for (const [fieldName, value] of Object.entries(formData)) {
-      const field = await this.findElementWithRetry(() => 
-        screen.getByRole('textbox', { name: new RegExp(fieldName, 'i') }) ||
-        screen.getByLabelText(new RegExp(fieldName, 'i'))
+      const field = await this.findElementWithRetry(
+        () =>
+          screen.getByRole('textbox', { name: new RegExp(fieldName, 'i') }) ||
+          screen.getByLabelText(new RegExp(fieldName, 'i'))
       );
 
       await act(async () => {
@@ -201,14 +210,17 @@ export class TestHelpers {
     options: TestAssertionOptions = {}
   ): Promise<HTMLElement> {
     const { timeout = 5000 } = options;
-    
-    return waitFor(() => {
-      const element = getElement();
-      if (!element) {
-        throw new Error('Element not found');
-      }
-      return element;
-    }, { timeout });
+
+    return waitFor(
+      () => {
+        const element = getElement();
+        if (!element) {
+          throw new Error('Element not found');
+        }
+        return element;
+      },
+      { timeout }
+    );
   }
 
   async waitForElementToDisappear(
@@ -216,13 +228,16 @@ export class TestHelpers {
     options: TestAssertionOptions = {}
   ): Promise<void> {
     const { timeout = 5000 } = options;
-    
-    await waitFor(() => {
-      const element = getElement();
-      if (element) {
-        throw new Error('Element still exists');
-      }
-    }, { timeout });
+
+    await waitFor(
+      () => {
+        const element = getElement();
+        if (element) {
+          throw new Error('Element still exists');
+        }
+      },
+      { timeout }
+    );
   }
 
   // Form testing utilities
@@ -233,8 +248,8 @@ export class TestHelpers {
     await act(async () => {
       await this.user.click(
         form.querySelector('button[type="submit"]') ||
-        form.querySelector('input[type="submit"]') ||
-        form.querySelector('[data-testid="submit"]') as HTMLElement
+          form.querySelector('input[type="submit"]') ||
+          (form.querySelector('[data-testid="submit"]') as HTMLElement)
       );
     });
 
@@ -268,8 +283,10 @@ export class TestHelpers {
 
     if (expectedValidation === 'valid') {
       await this.waitForCondition(() => {
-        return !field.getAttribute('aria-invalid') || 
-               field.getAttribute('aria-invalid') === 'false';
+        return (
+          !field.getAttribute('aria-invalid') ||
+          field.getAttribute('aria-invalid') === 'false'
+        );
       });
     } else if (expectedValidation === 'invalid') {
       await this.waitForCondition(() => {
@@ -280,7 +297,9 @@ export class TestHelpers {
         const errorMessage = field.getAttribute('aria-describedby');
         if (errorMessage) {
           const errorElement = document.getElementById(errorMessage);
-          return errorElement && expectedValidation.test(errorElement.textContent || '');
+          return (
+            errorElement && expectedValidation.test(errorElement.textContent || '')
+          );
         }
         return false;
       });
@@ -293,46 +312,55 @@ export class TestHelpers {
       await this.user.click(trigger);
     });
 
-    return this.waitForElement(() => 
-      document.querySelector('[role="dialog"]') as HTMLElement ||
-      document.querySelector('[data-testid="modal"]') as HTMLElement
+    return this.waitForElement(
+      () =>
+        (document.querySelector('[role="dialog"]') as HTMLElement) ||
+        (document.querySelector('[data-testid="modal"]') as HTMLElement)
     );
   }
 
-  async closeModal(closeMethod: 'escape' | 'close-button' | 'overlay' = 'escape'): Promise<void> {
+  async closeModal(
+    closeMethod: 'escape' | 'close-button' | 'overlay' = 'escape'
+  ): Promise<void> {
     if (closeMethod === 'escape') {
       await act(async () => {
         await this.user.keyboard('{Escape}');
       });
     } else if (closeMethod === 'close-button') {
-      const closeButton = await this.findElementWithRetry(() =>
-        document.querySelector('[aria-label*="close"]') as HTMLElement ||
-        document.querySelector('[data-testid="close"]') as HTMLElement
+      const closeButton = await this.findElementWithRetry(
+        () =>
+          (document.querySelector('[aria-label*="close"]') as HTMLElement) ||
+          (document.querySelector('[data-testid="close"]') as HTMLElement)
       );
       await act(async () => {
         await this.user.click(closeButton);
       });
     } else if (closeMethod === 'overlay') {
-      const overlay = await this.findElementWithRetry(() =>
-        document.querySelector('[data-testid="modal-overlay"]') as HTMLElement
+      const overlay = await this.findElementWithRetry(
+        () => document.querySelector('[data-testid="modal-overlay"]') as HTMLElement
       );
       await act(async () => {
         await this.user.click(overlay);
       });
     }
 
-    await this.waitForElementToDisappear(() =>
-      document.querySelector('[role="dialog"]') as HTMLElement ||
-      document.querySelector('[data-testid="modal"]') as HTMLElement
+    await this.waitForElementToDisappear(
+      () =>
+        (document.querySelector('[role="dialog"]') as HTMLElement) ||
+        (document.querySelector('[data-testid="modal"]') as HTMLElement)
     );
   }
 
   // Navigation and routing testing
-  async navigateTo(path: string, method: 'link' | 'button' | 'programmatic' = 'link'): Promise<void> {
+  async navigateTo(
+    path: string,
+    method: 'link' | 'button' | 'programmatic' = 'link'
+  ): Promise<void> {
     if (method === 'link') {
-      const link = await this.findElementWithRetry(() =>
-        screen.getByRole('link', { name: new RegExp(path, 'i') }) ||
-        document.querySelector(`a[href*="${path}"]`) as HTMLElement
+      const link = await this.findElementWithRetry(
+        () =>
+          screen.getByRole('link', { name: new RegExp(path, 'i') }) ||
+          (document.querySelector(`a[href*="${path}"]`) as HTMLElement)
       );
       await act(async () => {
         await this.user.click(link);
@@ -350,15 +378,18 @@ export class TestHelpers {
     }
 
     await this.waitForCondition(() => {
-      return window.location.pathname.includes(path) || 
-             window.location.href.includes(path);
+      return (
+        window.location.pathname.includes(path) || window.location.href.includes(path)
+      );
     });
   }
 
   async verifyCurrentRoute(expectedPath: string): Promise<void> {
     await this.waitForCondition(() => {
-      return window.location.pathname === expectedPath ||
-             window.location.pathname.includes(expectedPath);
+      return (
+        window.location.pathname === expectedPath ||
+        window.location.pathname.includes(expectedPath)
+      );
     });
   }
 
@@ -368,13 +399,13 @@ export class TestHelpers {
     options: TestAssertionOptions = {}
   ): Promise<void> {
     const { timeout = 10000 } = options;
-    
+
     // Wait for loading indicators to disappear
     if (indicator) {
       const loadingElement = document.querySelector(indicator);
       if (loadingElement) {
-        await this.waitForElementToDisappear(() => 
-          document.querySelector(indicator) as HTMLElement
+        await this.waitForElementToDisappear(
+          () => document.querySelector(indicator) as HTMLElement
         );
       }
     } else {
@@ -383,14 +414,14 @@ export class TestHelpers {
         '[data-testid="loading"]',
         '.loading',
         '[aria-label*="loading"]',
-        '[role="progressbar"]'
+        '[role="progressbar"]',
       ];
 
       for (const selector of genericIndicators) {
         const element = document.querySelector(selector);
         if (element) {
-          await this.waitForElementToDisappear(() => 
-            document.querySelector(selector) as HTMLElement
+          await this.waitForElementToDisappear(
+            () => document.querySelector(selector) as HTMLElement
           );
           break;
         }
@@ -422,10 +453,11 @@ export class TestHelpers {
       await this.user.click(errorComponent);
     });
 
-    await this.waitForElement(() => 
-      screen.queryByText(/something went wrong/i) ||
-      screen.queryByText(/error/i) ||
-      document.querySelector('[data-testid="error-boundary"]') as HTMLElement
+    await this.waitForElement(
+      () =>
+        screen.queryByText(/something went wrong/i) ||
+        screen.queryByText(/error/i) ||
+        (document.querySelector('[data-testid="error-boundary"]') as HTMLElement)
     );
   }
 
@@ -446,9 +478,10 @@ export class TestHelpers {
         }
       });
     } else {
-      await this.waitForElement(() => 
-        screen.queryByText(/error/i) ||
-        document.querySelector('[data-testid="error"]') as HTMLElement
+      await this.waitForElement(
+        () =>
+          screen.queryByText(/error/i) ||
+          (document.querySelector('[data-testid="error"]') as HTMLElement)
       );
     }
   }
@@ -458,19 +491,17 @@ export class TestHelpers {
     renderFunction: () => T | Promise<T>
   ): Promise<{ result: T; renderTime: number }> {
     const startTime = performance.now();
-    
+
     const result = await act(async () => {
       return await renderFunction();
     });
-    
+
     const renderTime = performance.now() - startTime;
-    
+
     return { result, renderTime };
   }
 
-  async measureInteractionTime(
-    interaction: () => Promise<void>
-  ): Promise<number> {
+  async measureInteractionTime(interaction: () => Promise<void>): Promise<number> {
     const startTime = performance.now();
     await interaction();
     return performance.now() - startTime;
@@ -482,14 +513,16 @@ export class TestHelpers {
   ): Promise<void> {
     for (const { action, expectedFocus } of interactions) {
       await action();
-      
+
       await this.waitForCondition(() => {
         const activeElement = document.activeElement;
         if (!activeElement) return false;
-        
-        return activeElement.matches(expectedFocus) ||
-               activeElement.getAttribute('data-testid') === expectedFocus ||
-               activeElement.textContent?.includes(expectedFocus);
+
+        return (
+          activeElement.matches(expectedFocus) ||
+          activeElement.getAttribute('data-testid') === expectedFocus ||
+          activeElement.textContent?.includes(expectedFocus)
+        );
       });
     }
   }
@@ -512,9 +545,11 @@ export class TestHelpers {
     await this.waitForCondition(() => {
       const activeElement = document.activeElement;
       if (!activeElement) return false;
-      
-      return activeElement.matches(expectedFinalFocus) ||
-             activeElement.getAttribute('data-testid') === expectedFinalFocus;
+
+      return (
+        activeElement.matches(expectedFinalFocus) ||
+        activeElement.getAttribute('data-testid') === expectedFinalFocus
+      );
     });
   }
 
@@ -547,56 +582,76 @@ export class TestHelpers {
     }
 
     await act(async () => {
-      element.dispatchEvent(new TouchEvent('touchstart', {
-        touches: [new Touch({
-          identifier: 0,
-          target: element,
-          clientX: startX,
-          clientY: startY,
-        })]
-      }));
+      element.dispatchEvent(
+        new TouchEvent('touchstart', {
+          touches: [
+            new Touch({
+              identifier: 0,
+              target: element,
+              clientX: startX,
+              clientY: startY,
+            }),
+          ],
+        })
+      );
 
-      element.dispatchEvent(new TouchEvent('touchmove', {
-        touches: [new Touch({
-          identifier: 0,
-          target: element,
-          clientX: endX,
-          clientY: endY,
-        })]
-      }));
+      element.dispatchEvent(
+        new TouchEvent('touchmove', {
+          touches: [
+            new Touch({
+              identifier: 0,
+              target: element,
+              clientX: endX,
+              clientY: endY,
+            }),
+          ],
+        })
+      );
 
-      element.dispatchEvent(new TouchEvent('touchend', {
-        changedTouches: [new Touch({
-          identifier: 0,
-          target: element,
-          clientX: endX,
-          clientY: endY,
-        })]
-      }));
+      element.dispatchEvent(
+        new TouchEvent('touchend', {
+          changedTouches: [
+            new Touch({
+              identifier: 0,
+              target: element,
+              clientX: endX,
+              clientY: endY,
+            }),
+          ],
+        })
+      );
     });
   }
 
   async simulateLongPress(element: HTMLElement, duration: number = 500): Promise<void> {
     await act(async () => {
-      element.dispatchEvent(new TouchEvent('touchstart', {
-        touches: [new Touch({
-          identifier: 0,
-          target: element,
-          clientX: element.getBoundingClientRect().left,
-          clientY: element.getBoundingClientRect().top,
-        })]
-      }));
+      element.dispatchEvent(
+        new TouchEvent('touchstart', {
+          touches: [
+            new Touch({
+              identifier: 0,
+              target: element,
+              clientX: element.getBoundingClientRect().left,
+              clientY: element.getBoundingClientRect().top,
+            }),
+          ],
+        })
+      );
 
       await this.wait(duration);
 
-      element.dispatchEvent(new TouchEvent('touchend', {
-        changedTouches: [new Touch({
-          identifier: 0,
-          target: element,
-          clientX: element.getBoundingClientRect().left,
-          clientY: element.getBoundingClientRect().top,
-        })]
-      }));
+      element.dispatchEvent(
+        new TouchEvent('touchend', {
+          changedTouches: [
+            new Touch({
+              identifier: 0,
+              target: element,
+              clientX: element.getBoundingClientRect().left,
+              clientY: element.getBoundingClientRect().top,
+            }),
+          ],
+        })
+      );
     });
   }
 
@@ -638,18 +693,20 @@ export class TestAssertions {
     const startTime = performance.now();
     await loadFunction();
     const loadTime = performance.now() - startTime;
-    
+
     expect(loadTime).toBeLessThan(maxTime);
   }
 
   static async expectToBeAccessible(element: HTMLElement): Promise<void> {
     // Check for ARIA attributes
-    const hasAriaLabel = element.hasAttribute('aria-label') || 
-                        element.hasAttribute('aria-labelledby');
+    const hasAriaLabel =
+      element.hasAttribute('aria-label') || element.hasAttribute('aria-labelledby');
     const hasRole = element.hasAttribute('role');
-    const isFocusable = element.tabIndex >= 0 || 
-                       ['button', 'input', 'select', 'textarea', 'a']
-                         .includes(element.tagName.toLowerCase());
+    const isFocusable =
+      element.tabIndex >= 0 ||
+      ['button', 'input', 'select', 'textarea', 'a'].includes(
+        element.tagName.toLowerCase()
+      );
 
     expect(hasAriaLabel || hasRole || isFocusable).toBe(true);
 
@@ -657,14 +714,14 @@ export class TestAssertions {
     const styles = window.getComputedStyle(element);
     const backgroundColor = styles.backgroundColor;
     const color = styles.color;
-    
+
     expect(backgroundColor).not.toBe(color); // Basic contrast check
   }
 
   static async expectToBeResponsive(element: HTMLElement): Promise<void> {
     const styles = window.getComputedStyle(element);
-    
-    const isResponsive = 
+
+    const isResponsive =
       styles.width.includes('%') ||
       styles.width.includes('vw') ||
       styles.maxWidth === '100%' ||
@@ -701,7 +758,7 @@ export class TestAssertions {
       expect(field.getAttribute('aria-invalid')).not.toBe('true');
     } else {
       expect(field.getAttribute('aria-invalid')).toBe('true');
-      
+
       if (errorMessage) {
         const errorId = field.getAttribute('aria-describedby');
         if (errorId) {
@@ -724,37 +781,35 @@ export class RelifeTestUtils {
       days: [1, 2, 3, 4, 5], // Monday to Friday
       voiceMood: 'gentle',
       difficulty: 'medium',
-      ...alarmData
+      ...alarmData,
     };
 
     // Navigate to alarm creation
     await this.helpers.navigateTo('/alarms/new');
-    
+
     // Fill form
     await this.helpers.fillFormWithValidation(defaultAlarm);
-    
+
     // Submit
-    const form = await this.helpers.findElementWithRetry(() =>
-      document.querySelector('form') as HTMLElement
+    const form = await this.helpers.findElementWithRetry(
+      () => document.querySelector('form') as HTMLElement
     );
     await this.helpers.submitForm(form, 'success');
-    
+
     // Verify creation
     await this.helpers.verifyCurrentRoute('/alarms');
-    await this.helpers.waitForElement(() =>
-      screen.queryByText(defaultAlarm.label)
-    );
+    await this.helpers.waitForElement(() => screen.queryByText(defaultAlarm.label));
   }
 
   async joinBattle(battleType: 'quick' | 'ranked' = 'quick'): Promise<void> {
     await this.helpers.navigateTo('/battles');
-    
+
     const joinButton = await this.helpers.findElementWithRetry(() =>
-      screen.getByRole('button', { 
-        name: new RegExp(`join ${battleType}`, 'i') 
+      screen.getByRole('button', {
+        name: new RegExp(`join ${battleType}`, 'i'),
       })
     );
-    
+
     await this.helpers.clickAndWaitForResponse(
       joinButton,
       () => screen.queryByText(/waiting for opponents/i) !== null
@@ -768,10 +823,8 @@ export class RelifeTestUtils {
 
     // Start recording
     await this.helpers.user.click(recordButton);
-    
-    await this.helpers.waitForElement(() =>
-      screen.queryByText(/recording/i)
-    );
+
+    await this.helpers.waitForElement(() => screen.queryByText(/recording/i));
 
     // Wait for duration
     await this.helpers.wait(duration);
@@ -780,44 +833,42 @@ export class RelifeTestUtils {
     const stopButton = await this.helpers.findElementWithRetry(() =>
       screen.getByRole('button', { name: /stop/i })
     );
-    
+
     await this.helpers.user.click(stopButton);
-    
+
     // Verify recording completed
-    await this.helpers.waitForElement(() =>
-      screen.queryByText(/recording complete/i) ||
-      screen.queryByText(/preview/i)
+    await this.helpers.waitForElement(
+      () => screen.queryByText(/recording complete/i) || screen.queryByText(/preview/i)
     );
   }
 
   async purchaseSubscription(tier: 'premium' | 'ultimate'): Promise<void> {
     await this.helpers.navigateTo('/subscription');
-    
+
     const tierButton = await this.helpers.findElementWithRetry(() =>
-      screen.getByRole('button', { 
-        name: new RegExp(`upgrade to ${tier}`, 'i') 
+      screen.getByRole('button', {
+        name: new RegExp(`upgrade to ${tier}`, 'i'),
       })
     );
-    
+
     await this.helpers.user.click(tierButton);
-    
+
     // Handle payment flow (mock)
-    await this.helpers.waitForElement(() =>
-      screen.queryByText(/payment/i) ||
-      screen.queryByText(/checkout/i)
+    await this.helpers.waitForElement(
+      () => screen.queryByText(/payment/i) || screen.queryByText(/checkout/i)
     );
-    
-    const confirmButton = await this.helpers.findElementWithRetry(() =>
-      screen.getByRole('button', { name: /confirm/i }) ||
-      screen.getByRole('button', { name: /pay/i })
+
+    const confirmButton = await this.helpers.findElementWithRetry(
+      () =>
+        screen.getByRole('button', { name: /confirm/i }) ||
+        screen.getByRole('button', { name: /pay/i })
     );
-    
+
     await this.helpers.user.click(confirmButton);
-    
+
     // Verify success
-    await this.helpers.waitForElement(() =>
-      screen.queryByText(/success/i) ||
-      screen.queryByText(/upgraded/i)
+    await this.helpers.waitForElement(
+      () => screen.queryByText(/success/i) || screen.queryByText(/upgraded/i)
     );
   }
 }
@@ -830,7 +881,7 @@ export const relifeTestUtils = new RelifeTestUtils();
 export default {
   TestStateManager,
   TestHelpers,
-  TestAssertions, 
+  TestAssertions,
   RelifeTestUtils,
   testHelpers,
   relifeTestUtils,

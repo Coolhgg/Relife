@@ -1,0 +1,212 @@
+name: Security Analysis
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 2 * * *" # Daily at 2 AM UTC
+
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  codeql-security-analysis:
+    name: CodeQL Security Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    permissions:
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ["javascript", "typescript"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          queries: security-extended,security-and-quality
+          config-file: ./.github/codeql/codeql-config.yml
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+          
+
+      - name: Install dependencies
+        run: |
+          bun install
+          cd relife-campaign-dashboard && bun install
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{matrix.language}}"
+
+  dependency-security-scan:
+    name: Dependency Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+          
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run npm audit (main project)
+        id: npm_audit_main
+        run: |
+          echo "Running npm audit for main project..."
+          npm audit --audit-level=moderate --json > npm-audit-main.json || true
+          if [ -s npm-audit-main.json ]; then
+            CRITICAL=$(cat npm-audit-main.json | jq '.metadata.vulnerabilities.critical // 0')
+            HIGH=$(cat npm-audit-main.json | jq '.metadata.vulnerabilities.high // 0')
+            echo "critical=$CRITICAL" >> $GITHUB_OUTPUT
+            echo "high=$HIGH" >> $GITHUB_OUTPUT
+          else
+            echo "critical=0" >> $GITHUB_OUTPUT
+            echo "high=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Install dashboard dependencies
+        run: |
+          cd relife-campaign-dashboard
+          bun install
+
+      - name: Run npm audit (dashboard)
+        id: npm_audit_dashboard
+        run: |
+          cd relife-campaign-dashboard
+          echo "Running npm audit for dashboard..."
+          npm audit --audit-level=moderate --json > ../npm-audit-dashboard.json || true
+          if [ -s ../npm-audit-dashboard.json ]; then
+            CRITICAL=$(cat ../npm-audit-dashboard.json | jq '.metadata.vulnerabilities.critical // 0')
+            HIGH=$(cat ../npm-audit-dashboard.json | jq '.metadata.vulnerabilities.high // 0')
+            echo "critical_dashboard=$CRITICAL" >> $GITHUB_OUTPUT
+            echo "high_dashboard=$HIGH" >> $GITHUB_OUTPUT
+          else
+            echo "critical_dashboard=0" >> $GITHUB_OUTPUT
+            echo "high_dashboard=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload audit results
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-audit-results
+          path: |
+            npm-audit-main.json
+            npm-audit-dashboard.json
+          retention-days: 30
+
+      - name: Evaluate vulnerabilities
+        run: |
+          MAIN_CRITICAL=${{ steps.npm_audit_main.outputs.critical }}
+          MAIN_HIGH=${{ steps.npm_audit_main.outputs.high }}
+          DASHBOARD_CRITICAL=${{ steps.npm_audit_dashboard.outputs.critical_dashboard }}
+          DASHBOARD_HIGH=${{ steps.npm_audit_dashboard.outputs.high_dashboard }}
+
+          echo "Main project - Critical: $MAIN_CRITICAL, High: $MAIN_HIGH"
+          echo "Dashboard - Critical: $DASHBOARD_CRITICAL, High: $DASHBOARD_HIGH"
+
+          TOTAL_CRITICAL=$((MAIN_CRITICAL + DASHBOARD_CRITICAL))
+          TOTAL_HIGH=$((MAIN_HIGH + DASHBOARD_HIGH))
+
+          if [ "$TOTAL_CRITICAL" -gt 0 ]; then
+            echo "❌ CRITICAL vulnerabilities found: $TOTAL_CRITICAL"
+            exit 1
+          elif [ "$TOTAL_HIGH" -gt 5 ]; then
+            echo "⚠️  Warning: High vulnerabilities found: $TOTAL_HIGH (threshold: 5)"
+            exit 0
+          else
+            echo "✅ Security audit passed"
+          fi
+
+  license-compliance-check:
+    name: License Compliance Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+          
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Install license-checker
+        run: bun install -g license-checker
+
+      - name: Check licenses (main project)
+        run: |
+          license-checker --production --json --out license-report-main.json
+          license-checker --production --summary > license-summary-main.txt
+
+      - name: Check licenses (dashboard)
+        run: |
+          cd relife-campaign-dashboard
+          bun install
+          license-checker --production --json --out ../license-report-dashboard.json
+          license-checker --production --summary > ../license-summary-dashboard.txt
+
+      - name: Check for problematic licenses
+        run: |
+          echo "Checking for problematic licenses..."
+          if grep -q "GPL" license-summary-*.txt; then
+            echo "⚠️  GPL licenses found - review required"
+          else
+            echo "✅ No problematic licenses detected"
+          fi
+
+      - name: Upload license reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: license-reports
+          path: |
+            license-report-*.json
+            license-summary-*.txt
+          retention-days: 30
+
+  secrets-detection:
+    name: Secrets Detection
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run TruffleHog OSS
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: main
+          head: HEAD
+          extra_args: --debug --only-verified

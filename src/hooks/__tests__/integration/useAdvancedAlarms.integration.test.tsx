@@ -187,6 +187,7 @@ const TestWrapper: React.FC<TestWrapperProps> = ({
 
   describe("Feature Access Integration", () => {
     it("should respect feature gates from FeatureAccessProvider", async () => {
+      const { result } = renderHook(() => useAdvancedAlarms(), {
         wrapper: (props) => <TestWrapper {...props} userTier="free" />,
       });
 

@@ -13,7 +13,7 @@ const stats = {
   filesProcessed: 0,
   functionsCommented: 0,
   componentsCommented: 0,
-  linesCommented: 0
+  linesCommented: 0,
 };
 
 console.log('🧹 Starting dead code commenting...');
@@ -24,21 +24,22 @@ console.log('🧹 Starting dead code commenting...');
 function commentOutFunction(content, functionName, startLine, endLine = null) {
   const lines = content.split('\n');
   let modified = false;
-  
+
   // If no endLine provided, try to find the function end
   if (endLine === null) {
     for (let i = startLine - 1; i < lines.length; i++) {
       const line = lines[i];
-      if (line.includes(`export const ${functionName}`) || 
-          line.includes(`export function ${functionName}`) ||
-          line.includes(`const ${functionName}`) ||
-          line.includes(`function ${functionName}`)) {
-        
+      if (
+        line.includes(`export const ${functionName}`) ||
+        line.includes(`export function ${functionName}`) ||
+        line.includes(`const ${functionName}`) ||
+        line.includes(`function ${functionName}`)
+      ) {
         // Simple heuristic: find next export or end of file
         let functionEnd = i;
         let braceCount = 0;
         let foundStart = false;
-        
+
         for (let j = i; j < lines.length; j++) {
           const currentLine = lines[j];
           if (currentLine.includes('{')) {
@@ -53,81 +54,85 @@ function commentOutFunction(content, functionName, startLine, endLine = null) {
             break;
           }
         }
-        
+
         // Add TODO comment
-        lines[i] = `// TODO: verify removal - ${functionName} appears to be unused\n// ${lines[i]}`;
-        
+        lines[i] =
+          `// TODO: verify removal - ${functionName} appears to be unused\n// ${lines[i]}`;
+
         // Comment out the function body
         for (let k = i + 1; k <= functionEnd; k++) {
           if (k < lines.length && lines[k].trim()) {
             lines[k] = `// ${lines[k]}`;
           }
         }
-        
+
         modified = true;
-        stats.linesCommented += (functionEnd - i + 1);
+        stats.linesCommented += functionEnd - i + 1;
         break;
       }
     }
   }
-  
+
   return { modified: lines.join('\n'), changed: modified };
 }
 
 /**
- * Comment out React components 
+ * Comment out React components
  */
 function commentOutComponent(content, componentName) {
   const lines = content.split('\n');
   let modified = false;
-  
+
   // Find component definition
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    if (line.includes(`export const ${componentName}`) || 
-        line.includes(`export default function ${componentName}`) ||
-        line.includes(`const ${componentName}`) ||
-        line.includes(`function ${componentName}`)) {
-      
+    if (
+      line.includes(`export const ${componentName}`) ||
+      line.includes(`export default function ${componentName}`) ||
+      line.includes(`const ${componentName}`) ||
+      line.includes(`function ${componentName}`)
+    ) {
       // Find component end
       let componentEnd = i;
       let braceCount = 0;
       let foundStart = false;
-      
+
       for (let j = i; j < lines.length; j++) {
         const currentLine = lines[j];
-        
+
         // For React components, look for JSX return or function end
         if (currentLine.includes('{') || currentLine.includes('(')) {
-          if (currentLine.includes('{')) braceCount += (currentLine.match(/\{/g) || []).length;
+          if (currentLine.includes('{'))
+            braceCount += (currentLine.match(/\{/g) || []).length;
           foundStart = true;
         }
         if (currentLine.includes('}')) {
           braceCount -= (currentLine.match(/\}/g) || []).length;
         }
-        
+
         if (foundStart && braceCount <= 0 && currentLine.includes('}')) {
           componentEnd = j;
           break;
         }
       }
-      
-      // Add TODO comment  
-      lines[i] = `// TODO: verify removal - ${componentName} component appears to be unused\n// ${lines[i]}`;
-      
+
+      // Add TODO comment
+      lines[i] =
+        `// TODO: verify removal - ${componentName} component appears to be unused\n// ${lines[i]}`;
+
       // Comment out component body
       for (let k = i + 1; k <= componentEnd; k++) {
         if (k < lines.length) {
           lines[k] = `// ${lines[k]}`;
         }
       }
-      
+
       modified = true;
-      stats.linesCommented += (componentEnd - i + 1);
+      stats.linesCommented += componentEnd - i + 1;
       break;
     }
   }
-  
+
   return { modified: lines.join('\n'), changed: modified };
 }
 
@@ -137,23 +142,23 @@ function commentOutComponent(content, componentName) {
 function commentOutEntireFile(filePath) {
   const content = fs.readFileSync(filePath, 'utf8');
   const lines = content.split('\n');
-  
+
   // Add warning header
   const header = [
     '// TODO: verify removal - This entire file appears to contain unused/stub code',
     '// Generated by dead code cleanup script',
     '',
   ];
-  
+
   // Comment out all non-empty lines
-  const commentedLines = lines.map(line => {
+  const commentedLines = lines.map((line) => {
     if (line.trim() === '') return line;
     return `// ${line}`;
   });
-  
+
   const modifiedContent = header.concat(commentedLines).join('\n');
   fs.writeFileSync(filePath, modifiedContent);
-  
+
   stats.linesCommented += lines.length;
   console.log(`✅ Commented out entire file: ${filePath}`);
 }
@@ -164,63 +169,62 @@ const deadCodeTargets = [
   {
     type: 'file',
     path: 'src/utils/manual-stubs.ts',
-    reason: 'Contains only stub functions that throw errors, never used'
+    reason: 'Contains only stub functions that throw errors, never used',
   },
-  
+
   // Unused React components
   {
     type: 'component',
     path: 'src/components/CompleteThemeSystemDemo.tsx',
     component: 'CompleteThemeSystemDemo',
-    reason: 'Demo component not used in application'
-  },
-  {
-    type: 'component', 
-    path: 'src/components/ComprehensiveSecurityDashboard.tsx',
-    component: 'ComprehensiveSecurityDashboard',
-    reason: 'Security dashboard not used in main application flow'
+    reason: 'Demo component not used in application',
   },
   {
     type: 'component',
-    path: 'src/components/MobileTester.tsx', 
+    path: 'src/components/ComprehensiveSecurityDashboard.tsx',
+    component: 'ComprehensiveSecurityDashboard',
+    reason: 'Security dashboard not used in main application flow',
+  },
+  {
+    type: 'component',
+    path: 'src/components/MobileTester.tsx',
     component: 'MobileTester',
-    reason: 'Testing component not used anywhere'
+    reason: 'Testing component not used anywhere',
   },
   {
     type: 'component',
     path: 'src/components/user-testing/RedesignedFeedbackWidget.tsx',
-    component: 'RedesignedFeedbackWidget', 
-    reason: 'Redesigned widget not used in main application'
+    component: 'RedesignedFeedbackWidget',
+    reason: 'Redesigned widget not used in main application',
   },
-  
+
   // Unused service functions
   {
     type: 'service',
     path: 'src/services/alarm-stub.ts',
-    reason: 'Temporary stub service with TODO to remove'
-  }
+    reason: 'Temporary stub service with TODO to remove',
+  },
 ];
 
 // Main execution
 try {
   for (const target of deadCodeTargets) {
     const fullPath = path.join(process.cwd(), target.path);
-    
+
     if (!fs.existsSync(fullPath)) {
       console.log(`⚠️  File not found: ${target.path}`);
       continue;
     }
-    
+
     if (target.type === 'file' || target.type === 'service') {
       // Comment out entire file
       commentOutEntireFile(fullPath);
       stats.filesProcessed++;
-      
     } else if (target.type === 'component') {
       // Comment out specific component
       const content = fs.readFileSync(fullPath, 'utf8');
       const result = commentOutComponent(content, target.component);
-      
+
       if (result.changed) {
         fs.writeFileSync(fullPath, result.modified);
         console.log(`✅ Commented out component ${target.component} in ${target.path}`);
@@ -235,7 +239,6 @@ try {
   console.log(`Components commented: ${stats.componentsCommented}`);
   console.log(`Functions commented: ${stats.functionsCommented}`);
   console.log(`Lines commented: ${stats.linesCommented}`);
-
 } catch (error) {
   console.error('❌ Dead code commenting failed:', error);
   process.exit(1);
