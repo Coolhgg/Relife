@@ -2,6 +2,10 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { useAdvancedAlarms } from '../../useAdvancedAlarms';
 
+// TODO(manual): Missing renderHook variable declarations - many references to 'result.current' without proper hook setup
+// TODO(manual): Missing describe block wrapper around beforeEach/afterEach
+// TODO(manual): Missing service mock imports (mockScheduler used but not imported)
+
 // Mock dependencies
 vi.mock('../../../services/alarm', () => ({
   AlarmService: {

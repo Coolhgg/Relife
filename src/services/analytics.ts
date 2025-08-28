@@ -1,10 +1,9 @@
-/* global TimeoutHandle */
 // Analytics Service for Smart Alarm App
 // Provides comprehensive user behavior tracking and analytics using PostHog
 // Enhanced with environment-specific configuration
 
 import posthog from 'posthog-js';
-import { config as envConfig, isEnvironment } from '../config/environment';
+import { config, isEnvironment } from '../config/environment';
 
 export interface AnalyticsConfig {
   apiKey: string;
@@ -37,7 +36,7 @@ export interface EventProperties {
   timestamp?: string;
   sessionId?: string;
   // Allow custom properties for flexible analytics
-  [key: string]: unknown;
+  [key: string]: any;
 }
 
 // Common event names as constants for consistency
@@ -117,9 +116,9 @@ export const ANALYTICS_EVENTS = {
 class AnalyticsService {
   private static instance: AnalyticsService;
   private isInitialized = false;
-  private _config: AnalyticsConfig | null = null;
+  private config: AnalyticsConfig | null = null;
   private sessionId: string | null = null;
-  private sessionStartTime: TimeoutHandle | null = null;
+  private sessionStartTime: number | null = null;
 
   private constructor() {}
 
@@ -160,7 +159,7 @@ class AnalyticsService {
       return;
     }
 
-    this._config = analyticsConfig;
+    this.config = analyticsConfig;
 
     try {
       posthog.init(analyticsConfig.apiKey, {
@@ -237,7 +236,7 @@ class AnalyticsService {
           .map(([feature]) => feature),
         timestamp: new Date().toISOString(),
       });
-    } catch (_error) {
+    } catch (error) {
       // Track initialization failure - silently fail in production
       // Error is already logged by the underlying PostHog library if needed
     }
@@ -341,12 +340,12 @@ class AnalyticsService {
    */
   trackFeatureUsage(
     featureName: string,
-    action: string = 'used',
+    action: string,
     properties: EventProperties = {}
   ): void {
     this.track('feature_used', {
       feature_name: featureName,
-      action: action || 'used',
+      action,
       ...properties,
     });
   }
@@ -371,11 +370,11 @@ class AnalyticsService {
   /**
    * Track errors (to correlate with Sentry)
    */
-  trackError(_error: Error, contextName?: string, context: EventProperties = {}): void {
+  trackError(error: Error, context: EventProperties = {}): void {
     this.track(ANALYTICS_EVENTS.ERROR_OCCURRED, {
-      error_message: _error.message,
-      error_stack: _error.stack?.substring(0, 500), // Truncate for performance
-      error_name: _error.name,
+      error_message: error.message,
+      error_stack: error.stack?.substring(0, 500), // Truncate for performance
+      error_name: error.name,
       ...context,
     });
   }
@@ -458,7 +457,7 @@ class AnalyticsService {
    * Get current configuration
    */
   getConfig(): AnalyticsConfig | null {
-    return this._config;
+    return this.config;
   }
 
   /**
@@ -531,7 +530,7 @@ class AnalyticsService {
    * Get enhanced system properties for context
    */
   private getSystemProperties(): Record<string, unknown> {
-    const connection = (navigator as unknown).connection;
+    const connection = (navigator as any).connection;
 
     return {
       // Display info
@@ -560,7 +559,7 @@ class AnalyticsService {
       touch_support: 'ontouchstart' in window,
       max_touch_points: navigator.maxTouchPoints || 0,
       hardware_concurrency: navigator.hardwareConcurrency || 1,
-      device_memory: (navigator as unknown).deviceMemory || 'unknown',
+      device_memory: (navigator as any).deviceMemory || 'unknown',
 
       // App environment context
       app_environment: config.env,
@@ -587,8 +586,8 @@ class AnalyticsService {
       page_loaded: document.readyState === 'complete',
 
       // Performance context
-      memory_used: (performance as unknown).memory?.usedJSHeapSize,
-      connection_type: (navigator as unknown).connection?.effectiveType,
+      memory_used: (performance as any).memory?.usedJSHeapSize,
+      connection_type: (navigator as any).connection?.effectiveType,
 
       // User context
       session_id: this.sessionId,
@@ -650,8 +649,8 @@ class AnalyticsService {
   /**
    * Capture exception for error handling (alias for trackError)
    */
-  captureException(_error: Error, context?: EventProperties): void {
-    this.trackError(_error, context);
+  captureException(error: Error, context?: EventProperties): void {
+    this.trackError(error, context);
   }
 
   /**
@@ -716,7 +715,7 @@ class AnalyticsService {
   trackBusinessMetric(
     metric: string,
     value: number,
-    metadata?: Record<string, unknown>
+    metadata?: Record<string, any>
   ): void {
     this.track('business_metric', {
       metric,

@@ -1,24 +1,17 @@
 // Pricing Page Component - Simplified Version
 import React, { useState } from 'react';
 import { ArrowLeft, Crown, Check } from 'lucide-react';
-import type { User } from '../types';
 
 interface PricingPageProps {
   onBack?: () => void;
   onSelectPlan?: (planId: string) => void;
   currentTier?: string;
-  user?: User;
-  onUpgrade?: ((...args: any[]) => void) | undefined;
-  onManageSubscription?: ((...args: any[]) => void) | undefined;
 }
 
 const PricingPage: React.FC<PricingPageProps> = ({
   onBack,
   onSelectPlan,
   currentTier = 'free',
-  _user, // auto: added for prop compatibility
-  onUpgrade, // auto: added for prop compatibility
-  onManageSubscription, // auto: added for prop compatibility
 }) => {
   const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>(
     'monthly'
@@ -158,8 +151,8 @@ const PricingPage: React.FC<PricingPageProps> = ({
                 </div>
 
                 <ul className="mt-6 space-y-3">
-                  {plan.features.map((feature, _index) => (
-                    <li key={_index} className="flex items-center gap-3">
+                  {plan.features.map((feature, index) => (
+                    <li key={index} className="flex items-center gap-3">
                       <Check className="w-5 h-5 text-green-500" />
                       <span className="text-gray-700">{feature}</span>
                     </li>
