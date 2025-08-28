@@ -69,12 +69,12 @@ jobs:
       - name: Create npm lock file for cache compatibility
         run: |
           # Create package-lock.json if it doesn't exist for npm cache compatibility
-          if [ ! -f package-lock.json ] && [ -f bun.lockb ]; then
+          if [ ! -f package-lock.json ] && [ -f bun.lock ]; then
             echo "Creating package-lock.json for npm cache compatibility..."
             npm install --package-lock-only
           fi
           # Also handle dashboard
-          if [ ! -f relife-campaign-dashboard/package-lock.json ] && [ -f relife-campaign-dashboard/bun.lockb ]; then
+          if [ ! -f relife-campaign-dashboard/package-lock.json ] && [ -f relife-campaign-dashboard/bun.lock ]; then
             cd relife-campaign-dashboard
             npm install --package-lock-only
             cd ..
@@ -117,7 +117,7 @@ jobs:
       - name: Create npm lock file for cache compatibility
         run: |
           # Create package-lock.json if it doesn't exist for npm cache compatibility
-          if [ ! -f package-lock.json ] && [ -f bun.lockb ]; then
+          if [ ! -f package-lock.json ] && [ -f bun.lock ]; then
             echo "Creating package-lock.json for npm cache compatibility..."
             npm install --package-lock-only
           fi
@@ -225,11 +225,11 @@ jobs:
 
       - name: Create npm lock file for cache compatibility
         run: |
-          if [ ! -f package-lock.json ] && [ -f bun.lockb ]; then
+          if [ ! -f package-lock.json ] && [ -f bun.lock ]; then
             echo "Creating package-lock.json for npm cache compatibility..."
             npm install --package-lock-only
           fi
-          if [ ! -f relife-campaign-dashboard/package-lock.json ] && [ -f relife-campaign-dashboard/bun.lockb ]; then
+          if [ ! -f relife-campaign-dashboard/package-lock.json ] && [ -f relife-campaign-dashboard/bun.lock ]; then
             cd relife-campaign-dashboard
             npm install --package-lock-only
             cd ..
@@ -244,7 +244,7 @@ jobs:
       - name: Install dependencies
         run: |
           # Create npm lock file for cache compatibility
-          if [ ! -f package-lock.json ] && [ -f bun.lockb ]; then
+          if [ ! -f package-lock.json ] && [ -f bun.lock ]; then
             npm install --package-lock-only
           fi
           bun install --frozen-lockfile || bun install --frozen-lockfile || bun install
