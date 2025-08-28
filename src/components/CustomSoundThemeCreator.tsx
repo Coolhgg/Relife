@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Textarea } from './ui/textarea';
 import {
   Palette,
   Info,
@@ -7,7 +6,7 @@ import {
   CheckCircle,
   Settings,
   Play,
-  Eye,
+  _Eye,
   Tags,
   Share,
   ChevronLeft,
@@ -23,7 +22,7 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
-import { Progress } from './ui/textarea';
+import { Textarea } from './ui/textarea';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
 import { Alert, AlertDescription } from './ui/alert';
@@ -169,7 +168,7 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
   // Initialize session on mount
   useEffect(() => {
     initializeSession();
-  }, [initializeSession]);
+  }, []);
 
   const initializeSession = async () => {
     setIsLoading(true);
@@ -181,8 +180,8 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
         const newSession = await soundEffectsService.startCustomThemeCreation(userId);
         setSession(newSession);
       }
-    } catch (_error) {
-      console._error('Error initializing session:', _error);
+    } catch (error) {
+      console.error('Error initializing session:', error);
     } finally {
       setIsLoading(false);
     }
@@ -377,14 +376,14 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
       } else {
         throw new Error('Failed to save theme');
       }
-    } catch (_error) {
-      console._error('Error saving theme:', _error);
+    } catch (error) {
+      console.error('Error saving theme:', error);
     } finally {
       setIsSaving(false);
     }
   };
 
-  const updateThemeField = (field: keyof CustomSoundTheme, value: unknown) => {
+  const updateThemeField = (field: keyof CustomSoundTheme, value: any) => {
     if (!session) return;
 
     const updatedTheme = {
@@ -456,7 +455,7 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
   if (!session) {
     return (
       <div className="text-center py-12">
-        <AlertCircle className="w-12 h-12 mx-auto mb-4 text-red-500" />
+        <AlertCircleCircle className="w-12 h-12 mx-auto mb-4 text-red-500" />
         <h3 className="text-lg font-medium mb-2">Failed to Initialize</h3>
         <p className="text-gray-600 mb-4">
           Could not start the theme creation session.
@@ -493,10 +492,10 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
 
           {/* Step Indicators */}
           <div className="flex items-center justify-between">
-            {CREATION_STEPS.map((step, _index) => {
+            {CREATION_STEPS.map((step, index) => {
               const Icon = step.icon;
               const isCompleted = session.completedSteps.includes(step.id);
-              const isCurrent = _index === currentStepIndex;
+              const isCurrent = index === currentStepIndex;
 
               return (
                 <div key={step.id} className="flex flex-col items-center">
@@ -584,11 +583,11 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
           </DialogHeader>
           {validationResult && (
             <div className="space-y-4">
-              {validationResult.issues.map((issue, _index) => (
-                <Alert key={_index}>
-                  <AlertCircle className="w-4 h-4" />
-                  <AlertDescription>{issue.message}</AlertDescription>
-                </Alert>
+              {validationResult.issues.map((issue, index) => (
+                <AlertCircle key={index}>
+                  <AlertCircleCircle className="w-4 h-4" />
+                  <AlertCircleDescription>{issue.message}</AlertCircleDescription>
+                </AlertCircle>
               ))}
               <div className="flex justify-end gap-2">
                 <Button
@@ -597,9 +596,7 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
                 >
                   Fix Issues
                 </Button>
-                {validationResult.issues.every(
-                  (issue: unknown) => issue.type === 'warning'
-                ) && (
+                {validationResult.issues.every(issue => issue.type === 'warning') && (
                   <Button
                     onClick={() => {
                       setShowValidationDialog(false);
@@ -622,7 +619,7 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
 
 const InfoStep: React.FC<{
   theme: Partial<CustomSoundTheme>;
-  onUpdate: (field: keyof CustomSoundTheme, value: unknown) => void;
+  onUpdate: (field: keyof CustomSoundTheme, value: any) => void;
 }> = ({ theme, onUpdate }) => (
   <div className="space-y-4">
     <div>
@@ -630,9 +627,7 @@ const InfoStep: React.FC<{
       <Input
         id="theme-name"
         value={theme.name || ''}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          onUpdate('name', e.target.value)
-        }
+        onChange={e => onUpdate('name', e.target.value)}
         placeholder="My Awesome Theme"
       />
     </div>
@@ -642,9 +637,7 @@ const InfoStep: React.FC<{
       <Input
         id="theme-display-name"
         value={theme.displayName || ''}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          onUpdate('displayName', e.target.value)
-        }
+        onChange={e => onUpdate('displayName', e.target.value)}
         placeholder="My Awesome Theme (optional)"
       />
     </div>
@@ -673,9 +666,7 @@ const InfoStep: React.FC<{
       <Textarea
         id="theme-description"
         value={theme.description || ''}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          onUpdate('description', e.target.value)
-        }
+        onChange={e => onUpdate('description', e.target.value)}
         placeholder="Describe your theme..."
         rows={4}
       />
@@ -691,9 +682,9 @@ const SoundsStep: React.FC<{
   <div>
     <SoundUploader
       userId={userId}
-      onSoundUploaded={(sound: unknown) => onSoundsUpdated([...uploadedSounds, sound])}
-      onSoundDeleted={(soundId: unknown) =>
-        onSoundsUpdated(uploadedSounds.filter((s: unknown) => s.id !== soundId))
+      onSoundUploaded={sound => onSoundsUpdated([...uploadedSounds, sound])}
+      onSoundDeleted={soundId =>
+        onSoundsUpdated(uploadedSounds.filter(s => s.id !== soundId))
       }
       maxFiles={20}
     />
@@ -703,16 +694,16 @@ const SoundsStep: React.FC<{
 const AssignmentStep: React.FC<{
   theme: Partial<CustomSoundTheme>;
   availableSounds: CustomSound[];
-  onUpdate: (field: keyof CustomSoundTheme, value: unknown) => void;
+  onUpdate: (field: keyof CustomSoundTheme, value: any) => void;
 }> = ({ _theme, _availableSounds, _onUpdate }) => (
   <div className="space-y-6">
-    <Alert>
+    <AlertCircle>
       <Info className="w-4 h-4" />
-      <AlertDescription>
+      <AlertCircleDescription>
         Assign your uploaded sounds to different categories. Each category needs at
         least one sound for basic functionality.
-      </AlertDescription>
-    </Alert>
+      </AlertCircleDescription>
+    </AlertCircle>
 
     <Tabs defaultValue="ui" className="w-full">
       <TabsList>
@@ -758,7 +749,7 @@ const AssignmentStep: React.FC<{
 
 const CustomizationStep: React.FC<{
   theme: Partial<CustomSoundTheme>;
-  onUpdate: (field: keyof CustomSoundTheme, value: unknown) => void;
+  onUpdate: (field: keyof CustomSoundTheme, value: any) => void;
 }> = ({ _theme, _onUpdate }) => (
   <div className="text-center py-12 text-gray-500">
     <Settings className="w-12 h-12 mx-auto mb-4 opacity-50" />
@@ -783,7 +774,7 @@ const PreviewStep: React.FC<{
 
 const MetadataStep: React.FC<{
   theme: Partial<CustomSoundTheme>;
-  onUpdate: (field: keyof CustomSoundTheme, value: unknown) => void;
+  onUpdate: (field: keyof CustomSoundTheme, value: any) => void;
 }> = ({ theme, onUpdate }) => (
   <div className="space-y-4">
     <div>
@@ -791,12 +782,12 @@ const MetadataStep: React.FC<{
       <Input
         id="theme-tags"
         value={theme.tags?.join(', ') || ''}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+        onChange={e =>
           onUpdate(
             'tags',
             e.target.value
               .split(',')
-              .map((tag: unknown) => tag.trim())
+              .map(tag => tag.trim())
               .filter(Boolean)
           )
         }
@@ -809,7 +800,7 @@ const MetadataStep: React.FC<{
 
 const SharingStep: React.FC<{
   theme: Partial<CustomSoundTheme>;
-  onUpdate: (field: keyof CustomSoundTheme, value: unknown) => void;
+  onUpdate: (field: keyof CustomSoundTheme, value: any) => void;
 }> = ({ _theme, _onUpdate }) => (
   <div className="text-center py-12 text-gray-500">
     <Share className="w-12 h-12 mx-auto mb-4 opacity-50" />
@@ -871,8 +862,8 @@ const PublishStep: React.FC<{
             <div className="mt-4">
               <h4 className="font-medium mb-2">Suggestions for improvement:</h4>
               <ul className="text-sm text-gray-600 space-y-1">
-                {validationResult.suggestions.map((suggestion, _index) => (
-                  <li key={_index}>• {suggestion.message}</li>
+                {validationResult.suggestions.map((suggestion, index) => (
+                  <li key={index}>• {suggestion.message}</li>
                 ))}
               </ul>
             </div>

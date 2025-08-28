@@ -732,7 +732,7 @@ export function AdvancedAnalytics({
                             </span>
                           ) : (
                             <span className="text-orange-500 flex items-center gap-1">
-                              <AlertCircle className="h-3 w-3" />
+                              <AlertCircleCircle className="h-3 w-3" />
                               {wakeup.snoozeCount} snooze
                               {wakeup.snoozeCount > 1 ? 's' : ''}
                             </span>
@@ -960,7 +960,7 @@ export function AdvancedAnalytics({
 
               <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
                 <div className="flex items-start gap-3">
-                  <AlertCircle className="h-5 w-5 text-orange-500 mt-0.5" />
+                  <AlertCircleCircle className="h-5 w-5 text-orange-500 mt-0.5" />
                   <div>
                     <h4 className="font-medium text-orange-900">
                       Monday Morning Pattern

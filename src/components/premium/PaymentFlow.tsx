@@ -3,7 +3,6 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-  ErrorHandler,
   CreditCard,
   CheckCircle,
   AlertCircle,
@@ -33,7 +32,7 @@ interface PaymentFlowProps {
   discountCode?: string;
   trialDays?: number;
   onPaymentSuccess: (subscriptionId: string) => void;
-  onPaymentError: (_error: string) => void;
+  onPaymentError: (error: string) => void;
   onCancel: () => void;
   onCreateSubscription: (
     request: CreateSubscriptionRequest
@@ -185,8 +184,7 @@ export function PaymentFlow({
 
     if (field.startsWith('billingAddress.')) {
       const addressField = field.replace('billingAddress.', '');
-
-      setFormData((prev: unknown) => ({
+      setFormData(prev => ({
         ...prev,
         billingAddress: {
           ...prev.billingAddress,
@@ -194,7 +192,7 @@ export function PaymentFlow({
         },
       }));
     } else {
-      setFormData((prev: unknown) => ({
+      setFormData(prev => ({
         ...prev,
         [field]: value,
       }));
@@ -202,7 +200,7 @@ export function PaymentFlow({
 
     // Clear validation error when user starts typing
     if (validationErrors[field]) {
-      setValidationErrors((prev: unknown) => ({
+      setValidationErrors(prev => ({
         ...prev,
         [field]: '',
       }));
@@ -262,7 +260,7 @@ export function PaymentFlow({
       {/* Progress Steps */}
       <div className="mb-8">
         <div className="flex items-center justify-between">
-          {steps.map((step, _index) => (
+          {steps.map((step, index) => (
             <div key={step.id} className="flex items-center">
               <div
                 className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${
@@ -276,7 +274,7 @@ export function PaymentFlow({
                 {step.completed ? (
                   <CheckCircle className="w-6 h-6" />
                 ) : (
-                  <span className="text-sm font-semibold">{_index + 1}</span>
+                  <span className="text-sm font-semibold">{index + 1}</span>
                 )}
               </div>
               <span
@@ -290,10 +288,10 @@ export function PaymentFlow({
               >
                 {step.title}
               </span>
-              {_index < steps.length - 1 && (
+              {index < steps.length - 1 && (
                 <div
                   className={`w-16 h-0.5 mx-4 ${
-                    steps[_index + 1].completed ? 'bg-green-600' : 'bg-gray-300'
+                    steps[index + 1].completed ? 'bg-green-600' : 'bg-gray-300'
                   }`}
                 />
               )}
@@ -330,13 +328,13 @@ export function PaymentFlow({
 
             {/* Trial Info */}
             {trialDays && trialDays > 0 && (
-              <Alert className="border-blue-200 bg-blue-50">
-                <AlertCircle className="h-4 w-4 text-blue-600" />
-                <AlertDescription className="text-blue-800">
+              <AlertCircle className="border-blue-200 bg-blue-50">
+                <AlertCircleCircle className="h-4 w-4 text-blue-600" />
+                <AlertCircleDescription className="text-blue-800">
                   You'll get {trialDays} days free trial. Your card will be charged
                   after the trial ends.
-                </AlertDescription>
-              </Alert>
+                </AlertCircleDescription>
+              </AlertCircle>
             )}
 
             {/* Discount Code */}
@@ -380,11 +378,11 @@ export function PaymentFlow({
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            {_error && (
-              <Alert className="border-red-200 bg-red-50">
-                <AlertCircle className="h-4 w-4 text-red-600" />
-                <AlertDescription className="text-red-600">{_error}</AlertDescription>
-              </Alert>
+            {error && (
+              <AlertCircle className="border-red-200 bg-red-50">
+                <AlertCircleCircle className="h-4 w-4 text-red-600" />
+                <AlertCircleDescription className="text-red-600">{error}</AlertCircleDescription>
+              </AlertCircle>
             )}
 
             {/* Existing Payment Methods */}
@@ -455,9 +453,7 @@ export function PaymentFlow({
                     <Input
                       id="cardNumber"
                       value={formData.cardNumber}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        handleInputChange('cardNumber', e.target.value)
-                      }
+                      onChange={e => handleInputChange('cardNumber', e.target.value)}
                       placeholder="1234 5678 9012 3456"
                       maxLength={19}
                       className={validationErrors.cardNumber ? 'border-red-300' : ''}
@@ -474,9 +470,7 @@ export function PaymentFlow({
                     <Input
                       id="expiryDate"
                       value={formData.expiryDate}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        handleInputChange('expiryDate', e.target.value)
-                      }
+                      onChange={e => handleInputChange('expiryDate', e.target.value)}
                       placeholder="MM/YY"
                       maxLength={5}
                       className={validationErrors.expiryDate ? 'border-red-300' : ''}
@@ -493,9 +487,7 @@ export function PaymentFlow({
                     <Input
                       id="cvc"
                       value={formData.cvc}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        handleInputChange('cvc', e.target.value)
-                      }
+                      onChange={e => handleInputChange('cvc', e.target.value)}
                       placeholder="123"
                       maxLength={4}
                       className={validationErrors.cvc ? 'border-red-300' : ''}
@@ -512,9 +504,7 @@ export function PaymentFlow({
                     <Input
                       id="cardName"
                       value={formData.cardName}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        handleInputChange('cardName', e.target.value)
-                      }
+                      onChange={e => handleInputChange('cardName', e.target.value)}
                       placeholder="John Doe"
                       className={validationErrors.cardName ? 'border-red-300' : ''}
                     />
@@ -537,7 +527,7 @@ export function PaymentFlow({
                       <Input
                         id="line1"
                         value={formData.billingAddress.line1}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        onChange={e =>
                           handleInputChange('billingAddress.line1', e.target.value)
                         }
                         placeholder="123 Main Street"
@@ -557,7 +547,7 @@ export function PaymentFlow({
                       <Input
                         id="line2"
                         value={formData.billingAddress.line2}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        onChange={e =>
                           handleInputChange('billingAddress.line2', e.target.value)
                         }
                         placeholder="Apartment, suite, etc."
@@ -569,7 +559,7 @@ export function PaymentFlow({
                       <Input
                         id="city"
                         value={formData.billingAddress.city}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        onChange={e =>
                           handleInputChange('billingAddress.city', e.target.value)
                         }
                         placeholder="New York"
@@ -587,7 +577,7 @@ export function PaymentFlow({
                       <Input
                         id="state"
                         value={formData.billingAddress.state}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        onChange={e =>
                           handleInputChange('billingAddress.state', e.target.value)
                         }
                         placeholder="NY"
@@ -599,7 +589,7 @@ export function PaymentFlow({
                       <Input
                         id="postalCode"
                         value={formData.billingAddress.postalCode}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        onChange={e =>
                           handleInputChange('billingAddress.postalCode', e.target.value)
                         }
                         placeholder="10001"
@@ -617,7 +607,7 @@ export function PaymentFlow({
                       <Input
                         id="country"
                         value={formData.billingAddress.country}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        onChange={e =>
                           handleInputChange('billingAddress.country', e.target.value)
                         }
                         placeholder="US"
@@ -635,9 +625,7 @@ export function PaymentFlow({
                 id="email"
                 type="email"
                 value={formData.email}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  handleInputChange('email', e.target.value)
-                }
+                onChange={e => handleInputChange('email', e.target.value)}
                 placeholder="john@example.com"
                 className={validationErrors.email ? 'border-red-300' : ''}
               />

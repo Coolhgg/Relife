@@ -6,17 +6,13 @@ import { CreditCard, Trash2, Plus, Check, AlertCircle, Star } from 'lucide-react
 import { Button } from '../ui/button';
 import { Card } from '../ui/card';
 import {
-  // auto: restored by scout - verify import path
-  // Replaced stub import with proper implementation
-  // auto: restored by scout - verify import path
-  // Replaced stub import with proper implementation
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '../ui/dialog';
-import { Alert, AlertDescription } from '../ui/alert';
+import { AlertCircle, AlertDescription } from '../ui/alert';
 import type { PaymentMethod, PaymentMethod } from '../../types/premium';
 
 interface PaymentMethodManagerProps {
@@ -45,7 +41,7 @@ export function PaymentMethodManager({
 }: PaymentMethodManagerProps) {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [showAddMethod, setShowAddMethod] = useState(false);
-  const [_error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleAddMethod = async () => {
     try {
@@ -122,10 +118,8 @@ export function PaymentMethodManager({
     return brand.charAt(0).toUpperCase() + brand.slice(1);
   };
 
-  const isDefaultMethod = (paymentMethodId: string) => {
-    /* TODO: implement */
-  };
-  paymentMethodId === defaultPaymentMethodId;
+  const isDefaultMethod = (paymentMethodId: string) =>
+    paymentMethodId === defaultPaymentMethodId;
 
   if (isLoading && paymentMethods.length === 0) {
     return (
@@ -192,11 +186,11 @@ export function PaymentMethodManager({
         </Dialog>
       </div>
 
-      {_error && (
-        <Alert className="border-red-200 bg-red-50">
+      {error && (
+        <AlertCircle className="border-red-200 bg-red-50">
           <AlertCircle className="h-4 w-4 text-red-600" />
-          <AlertDescription className="text-red-600">{_error}</AlertDescription>
-        </Alert>
+          <AlertCircleDescription className="text-red-600">{error}</AlertCircleDescription>
+        </AlertCircle>
       )}
 
       {paymentMethods.length === 0 ? (

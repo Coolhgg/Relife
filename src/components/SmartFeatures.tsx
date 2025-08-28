@@ -862,7 +862,7 @@ export function SmartFeatures({
               </div>
 
               <div className="flex items-center gap-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <AlertCircle className="h-5 w-5 text-yellow-500" />
+                <AlertCircleCircle className="h-5 w-5 text-yellow-500" />
                 <div>
                   <div className="font-medium">Weather Data</div>
                   <div className="text-sm text-muted-foreground">

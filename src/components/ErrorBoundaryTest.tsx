@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
-import { Bug, Alert, Database, Wifi, Brain, Volume2 } from 'lucide-react';
+import { Bug, Zap, AlertCircle, Database, Wifi, Brain, Volume2 } from 'lucide-react';
 import { TimeoutHandle } from '../types/timers';
-// auto: restored by scout - verify import path
-import { Zap } from 'lucide-react';
-// auto: restored by scout - verify import path
-import { Zap } from 'lucide-react';
-import { AlertTriangle } from 'lucide-react'; // auto: restored by scout - verify
 
 interface ErrorBoundaryTestProps {
   onClose?: () => void;
@@ -31,14 +26,14 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
       case 'render':
         // This will cause a render error
         throw new Error(
-          'Test render error - This is intentional for testing _error boundaries'
+          'Test render error - This is intentional for testing error boundaries'
         );
 
       case 'async':
         // Simulate async error
         setTimeout(() => {
           throw new Error(
-            'Test async _error - This is intentional for testing _error boundaries'
+            'Test async error - This is intentional for testing error boundaries'
           );
         }, 100);
         break;
@@ -58,36 +53,36 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
       case 'network-simulation':
         // Simulate network error
         throw new Error(
-          'Network request failed - This is intentional for testing _error boundaries'
+          'Network request failed - This is intentional for testing error boundaries'
         );
 
       case 'media-error':
         // Simulate media/audio error
         throw new Error(
-          'Audio playback failed - This is intentional for testing _error boundaries'
+          'Audio playback failed - This is intentional for testing error boundaries'
         );
 
       case 'ai-error':
         // Simulate AI service error
         throw new Error(
-          'AI service unavailable - This is intentional for testing _error boundaries'
+          'AI service unavailable - This is intentional for testing error boundaries'
         );
 
       case 'data-error':
         // Simulate data/storage error
         throw new Error(
-          'Failed to save data - This is intentional for testing _error boundaries'
+          'Failed to save data - This is intentional for testing error boundaries'
         );
 
       default:
-        throw new Error(`Unknown test _error type: ${type}`);
+        throw new Error(`Unknown test error type: ${type}`);
     }
   };
 
   const CrashComponent = () => {
     if (errorType === 'render') {
       throw new Error(
-        'Test render _error - This is intentional for testing _error boundaries'
+        'Test render error - This is intentional for testing error boundaries'
       );
     }
     return <div>This component would crash with render error</div>;
@@ -127,7 +122,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
         <div className="mb-6">
           <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
             <div className="flex items-start gap-2">
-              <AlertTriangle className="w-5 h-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
+              <AlertCircleCircle className="w-5 h-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
               <div>
                 <p className="text-yellow-800 dark:text-yellow-200 text-sm font-medium">
                   Development Mode Only
@@ -169,7 +164,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
           </button>
 
           <button
-            onClick={() => triggerError('media-_error')}
+            onClick={() => triggerError('media-error')}
             className="w-full flex items-center gap-3 p-3 bg-purple-50 hover:bg-purple-100 dark:bg-purple-900/20 dark:hover:bg-purple-900/30 border border-purple-200 dark:border-purple-800 rounded-lg text-purple-800 dark:text-purple-200 transition-colors"
           >
             <Volume2 className="w-4 h-4" />
@@ -180,7 +175,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
           </button>
 
           <button
-            onClick={() => triggerError('ai-_error')}
+            onClick={() => triggerError('ai-error')}
             className="w-full flex items-center gap-3 p-3 bg-green-50 hover:bg-green-100 dark:bg-green-900/20 dark:hover:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg text-green-800 dark:text-green-200 transition-colors"
           >
             <Brain className="w-4 h-4" />
@@ -191,7 +186,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
           </button>
 
           <button
-            onClick={() => triggerError('data-_error')}
+            onClick={() => triggerError('data-error')}
             className="w-full flex items-center gap-3 p-3 bg-orange-50 hover:bg-orange-100 dark:bg-orange-900/20 dark:hover:bg-orange-900/30 border border-orange-200 dark:border-orange-800 rounded-lg text-orange-800 dark:text-orange-200 transition-colors"
           >
             <Database className="w-4 h-4" />
@@ -207,7 +202,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
             onClick={() => triggerError('null-reference')}
             className="w-full flex items-center gap-3 p-3 bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-800 dark:text-gray-200 transition-colors"
           >
-            <AlertTriangle className="w-4 h-4" />
+            <AlertCircleCircle className="w-4 h-4" />
             <div className="text-left">
               <div className="font-medium">Null Reference Error</div>
               <div className="text-xs opacity-75">Common JavaScript error</div>

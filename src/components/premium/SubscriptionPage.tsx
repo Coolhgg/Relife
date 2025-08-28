@@ -2,8 +2,6 @@
 // Main page component that integrates all premium subscription functionality
 
 import React, { useState, useEffect } from 'react';
-// Replaced stub import with proper implementation
-import { ErrorHandler } from '../../services/error-handler';
 import {
   Crown,
   CreditCard,
@@ -36,7 +34,7 @@ export function SubscriptionPage({
   initialTab = 'overview',
 }: SubscriptionPageProps) {
   const { user } = useAuth();
-  const subscription = useSubscription({ userId: _user?.id || '', autoRefresh: true });
+  const subscription = useSubscription({ userId: user?.id || '', autoRefresh: true });
 
   const [activeTab, setActiveTab] = useState(initialTab);
   const [showPaymentFlow, setShowPaymentFlow] = useState(false);
@@ -46,14 +44,14 @@ export function SubscriptionPage({
   const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
-    if (subscription._error) {
-      setError(subscription._error);
+    if (subscription.error) {
+      setError(subscription.error);
     }
   }, [subscription.error]);
 
   // Clear messages after a delay
   useEffect(() => {
-    if (_error || success) {
+    if (error || success) {
       const timer = setTimeout(() => {
         setError(null);
         setSuccess(null);
@@ -107,8 +105,8 @@ export function SubscriptionPage({
     setActiveTab('overview');
   };
 
-  const handlePaymentError = (_error: string) => {
-    setError(_error);
+  const handlePaymentError = (error: string) => {
+    setError(error);
     setShowPaymentFlow(false);
   };
 
@@ -122,7 +120,7 @@ export function SubscriptionPage({
     }
   };
 
-  if (!_user) {
+  if (!user) {
     return (
       <div className={`max-w-4xl mx-auto p-6 ${className}`}>
         <Card className="text-center">
@@ -203,7 +201,7 @@ export function SubscriptionPage({
               {subscription.subscription.status === 'active' ? (
                 <CheckCircle className="w-5 h-5 text-green-600" />
               ) : (
-                <AlertCircle className="w-5 h-5 text-yellow-600" />
+                <AlertCircleCircle className="w-5 h-5 text-yellow-600" />
               )}
               <span className="font-medium capitalize">
                 {subscription.currentPlan?.displayName || subscription.userTier}
@@ -220,18 +218,18 @@ export function SubscriptionPage({
       </div>
 
       {/* Alerts */}
-      {_error && (
-        <Alert className="border-red-200 bg-red-50">
-          <AlertCircle className="h-4 w-4 text-red-600" />
-          <AlertDescription className="text-red-600">{_error}</AlertDescription>
-        </Alert>
+      {error && (
+        <AlertCircle className="border-red-200 bg-red-50">
+          <AlertCircleCircle className="h-4 w-4 text-red-600" />
+          <AlertCircleDescription className="text-red-600">{error}</AlertCircleDescription>
+        </AlertCircle>
       )}
 
       {success && (
-        <Alert className="border-green-200 bg-green-50">
+        <AlertCircle className="border-green-200 bg-green-50">
           <CheckCircle className="h-4 w-4 text-green-600" />
-          <AlertDescription className="text-green-600">{success}</AlertDescription>
-        </Alert>
+          <AlertCircleDescription className="text-green-600">{success}</AlertCircleDescription>
+        </AlertCircle>
       )}
 
       {/* Main Content */}
