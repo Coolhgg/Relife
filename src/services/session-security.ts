@@ -128,15 +128,6 @@ class SessionSecurityService {
     return Array.from(this.sessions.values())
       .filter(session => session.userId === userId && session.isActive);
   }
-}
-
-export default SessionSecurityService.getInstance();ror)),
-        'Failed to create secure session',
-        { context: 'session_creation', userId }
-      );
-      throw error;
-    }
-  }
 
   /**
    * Validate and update session
