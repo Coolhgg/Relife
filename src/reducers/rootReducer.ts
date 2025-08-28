@@ -11,28 +11,17 @@ import { subscriptionReducer } from './subscriptionReducer';
 
 export const rootReducer = (
   state: AppState = INITIAL_DOMAIN_APP_STATE,
-  action:
-    | AppAction
-    | { type: 'APP_UPDATE'; payload: AppState }
-    | { type: 'STORE_HYDRATED'; payload: Partial<AppState> }
+  action: AppAction | { type: 'APP_UPDATE'; payload: AppState }
 ): AppState => {
   // Handle legacy APP_UPDATE action for gradual migration
   if (action.type === 'APP_UPDATE') {
     return action.payload;
   }
-
-  // Handle store hydration from persisted state
-  if (action.type === 'STORE_HYDRATED') {
-    return {
-      ...state,
-      ...action.payload,
-    };
-  }
   return {
     alarm: alarmReducer(state.alarm, action as any),
     user: userReducer(state.user, action as any),
     subscription: subscriptionReducer(state.subscription, action as any),
-
+    
     // Handle global app actions
     app: handleAppActions(state.app, action),
     navigation: handleNavigationActions(state.navigation, action),
@@ -51,11 +40,8 @@ function handleNavigationActions(navState: AppState['navigation'], action: AppAc
   return navState;
 }
 
-function handlePerformanceActions(
-  perfState: AppState['performance'],
-  action: AppAction
-) {
-  // Add performance tracking actions here in the future
+function handlePerformanceActions(perfState: AppState['performance'], action: AppAction) {
+  // Add performance tracking actions here in the future  
   return perfState;
 }
 

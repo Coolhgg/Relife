@@ -34,12 +34,12 @@ describe('AlarmReducer Integration Tests', () => {
         snoozeCount: 0,
         difficulty: 'medium',
         createdAt: new Date('2024-01-01T06:30:00Z'),
-        updatedAt: new Date('2024-01-01T06:30:00Z'),
+        updatedAt: new Date('2024-01-01T06:30:00Z')
       };
 
       const action: AlarmAction = {
         type: 'ALARM_CREATE_SUCCESS',
-        payload: { alarm: mockAlarm },
+        payload: { alarm: mockAlarm }
       };
 
       const newState = alarmReducer(initialState, action);
@@ -55,7 +55,7 @@ describe('AlarmReducer Integration Tests', () => {
     it('should handle ALARM_CREATE_ERROR with typed error payload', () => {
       const action: AlarmAction = {
         type: 'ALARM_CREATE_ERROR',
-        payload: { error: 'Failed to create alarm' },
+        payload: { error: 'Failed to create alarm' }
       };
 
       const newState = alarmReducer(initialState, action);
@@ -86,18 +86,18 @@ describe('AlarmReducer Integration Tests', () => {
         snoozeCount: 0,
         difficulty: 'medium',
         createdAt: new Date(),
-        updatedAt: new Date(),
+        updatedAt: new Date()
       };
 
       const stateWithTriggeredAlarm: AlarmState = {
         ...initialState,
         currentlyTriggering: [mockAlarm.id],
-        alarms: [mockAlarm],
+        alarms: [mockAlarm]
       };
 
       const action: AlarmAction = {
         type: 'ALARM_DISMISS',
-        payload: { alarmId: mockAlarm.id, method: 'button' },
+        payload: { alarmId: mockAlarm.id, method: 'button' }
       };
 
       const newState = alarmReducer(stateWithTriggeredAlarm, action);
@@ -126,18 +126,18 @@ describe('AlarmReducer Integration Tests', () => {
         snoozeCount: 0,
         difficulty: 'medium',
         createdAt: new Date(),
-        updatedAt: new Date(),
+        updatedAt: new Date()
       };
 
       const stateWithAlarm: AlarmState = {
         ...initialState,
         alarms: [mockAlarm],
-        activeAlarms: [mockAlarm],
+        activeAlarms: [mockAlarm]
       };
 
       const action: AlarmAction = {
         type: 'ALARM_TOGGLE',
-        payload: { alarmId: mockAlarm.id, enabled: false },
+        payload: { alarmId: mockAlarm.id, enabled: false }
       };
 
       const newState = alarmReducer(stateWithAlarm, action);
@@ -153,7 +153,7 @@ describe('AlarmReducer Integration Tests', () => {
     it('should handle ALARMS_LOAD_START correctly', () => {
       const action: AlarmAction = {
         type: 'ALARMS_LOAD_START',
-        payload: {},
+        payload: {}
       };
 
       const newState = alarmReducer(initialState, action);
@@ -165,12 +165,12 @@ describe('AlarmReducer Integration Tests', () => {
     it('should handle ALARMS_LOAD_ERROR correctly', () => {
       const stateWithLoading: AlarmState = {
         ...initialState,
-        isLoading: true,
+        isLoading: true
       };
 
       const action: AlarmAction = {
         type: 'ALARMS_LOAD_ERROR',
-        payload: { error: 'Network error' },
+        payload: { error: 'Network error' }
       };
 
       const newState = alarmReducer(stateWithLoading, action);

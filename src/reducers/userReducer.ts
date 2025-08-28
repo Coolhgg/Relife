@@ -30,7 +30,7 @@ export const userReducer = (
     case 'USER_LOGIN_SUCCESS': {
       const { user, token, refreshToken } = action.payload;
       const expiresAt = new Date(Date.now() + 3600000); // 1 hour from now
-
+      
       return {
         ...state,
         currentUser: user,
@@ -159,11 +159,8 @@ export const userReducer = (
           ),
           totalPoints: state.achievements.totalPoints + newAchievement.points,
           // Update level based on points (every 100 points = 1 level)
-          currentLevel:
-            Math.floor((state.achievements.totalPoints + newAchievement.points) / 100) +
-            1,
-          progressToNextLevel:
-            (state.achievements.totalPoints + newAchievement.points) % 100,
+          currentLevel: Math.floor((state.achievements.totalPoints + newAchievement.points) / 100) + 1,
+          progressToNextLevel: (state.achievements.totalPoints + newAchievement.points) % 100,
         },
         activity: {
           ...state.activity,
@@ -173,7 +170,7 @@ export const userReducer = (
     }
 
     // =============================================================================
-    // STREAK ACTIONS
+    // STREAK ACTIONS  
     // =============================================================================
     case 'USER_STREAK_UPDATE': {
       const { current, longest } = action.payload;
@@ -205,7 +202,10 @@ export const userReducer = (
         ...state,
         social: {
           ...state.social,
-          friends: [...state.social.friends, { ...friendRequest, status: 'pending' }],
+          friends: [
+            ...state.social.friends,
+            { ...friendRequest, status: 'pending' },
+          ],
         },
       };
     }
@@ -217,7 +217,9 @@ export const userReducer = (
         social: {
           ...state.social,
           friends: state.social.friends.map(friend =>
-            friend.id === friendId ? { ...friend, status: 'accepted' as const } : friend
+            friend.id === friendId
+              ? { ...friend, status: 'accepted' as const }
+              : friend
           ),
         },
       };

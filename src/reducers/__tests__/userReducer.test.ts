@@ -29,7 +29,7 @@ describe('UserReducer Integration Tests', () => {
         emailVerified: true,
         phoneVerified: false,
         twoFactorEnabled: false,
-
+        
         // Preferences
         preferences: {
           theme: 'dark',
@@ -39,14 +39,14 @@ describe('UserReducer Integration Tests', () => {
             email: true,
             push: true,
             sms: false,
-            inApp: true,
+            inApp: true
           },
           accessibility: {
             screenReader: false,
             highContrast: false,
             reducedMotion: false,
-            fontSize: 'medium',
-          },
+            fontSize: 'medium'
+          }
         },
 
         // Privacy settings
@@ -54,7 +54,7 @@ describe('UserReducer Integration Tests', () => {
           profileVisible: true,
           showActivity: false,
           allowFriendRequests: true,
-          shareAchievements: true,
+          shareAchievements: true
         },
 
         // Activity data
@@ -65,7 +65,7 @@ describe('UserReducer Integration Tests', () => {
           longestStreak: 0,
           totalSnoozes: 0,
           averageWakeTime: null,
-          lastActive: new Date(),
+          lastActive: new Date()
         },
 
         // Achievements
@@ -74,20 +74,20 @@ describe('UserReducer Integration Tests', () => {
           progress: {},
           points: 0,
           level: 1,
-          nextLevelPoints: 100,
+          nextLevelPoints: 100
         },
 
         // Social
         social: {
           friends: [],
           pendingRequests: [],
-          blockedUsers: [],
-        },
+          blockedUsers: []
+        }
       };
 
       const action: UserAction = {
         type: 'USER_LOGIN_SUCCESS',
-        payload: { user: mockUser },
+        payload: { user: mockUser }
       };
 
       const newState = userReducer(initialState, action);
@@ -101,7 +101,7 @@ describe('UserReducer Integration Tests', () => {
     it('should handle USER_LOGIN_ERROR with typed error payload', () => {
       const action: UserAction = {
         type: 'USER_LOGIN_ERROR',
-        payload: { error: 'Invalid credentials' },
+        payload: { error: 'Invalid credentials' }
       };
 
       const newState = userReducer(initialState, action);
@@ -133,20 +133,20 @@ describe('UserReducer Integration Tests', () => {
             email: true,
             push: true,
             sms: false,
-            inApp: true,
+            inApp: true
           },
           accessibility: {
             screenReader: false,
             highContrast: false,
             reducedMotion: false,
-            fontSize: 'medium',
-          },
+            fontSize: 'medium'
+          }
         },
         privacy: {
           profileVisible: true,
           showActivity: false,
           allowFriendRequests: true,
-          shareAchievements: true,
+          shareAchievements: true
         },
         activity: {
           totalAlarms: 10,
@@ -155,31 +155,31 @@ describe('UserReducer Integration Tests', () => {
           longestStreak: 12,
           totalSnoozes: 3,
           averageWakeTime: '06:30',
-          lastActive: new Date(),
+          lastActive: new Date()
         },
         achievements: {
           unlocked: ['early-bird', 'consistent'],
           progress: {},
           points: 500,
           level: 5,
-          nextLevelPoints: 600,
+          nextLevelPoints: 600
         },
         social: {
           friends: [],
           pendingRequests: [],
-          blockedUsers: [],
-        },
+          blockedUsers: []
+        }
       };
 
       const authenticatedState: UserState = {
         ...initialState,
         isAuthenticated: true,
-        currentUser: mockUser,
+        currentUser: mockUser
       };
 
       const action: UserAction = {
         type: 'USER_LOGOUT',
-        payload: {},
+        payload: {}
       };
 
       const newState = userReducer(authenticatedState, action);
@@ -212,20 +212,20 @@ describe('UserReducer Integration Tests', () => {
             email: true,
             push: true,
             sms: false,
-            inApp: true,
+            inApp: true
           },
           accessibility: {
             screenReader: false,
             highContrast: false,
             reducedMotion: false,
-            fontSize: 'medium',
-          },
+            fontSize: 'medium'
+          }
         },
         privacy: {
           profileVisible: true,
           showActivity: false,
           allowFriendRequests: true,
-          shareAchievements: true,
+          shareAchievements: true
         },
         activity: {
           totalAlarms: 0,
@@ -234,26 +234,26 @@ describe('UserReducer Integration Tests', () => {
           longestStreak: 0,
           totalSnoozes: 0,
           averageWakeTime: null,
-          lastActive: new Date(),
+          lastActive: new Date()
         },
         achievements: {
           unlocked: [],
           progress: {},
           points: 0,
           level: 1,
-          nextLevelPoints: 100,
+          nextLevelPoints: 100
         },
         social: {
           friends: [],
           pendingRequests: [],
-          blockedUsers: [],
-        },
+          blockedUsers: []
+        }
       };
 
       const authenticatedState: UserState = {
         ...initialState,
         isAuthenticated: true,
-        currentUser: mockUser,
+        currentUser: mockUser
       };
 
       const newPreferences = {
@@ -264,19 +264,19 @@ describe('UserReducer Integration Tests', () => {
           email: false,
           push: true,
           sms: true,
-          inApp: false,
+          inApp: false
         },
         accessibility: {
           screenReader: true,
           highContrast: true,
           reducedMotion: true,
-          fontSize: 'large' as const,
-        },
+          fontSize: 'large' as const
+        }
       };
 
       const action: UserAction = {
         type: 'USER_PREFERENCES_UPDATE',
-        payload: { preferences: newPreferences },
+        payload: { preferences: newPreferences }
       };
 
       const newState = userReducer(authenticatedState, action);
@@ -305,50 +305,32 @@ describe('UserReducer Integration Tests', () => {
           language: 'en',
           timezone: 'UTC',
           notifications: { email: true, push: true, sms: false, inApp: true },
-          accessibility: {
-            screenReader: false,
-            highContrast: false,
-            reducedMotion: false,
-            fontSize: 'medium',
-          },
+          accessibility: { screenReader: false, highContrast: false, reducedMotion: false, fontSize: 'medium' }
         },
-        privacy: {
-          profileVisible: true,
-          showActivity: false,
-          allowFriendRequests: true,
-          shareAchievements: true,
-        },
-        activity: {
-          totalAlarms: 0,
-          alarmsCompleted: 0,
-          currentStreak: 0,
-          longestStreak: 0,
-          totalSnoozes: 0,
-          averageWakeTime: null,
-          lastActive: new Date(),
-        },
+        privacy: { profileVisible: true, showActivity: false, allowFriendRequests: true, shareAchievements: true },
+        activity: { totalAlarms: 0, alarmsCompleted: 0, currentStreak: 0, longestStreak: 0, totalSnoozes: 0, averageWakeTime: null, lastActive: new Date() },
         achievements: {
           unlocked: [],
           progress: {},
           points: 50,
           level: 1,
-          nextLevelPoints: 100,
+          nextLevelPoints: 100
         },
-        social: { friends: [], pendingRequests: [], blockedUsers: [] },
+        social: { friends: [], pendingRequests: [], blockedUsers: [] }
       };
 
       const authenticatedState: UserState = {
         ...initialState,
         isAuthenticated: true,
-        currentUser: mockUser,
+        currentUser: mockUser
       };
 
       const action: UserAction = {
         type: 'USER_ACHIEVEMENT_UNLOCK',
-        payload: {
+        payload: { 
           achievement: 'early-bird',
-          points: 50,
-        },
+          points: 50
+        }
       };
 
       const newState = userReducer(authenticatedState, action);
@@ -376,19 +358,9 @@ describe('UserReducer Integration Tests', () => {
           language: 'en',
           timezone: 'UTC',
           notifications: { email: true, push: true, sms: false, inApp: true },
-          accessibility: {
-            screenReader: false,
-            highContrast: false,
-            reducedMotion: false,
-            fontSize: 'medium',
-          },
+          accessibility: { screenReader: false, highContrast: false, reducedMotion: false, fontSize: 'medium' }
         },
-        privacy: {
-          profileVisible: true,
-          showActivity: false,
-          allowFriendRequests: true,
-          shareAchievements: true,
-        },
+        privacy: { profileVisible: true, showActivity: false, allowFriendRequests: true, shareAchievements: true },
         activity: {
           totalAlarms: 10,
           alarmsCompleted: 8,
@@ -396,30 +368,30 @@ describe('UserReducer Integration Tests', () => {
           longestStreak: 5,
           totalSnoozes: 2,
           averageWakeTime: '06:30',
-          lastActive: new Date(),
+          lastActive: new Date()
         },
         achievements: {
           unlocked: [],
           progress: {},
           points: 0,
           level: 1,
-          nextLevelPoints: 100,
+          nextLevelPoints: 100
         },
-        social: { friends: [], pendingRequests: [], blockedUsers: [] },
+        social: { friends: [], pendingRequests: [], blockedUsers: [] }
       };
 
       const authenticatedState: UserState = {
         ...initialState,
         isAuthenticated: true,
-        currentUser: mockUser,
+        currentUser: mockUser
       };
 
       const action: UserAction = {
         type: 'USER_STREAK_UPDATE',
-        payload: {
+        payload: { 
           currentStreak: 7,
-          longestStreak: 7,
-        },
+          longestStreak: 7
+        }
       };
 
       const newState = userReducer(authenticatedState, action);

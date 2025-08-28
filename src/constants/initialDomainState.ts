@@ -6,12 +6,14 @@
 
 import type {
   AppState,
-  AlarmState,
+  AlarmState, 
   UserState,
-  SubscriptionState,
+  SubscriptionState
 } from '../types/app-state';
 
-import type { VoiceMood } from '../types/domain';
+import type {
+  VoiceMood
+} from '../types/domain';
 
 // =============================================================================
 // DEFAULT VALUES
@@ -35,19 +37,19 @@ const INITIAL_ALARM_STATE: AlarmState = {
   alarms: [],
   activeAlarms: [],
   upcomingAlarms: [],
-
+  
   // Alarm management
   isLoading: false,
   isSaving: false,
   loadError: null,
   saveError: null,
   lastUpdated: null,
-
+  
   // Current alarm execution
   currentlyTriggering: [],
   snoozing: {},
   dismissing: [],
-
+  
   // Alarm creation/editing state
   editing: {
     alarmId: null,
@@ -56,13 +58,13 @@ const INITIAL_ALARM_STATE: AlarmState = {
     draftAlarm: null,
     validationErrors: {},
   },
-
+  
   // Advanced scheduling
   schedulingConfigs: {},
   enabledOptimizations: [],
   locationTriggers: [],
   conditionalRules: [],
-
+  
   // Voice and audio
   voiceSettings: {
     defaultMood: DEFAULT_VOICE_MOOD,
@@ -71,14 +73,14 @@ const INITIAL_ALARM_STATE: AlarmState = {
     volume: 0.8,
     speaking: false,
   },
-
+  
   // Battle mode integration
   battleState: {
     activeBattles: {},
     battleResults: {},
     battleStats: null,
   },
-
+  
   // Performance and analytics
   performance: {
     successRate: 0,
@@ -87,7 +89,7 @@ const INITIAL_ALARM_STATE: AlarmState = {
     weeklyPatterns: [],
     sleepQualityCorrelation: 0,
   },
-
+  
   // Settings and preferences
   settings: {
     defaultSound: 'default',
@@ -100,7 +102,7 @@ const INITIAL_ALARM_STATE: AlarmState = {
     weatherIntegrationEnabled: false,
     calendarIntegrationEnabled: false,
   },
-
+  
   // UI state
   ui: {
     selectedAlarmId: null,
@@ -121,7 +123,7 @@ const INITIAL_USER_STATE: UserState = {
   // Core user data
   currentUser: null,
   profile: null,
-
+  
   // Authentication state
   auth: {
     isAuthenticated: false,
@@ -131,7 +133,7 @@ const INITIAL_USER_STATE: UserState = {
     expiresAt: null,
     loginMethod: null,
   },
-
+  
   // User preferences
   preferences: {
     language: 'en',
@@ -147,7 +149,7 @@ const INITIAL_USER_STATE: UserState = {
     analyticsEnabled: true,
     marketingEmailsEnabled: false,
   },
-
+  
   // Privacy and security
   privacy: {
     dataProcessingConsent: false,
@@ -158,7 +160,7 @@ const INITIAL_USER_STATE: UserState = {
     biometricLoginEnabled: false,
     sessionTimeout: 30, // minutes
   },
-
+  
   // User activity and streaks
   activity: {
     currentStreak: 0,
@@ -172,7 +174,7 @@ const INITIAL_USER_STATE: UserState = {
     lastActive: null,
     joinDate: null,
   },
-
+  
   // Achievements and gamification
   achievements: {
     unlockedAchievements: [],
@@ -182,7 +184,7 @@ const INITIAL_USER_STATE: UserState = {
     progressToNextLevel: 0,
     badges: [],
   },
-
+  
   // Social features
   social: {
     friends: [],
@@ -198,7 +200,7 @@ const INITIAL_USER_STATE: UserState = {
     },
     communityParticipation: false,
   },
-
+  
   // Error states
   errors: {
     profileLoadError: null,
@@ -206,7 +208,7 @@ const INITIAL_USER_STATE: UserState = {
     authError: null,
     permissionError: null,
   },
-
+  
   // Loading states
   loading: {
     profile: false,
@@ -226,12 +228,12 @@ const INITIAL_SUBSCRIPTION_STATE: SubscriptionState = {
   currentSubscription: null,
   subscriptionPlan: null,
   availablePlans: [],
-
+  
   // Feature access
   featureAccess: null,
   featureUsage: {},
   billingUsage: null,
-
+  
   // Subscription status
   status: {
     isActive: false,
@@ -243,7 +245,7 @@ const INITIAL_SUBSCRIPTION_STATE: SubscriptionState = {
     cancelAtPeriodEnd: false,
     gracePeriodEndsAt: null,
   },
-
+  
   // Trial information
   trial: {
     isInTrial: false,
@@ -254,7 +256,7 @@ const INITIAL_SUBSCRIPTION_STATE: SubscriptionState = {
     hasUsedTrial: false,
     eligibleForExtension: false,
   },
-
+  
   // Billing and payments
   billing: {
     paymentMethods: [],
@@ -267,7 +269,7 @@ const INITIAL_SUBSCRIPTION_STATE: SubscriptionState = {
     currency: 'USD',
     taxRate: 0,
   },
-
+  
   // Discounts and promotions
   promotions: {
     activeDiscounts: [],
@@ -280,7 +282,7 @@ const INITIAL_SUBSCRIPTION_STATE: SubscriptionState = {
       pendingEarnings: 0,
     },
   },
-
+  
   // Upgrade/downgrade management
   changes: {
     pendingChange: null,
@@ -289,7 +291,7 @@ const INITIAL_SUBSCRIPTION_STATE: SubscriptionState = {
     lastUpgradePrompt: null,
     upgradePromptFrequency: 7,
   },
-
+  
   // Feature limitations and usage warnings
   limits: {
     reachedLimits: new Set(),
@@ -297,7 +299,7 @@ const INITIAL_SUBSCRIPTION_STATE: SubscriptionState = {
     overageFees: [],
     warningsShown: new Set(),
   },
-
+  
   // UI state for subscription management
   ui: {
     showUpgradeModal: false,
@@ -308,7 +310,7 @@ const INITIAL_SUBSCRIPTION_STATE: SubscriptionState = {
     lastPaymentError: null,
     showUsageDetails: false,
   },
-
+  
   // Loading and error states
   loading: {
     subscription: false,
@@ -317,7 +319,7 @@ const INITIAL_SUBSCRIPTION_STATE: SubscriptionState = {
     invoices: false,
     featureAccess: false,
   },
-
+  
   errors: {
     subscriptionError: null,
     paymentError: null,
@@ -327,14 +329,14 @@ const INITIAL_SUBSCRIPTION_STATE: SubscriptionState = {
 };
 
 // =============================================================================
-// INITIAL APP STATE
+// INITIAL APP STATE  
 // =============================================================================
 
 export const INITIAL_DOMAIN_APP_STATE: AppState = {
   alarm: INITIAL_ALARM_STATE,
   user: INITIAL_USER_STATE,
   subscription: INITIAL_SUBSCRIPTION_STATE,
-
+  
   // Global app state
   app: {
     initialized: false,
@@ -346,7 +348,7 @@ export const INITIAL_DOMAIN_APP_STATE: AppState = {
     maintenanceMode: false,
     criticalError: null,
   },
-
+  
   // Navigation and routing
   navigation: {
     currentView: 'dashboard',
@@ -354,7 +356,7 @@ export const INITIAL_DOMAIN_APP_STATE: AppState = {
     navigationHistory: ['dashboard'],
     modalStack: [],
   },
-
+  
   // Performance monitoring
   performance: {
     startupTime: 0,
@@ -367,7 +369,7 @@ export const INITIAL_DOMAIN_APP_STATE: AppState = {
 // Export individual state sections for testing and development
 export {
   INITIAL_ALARM_STATE,
-  INITIAL_USER_STATE,
+  INITIAL_USER_STATE, 
   INITIAL_SUBSCRIPTION_STATE,
-  DEFAULT_VOICE_MOOD,
+  DEFAULT_VOICE_MOOD
 };
