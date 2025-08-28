@@ -8,15 +8,14 @@ import type { DefaultBodyType, HttpResponseResolver, PathParams } from 'msw';
 
 // Configuration and base URLs
 const CLOUDFLARE_API_URL = 'https://relife-api.workers.dev';
-const SUPABASE_URL =
-  process.env.VITE_SUPABASE_URL || 'https://test-supabase-url.supabase.co';
+const SUPABASE_URL = process.env.VITE_SUPABASE_URL || 'https://test-supabase-url.supabase.co';
 const STRIPE_URL = 'https://api.stripe.com';
 const ELEVENLABS_URL = 'https://api.elevenlabs.io';
 const ANALYTICS_URL = 'https://app.posthog.com';
 
 // Mock data factories
 export class MockDataFactory {
-  static createUser(overrides: Partial<unknown> = {}) {
+  static createUser(overrides: Partial<any> = {}) {
     return {
       id: 'test-user-123',
       email: 'test@example.com',
@@ -43,7 +42,7 @@ export class MockDataFactory {
     };
   }
 
-  static createAlarm(overrides: Partial<unknown> = {}) {
+  static createAlarm(overrides: Partial<any> = {}) {
     return {
       id: 'test-alarm-123',
       user_id: 'test-user-123',
@@ -67,7 +66,7 @@ export class MockDataFactory {
     };
   }
 
-  static createBattle(overrides: Partial<unknown> = {}) {
+  static createBattle(overrides: Partial<any> = {}) {
     return {
       id: 'test-battle-123',
       creator_id: 'test-user-123',
@@ -108,7 +107,7 @@ export class MockDataFactory {
     };
   }
 
-  static createSubscription(overrides: Partial<unknown> = {}) {
+  static createSubscription(overrides: Partial<any> = {}) {
     return {
       id: 'sub_test123',
       object: 'subscription',
@@ -145,7 +144,7 @@ export class MockDataFactory {
     };
   }
 
-  static createAnalyticsEvent(overrides: Partial<unknown> = {}) {
+  static createAnalyticsEvent(overrides: Partial<any> = {}) {
     return {
       event: 'alarm_created',
       properties: {
@@ -161,7 +160,7 @@ export class MockDataFactory {
     };
   }
 
-  static createPerformanceMetrics(overrides: Partial<unknown> = {}) {
+  static createPerformanceMetrics(overrides: Partial<any> = {}) {
     return {
       metrics: {
         page_load_time: 1250,
@@ -182,23 +181,18 @@ export class MockDataFactory {
 
 // Request/Response interceptors for advanced scenarios
 export class RequestInterceptor {
-  static withDelay(
-    delay: number
-  ): HttpResponseResolver<PathParams, DefaultBodyType, unknown> {
-    return async _info => {
+  static withDelay(delay: number): HttpResponseResolver<PathParams, DefaultBodyType, any> {
+    return async (info) => {
       await new Promise(resolve => setTimeout(resolve, delay));
       return HttpResponse.json({ success: true, delayed: true });
     };
   }
 
-  static withErrorRate(
-    errorRate: number,
-    errorStatus: number = 500
-  ): HttpResponseResolver<PathParams, DefaultBodyType, unknown> {
-    return _info => {
+  static withErrorRate(errorRate: number, errorStatus: number = 500): HttpResponseResolver<PathParams, DefaultBodyType, any> {
+    return (info) => {
       if (Math.random() < errorRate) {
         return HttpResponse.json(
-          { _error: 'Simulated _error', rate: errorRate },
+          { error: 'Simulated error', rate: errorRate },
           { status: errorStatus }
         );
       }
@@ -206,15 +200,13 @@ export class RequestInterceptor {
     };
   }
 
-  static withAuth(
-    requireAuth: boolean = true
-  ): HttpResponseResolver<PathParams, DefaultBodyType, unknown> {
-    return info => {
+  static withAuth(requireAuth: boolean = true): HttpResponseResolver<PathParams, DefaultBodyType, any> {
+    return (info) => {
       if (requireAuth) {
         const authHeader = info.request.headers.get('authorization');
         if (!authHeader || !authHeader.includes('Bearer')) {
           return HttpResponse.json(
-            { _error: 'Authentication required' },
+            { error: 'Authentication required' },
             { status: 401 }
           );
         }
@@ -223,44 +215,42 @@ export class RequestInterceptor {
     };
   }
 
-  static withRateLimit(
-    requestsPerMinute: number
-  ): HttpResponseResolver<PathParams, DefaultBodyType, unknown> {
+  static withRateLimit(requestsPerMinute: number): HttpResponseResolver<PathParams, DefaultBodyType, any> {
     const requests = new Map<string, number[]>();
-
-    return info => {
+    
+    return (info) => {
       const clientId = info.request.headers.get('x-client-id') || 'default';
       const now = Date.now();
       const minute = Math.floor(now / 60000);
-
+      
       if (!requests.has(clientId)) {
         requests.set(clientId, []);
       }
-
+      
       const clientRequests = requests.get(clientId)!;
       const recentRequests = clientRequests.filter(time => time >= minute);
-
+      
       if (recentRequests.length >= requestsPerMinute) {
         return HttpResponse.json(
-          {
-            _error: 'Rate limit exceeded',
+          { 
+            error: 'Rate limit exceeded',
             retry_after: 60,
-            limit: requestsPerMinute,
+            limit: requestsPerMinute 
           },
-          {
+          { 
             status: 429,
             headers: {
               'X-RateLimit-Limit': requestsPerMinute.toString(),
               'X-RateLimit-Remaining': '0',
               'X-RateLimit-Reset': (minute + 1).toString(),
-            },
+            }
           }
         );
       }
-
+      
       clientRequests.push(minute);
       requests.set(clientId, clientRequests);
-
+      
       return HttpResponse.json({ success: true });
     };
   }
@@ -269,7 +259,7 @@ export class RequestInterceptor {
 // Enhanced API handlers with comprehensive coverage
 export const enhancedHandlers = [
   // ==================== CLOUDFLARE EDGE API ====================
-
+  
   // Health check endpoint
   http.get(`${CLOUDFLARE_API_URL}/api/health`, () => {
     return HttpResponse.json({
@@ -295,16 +285,16 @@ export const enhancedHandlers = [
     const url = new URL(request.url);
     const userId = url.searchParams.get('id');
     const includeBattles = url.searchParams.get('includeBattles') === 'true';
-
+    
     const user = MockDataFactory.createUser({ id: userId });
-
+    
     if (includeBattles) {
       user.battles = [MockDataFactory.createBattle()];
     }
-
+    
     return HttpResponse.json({
       success: true,
-      data: [_user],
+      data: [user],
       meta: {
         total: 1,
         page: 1,
@@ -314,13 +304,13 @@ export const enhancedHandlers = [
   }),
 
   http.post(`${CLOUDFLARE_API_URL}/api/users`, async ({ request }) => {
-    const body = (await request.json()) as unknown;
+    const body = await request.json() as any;
     const newUser = MockDataFactory.createUser({
       email: body.email,
       name: body.name,
       id: `user_${Date.now()}`,
     });
-
+    
     return HttpResponse.json(
       {
         success: true,
@@ -334,10 +324,10 @@ export const enhancedHandlers = [
   // Alarm management endpoints
   http.get(`${CLOUDFLARE_API_URL}/api/alarms`, ({ request }) => {
     const url = new URL(request.url);
-    const _userId = url.searchParams.get('_userId');
+    const userId = url.searchParams.get('userId');
     const enabled = url.searchParams.get('enabled');
     const withBattles = url.searchParams.get('withBattles') === 'true';
-
+    
     let alarms = [
       MockDataFactory.createAlarm(),
       MockDataFactory.createAlarm({
@@ -347,18 +337,18 @@ export const enhancedHandlers = [
         voice_mood: 'calm',
       }),
     ];
-
+    
     if (enabled !== null) {
       alarms = alarms.filter(alarm => alarm.is_active === (enabled === 'true'));
     }
-
+    
     if (withBattles) {
       alarms = alarms.map(alarm => ({
         ...alarm,
         battle: MockDataFactory.createBattle(),
       }));
     }
-
+    
     return HttpResponse.json({
       success: true,
       data: alarms,
@@ -371,12 +361,12 @@ export const enhancedHandlers = [
   }),
 
   http.post(`${CLOUDFLARE_API_URL}/api/alarms`, async ({ request }) => {
-    const body = (await request.json()) as unknown;
+    const body = await request.json() as any;
     const newAlarm = MockDataFactory.createAlarm({
       ...body,
       id: `alarm_${Date.now()}`,
     });
-
+    
     return HttpResponse.json(
       {
         success: true,
@@ -388,13 +378,13 @@ export const enhancedHandlers = [
   }),
 
   http.put(`${CLOUDFLARE_API_URL}/api/alarms/:id`, async ({ request, params }) => {
-    const body = (await request.json()) as unknown;
+    const body = await request.json() as any;
     const updatedAlarm = MockDataFactory.createAlarm({
       ...body,
       id: params.id,
       updated_at: new Date().toISOString(),
     });
-
+    
     return HttpResponse.json({
       success: true,
       data: updatedAlarm,
@@ -413,8 +403,8 @@ export const enhancedHandlers = [
   http.get(`${CLOUDFLARE_API_URL}/api/battles`, ({ request }) => {
     const url = new URL(request.url);
     const status = url.searchParams.get('status');
-    const _userId = url.searchParams.get('_userId');
-
+    const userId = url.searchParams.get('userId');
+    
     let battles = [
       MockDataFactory.createBattle(),
       MockDataFactory.createBattle({
@@ -424,11 +414,11 @@ export const enhancedHandlers = [
         status: 'pending',
       }),
     ];
-
+    
     if (status) {
       battles = battles.filter(battle => battle.status === status);
     }
-
+    
     return HttpResponse.json({
       success: true,
       data: battles,
@@ -441,13 +431,13 @@ export const enhancedHandlers = [
   }),
 
   http.post(`${CLOUDFLARE_API_URL}/api/battles`, async ({ request }) => {
-    const body = (await request.json()) as unknown;
+    const body = await request.json() as any;
     const newBattle = MockDataFactory.createBattle({
       ...body,
       id: `battle_${Date.now()}`,
       creator_id: body.creator_id || 'test-user-123',
     });
-
+    
     return HttpResponse.json(
       {
         success: true,
@@ -458,44 +448,38 @@ export const enhancedHandlers = [
     );
   }),
 
-  http.post(
-    `${CLOUDFLARE_API_URL}/api/battles/:id/join`,
-    async ({ params, request }) => {
-      const body = (await request.json()) as unknown;
+  http.post(`${CLOUDFLARE_API_URL}/api/battles/:id/join`, async ({ params, request }) => {
+    const body = await request.json() as any;
+    
+    return HttpResponse.json({
+      success: true,
+      data: {
+        battle_id: params.id,
+        participant_id: body.user_id,
+        joined_at: new Date().toISOString(),
+        status: 'active',
+      },
+      message: 'Successfully joined battle',
+    });
+  }),
 
-      return HttpResponse.json({
-        success: true,
-        data: {
-          battle_id: params.id,
-          participant_id: body.user_id,
-          joined_at: new Date().toISOString(),
-          status: 'active',
-        },
-        message: 'Successfully joined battle',
-      });
-    }
-  ),
-
-  http.post(
-    `${CLOUDFLARE_API_URL}/api/battles/:id/wake`,
-    async ({ params, request }) => {
-      const body = (await request.json()) as unknown;
-
-      return HttpResponse.json({
-        success: true,
-        data: {
-          battle_id: params.id,
-          user_id: body.user_id,
-          wake_time: body.wake_time,
-          proof_type: body.proof_type,
-          points_earned: 15,
-          new_score: 100,
-          rank: 1,
-        },
-        message: 'Wake proof submitted successfully',
-      });
-    }
-  ),
+  http.post(`${CLOUDFLARE_API_URL}/api/battles/:id/wake`, async ({ params, request }) => {
+    const body = await request.json() as any;
+    
+    return HttpResponse.json({
+      success: true,
+      data: {
+        battle_id: params.id,
+        user_id: body.user_id,
+        wake_time: body.wake_time,
+        proof_type: body.proof_type,
+        points_earned: 15,
+        new_score: 100,
+        rank: 1,
+      },
+      message: 'Wake proof submitted successfully',
+    });
+  }),
 
   // Tournament endpoints
   http.get(`${CLOUDFLARE_API_URL}/api/tournaments`, () => {
@@ -520,8 +504,8 @@ export const enhancedHandlers = [
 
   // Performance monitoring endpoints
   http.post(`${CLOUDFLARE_API_URL}/api/performance/metrics`, async ({ request }) => {
-    const _body = (await request.json()) as unknown;
-
+    const body = await request.json() as any;
+    
     return HttpResponse.json({
       success: true,
       data: {
@@ -533,8 +517,8 @@ export const enhancedHandlers = [
   }),
 
   http.post(`${CLOUDFLARE_API_URL}/api/performance/web-vitals`, async ({ request }) => {
-    const _body = (await request.json()) as unknown;
-
+    const body = await request.json() as any;
+    
     return HttpResponse.json({
       success: true,
       data: {
@@ -553,7 +537,7 @@ export const enhancedHandlers = [
   http.get(`${CLOUDFLARE_API_URL}/api/performance/dashboard`, ({ request }) => {
     const url = new URL(request.url);
     const timeRange = url.searchParams.get('range') || '7d';
-
+    
     return HttpResponse.json({
       success: true,
       data: {
@@ -575,23 +559,26 @@ export const enhancedHandlers = [
   }),
 
   // ==================== SUPABASE INTEGRATION ====================
-
+  
   // Enhanced Supabase auth handlers
   http.post(`${SUPABASE_URL}/auth/v1/token`, async ({ request }) => {
-    const body = (await request.json()) as unknown;
-
+    const body = await request.json() as any;
+    
     // Simulate different authentication scenarios
     if (body.email === 'blocked@example.com') {
       return HttpResponse.json(
-        { _error: 'Account is temporarily blocked' },
+        { error: 'Account is temporarily blocked' },
         { status: 423 }
       );
     }
-
+    
     if (body.email === 'unverified@example.com') {
-      return HttpResponse.json({ _error: 'Email not verified' }, { status: 403 });
+      return HttpResponse.json(
+        { error: 'Email not verified' },
+        { status: 403 }
+      );
     }
-
+    
     return HttpResponse.json({
       access_token: 'mock_access_token_' + Date.now(),
       token_type: 'bearer',
@@ -609,30 +596,30 @@ export const enhancedHandlers = [
     const url = new URL(request.url);
     const select = url.searchParams.get('select');
     const filters = Object.fromEntries(url.searchParams.entries());
-
+    
     let users = [MockDataFactory.createUser()];
-
+    
     // Apply filters
     Object.entries(filters).forEach(([key, value]) => {
       if (key !== 'select') {
-        users = users.filter(_user => _user[key] === value);
+        users = users.filter(user => user[key] === value);
       }
     });
-
+    
     // Apply select
     if (select) {
       const fields = select.split(',');
       users = users.map(user => {
-        const selectedUser: unknown = {};
+        const selectedUser: any = {};
         fields.forEach(field => {
-          if (_user[field] !== undefined) {
+          if (user[field] !== undefined) {
             selectedUser[field] = user[field];
           }
         });
         return selectedUser;
       });
     }
-
+    
     return HttpResponse.json(users);
   }),
 
@@ -646,7 +633,7 @@ export const enhancedHandlers = [
   }),
 
   // ==================== STRIPE INTEGRATION ====================
-
+  
   // Enhanced Stripe handlers with more realistic responses
   http.get(`${STRIPE_URL}/v1/customers/:id`, ({ params }) => {
     return HttpResponse.json({
@@ -666,7 +653,7 @@ export const enhancedHandlers = [
   http.post(`${STRIPE_URL}/v1/payment_intents`, async ({ request }) => {
     const body = await request.formData();
     const amount = body.get('amount');
-
+    
     return HttpResponse.json({
       id: `pi_${Date.now()}`,
       object: 'payment_intent',
@@ -700,9 +687,9 @@ export const enhancedHandlers = [
 
   // Webhook endpoint simulation
   http.post(`${CLOUDFLARE_API_URL}/api/stripe/webhooks`, async ({ request }) => {
-    const _body = await request.text();
-    const _signature = request.headers.get('stripe-_signature');
-
+    const body = await request.text();
+    const signature = request.headers.get('stripe-signature');
+    
     return HttpResponse.json({
       received: true,
       processed: true,
@@ -711,7 +698,7 @@ export const enhancedHandlers = [
   }),
 
   // ==================== ELEVENLABS VOICE API ====================
-
+  
   http.get(`${ELEVENLABS_URL}/v1/voices`, RequestInterceptor.withAuth(), () => {
     return HttpResponse.json({
       voices: [
@@ -733,30 +720,27 @@ export const enhancedHandlers = [
     });
   }),
 
-  http.post(
-    `${ELEVENLABS_URL}/v1/text-to-speech/:voice_id`,
-    async ({ _params, request }) => {
-      const _body = (await request.json()) as unknown;
-
-      // Simulate audio generation delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Return mock audio data
-      const audioBuffer = new ArrayBuffer(1024 * 50); // 50KB mock audio
-      return HttpResponse.arrayBuffer(audioBuffer, {
-        headers: {
-          'Content-Type': 'audio/mpeg',
-          'Content-Length': (1024 * 50).toString(),
-        },
-      });
-    }
-  ),
+  http.post(`${ELEVENLABS_URL}/v1/text-to-speech/:voice_id`, async ({ params, request }) => {
+    const body = await request.json() as any;
+    
+    // Simulate audio generation delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Return mock audio data
+    const audioBuffer = new ArrayBuffer(1024 * 50); // 50KB mock audio
+    return HttpResponse.arrayBuffer(audioBuffer, {
+      headers: {
+        'Content-Type': 'audio/mpeg',
+        'Content-Length': (1024 * 50).toString(),
+      },
+    });
+  }),
 
   // ==================== ANALYTICS ENDPOINTS ====================
-
+  
   http.post(`${ANALYTICS_URL}/capture/`, async ({ request }) => {
-    const _body = (await request.json()) as unknown;
-
+    const body = await request.json() as any;
+    
     return HttpResponse.json({
       status: 1,
       timestamp: new Date().toISOString(),
@@ -765,9 +749,9 @@ export const enhancedHandlers = [
   }),
 
   http.post(`${ANALYTICS_URL}/batch/`, async ({ request }) => {
-    const body = (await request.json()) as unknown;
+    const body = await request.json() as any;
     const events = body.batch || [];
-
+    
     return HttpResponse.json({
       status: 1,
       processed: events.length,
@@ -777,8 +761,8 @@ export const enhancedHandlers = [
 
   // Feature flag endpoints
   http.post(`${ANALYTICS_URL}/decide/`, async ({ request }) => {
-    const _body = (await request.json()) as unknown;
-
+    const body = await request.json() as any;
+    
     return HttpResponse.json({
       featureFlags: {
         'new-battle-system': true,
@@ -791,16 +775,16 @@ export const enhancedHandlers = [
   }),
 
   // ==================== ERROR SIMULATION ====================
-
+  
   // Rate limiting test endpoint
   http.get('/api/test/rate-limit', RequestInterceptor.withRateLimit(5)),
-
+  
   // Authentication test endpoint
   http.get('/api/test/auth', RequestInterceptor.withAuth()),
-
+  
   // Error rate test endpoint
-  http.get('/api/test/_error-rate', RequestInterceptor.withErrorRate(0.2, 500)),
-
+  http.get('/api/test/error-rate', RequestInterceptor.withErrorRate(0.2, 500)),
+  
   // Delay test endpoint
   http.get('/api/test/delay', RequestInterceptor.withDelay(2000)),
 ];
@@ -811,7 +795,7 @@ export const wsHandlers = [
   ws.link('wss://*/battles/:battleId', ({ params }) => {
     return new WebSocket(`wss://mock-battle-server/${params.battleId}`);
   }),
-
+  
   // General real-time updates
   ws.link('wss://*/realtime', () => {
     return new WebSocket('wss://mock-realtime-server');
@@ -825,9 +809,9 @@ export const allHandlers = [...enhancedHandlers, ...wsHandlers];
 export const scenarioHandlers = {
   // Success scenario - all requests succeed
   success: enhancedHandlers,
-
+  
   // Error scenario - simulate various error conditions
-  _error: [
+  error: [
     ...enhancedHandlers.map(handler => {
       // Override some handlers to return errors
       if (handler.info.path.includes('/api/')) {
@@ -836,7 +820,7 @@ export const scenarioHandlers = {
       return handler;
     }),
   ],
-
+  
   // Slow network scenario
   slow: [
     ...enhancedHandlers.map(handler => {
@@ -846,11 +830,11 @@ export const scenarioHandlers = {
       return handler;
     }),
   ],
-
+  
   // Offline scenario - most requests fail
   offline: [
     http.all('*', () => {
-      return HttpResponse._error();
+      return HttpResponse.error();
     }),
   ],
 };

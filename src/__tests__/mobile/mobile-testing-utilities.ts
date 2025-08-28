@@ -8,7 +8,7 @@ import { _mockCapacitorSetup } from '../mocks/capacitor.mock';
 // Mobile Platform Test Scenarios
 export class MobilePlatformTester {
   private platform: 'ios' | 'android' | 'web';
-  private testEvents: Array<{ type: string; data: unknown; timestamp: number }> = [];
+  private testEvents: Array<{ type: string; data: any; timestamp: number }> = [];
 
   constructor(platform: 'ios' | 'android' | 'web' = 'web') {
     this.platform = platform;
@@ -21,7 +21,7 @@ export class MobilePlatformTester {
     _mockCapacitorSetup.setPlatform(this.platform);
   }
 
-  private logEvent(type: string, data: unknown) {
+  private logEvent(type: string, data: any) {
     this.testEvents.push({ type, data, timestamp: Date.now() });
   }
 
@@ -114,7 +114,7 @@ export class MobilePlatformTester {
     this.logEvent('permission_flow_started', { platform: this.platform });
 
     const permissions = ['notifications', 'camera', 'microphone', 'location'] as const;
-    const results: Record<string, unknown> = {};
+    const results: Record<string, any> = {};
 
     for (const permission of permissions) {
       // Start with denied permission
@@ -167,11 +167,11 @@ export class MobilePlatformTester {
     this.logEvent('battery_scenarios_started', { platform: this.platform });
 
     const scenarios = [
-      { level: 1.0, charging: true }, // Full, charging
-      { level: 0.8, charging: false }, // 80%, not charging
-      { level: 0.2, charging: false }, // Low battery
+      { level: 1.0, charging: true },    // Full, charging
+      { level: 0.8, charging: false },  // 80%, not charging
+      { level: 0.2, charging: false },  // Low battery
       { level: 0.05, charging: false }, // Critical battery
-      { level: 0.1, charging: true }, // Low battery, charging
+      { level: 0.1, charging: true },   // Low battery, charging
     ];
 
     for (const scenario of scenarios) {
@@ -194,7 +194,7 @@ export class MobilePlatformTester {
   async testPlatformSpecificBehavior() {
     this.logEvent('platform_specific_test_started', { platform: this.platform });
 
-    const behaviors: Record<string, unknown> = {};
+    const behaviors: Record<string, any> = {};
 
     switch (this.platform) {
       case 'ios':
@@ -228,7 +228,7 @@ export class MobilePlatformTester {
 
   private async testIOSHaptics() {
     this.logEvent('ios_haptics_test', {});
-
+    
     // Test different haptic types
     const hapticTypes = ['LIGHT', 'MEDIUM', 'HEAVY'] as const;
     const hapticResults = [];
@@ -244,32 +244,28 @@ export class MobilePlatformTester {
 
   private async testIOSBackgroundApp() {
     this.logEvent('ios_background_app_test', {});
-
+    
     // Simulate iOS background app refresh scenarios
     _mockCapacitorSetup.triggerEvent('App', 'appStateChange', { isActive: false });
     await new Promise(resolve => setTimeout(resolve, 100));
-
+    
     _mockCapacitorSetup.triggerEvent('App', 'appStateChange', { isActive: true });
-
+    
     return { backgroundRefreshTested: true };
   }
 
   private async testIOSNotifications() {
     this.logEvent('ios_notifications_test', {});
-
+    
     // Test iOS notification categories and actions
     const notificationActions = ['snooze', 'dismiss', 'view'];
     const results = [];
 
     for (const action of notificationActions) {
-      _mockCapacitorSetup.triggerEvent(
-        'LocalNotifications',
-        'localNotificationActionPerformed',
-        {
-          actionId: action,
-          notificationId: 123,
-        }
-      );
+      _mockCapacitorSetup.triggerEvent('LocalNotifications', 'localNotificationActionPerformed', {
+        actionId: action,
+        notificationId: 123,
+      });
       results.push({ action, handled: true });
     }
 
@@ -278,15 +274,13 @@ export class MobilePlatformTester {
 
   private async testAndroidBatteryOptimization() {
     this.logEvent('android_battery_optimization_test', {});
-
+    
     // Simulate Android battery optimization scenarios
     const optimizationStates = ['whitelisted', 'optimized', 'unrestricted'];
     const results = [];
 
     for (const state of optimizationStates) {
-      _mockCapacitorSetup.triggerEvent('Device', 'batteryOptimizationChange', {
-        state,
-      });
+      _mockCapacitorSetup.triggerEvent('Device', 'batteryOptimizationChange', { state });
       results.push({ state, tested: true });
       await new Promise(resolve => setTimeout(resolve, 50));
     }
@@ -296,7 +290,7 @@ export class MobilePlatformTester {
 
   private async testAndroidDozeMode() {
     this.logEvent('android_doze_mode_test', {});
-
+    
     // Simulate Android Doze mode scenarios
     const dozeModes = ['entering', 'active', 'exiting'];
     const results = [];
@@ -312,7 +306,7 @@ export class MobilePlatformTester {
 
   private async testAndroidNotifications() {
     this.logEvent('android_notifications_test', {});
-
+    
     // Test Android notification channels and importance
     const channels = [
       { id: 'alarms', importance: 'high' },
@@ -331,17 +325,17 @@ export class MobilePlatformTester {
 
   private async testWebServiceWorker() {
     this.logEvent('web_service_worker_test', {});
-
+    
     // Mock service worker registration and events
     const swEvents = ['install', 'activate', 'message', 'push'];
     const results = [];
 
-    for (const _event of swEvents) {
-      _mockCapacitorSetup.triggerEvent('ServiceWorker', _event, {
+    for (const event of swEvents) {
+      _mockCapacitorSetup.triggerEvent('ServiceWorker', event, { 
         timestamp: Date.now(),
         source: 'mock',
       });
-      results.push({ _event, triggered: true });
+      results.push({ event, triggered: true });
     }
 
     return { serviceWorkerEvents: results };
@@ -349,13 +343,13 @@ export class MobilePlatformTester {
 
   private async testWebNotifications() {
     this.logEvent('web_notifications_test', {});
-
+    
     // Test web notification API scenarios
     const notificationStates = ['granted', 'denied', 'default'];
     const results = [];
 
     for (const state of notificationStates) {
-      _mockCapacitorSetup.setPermission('notifications', state as unknown);
+      _mockCapacitorSetup.setPermission('notifications', state as any);
       results.push({ permission: state, set: true });
     }
 
@@ -364,7 +358,7 @@ export class MobilePlatformTester {
 
   private async testWebAudio() {
     this.logEvent('web_audio_test', {});
-
+    
     // Test web audio context scenarios
     const audioStates = ['suspended', 'running', 'closed'];
     const results = [];
@@ -409,7 +403,7 @@ export class MobilePerformanceTester {
 
     // Test alarm scheduling performance
     const startTime = Date.now();
-
+    
     const alarmCount = 50;
     const alarmIds = [];
 
@@ -418,7 +412,7 @@ export class MobilePerformanceTester {
         title: `Performance Test Alarm ${i}`,
         body: `Alarm ${i} for performance testing`,
         schedule: {
-          at: new Date(Date.now() + i * 60000), // Every minute
+          at: new Date(Date.now() + (i * 60000)), // Every minute
           repeats: false,
         },
       });
@@ -427,17 +421,13 @@ export class MobilePerformanceTester {
 
     const schedulingTime = Date.now() - startTime;
     this.measure('alarm_scheduling_time', schedulingTime, platform);
-    this.measure(
-      'alarm_scheduling_rate',
-      alarmCount / (schedulingTime / 1000),
-      platform
-    );
+    this.measure('alarm_scheduling_rate', alarmCount / (schedulingTime / 1000), platform);
 
     // Test alarm querying performance
     const queryStartTime = Date.now();
     const scheduledAlarms = _mockCapacitorSetup.getScheduledAlarms();
     const queryTime = Date.now() - queryStartTime;
-
+    
     this.measure('alarm_query_time', queryTime, platform);
     this.measure('alarm_query_count', scheduledAlarms.length, platform);
 
@@ -465,7 +455,7 @@ export class MobilePerformanceTester {
     for (const scenario of scenarios) {
       // Simulate different memory usage based on scenario
       let memoryUsage = scenario.expectedMemory;
-
+      
       if (platform === 'ios') {
         memoryUsage *= 0.8; // iOS generally uses less memory
       } else if (platform === 'android') {
@@ -485,8 +475,7 @@ export class MobilePerformanceTester {
     return {
       measurements,
       peakMemory: Math.max(...measurements.map(m => m.memoryUsage)),
-      averageMemory:
-        measurements.reduce((sum, m) => sum + m.memoryUsage, 0) / measurements.length,
+      averageMemory: measurements.reduce((sum, m) => sum + m.memoryUsage, 0) / measurements.length,
     };
   }
 
@@ -504,7 +493,7 @@ export class MobilePerformanceTester {
 
     for (const test of batteryTests) {
       let batteryDrain = test.expectedDrain;
-
+      
       // Platform-specific battery impact adjustments
       if (platform === 'ios') {
         batteryDrain *= 0.7; // iOS generally more battery efficient
@@ -531,7 +520,7 @@ export class MobilePerformanceTester {
 // Mobile Device Simulation
 export class MobileDeviceSimulator {
   private deviceProfiles = {
-    iPhone_14_Pro: {
+    'iPhone_14_Pro': {
       platform: 'ios' as const,
       model: 'iPhone 14 Pro',
       osVersion: '16.0',
@@ -547,7 +536,7 @@ export class MobileDeviceSimulator {
         fifthG: true,
       },
     },
-    Samsung_Galaxy_S23: {
+    'Samsung_Galaxy_S23': {
       platform: 'android' as const,
       model: 'Samsung Galaxy S23',
       osVersion: '13.0',
@@ -563,7 +552,7 @@ export class MobileDeviceSimulator {
         fifthG: true,
       },
     },
-    iPad_Pro: {
+    'iPad_Pro': {
       platform: 'ios' as const,
       model: 'iPad Pro',
       osVersion: '16.1',
@@ -579,7 +568,7 @@ export class MobileDeviceSimulator {
         keyboard: true,
       },
     },
-    Budget_Android: {
+    'Budget_Android': {
       platform: 'android' as const,
       model: 'Budget Android Device',
       osVersion: '11.0',
@@ -599,7 +588,7 @@ export class MobileDeviceSimulator {
 
   simulateDevice(deviceName: keyof typeof this.deviceProfiles) {
     const profile = this.deviceProfiles[deviceName];
-
+    
     // Configure Capacitor mock to match device
     _mockCapacitorSetup.setPlatform(profile.platform);
     _mockCapacitorSetup.setDeviceInfo({
@@ -609,7 +598,7 @@ export class MobileDeviceSimulator {
       memUsed: profile.memory * 0.6, // Assume 60% memory usage
       diskFree: profile.memory * 10, // Rough disk free estimate
     });
-
+    
     _mockCapacitorSetup.setBatteryInfo(profile.battery);
 
     // Set device-specific permissions based on capabilities
@@ -621,7 +610,7 @@ export class MobileDeviceSimulator {
     };
 
     Object.entries(permissions).forEach(([permission, state]) => {
-      _mockCapacitorSetup.setPermission(permission as unknown, state);
+      _mockCapacitorSetup.setPermission(permission as any, state);
     });
 
     return {
@@ -632,14 +621,12 @@ export class MobileDeviceSimulator {
   }
 
   async testCrossDeviceCompatibility() {
-    const deviceNames = Object.keys(this.deviceProfiles) as Array<
-      keyof typeof this.deviceProfiles
-    >;
+    const deviceNames = Object.keys(this.deviceProfiles) as Array<keyof typeof this.deviceProfiles>;
     const results = [];
 
     for (const deviceName of deviceNames) {
       this.simulateDevice(deviceName);
-
+      
       // Test basic alarm functionality on each device
       const alarmId = _mockCapacitorSetup.scheduleTestAlarm({
         title: `Test on ${deviceName}`,
@@ -696,7 +683,11 @@ export const setupMobileTesting = () => {
   };
 };
 
-export { MobilePlatformTester, MobilePerformanceTester, MobileDeviceSimulator };
+export {
+  MobilePlatformTester,
+  MobilePerformanceTester,
+  MobileDeviceSimulator,
+};
 
 export default {
   MobilePlatformTester,
