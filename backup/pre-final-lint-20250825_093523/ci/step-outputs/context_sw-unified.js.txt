@@ -1,0 +1,1 @@
+Context for public/sw-unified.js - Check for escaped newline characters throughout file

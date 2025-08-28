@@ -317,7 +317,7 @@ class EnhancedCommitValidator {
     return issues;
   }
 
-  generateSuggestions(parsed, _issues) {
+  generateSuggestions(parsed, issues) {
     const suggestions = [];
 
     // Type-specific suggestions
@@ -374,7 +374,7 @@ class EnhancedCommitValidator {
   }
 
   printResults(result) {
-    const { parsed, errors, warnings, info, suggestions } = result;
+    const { _parsed, _errors, _warnings, _info, _suggestions } = result;
 
     this.log('\n🔍 Commit Message Analysis', 'cyan');
     this.log(`Subject: ${parsed.subject}`, 'blue');

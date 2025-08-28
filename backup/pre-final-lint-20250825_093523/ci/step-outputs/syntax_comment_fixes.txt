@@ -1,0 +1,24 @@
+Files changed to fix broken auto-generated comments:
+
+1. src/App.tsx - Fixed broken inline auto-comments that were breaking expressions and arrow functions
+2. src/components/AlarmList.tsx - Fixed auto-comments breaking find expressions
+3. src/components/AlarmForm.tsx - Fixed auto-comments on arrow functions and event handlers
+4. src/components/AlarmManagement.tsx - Fixed auto-comments on arrow functions and event handlers
+5. src/components/AdvancedAlarmScheduling.tsx - Fixed auto-comments on multiple arrow functions
+6. src/components/AlarmThemeBrowser.tsx - Fixed auto-comments on event handlers
+7. src/components/BattleSystem.tsx - Fixed broken inline comment that was cutting off expression
+8. src/components/CommunityChallenge.tsx - Fixed auto-comments on event handlers
+9. src/components/CompleteThemeSystemDemo.tsx - Fixed auto-comments on multiple handlers
+10. src/components/CustomSoundThemeCreator.tsx - Fixed broken inline comments and expressions
+11. src/components/CustomThemeManager.tsx - Fixed auto-comments on arrow functions
+12. src/components/EnhancedSmartAlarmSettings.tsx - Fixed broken inline comment breaking map function
+13. src/components/ExtendedScreenReaderTester.tsx - Fixed auto-comments on event handlers
+14. src/components/SoundThemeDemo.tsx - Fixed 6 broken object literal expressions with auto-comments
+15. src/components/SyncStatus.tsx - Fixed 4 broken expressions and removed duplicate line
+16. src/components/ThemeGallery.tsx - Fixed 7 broken expressions in map/filter functions
+17. src/components/TranslationDashboard.tsx - Fixed 9 broken expressions in complex map/filter chains
+
+Pattern fixes applied:
+- Moved "(param: any) => // auto: implicit any" to block comment format
+- Fixed broken expressions where comments were inserted mid-word
+- Converted all inline "// auto:" comments to block "/* auto: */" comments
