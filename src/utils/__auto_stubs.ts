@@ -45,9 +45,15 @@ export interface IDBPDatabase<T extends DBSchema = DBSchema> {
   version: number;
   objectStoreNames: DOMStringList;
   close(): void;
-  createObjectStore(name: string, options?: IDBObjectStoreParameters): IDBObjectStore;
+  createObjectStore(
+    name: string,
+    options?: IDBObjectStoreParameters
+  ): IDBObjectStore;
   deleteObjectStore(name: string): void;
-  transaction(storeNames: string | string[], mode?: IDBTransactionMode): IDBTransaction;
+  transaction(
+    storeNames: string | string[],
+    mode?: IDBTransactionMode
+  ): IDBTransaction;
 }
 
 // Basic openDB function - replace with proper idb library import
@@ -63,19 +69,19 @@ export function openDB<T extends DBSchema>(
 ): Promise<IDBPDatabase<T>> {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(name, version);
-
+    
     request.onerror = () => reject(request.error);
     request.onsuccess = () => resolve(request.result as IDBPDatabase<T>);
-
+    
     if (options?.upgrade) {
-      request.onupgradeneeded = event => {
+      request.onupgradeneeded = (event) => {
         const db = request.result as IDBPDatabase<T>;
         options.upgrade!(db, event.oldVersion, event.newVersion || 0);
       };
     }
-
+    
     if (options?.blocked) {
-      request.onblocked = event => {
+      request.onblocked = (event) => {
         options.blocked!((event.target as any).version, event.newVersion || 0);
       };
     }
@@ -128,10 +134,7 @@ export async function getUserTier(userId: string): Promise<SubscriptionTier> {
   }
 }
 
-export async function setUserTier(
-  userId: string,
-  tier: SubscriptionTier
-): Promise<void> {
+export async function setUserTier(userId: string, tier: SubscriptionTier): Promise<void> {
   try {
     // This should be implemented by importing the actual service
     console.log(`Setting user ${userId} tier to ${tier}`);
@@ -224,11 +227,7 @@ export const _config = config; // Legacy alias
 
 // Error handling
 export class AppError extends Error {
-  constructor(
-    message: string,
-    public code?: string,
-    public context?: any
-  ) {
+  constructor(message: string, public code?: string, public context?: any) {
     super(message);
     this.name = 'AppError';
   }
@@ -393,17 +392,13 @@ export const tier = getCurrentTier;
 import React from 'react';
 
 // Component stubs to avoid circular dependencies
-export const UserTestingService: React.FC<any> = props => {
-  console.warn(
-    'UserTestingService: Using stub, actual component should be imported directly'
-  );
+export const UserTestingService: React.FC<any> = (props) => {
+  console.warn('UserTestingService: Using stub, actual component should be imported directly');
   return React.createElement('div', { ...props }, 'User Testing Service Placeholder');
 };
 
-export const RedesignedFeedbackModal: React.FC<any> = props => {
-  console.warn(
-    'RedesignedFeedbackModal: Using stub, actual component should be imported directly'
-  );
+export const RedesignedFeedbackModal: React.FC<any> = (props) => {
+  console.warn('RedesignedFeedbackModal: Using stub, actual component should be imported directly');
   return React.createElement('div', { ...props }, 'Feedback Modal Placeholder');
 };
 
@@ -437,10 +432,7 @@ export function getContext() {
 export const context = getContext;
 
 // UI utilities
-export function getClassName(
-  base?: string,
-  ...classes: (string | undefined)[]
-): string {
+export function getClassName(base?: string, ...classes: (string | undefined)[]): string {
   return [base, ...classes.filter(Boolean)].join(' ');
 }
 
