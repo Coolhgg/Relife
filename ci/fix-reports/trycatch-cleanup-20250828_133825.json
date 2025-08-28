@@ -1,0 +1,712 @@
+{
+  "files_analyzed": 910,
+  "files_modified": 40,
+  "patterns_found": 116,
+  "patterns_fixed": 116,
+  "changes": [
+    {
+      "file": "relife-campaign-dashboard/src/services/activecampaign.ts",
+      "patterns_fixed": 15,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 8
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 26
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 8
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 13
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 8
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 13
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 8
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 8
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 14
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 8
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 7
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 8
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 8
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 8
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 25
+        }
+      ]
+    },
+    {
+      "file": "relife-campaign-dashboard/src/services/ai.ts",
+      "patterns_fixed": 6,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 24
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 24
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 24
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 24
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 24
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 24
+        }
+      ]
+    },
+    {
+      "file": "relife-campaign-dashboard/src/services/convertkit.ts",
+      "patterns_fixed": 14,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 11
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 8
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 11
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 8
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 11
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 8
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 11
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 8
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 12
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 8
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 12
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 8
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 10
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 8
+        }
+      ]
+    },
+    {
+      "file": "relife-campaign-dashboard/src/services/mailchimp.ts",
+      "patterns_fixed": 8,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 14
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 7
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 7
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 7
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 8
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 15
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 8
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 36
+        }
+      ]
+    },
+    {
+      "file": "src/__tests__/integration/test-orchestration.ts",
+      "patterns_fixed": 1,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 127
+        }
+      ]
+    },
+    {
+      "file": "src/config/enhancedInitializeApp.ts",
+      "patterns_fixed": 1,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 157
+        }
+      ]
+    },
+    {
+      "file": "src/config/i18n.ts",
+      "patterns_fixed": 2,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 18
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 187
+        }
+      ]
+    },
+    {
+      "file": "src/hooks/useCapacitor.ts",
+      "patterns_fixed": 2,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 9
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 48
+        }
+      ]
+    },
+    {
+      "file": "src/hooks/usePWA.ts",
+      "patterns_fixed": 1,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 92
+        }
+      ]
+    },
+    {
+      "file": "src/services/CloudSyncService.ts",
+      "patterns_fixed": 3,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 117
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 18
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 89
+        }
+      ]
+    },
+    {
+      "file": "src/services/ServiceBootstrap.ts",
+      "patterns_fixed": 1,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 162
+        }
+      ]
+    },
+    {
+      "file": "src/services/advanced-alarm-scheduler.ts",
+      "patterns_fixed": 1,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 9
+        }
+      ]
+    },
+    {
+      "file": "src/services/ai-deployment-alerts.ts",
+      "patterns_fixed": 3,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 11
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 12
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 33
+        }
+      ]
+    },
+    {
+      "file": "src/services/alarm-battle-integration.ts",
+      "patterns_fixed": 1,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 205
+        }
+      ]
+    },
+    {
+      "file": "src/services/audio-manager.ts",
+      "patterns_fixed": 3,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 563
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 288
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 365
+        }
+      ]
+    },
+    {
+      "file": "src/services/battle.ts",
+      "patterns_fixed": 14,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 27
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 12
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 14
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 18
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 20
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 18
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 111
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 33
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 24
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 7
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 26
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 29
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 45
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 21
+        }
+      ]
+    },
+    {
+      "file": "src/services/capacitor-enhanced.ts",
+      "patterns_fixed": 3,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 14
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 177
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 30
+        }
+      ]
+    },
+    {
+      "file": "src/services/capacitor.ts",
+      "patterns_fixed": 2,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 10
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 90
+        }
+      ]
+    },
+    {
+      "file": "src/services/email-campaigns.ts",
+      "patterns_fixed": 1,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 39
+        }
+      ]
+    },
+    {
+      "file": "src/services/enhanced-calendar-service.ts",
+      "patterns_fixed": 1,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 17
+        }
+      ]
+    },
+    {
+      "file": "src/services/enhanced-location-service.ts",
+      "patterns_fixed": 4,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 8
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 12
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 74
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 93
+        }
+      ]
+    },
+    {
+      "file": "src/services/health-tracker-integration.ts",
+      "patterns_fixed": 1,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 19
+        }
+      ]
+    },
+    {
+      "file": "src/services/nuclear-mode.ts",
+      "patterns_fixed": 1,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 571
+        }
+      ]
+    },
+    {
+      "file": "src/services/premium-voice.ts",
+      "patterns_fixed": 1,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 67
+        }
+      ]
+    },
+    {
+      "file": "src/services/push-notifications.ts",
+      "patterns_fixed": 1,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 101
+        }
+      ]
+    },
+    {
+      "file": "src/services/pwa-manager.ts",
+      "patterns_fixed": 3,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 15
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 9
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 156
+        }
+      ]
+    },
+    {
+      "file": "src/services/revenue-analytics.ts",
+      "patterns_fixed": 1,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 46
+        }
+      ]
+    },
+    {
+      "file": "src/services/scheduler-core.ts",
+      "patterns_fixed": 3,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 7
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 171
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 9
+        }
+      ]
+    },
+    {
+      "file": "src/services/secure-alarm-storage.ts",
+      "patterns_fixed": 1,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 609
+        }
+      ]
+    },
+    {
+      "file": "src/services/secure-push-notification.ts",
+      "patterns_fixed": 2,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 239
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 66
+        }
+      ]
+    },
+    {
+      "file": "src/services/security-monitoring-forensics.ts",
+      "patterns_fixed": 2,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 240
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 43
+        }
+      ]
+    },
+    {
+      "file": "src/services/security.ts",
+      "patterns_fixed": 1,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 76
+        }
+      ]
+    },
+    {
+      "file": "src/services/service-worker-manager.ts",
+      "patterns_fixed": 1,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 45
+        }
+      ]
+    },
+    {
+      "file": "src/services/smart-notification-service.ts",
+      "patterns_fixed": 1,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 37
+        }
+      ]
+    },
+    {
+      "file": "src/services/enhanced/EnhancedAlarmService.ts",
+      "patterns_fixed": 1,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 16
+        }
+      ]
+    },
+    {
+      "file": "src/services/enhanced/EnhancedAnalyticsService.ts",
+      "patterns_fixed": 1,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 21
+        }
+      ]
+    },
+    {
+      "file": "src/services/enhanced/EnhancedStorageService.ts",
+      "patterns_fixed": 1,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 19
+        }
+      ]
+    },
+    {
+      "file": "src/utils/__auto_stubs.ts",
+      "patterns_fixed": 2,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 6
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 20
+        }
+      ]
+    },
+    {
+      "file": "src/hooks/useTheme.tsx",
+      "patterns_fixed": 3,
+      "patterns": [
+        {
+          "type": "console_log_throw",
+          "lines_removed": 13
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 7
+        },
+        {
+          "type": "console_log_throw",
+          "lines_removed": 459
+        }
+      ]
+    },
+    {
+      "file": "public/sw-unified.js",
+      "patterns_fixed": 2,
+      "patterns": [
+        {
+          "type": "console_log_throw_mismatch",
+          "lines_removed": 19
+        },
+        {
+          "type": "console_log_throw_mismatch",
+          "lines_removed": 1776
+        }
+      ]
+    }
+  ]
+}
