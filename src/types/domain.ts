@@ -241,32 +241,32 @@ export interface AlarmInstance {
 // TYPE UNIONS AND ENUMS
 // =============================================================================
 
-export type SubscriptionTier = 
-  | 'free' 
-  | 'basic' 
-  | 'student' 
-  | 'premium' 
-  | 'pro' 
-  | 'ultimate' 
+export type SubscriptionTier =
+  | 'free'
+  | 'basic'
+  | 'student'
+  | 'premium'
+  | 'pro'
+  | 'ultimate'
   | 'lifetime';
 
-export type SubscriptionStatus = 
-  | 'active' 
-  | 'canceled' 
-  | 'past_due' 
-  | 'unpaid' 
-  | 'trialing' 
-  | 'incomplete' 
+export type SubscriptionStatus =
+  | 'active'
+  | 'canceled'
+  | 'past_due'
+  | 'unpaid'
+  | 'trialing'
+  | 'incomplete'
   | 'incomplete_expired';
 
 export type BillingInterval = 'month' | 'year' | 'lifetime';
 
-export type PaymentStatus = 
-  | 'succeeded' 
-  | 'pending' 
-  | 'failed' 
-  | 'canceled' 
-  | 'requires_action' 
+export type PaymentStatus =
+  | 'succeeded'
+  | 'pending'
+  | 'failed'
+  | 'canceled'
+  | 'requires_action'
   | 'processing';
 
 // =============================================================================
@@ -459,7 +459,7 @@ export interface PersonalizationSettings {
 }
 
 // =============================================================================
-// BATTLE AND GAMIFICATION INTERFACES  
+// BATTLE AND GAMIFICATION INTERFACES
 // =============================================================================
 
 export interface Battle {

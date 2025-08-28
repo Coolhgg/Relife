@@ -1,6 +1,6 @@
 /**
  * Domain Interface Re-exports
- * 
+ *
  * This file re-exports all domain interfaces from the centralized domain.ts file
  * to maintain backward compatibility while providing proper type safety.
  */
@@ -9,9 +9,9 @@
 export * from './domain';
 
 // Legacy compatibility exports (deprecated - use domain.ts imports instead)
-export type { 
+export type {
   Alarm,
-  User, 
+  User,
   Subscription,
   SubscriptionTier,
   Theme,
@@ -20,5 +20,5 @@ export type {
   BattleParticipantStats,
   PremiumFeatureAccess,
   PersonalizationSettings,
-  SmartAlarmSettings
+  SmartAlarmSettings,
 } from './domain';

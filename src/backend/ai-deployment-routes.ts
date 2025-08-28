@@ -14,8 +14,12 @@ router.post('/start', (req, res) => deploymentAPI.startDeployment(req, res));
 router.get('/status', (req, res) => deploymentAPI.getDeploymentStatus(req, res));
 
 // Phase-specific routes
-router.post('/phases/:phaseNumber/deploy', (req, res) => deploymentAPI.deployPhase(req, res));
-router.post('/phases/:phaseNumber/rollback', (req, res) => deploymentAPI.rollbackPhase(req, res));
+router.post('/phases/:phaseNumber/deploy', (req, res) =>
+  deploymentAPI.deployPhase(req, res)
+);
+router.post('/phases/:phaseNumber/rollback', (req, res) =>
+  deploymentAPI.rollbackPhase(req, res)
+);
 
 // Health and monitoring routes
 router.get('/health', (req, res) => {
@@ -25,8 +29,8 @@ router.get('/health', (req, res) => {
     data: {
       status: 'healthy',
       timestamp: new Date().toISOString(),
-      version: '1.0.0'
-    }
+      version: '1.0.0',
+    },
   });
 });
 
@@ -40,10 +44,10 @@ router.get('/config', (req, res) => {
         { phase: 2, name: 'Cross-Platform Integration' },
         { phase: 3, name: 'Recommendation Engine' },
         { phase: 4, name: 'Dashboard & UI' },
-        { phase: 5, name: 'Optimization & Scaling' }
+        { phase: 5, name: 'Optimization & Scaling' },
       ],
-      apiVersion: '1.0.0'
-    }
+      apiVersion: '1.0.0',
+    },
   });
 });
 

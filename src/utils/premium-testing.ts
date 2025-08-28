@@ -7,66 +7,62 @@
 
 import { SubscriptionService } from '../services/subscription';
 import { PremiumVoiceService } from '../services/premium-voice';
-import type {
-  Subscription,
-  PremiumFeatureAccess,
-  PremiumUsage
-} from '../types';
+import type { Subscription, PremiumFeatureAccess, PremiumUsage } from '../types';
 
 // Test user IDs for different subscription tiers
 export const TEST_USER_IDS = {
   FREE: 'test-user-free-123',
   PREMIUM: 'test-user-premium-456',
   PRO: 'test-user-pro-789',
-  LIFETIME: 'test-user-lifetime-012'
+  LIFETIME: 'test-user-lifetime-012',
 };
 
 // Mock subscription data for testing
 export const MOCK_SUBSCRIPTION_DATA = {
-    free: null, // Free users don't have subscription records
-    premium: {
-      id: "sub_premium_123",
-      userId: TEST_USER_IDS.PREMIUM,
-      tier: "premium",
-      status: "active",
-      currentPeriodStart: new Date("2024-01-01"),
-      currentPeriodEnd: new Date("2024-02-01"),
-      cancelAtPeriodEnd: false,
-      createdAt: new Date("2024-01-01"),
-      updatedAt: new Date("2024-01-01"),
-      stripeCustomerId: "cus_premium_123",
-      stripeSubscriptionId: "sub_stripe_premium_123",
-      stripePriceId: "price_premium_monthly",
-    },
-    pro: {
-      id: "sub_pro_456",
-      userId: TEST_USER_IDS.PRO,
-      tier: "pro",
-      status: "active",
-      currentPeriodStart: new Date("2024-01-01"),
-      currentPeriodEnd: new Date("2024-02-01"),
-      cancelAtPeriodEnd: false,
-      createdAt: new Date("2024-01-01"),
-      updatedAt: new Date("2024-01-01"),
-      stripeCustomerId: "cus_pro_456",
-      stripeSubscriptionId: "sub_stripe_pro_456",
-      stripePriceId: "price_pro_monthly",
-    },
-    lifetime: {
-      id: "sub_lifetime_789",
-      userId: TEST_USER_IDS.LIFETIME,
-      tier: "lifetime",
-      status: "active",
-      currentPeriodStart: new Date("2024-01-01"),
-      currentPeriodEnd: new Date("2099-01-01"), // Far future for lifetime
-      cancelAtPeriodEnd: false,
-      createdAt: new Date("2024-01-01"),
-      updatedAt: new Date("2024-01-01"),
-      stripeCustomerId: "cus_lifetime_789",
-      stripeSubscriptionId: "sub_stripe_lifetime_789",
-      stripePriceId: "price_lifetime",
-    },
-  };
+  free: null, // Free users don't have subscription records
+  premium: {
+    id: 'sub_premium_123',
+    userId: TEST_USER_IDS.PREMIUM,
+    tier: 'premium',
+    status: 'active',
+    currentPeriodStart: new Date('2024-01-01'),
+    currentPeriodEnd: new Date('2024-02-01'),
+    cancelAtPeriodEnd: false,
+    createdAt: new Date('2024-01-01'),
+    updatedAt: new Date('2024-01-01'),
+    stripeCustomerId: 'cus_premium_123',
+    stripeSubscriptionId: 'sub_stripe_premium_123',
+    stripePriceId: 'price_premium_monthly',
+  },
+  pro: {
+    id: 'sub_pro_456',
+    userId: TEST_USER_IDS.PRO,
+    tier: 'pro',
+    status: 'active',
+    currentPeriodStart: new Date('2024-01-01'),
+    currentPeriodEnd: new Date('2024-02-01'),
+    cancelAtPeriodEnd: false,
+    createdAt: new Date('2024-01-01'),
+    updatedAt: new Date('2024-01-01'),
+    stripeCustomerId: 'cus_pro_456',
+    stripeSubscriptionId: 'sub_stripe_pro_456',
+    stripePriceId: 'price_pro_monthly',
+  },
+  lifetime: {
+    id: 'sub_lifetime_789',
+    userId: TEST_USER_IDS.LIFETIME,
+    tier: 'lifetime',
+    status: 'active',
+    currentPeriodStart: new Date('2024-01-01'),
+    currentPeriodEnd: new Date('2099-01-01'), // Far future for lifetime
+    cancelAtPeriodEnd: false,
+    createdAt: new Date('2024-01-01'),
+    updatedAt: new Date('2024-01-01'),
+    stripeCustomerId: 'cus_lifetime_789',
+    stripeSubscriptionId: 'sub_stripe_lifetime_789',
+    stripePriceId: 'price_lifetime',
+  },
+};
 
 // Mock usage data for testing limits
 export const MOCK_USAGE_DATA: Record<string, PremiumUsage> = {
@@ -77,7 +73,7 @@ export const MOCK_USAGE_DATA: Record<string, PremiumUsage> = {
     aiInsightsGenerated: 8, // Under limit of 10
     customVoiceMessages: 3, // Under limit of 5
     premiumThemesUsed: ['neon-cyberpunk', 'sunset-gradient'],
-    lastUpdated: new Date()
+    lastUpdated: new Date(),
   },
   [TEST_USER_IDS.PRO]: {
     userId: TEST_USER_IDS.PRO,
@@ -85,8 +81,13 @@ export const MOCK_USAGE_DATA: Record<string, PremiumUsage> = {
     elevenlabsApiCalls: 250, // Under limit of 500
     aiInsightsGenerated: 15, // Under limit of 25
     customVoiceMessages: 12, // Under limit of 20
-    premiumThemesUsed: ['neon-cyberpunk', 'sunset-gradient', 'forest-zen', 'deep-space'],
-    lastUpdated: new Date()
+    premiumThemesUsed: [
+      'neon-cyberpunk',
+      'sunset-gradient',
+      'forest-zen',
+      'deep-space',
+    ],
+    lastUpdated: new Date(),
   },
   [`${TEST_USER_IDS.PREMIUM}_high_usage`]: {
     userId: TEST_USER_IDS.PREMIUM,
@@ -95,15 +96,14 @@ export const MOCK_USAGE_DATA: Record<string, PremiumUsage> = {
     aiInsightsGenerated: 9, // Close to limit of 10
     customVoiceMessages: 4, // Close to limit of 5
     premiumThemesUsed: ['neon-cyberpunk', 'sunset-gradient'],
-    lastUpdated: new Date()
-  }
+    lastUpdated: new Date(),
+  },
 };
 
 /**
  * Test suite for premium functionality
  */
 export class PremiumTester {
-
   /**
    * Test subscription access for different tiers
    */
@@ -124,27 +124,25 @@ export class PremiumTester {
     try {
       for (const [tier, userId] of Object.entries(TEST_USER_IDS)) {
         try {
-          const [
-            hasElevenlabs,
-            hasCustomMessages,
-            hasPremiumThemes,
-            hasVoiceCloning
-          ] = await Promise.all([
-            SubscriptionService.hasFeatureAccess(userId, 'elevenlabsVoices'),
-            SubscriptionService.hasFeatureAccess(userId, 'customVoiceMessages'),
-            SubscriptionService.hasFeatureAccess(userId, 'premiumThemes'),
-            SubscriptionService.hasFeatureAccess(userId, 'voiceCloning')
-          ]);
+          const [hasElevenlabs, hasCustomMessages, hasPremiumThemes, hasVoiceCloning] =
+            await Promise.all([
+              SubscriptionService.hasFeatureAccess(userId, 'elevenlabsVoices'),
+              SubscriptionService.hasFeatureAccess(userId, 'customVoiceMessages'),
+              SubscriptionService.hasFeatureAccess(userId, 'premiumThemes'),
+              SubscriptionService.hasFeatureAccess(userId, 'voiceCloning'),
+            ]);
 
           results.push({
             userId,
             hasElevenlabs,
             hasCustomMessages,
             hasPremiumThemes,
-            hasVoiceCloning
+            hasVoiceCloning,
           });
         } catch (error) {
-          errors.push(`Error testing ${tier}: ${error instanceof Error ? error.message : String(error)}`);
+          errors.push(
+            `Error testing ${tier}: ${error instanceof Error ? error.message : String(error)}`
+          );
         }
       }
 
@@ -153,7 +151,9 @@ export class PremiumTester {
       return {
         success: false,
         results: [],
-        errors: [`Global test error: ${error instanceof Error ? error.message : String(error)}`]
+        errors: [
+          `Global test error: ${error instanceof Error ? error.message : String(error)}`,
+        ],
       };
     }
   }
@@ -188,16 +188,18 @@ export class PremiumTester {
         try {
           const [elevenlabsCheck, customMessagesCheck] = await Promise.all([
             SubscriptionService.checkFeatureUsage(userId, 'elevenlabsApiCalls'),
-            SubscriptionService.checkFeatureUsage(userId, 'customVoiceMessages')
+            SubscriptionService.checkFeatureUsage(userId, 'customVoiceMessages'),
           ]);
 
           results.push({
             userId,
             elevenlabsCheck,
-            customMessagesCheck
+            customMessagesCheck,
           });
         } catch (error) {
-          errors.push(`Error testing usage for ${tier}: ${error instanceof Error ? error.message : String(error)}`);
+          errors.push(
+            `Error testing usage for ${tier}: ${error instanceof Error ? error.message : String(error)}`
+          );
         }
       }
 
@@ -206,7 +208,9 @@ export class PremiumTester {
       return {
         success: false,
         results: [],
-        errors: [`Global usage test error: ${error instanceof Error ? error.message : String(error)}`]
+        errors: [
+          `Global usage test error: ${error instanceof Error ? error.message : String(error)}`,
+        ],
       };
     }
   }
@@ -230,28 +234,27 @@ export class PremiumTester {
     try {
       for (const [tier, userId] of Object.entries(TEST_USER_IDS)) {
         try {
-          const [
-            canUseElevenlabs,
-            canCreateCustomMessages,
-            voicePreview
-          ] = await Promise.all([
-            SubscriptionService.hasFeatureAccess(userId, 'elevenlabsVoices'),
-            SubscriptionService.hasFeatureAccess(userId, 'customVoiceMessages'),
-            PremiumVoiceService.previewVoice(
-              userId,
-              'Good morning! Time to wake up and seize the day!',
-              'motivational'
-            )
-          ]);
+          const [canUseElevenlabs, canCreateCustomMessages, voicePreview] =
+            await Promise.all([
+              SubscriptionService.hasFeatureAccess(userId, 'elevenlabsVoices'),
+              SubscriptionService.hasFeatureAccess(userId, 'customVoiceMessages'),
+              PremiumVoiceService.previewVoice(
+                userId,
+                'Good morning! Time to wake up and seize the day!',
+                'motivational'
+              ),
+            ]);
 
           results.push({
             userId,
             canUseElevenlabs,
             canCreateCustomMessages,
-            voicePreview
+            voicePreview,
           });
         } catch (error) {
-          errors.push(`Error testing voice for ${tier}: ${error instanceof Error ? error.message : String(error)}`);
+          errors.push(
+            `Error testing voice for ${tier}: ${error instanceof Error ? error.message : String(error)}`
+          );
         }
       }
 
@@ -260,7 +263,9 @@ export class PremiumTester {
       return {
         success: false,
         results: [],
-        errors: [`Global voice test error: ${error instanceof Error ? error.message : String(error)}`]
+        errors: [
+          `Global voice test error: ${error instanceof Error ? error.message : String(error)}`,
+        ],
       };
     }
   }
@@ -287,14 +292,17 @@ export class PremiumTester {
     try {
       for (const [tier, userId] of Object.entries(TEST_USER_IDS)) {
         try {
-          const recommendation = await PremiumVoiceService.getUpgradeRecommendation(userId);
+          const recommendation =
+            await PremiumVoiceService.getUpgradeRecommendation(userId);
 
           results.push({
             userId,
             recommendation,
           });
         } catch (error) {
-          errors.push(`Error testing recommendations for ${tier}: ${error instanceof Error ? error.message : String(error)}`);
+          errors.push(
+            `Error testing recommendations for ${tier}: ${error instanceof Error ? error.message : String(error)}`
+          );
         }
       }
 
@@ -303,7 +311,9 @@ export class PremiumTester {
       return {
         success: false,
         results: [],
-        errors: [`Global recommendation test error: ${error instanceof Error ? error.message : String(error)}`]
+        errors: [
+          `Global recommendation test error: ${error instanceof Error ? error.message : String(error)}`,
+        ],
       };
     }
   }
@@ -394,15 +404,15 @@ export class PremiumTester {
       summary: {
         testsRun,
         testsPassed,
-        testsFailed
+        testsFailed,
       },
       results: {
         subscriptionAccess: subscriptionAccessTest,
         usageLimits: usageLimitsTest,
         voiceGeneration: voiceGenerationTest,
-        upgradeRecommendations: upgradeRecommendationsTest
+        upgradeRecommendations: upgradeRecommendationsTest,
       },
-      errors: allErrors
+      errors: allErrors,
     };
   }
 }
@@ -411,7 +421,6 @@ export class PremiumTester {
  * Premium feature integration examples
  */
 export class PremiumIntegrationExamples {
-
   /**
    * Example: Gating a premium feature in a component
    */

@@ -3,14 +3,14 @@
 
 // Service Worker types
 interface ServiceWorkerEventMap {
-  'message': MessageEvent;
-  'install': ExtendableEvent;
-  'activate': ExtendableEvent;
-  'fetch': FetchEvent;
-  'push': PushEvent;
-  'notificationclick': NotificationEvent;
-  'notificationclose': NotificationEvent;
-  'sync': SyncEvent;
+  message: MessageEvent;
+  install: ExtendableEvent;
+  activate: ExtendableEvent;
+  fetch: FetchEvent;
+  push: PushEvent;
+  notificationclick: NotificationEvent;
+  notificationclose: NotificationEvent;
+  sync: SyncEvent;
 }
 
 // Enhanced Service Worker Registration
@@ -156,7 +156,7 @@ interface PermissionDescriptor {
   name: PermissionName;
 }
 
-type PermissionName = 
+type PermissionName =
   | 'camera'
   | 'microphone'
   | 'notifications'
@@ -206,7 +206,15 @@ interface Navigator {
 // Network Information API
 interface Connection {
   readonly effectiveType: '2g' | '3g' | '4g' | 'slow-2g';
-  readonly type: 'bluetooth' | 'cellular' | 'ethernet' | 'none' | 'wifi' | 'wimax' | 'other' | 'unknown';
+  readonly type:
+    | 'bluetooth'
+    | 'cellular'
+    | 'ethernet'
+    | 'none'
+    | 'wifi'
+    | 'wimax'
+    | 'other'
+    | 'unknown';
   readonly downlink: number;
   readonly downlinkMax: number;
   readonly rtt: number;
@@ -233,7 +241,7 @@ declare global {
   interface Window {
     BroadcastChannel: typeof BroadcastChannel;
   }
-  
+
   interface Navigator {
     storage?: StorageManager;
     serviceWorker: ServiceWorkerContainer;
@@ -245,23 +253,29 @@ declare global {
     connection?: Connection;
     deviceMemory?: number;
   }
-  
+
   interface ServiceWorkerContainer {
     ready: Promise<ServiceWorkerRegistration>;
     controller: ServiceWorker | null;
-    register(scriptURL: string, options?: RegistrationOptions): Promise<ServiceWorkerRegistration>;
+    register(
+      scriptURL: string,
+      options?: RegistrationOptions
+    ): Promise<ServiceWorkerRegistration>;
     getRegistration(scope?: string): Promise<ServiceWorkerRegistration | undefined>;
     getRegistrations(): Promise<ServiceWorkerRegistration[]>;
     addEventListener<K extends keyof ServiceWorkerContainerEventMap>(
       type: K,
-      listener: (this: ServiceWorkerContainer, ev: ServiceWorkerContainerEventMap[K]) => any,
+      listener: (
+        this: ServiceWorkerContainer,
+        ev: ServiceWorkerContainerEventMap[K]
+      ) => any,
       options?: boolean | AddEventListenerOptions
     ): void;
   }
-  
+
   const BroadcastChannel: {
     prototype: BroadcastChannel;
-    new(name: string): BroadcastChannel;
+    new (name: string): BroadcastChannel;
   };
 }
 

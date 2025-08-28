@@ -26,7 +26,8 @@ function AlertDialogPortal({
 }
 
 function AlertDialogOverlay({
-  className, ...props
+  className,
+  ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Overlay>) {
   return (
     <AlertDialogPrimitive.Overlay
@@ -41,7 +42,8 @@ function AlertDialogOverlay({
 }
 
 function AlertDialogContent({
-  className, ...props
+  className,
+  ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Content>) {
   return (
     <AlertDialogPortal>
@@ -82,7 +84,8 @@ function AlertDialogFooter({ className, ...props }: React.ComponentProps<'div'>)
 }
 
 function AlertDialogTitle({
-  className, ...props
+  className,
+  ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Title>) {
   return (
     <AlertDialogPrimitive.Title
@@ -94,7 +97,8 @@ function AlertDialogTitle({
 }
 
 function AlertDialogDescription({
-  className, ...props
+  className,
+  ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Description>) {
   return (
     <AlertDialogPrimitive.Description
@@ -106,7 +110,8 @@ function AlertDialogDescription({
 }
 
 function AlertDialogAction({
-  className, ...props
+  className,
+  ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Action>) {
   return (
     <AlertDialogPrimitive.Action
@@ -117,7 +122,8 @@ function AlertDialogAction({
 }
 
 function AlertDialogCancel({
-  className, ...props
+  className,
+  ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Cancel>) {
   return (
     <AlertDialogPrimitive.Cancel

@@ -15,8 +15,10 @@ function extractNoUndefErrors(jsonFilePath) {
 
     for (const result of eslintResults) {
       if (result.messages && result.messages.length > 0) {
-        const noUndefMessages = result.messages.filter(msg => msg.ruleId === 'no-undef');
-        
+        const noUndefMessages = result.messages.filter(
+          (msg) => msg.ruleId === 'no-undef'
+        );
+
         if (noUndefMessages.length > 0) {
           const relativeFilePath = path.relative(process.cwd(), result.filePath);
           fileErrors.set(relativeFilePath, noUndefMessages.length);
@@ -26,12 +28,12 @@ function extractNoUndefErrors(jsonFilePath) {
             const match = message.message.match(/^'([^']+)' is not defined\.$/);
             if (match) {
               const identifier = match[1];
-              
+
               if (!undefinedIdentifiers.has(identifier)) {
                 undefinedIdentifiers.set(identifier, {
                   count: 0,
                   files: new Set(),
-                  locations: []
+                  locations: [],
                 });
               }
 
@@ -41,7 +43,7 @@ function extractNoUndefErrors(jsonFilePath) {
               entry.locations.push({
                 file: relativeFilePath,
                 line: message.line,
-                column: message.column
+                column: message.column,
               });
             }
           }
@@ -58,8 +60,9 @@ function extractNoUndefErrors(jsonFilePath) {
 
 function generateReport(undefinedIdentifiers, fileErrors, outputPath) {
   // Sort identifiers by count (most occurrences first)
-  const sortedIdentifiers = Array.from(undefinedIdentifiers.entries())
-    .sort(([, a], [, b]) => b.count - a.count);
+  const sortedIdentifiers = Array.from(undefinedIdentifiers.entries()).sort(
+    ([, a], [, b]) => b.count - a.count
+  );
 
   // Generate main report
   let report = `# No-Undef Analysis Report\n\n`;
@@ -90,10 +93,10 @@ function generateReport(undefinedIdentifiers, fileErrors, outputPath) {
   report += `\n## All Identifiers (Complete List)\n\n`;
   sortedIdentifiers.forEach(([identifier, data], index) => {
     report += `### ${index + 1}. \`${identifier}\` (${data.count} occurrences in ${data.files.size} files)\n\n`;
-    
+
     // Group locations by file
     const locationsByFile = new Map();
-    data.locations.forEach(loc => {
+    data.locations.forEach((loc) => {
       if (!locationsByFile.has(loc.file)) {
         locationsByFile.set(loc.file, []);
       }
@@ -107,19 +110,19 @@ function generateReport(undefinedIdentifiers, fileErrors, outputPath) {
   });
 
   fs.writeFileSync(outputPath, report);
-  
+
   // Generate top 150 list for processing
-  const top150List = top150.map(([identifier, data]) => 
-    `${identifier} (${data.count} occurrences)`
-  ).join('\n');
-  
+  const top150List = top150
+    .map(([identifier, data]) => `${identifier} (${data.count} occurrences)`)
+    .join('\n');
+
   const top150Path = outputPath.replace('.txt', '_top150.txt');
   fs.writeFileSync(top150Path, top150List);
 
-  return { 
-    totalIdentifiers: sortedIdentifiers.length, 
+  return {
+    totalIdentifiers: sortedIdentifiers.length,
     totalOccurrences: sortedIdentifiers.reduce((sum, [, data]) => sum + data.count, 0),
-    top150Count: top150.length
+    top150Count: top150.length,
   };
 }
 

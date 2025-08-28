@@ -46,7 +46,10 @@ function ContextMenuRadioGroup({
 }
 
 function ContextMenuSubTrigger({
-  className, _inset, _children, ...props
+  className,
+  _inset,
+  _children,
+  ...props
 }: React.ComponentProps<typeof ContextMenuPrimitive.SubTrigger> & {
   inset?: boolean;
 }) {
@@ -67,7 +70,8 @@ function ContextMenuSubTrigger({
 }
 
 function ContextMenuSubContent({
-  className, ...props
+  className,
+  ...props
 }: React.ComponentProps<typeof ContextMenuPrimitive.SubContent>) {
   return (
     <ContextMenuPrimitive.SubContent
@@ -82,7 +86,8 @@ function ContextMenuSubContent({
 }
 
 function ContextMenuContent({
-  className, ...props
+  className,
+  ...props
 }: React.ComponentProps<typeof ContextMenuPrimitive.Content>) {
   return (
     <ContextMenuPrimitive.Portal>
@@ -99,7 +104,10 @@ function ContextMenuContent({
 }
 
 function ContextMenuItem({
-  className, _inset, _variant = 'default', ...props
+  className,
+  _inset,
+  _variant = 'default',
+  ...props
 }: React.ComponentProps<typeof ContextMenuPrimitive.Item> & {
   inset?: boolean;
   variant?: 'default' | 'destructive';
@@ -119,7 +127,10 @@ function ContextMenuItem({
 }
 
 function ContextMenuCheckboxItem({
-  className, children, _checked, ...props
+  className,
+  children,
+  _checked,
+  ...props
 }: React.ComponentProps<typeof ContextMenuPrimitive.CheckboxItem>) {
   return (
     <ContextMenuPrimitive.CheckboxItem
@@ -142,7 +153,9 @@ function ContextMenuCheckboxItem({
 }
 
 function ContextMenuRadioItem({
-  className, children, ...props
+  className,
+  children,
+  ...props
 }: React.ComponentProps<typeof ContextMenuPrimitive.RadioItem>) {
   return (
     <ContextMenuPrimitive.RadioItem
@@ -164,7 +177,9 @@ function ContextMenuRadioItem({
 }
 
 function ContextMenuLabel({
-  className, _inset, ...props
+  className,
+  _inset,
+  ...props
 }: React.ComponentProps<typeof ContextMenuPrimitive.Label> & {
   inset?: boolean;
 }) {
@@ -182,7 +197,8 @@ function ContextMenuLabel({
 }
 
 function ContextMenuSeparator({
-  className, ...props
+  className,
+  ...props
 }: React.ComponentProps<typeof ContextMenuPrimitive.Separator>) {
   return (
     <ContextMenuPrimitive.Separator

@@ -12,34 +12,25 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
-    
+
     // Additional strict checks
     "exactOptionalPropertyTypes": true,
     "noPropertyAccessFromIndexSignature": true,
-    
+
     // Enhanced error reporting
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "allowUnusedLabels": false,
     "allowUnreachableCode": false,
-    
+
     // Import/export validation
     "importsNotUsedAsValues": "error",
     "preserveValueImports": false,
-    
+
     // Enhanced module resolution
     "forceConsistentCasingInFileNames": true,
     "verbatimModuleSyntax": true
   },
-  "include": [
-    "src/**/*",
-    "tests/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "build",
-    "coverage",
-    "**/*.d.ts"
-  ]
+  "include": ["src/**/*", "tests/**/*"],
+  "exclude": ["node_modules", "dist", "build", "coverage", "**/*.d.ts"]
 }

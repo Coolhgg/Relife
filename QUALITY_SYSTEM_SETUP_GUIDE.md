@@ -1,6 +1,7 @@
 # Enhanced Quality System Setup Guide
 
-This guide will help you quickly enable the enhanced quality system to prevent ESLint issues and other code quality problems from reoccurring.
+This guide will help you quickly enable the enhanced quality system to prevent ESLint issues and
+other code quality problems from reoccurring.
 
 ## 🚀 Quick Start (5 minutes)
 
@@ -41,7 +42,7 @@ Add these scripts to your `package.json` for easy access:
 {
   "scripts": {
     "quality:fix": "node scripts/intelligent-eslint-fix.js --verbose",
-    "quality:hooks": "node scripts/react-hooks-enforcer.js --verbose", 
+    "quality:hooks": "node scripts/react-hooks-enforcer.js --verbose",
     "quality:hooks:strict": "node scripts/react-hooks-enforcer.js --strict --verbose",
     "quality:check": "bun run type-check && bun run quality:fix && bun run quality:hooks && bun run format",
     "bundle:check": "node scripts/bundle-size-monitor.js"
@@ -52,21 +53,26 @@ Add these scripts to your `package.json` for easy access:
 ## 🛠️ What You Get
 
 ### Intelligent ESLint Auto-Fixing
+
 - **Auto-fixes safe issues**: Unused imports, variables (prefixed with `_`)
 - **Warns about risky issues**: React hook dependencies that might cause infinite loops
 - **Context-aware suggestions**: Smart recommendations based on code patterns
 
-### React Hooks Dependency Enforcement  
+### React Hooks Dependency Enforcement
+
 - **Prevents infinite re-renders**: Detects problematic hook dependency patterns
 - **Risk analysis**: Identifies high-risk dependencies (setState, dispatch functions)
 - **Smart suggestions**: Context-aware recommendations for fixing dependencies
 
 ### Enhanced Commit Message Validation
+
 - **Conventional commits**: Enforces consistent commit format
-- **Project-specific types**: Supports your domain-specific commit types (`mobile`, `premium`, `gaming`, etc.)
+- **Project-specific types**: Supports your domain-specific commit types (`mobile`, `premium`,
+  `gaming`, etc.)
 - **Intelligent suggestions**: Helps write better commit messages
 
 ### Bundle Size Monitoring
+
 - **Performance protection**: Prevents bundle size regressions
 - **Detailed analysis**: Shows which files are approaching size limits
 - **Optimization suggestions**: Recommendations for reducing bundle size
@@ -74,10 +80,12 @@ Add these scripts to your `package.json` for easy access:
 ## 📋 Daily Usage
 
 ### Before Committing
+
 The enhanced pre-commit hook automatically runs and:
+
 1. ✅ Validates TypeScript compilation
 2. 🔧 Auto-fixes safe ESLint issues
-3. ⚠️ Warns about React hook dependencies  
+3. ⚠️ Warns about React hook dependencies
 4. 💅 Fixes code formatting
 5. 📦 Checks bundle size limits
 6. 🔒 Scans for hardcoded secrets
@@ -98,14 +106,16 @@ bun run bundle:check
 ### Handling Warnings
 
 When you see **React Hook dependency warnings**:
+
 1. Review the suggestions carefully
-2. Test your changes thoroughly  
+2. Test your changes thoroughly
 3. Consider if dependencies are truly needed
 4. Use `useCallback`/`useMemo` for object dependencies
 
 ## 🚨 Troubleshooting
 
 ### "Critical ESLint issues found"
+
 ```bash
 # Run intelligent fixer to see details
 node scripts/intelligent-eslint-fix.js --verbose
@@ -114,7 +124,8 @@ node scripts/intelligent-eslint-fix.js --verbose
 bun run lint:fix
 ```
 
-### "React Hook dependency issues found" 
+### "React Hook dependency issues found"
+
 ```bash
 # Get detailed analysis
 node scripts/react-hooks-enforcer.js --verbose
@@ -124,6 +135,7 @@ node scripts/react-hooks-enforcer.js --verbose
 ```
 
 ### "Bundle size exceeds limits"
+
 ```bash
 # Analyze bundle composition
 node scripts/bundle-size-monitor.js
@@ -135,10 +147,11 @@ node scripts/bundle-size-monitor.js
 ```
 
 ### "Commit message validation failed"
+
 ```bash
 # Use conventional commit format:
 # type(scope): description
-# 
+#
 # Examples:
 # feat(alarm): add smart snooze feature
 # fix(auth): resolve login timeout issue
@@ -155,7 +168,7 @@ Edit `.husky/pre-commit-enhanced` to change React hooks enforcement:
 # Strict mode (blocks commits on hook issues)
 node scripts/react-hooks-enforcer.js --strict --verbose
 
-# Warning mode (allows commits with warnings)  
+# Warning mode (allows commits with warnings)
 node scripts/react-hooks-enforcer.js --verbose
 ```
 
@@ -173,14 +186,15 @@ limits: {
 
 ### Add Custom ESLint Rules
 
-The intelligent ESLint fixer respects your `eslint.config.js` configuration. Add custom rules there and they'll be automatically applied.
+The intelligent ESLint fixer respects your `eslint.config.js` configuration. Add custom rules there
+and they'll be automatically applied.
 
 ## 🎯 Success Indicators
 
 After setup, you should see:
 
 - ✅ **Fewer ESLint issues** in PRs and code reviews
-- ✅ **No more React hook infinite loops** from missing dependencies  
+- ✅ **No more React hook infinite loops** from missing dependencies
 - ✅ **Consistent commit messages** following conventional format
 - ✅ **Stable bundle size** without performance regressions
 - ✅ **Auto-fixed formatting** and safe code issues
@@ -199,11 +213,13 @@ If you had previous pre-commit hooks:
 diff .husky/pre-commit.backup .husky/pre-commit-enhanced
 
 # The enhanced system is backwards compatible with:
-# - Your existing lint-staged configuration  
+# - Your existing lint-staged configuration
 # - Current ESLint rules
 # - Existing commitlint setup
 ```
 
 ---
 
-**Need help?** The enhanced quality system is designed to be helpful, not obstructive. If you encounter issues, the verbose output will guide you to solutions. Most issues can be auto-fixed or resolved with the provided suggestions.
+**Need help?** The enhanced quality system is designed to be helpful, not obstructive. If you
+encounter issues, the verbose output will guide you to solutions. Most issues can be auto-fixed or
+resolved with the provided suggestions.

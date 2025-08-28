@@ -10,16 +10,19 @@ import { setupServer } from 'msw/node';
 import { handlers } from '../../src/__tests__/mocks/msw-handlers';
 
 // Import enhanced browser API mocks
-import { setupEnhancedBrowserAPIMocks, createIntegrationTestHelpers } from './enhanced-browser-api-mocks';
+import {
+  setupEnhancedBrowserAPIMocks,
+  createIntegrationTestHelpers,
+} from './enhanced-browser-api-mocks';
 
 // Import additional mocks for new features
-import { 
+import {
   setupAllMocks,
   mockWebSocket,
   mockMediaRecorder,
   mockFileAPI,
   mockBiometricAPIs,
-  mockSleepAPIs
+  mockSleepAPIs,
 } from './test-mocks';
 
 // Setup MSW server for integration tests
@@ -339,17 +342,21 @@ if (typeof global !== 'undefined') {
       now: vi.fn(() => Date.now()),
       mark: vi.fn(),
       measure: vi.fn(),
-      getEntriesByName: vi.fn(() => [])
+      getEntriesByName: vi.fn(() => []),
     } as any;
   }
 
   // Mock requestIdleCallback for sleep analysis
   if (!global.requestIdleCallback) {
-    global.requestIdleCallback = vi.fn((cb) => {
-      return setTimeout(() => cb({ 
-        didTimeout: false, 
-        timeRemaining: () => 50 
-      }), 0);
+    global.requestIdleCallback = vi.fn(cb => {
+      return setTimeout(
+        () =>
+          cb({
+            didTimeout: false,
+            timeRemaining: () => 50,
+          }),
+        0
+      );
     });
   }
 
@@ -360,19 +367,23 @@ if (typeof global !== 'undefined') {
   // Mock TextEncoder/TextDecoder for WebSocket message handling
   if (!global.TextEncoder) {
     global.TextEncoder = vi.fn().mockImplementation(() => ({
-      encode: vi.fn((text) => new Uint8Array(Buffer.from(text, 'utf-8')))
+      encode: vi.fn(text => new Uint8Array(Buffer.from(text, 'utf-8'))),
     }));
   }
 
   if (!global.TextDecoder) {
     global.TextDecoder = vi.fn().mockImplementation(() => ({
-      decode: vi.fn((bytes) => Buffer.from(bytes).toString('utf-8'))
+      decode: vi.fn(bytes => Buffer.from(bytes).toString('utf-8')),
     }));
   }
 }
 
 // Helper functions for integration tests
-export const mockApiError = (endpoint: string, status: number = 500, message: string = 'Server Error') => {
+export const mockApiError = (
+  endpoint: string,
+  status: number = 500,
+  message: string = 'Server Error'
+) => {
   const { http, HttpResponse } = require('msw');
 
   server.use(
@@ -411,31 +422,34 @@ export const mockApiSuccess = (endpoint: string, data: any) => {
 // New API mock helpers for advanced features
 export const mockWebSocketServer = (url: string, responses: any[] = []) => {
   const mockWS = mockWebSocket();
-  
+
   // Simulate server responses
   responses.forEach((response, index) => {
-    setTimeout(() => {
-      if (mockWS.onmessage) {
-        mockWS.onmessage({ data: JSON.stringify(response) });
-      }
-    }, 100 * (index + 1));
+    setTimeout(
+      () => {
+        if (mockWS.onmessage) {
+          mockWS.onmessage({ data: JSON.stringify(response) });
+        }
+      },
+      100 * (index + 1)
+    );
   });
-  
+
   return mockWS;
 };
 
 export const mockTTSService = (audioUrl: string = 'blob:mock-tts-audio') => {
   const { http, HttpResponse } = require('msw');
-  
+
   server.use(
     http.post('*/api/voice/synthesize', () => {
       return HttpResponse.json({ audioUrl, duration: 5.2 });
     }),
     http.post('*/api/voice/clone', () => {
-      return HttpResponse.json({ 
+      return HttpResponse.json({
         voiceId: 'mock-voice-id',
         status: 'ready',
-        similarity: 0.95 
+        similarity: 0.95,
       });
     })
   );
@@ -443,7 +457,7 @@ export const mockTTSService = (audioUrl: string = 'blob:mock-tts-audio') => {
 
 export const mockSleepAnalysisService = (analysisData: any) => {
   const { http, HttpResponse } = require('msw');
-  
+
   server.use(
     http.post('*/api/sleep/analyze', () => {
       return HttpResponse.json(analysisData);
@@ -454,7 +468,7 @@ export const mockSleepAnalysisService = (analysisData: any) => {
         optimalWakeTime: '06:30',
         sleepCycles: 5,
         chronotype: 'intermediate',
-        confidence: 0.87
+        confidence: 0.87,
       });
     })
   );
@@ -478,7 +492,7 @@ export const {
   simulateScreenWakeLock,
   verifyNotificationShown,
   verifyServiceWorkerActive,
-  verifyPushSubscriptionActive
+  verifyPushSubscriptionActive,
 } = integrationTestHelpers;
 
 // Additional helper exports for new features
@@ -494,5 +508,5 @@ export {
   simulateVoiceRecording,
   generateLargeSleepDataset,
   simulateBattleProgress,
-  generateMockAudioBlob
+  generateMockAudioBlob,
 } from './test-mocks';

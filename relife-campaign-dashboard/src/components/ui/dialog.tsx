@@ -26,7 +26,8 @@ function DialogClose({ ...props }: React.ComponentProps<typeof DialogPrimitive.C
 }
 
 function DialogOverlay({
-  className, ...props
+  className,
+  ...props
 }: React.ComponentProps<typeof DialogPrimitive.Overlay>) {
   return (
     <DialogPrimitive.Overlay
@@ -41,7 +42,9 @@ function DialogOverlay({
 }
 
 function DialogContent({
-  className, children, ...props
+  className,
+  children,
+  ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content>) {
   return (
     <DialogPortal data-slot="dialog-portal">
@@ -88,7 +91,8 @@ function DialogFooter({ className, ...props }: React.ComponentProps<'div'>) {
 }
 
 function DialogTitle({
-  className, ...props
+  className,
+  ...props
 }: React.ComponentProps<typeof DialogPrimitive.Title>) {
   return (
     <DialogPrimitive.Title
@@ -100,7 +104,8 @@ function DialogTitle({
 }
 
 function DialogDescription({
-  className, ...props
+  className,
+  ...props
 }: React.ComponentProps<typeof DialogPrimitive.Description>) {
   return (
     <DialogPrimitive.Description

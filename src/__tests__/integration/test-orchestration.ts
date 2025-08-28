@@ -3,8 +3,15 @@
  * Provides comprehensive testing flows and test suite coordination
  */
 
-import { TestHelpers, TestAssertions, RelifeTestUtils } from '../helpers/comprehensive-test-helpers';
-import { ApiPerformanceTester, PerformanceTestSuite } from '../performance/performance-testing-utilities';
+import {
+  TestHelpers,
+  TestAssertions,
+  RelifeTestUtils,
+} from '../helpers/comprehensive-test-helpers';
+import {
+  ApiPerformanceTester,
+  PerformanceTestSuite,
+} from '../performance/performance-testing-utilities';
 import { PaymentFlowTester } from '../payments/payment-testing-utilities';
 import { MobilePerformanceTester } from '../performance/performance-testing-utilities';
 import { MockPerformanceMonitor } from '../performance/performance-testing-utilities';
@@ -103,7 +110,7 @@ export class TestOrchestrator {
 
       // Execute main test
       const result = await scenario.execute();
-      
+
       // Merge results
       steps.push(...result.steps);
       if (result.errors) errors.push(...result.errors);
@@ -134,7 +141,6 @@ export class TestOrchestrator {
 
       this.results.set(scenario.id, scenarioResult);
       return scenarioResult;
-
     } catch (error) {
       const duration = performance.now() - startTime;
       errors.push(error instanceof Error ? error.message : String(error));
@@ -165,14 +171,14 @@ export class TestOrchestrator {
       // Execute scenarios
       if (this.config.parallel && suite.parallel !== false) {
         const batches = this.createBatches(suite.scenarios, this.config.maxConcurrency);
-        
+
         for (const batch of batches) {
-          const batchPromises = batch.map(scenario => 
+          const batchPromises = batch.map(scenario =>
             this.executeScenarioWithRetry(scenario)
           );
-          
+
           const batchResults = await Promise.allSettled(batchPromises);
-          
+
           batchResults.forEach((result, index) => {
             const scenario = batch[index];
             if (result.status === 'fulfilled') {
@@ -185,7 +191,7 @@ export class TestOrchestrator {
                 errors: [result.reason?.message || 'Unknown error'],
               });
             }
-            
+
             // Fail fast if enabled
             if (this.config.failFast && !results.get(scenario.id)?.passed) {
               throw new Error(`Test failed: ${scenario.name}`);
@@ -197,7 +203,7 @@ export class TestOrchestrator {
         for (const scenario of suite.scenarios) {
           const result = await this.executeScenarioWithRetry(scenario);
           results.set(scenario.id, result);
-          
+
           if (this.config.failFast && !result.passed) {
             break;
           }
@@ -210,7 +216,6 @@ export class TestOrchestrator {
       }
 
       return results;
-
     } catch (error) {
       console.error(`Test suite execution failed: ${error}`);
       throw error;
@@ -218,24 +223,27 @@ export class TestOrchestrator {
   }
 
   // Execute scenario with retry logic
-  private async executeScenarioWithRetry(scenario: TestScenario): Promise<TestScenarioResult> {
-    const maxRetries = this.config.retryFailures ? (scenario.retries || 1) : 1;
+  private async executeScenarioWithRetry(
+    scenario: TestScenario
+  ): Promise<TestScenarioResult> {
+    const maxRetries = this.config.retryFailures ? scenario.retries || 1 : 1;
     let lastResult: TestScenarioResult | null = null;
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
         const result = await this.executeScenario(scenario);
-        
+
         if (result.passed || attempt === maxRetries) {
           return result;
         }
-        
+
         lastResult = result;
-        console.warn(`Scenario ${scenario.name} failed (attempt ${attempt}/${maxRetries}), retrying...`);
-        
+        console.warn(
+          `Scenario ${scenario.name} failed (attempt ${attempt}/${maxRetries}), retrying...`
+        );
+
         // Wait before retry
         await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
-        
       } catch (error) {
         if (attempt === maxRetries) {
           return {
@@ -271,7 +279,7 @@ export class TestOrchestrator {
     const passed = results.filter(r => r.passed).length;
     const failed = results.filter(r => !r.passed).length;
     const totalDuration = results.reduce((sum, r) => sum + r.duration, 0);
-    
+
     return {
       summary: {
         total: results.length,
@@ -282,7 +290,7 @@ export class TestOrchestrator {
         averageDuration: results.length > 0 ? totalDuration / results.length : 0,
       },
       scenarios: Object.fromEntries(this.results.entries()),
-      performanceMetrics: this.config.enablePerformanceMonitoring 
+      performanceMetrics: this.config.enablePerformanceMonitoring
         ? this.performanceMonitor.getPerformanceSummary()
         : undefined,
       generatedAt: new Date().toISOString(),
@@ -341,12 +349,12 @@ export class RelifeIntegrationScenarios {
             confirmPassword: 'SecurePassword123!',
             name: 'Test User',
           });
-          
-          const form = await this.helpers.findElementWithRetry(() =>
-            document.querySelector('form') as HTMLElement
+
+          const form = await this.helpers.findElementWithRetry(
+            () => document.querySelector('form') as HTMLElement
           );
           await this.helpers.submitForm(form, 'success');
-          
+
           steps.push({
             name: 'User Registration',
             passed: true,
@@ -365,19 +373,19 @@ export class RelifeIntegrationScenarios {
         const profileStart = performance.now();
         try {
           await this.helpers.verifyCurrentRoute('/profile/setup');
-          
+
           // Set preferences
           await this.helpers.fillFormWithValidation({
             timezone: 'America/New_York',
             language: 'English',
             theme: 'dark',
           });
-          
-          const nextButton = await this.helpers.findElementWithRetry(() =>
-            document.querySelector('[data-testid="next-step"]') as HTMLElement
+
+          const nextButton = await this.helpers.findElementWithRetry(
+            () => document.querySelector('[data-testid="next-step"]') as HTMLElement
           );
           await this.helpers.user.click(nextButton);
-          
+
           steps.push({
             name: 'Profile Setup',
             passed: true,
@@ -400,7 +408,7 @@ export class RelifeIntegrationScenarios {
             time: '07:00',
             days: [1, 2, 3, 4, 5],
           });
-          
+
           steps.push({
             name: 'First Alarm Creation',
             passed: true,
@@ -418,17 +426,19 @@ export class RelifeIntegrationScenarios {
         // Step 4: Tutorial Completion
         const tutorialStart = performance.now();
         try {
-          await this.helpers.waitForElement(() =>
-            document.querySelector('[data-testid="tutorial-complete"]') as HTMLElement
+          await this.helpers.waitForElement(
+            () =>
+              document.querySelector('[data-testid="tutorial-complete"]') as HTMLElement
           );
-          
-          const completeButton = await this.helpers.findElementWithRetry(() =>
-            document.querySelector('[data-testid="complete-tutorial"]') as HTMLElement
+
+          const completeButton = await this.helpers.findElementWithRetry(
+            () =>
+              document.querySelector('[data-testid="complete-tutorial"]') as HTMLElement
           );
           await this.helpers.user.click(completeButton);
-          
+
           await this.helpers.verifyCurrentRoute('/dashboard');
-          
+
           steps.push({
             name: 'Tutorial Completion',
             passed: true,
@@ -445,7 +455,7 @@ export class RelifeIntegrationScenarios {
 
         const allPassed = steps.every(step => step.passed);
         const totalDuration = steps.reduce((sum, step) => sum + step.duration, 0);
-        
+
         metrics.onboardingTime = totalDuration;
         metrics.completionRate = allPassed ? 100 : 0;
 
@@ -480,7 +490,7 @@ export class RelifeIntegrationScenarios {
             difficulty: 'medium',
             voiceMood: 'motivational',
           });
-          
+
           steps.push({
             name: 'Create Alarm',
             passed: true,
@@ -498,21 +508,21 @@ export class RelifeIntegrationScenarios {
         // Step 2: Modify Alarm
         const modifyStart = performance.now();
         try {
-          const editButton = await this.helpers.findElementWithRetry(() =>
-            document.querySelector('[data-testid="edit-alarm"]') as HTMLElement
+          const editButton = await this.helpers.findElementWithRetry(
+            () => document.querySelector('[data-testid="edit-alarm"]') as HTMLElement
           );
           await this.helpers.user.click(editButton);
-          
+
           await this.helpers.fillFormWithValidation({
             label: 'Modified Lifecycle Alarm',
             time: '08:30',
           });
-          
-          const saveButton = await this.helpers.findElementWithRetry(() =>
-            document.querySelector('[data-testid="save-alarm"]') as HTMLElement
+
+          const saveButton = await this.helpers.findElementWithRetry(
+            () => document.querySelector('[data-testid="save-alarm"]') as HTMLElement
           );
           await this.helpers.user.click(saveButton);
-          
+
           steps.push({
             name: 'Modify Alarm',
             passed: true,
@@ -530,21 +540,24 @@ export class RelifeIntegrationScenarios {
         // Step 3: Test Alarm (simulate trigger)
         const testStart = performance.now();
         try {
-          const testButton = await this.helpers.findElementWithRetry(() =>
-            document.querySelector('[data-testid="test-alarm"]') as HTMLElement
+          const testButton = await this.helpers.findElementWithRetry(
+            () => document.querySelector('[data-testid="test-alarm"]') as HTMLElement
           );
           await this.helpers.user.click(testButton);
-          
-          await this.helpers.waitForElement(() =>
-            document.querySelector('[data-testid="alarm-modal"]') as HTMLElement
+
+          await this.helpers.waitForElement(
+            () => document.querySelector('[data-testid="alarm-modal"]') as HTMLElement
           );
-          
+
           // Complete challenge
-          const challengeButton = await this.helpers.findElementWithRetry(() =>
-            document.querySelector('[data-testid="complete-challenge"]') as HTMLElement
+          const challengeButton = await this.helpers.findElementWithRetry(
+            () =>
+              document.querySelector(
+                '[data-testid="complete-challenge"]'
+              ) as HTMLElement
           );
           await this.helpers.user.click(challengeButton);
-          
+
           steps.push({
             name: 'Test Alarm Trigger',
             passed: true,
@@ -562,21 +575,22 @@ export class RelifeIntegrationScenarios {
         // Step 4: Delete Alarm
         const deleteStart = performance.now();
         try {
-          const deleteButton = await this.helpers.findElementWithRetry(() =>
-            document.querySelector('[data-testid="delete-alarm"]') as HTMLElement
+          const deleteButton = await this.helpers.findElementWithRetry(
+            () => document.querySelector('[data-testid="delete-alarm"]') as HTMLElement
           );
           await this.helpers.user.click(deleteButton);
-          
+
           // Confirm deletion
-          const confirmButton = await this.helpers.findElementWithRetry(() =>
-            document.querySelector('[data-testid="confirm-delete"]') as HTMLElement
+          const confirmButton = await this.helpers.findElementWithRetry(
+            () =>
+              document.querySelector('[data-testid="confirm-delete"]') as HTMLElement
           );
           await this.helpers.user.click(confirmButton);
-          
-          await this.helpers.waitForElementToDisappear(() =>
-            document.querySelector('[data-testid="alarm-card"]') as HTMLElement
+
+          await this.helpers.waitForElementToDisappear(
+            () => document.querySelector('[data-testid="alarm-card"]') as HTMLElement
           );
-          
+
           steps.push({
             name: 'Delete Alarm',
             passed: true,
@@ -593,7 +607,7 @@ export class RelifeIntegrationScenarios {
 
         const allPassed = steps.every(step => step.passed);
         const totalDuration = steps.reduce((sum, step) => sum + step.duration, 0);
-        
+
         metrics.lifecycleDuration = totalDuration;
         metrics.stepsCompleted = steps.filter(s => s.passed).length;
 
@@ -623,7 +637,7 @@ export class RelifeIntegrationScenarios {
         const joinStart = performance.now();
         try {
           await this.relifeUtils.joinBattle('quick');
-          
+
           steps.push({
             name: 'Join Battle',
             passed: true,
@@ -641,14 +655,15 @@ export class RelifeIntegrationScenarios {
         // Step 2: Battle Start
         const battleStart = performance.now();
         try {
-          await this.helpers.waitForElement(() =>
-            document.querySelector('[data-testid="battle-arena"]') as HTMLElement
+          await this.helpers.waitForElement(
+            () => document.querySelector('[data-testid="battle-arena"]') as HTMLElement
           );
-          
-          await this.helpers.waitForElement(() =>
-            document.querySelector('[data-testid="battle-started"]') as HTMLElement
+
+          await this.helpers.waitForElement(
+            () =>
+              document.querySelector('[data-testid="battle-started"]') as HTMLElement
           );
-          
+
           steps.push({
             name: 'Battle Start',
             passed: true,
@@ -668,18 +683,19 @@ export class RelifeIntegrationScenarios {
         try {
           // Complete multiple challenges
           for (let i = 0; i < 3; i++) {
-            await this.helpers.waitForElement(() =>
-              document.querySelector('[data-testid="challenge"]') as HTMLElement
+            await this.helpers.waitForElement(
+              () => document.querySelector('[data-testid="challenge"]') as HTMLElement
             );
-            
-            const answerButton = await this.helpers.findElementWithRetry(() =>
-              document.querySelector('[data-testid="submit-answer"]') as HTMLElement
+
+            const answerButton = await this.helpers.findElementWithRetry(
+              () =>
+                document.querySelector('[data-testid="submit-answer"]') as HTMLElement
             );
             await this.helpers.user.click(answerButton);
-            
+
             await this.helpers.wait(1000); // Wait for next challenge
           }
-          
+
           steps.push({
             name: 'Complete Challenges',
             passed: true,
@@ -697,15 +713,16 @@ export class RelifeIntegrationScenarios {
         // Step 4: Battle Completion
         const completionStart = performance.now();
         try {
-          await this.helpers.waitForElement(() =>
-            document.querySelector('[data-testid="battle-results"]') as HTMLElement
+          await this.helpers.waitForElement(
+            () =>
+              document.querySelector('[data-testid="battle-results"]') as HTMLElement
           );
-          
-          const continueButton = await this.helpers.findElementWithRetry(() =>
-            document.querySelector('[data-testid="continue"]') as HTMLElement
+
+          const continueButton = await this.helpers.findElementWithRetry(
+            () => document.querySelector('[data-testid="continue"]') as HTMLElement
           );
           await this.helpers.user.click(continueButton);
-          
+
           steps.push({
             name: 'Battle Completion',
             passed: true,
@@ -722,7 +739,7 @@ export class RelifeIntegrationScenarios {
 
         const allPassed = steps.every(step => step.passed);
         const totalDuration = steps.reduce((sum, step) => sum + step.duration, 0);
-        
+
         metrics.battleDuration = totalDuration;
         metrics.challengesCompleted = 3;
 
@@ -752,7 +769,7 @@ export class RelifeIntegrationScenarios {
         const purchaseStart = performance.now();
         try {
           await this.relifeUtils.purchaseSubscription('premium');
-          
+
           steps.push({
             name: 'Purchase Subscription',
             passed: true,
@@ -771,9 +788,9 @@ export class RelifeIntegrationScenarios {
         const accessStart = performance.now();
         try {
           await this.helpers.navigateTo('/voice-recording');
-          
+
           await this.relifeUtils.testVoiceRecording(3000);
-          
+
           steps.push({
             name: 'Access Premium Features',
             passed: true,
@@ -796,7 +813,7 @@ export class RelifeIntegrationScenarios {
             voiceMood: 'custom',
             difficulty: 'nuclear',
           });
-          
+
           steps.push({
             name: 'Create Premium Alarms',
             passed: true,
@@ -813,7 +830,7 @@ export class RelifeIntegrationScenarios {
 
         const allPassed = steps.every(step => step.passed);
         const totalDuration = steps.reduce((sum, step) => sum + step.duration, 0);
-        
+
         metrics.subscriptionTime = totalDuration;
         metrics.featuresAccessed = steps.filter(s => s.passed).length;
 
@@ -865,7 +882,7 @@ export class RelifeIntegrationTestSuite {
   async runScenario(scenarioId: string): Promise<TestScenarioResult> {
     const allScenarios = this.scenarios.getAllScenarios();
     const scenario = allScenarios.find(s => s.id === scenarioId);
-    
+
     if (!scenario) {
       throw new Error(`Scenario not found: ${scenarioId}`);
     }
@@ -883,11 +900,7 @@ export class RelifeIntegrationTestSuite {
 }
 
 // Export utilities and classes
-export {
-  TestOrchestrator,
-  RelifeIntegrationScenarios,
-  RelifeIntegrationTestSuite,
-};
+export { TestOrchestrator, RelifeIntegrationScenarios, RelifeIntegrationTestSuite };
 
 // Create singleton instance for easy use
 export const relifeIntegrationSuite = new RelifeIntegrationTestSuite();

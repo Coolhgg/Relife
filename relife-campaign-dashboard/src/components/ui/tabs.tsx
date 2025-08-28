@@ -7,7 +7,8 @@ import * as TabsPrimitive from '@radix-ui/react-tabs';
 import { cn } from '@/lib/utils';
 
 function Tabs({
-  className, ...props
+  className,
+  ...props
 }: React.ComponentProps<typeof TabsPrimitive.Root>) {
   return (
     <TabsPrimitive.Root
@@ -19,7 +20,8 @@ function Tabs({
 }
 
 function TabsList({
-  className, ...props
+  className,
+  ...props
 }: React.ComponentProps<typeof TabsPrimitive.List>) {
   return (
     <TabsPrimitive.List
@@ -34,7 +36,8 @@ function TabsList({
 }
 
 function TabsTrigger({
-  className, ...props
+  className,
+  ...props
 }: React.ComponentProps<typeof TabsPrimitive.Trigger>) {
   return (
     <TabsPrimitive.Trigger
@@ -49,7 +52,8 @@ function TabsTrigger({
 }
 
 function TabsContent({
-  className, ...props
+  className,
+  ...props
 }: React.ComponentProps<typeof TabsPrimitive.Content>) {
   return (
     <TabsPrimitive.Content

@@ -2,7 +2,7 @@
 
 /**
  * Reward System Integration Test
- * 
+ *
  * This script tests the core functionality of the reward system implementation:
  * - Database service integration
  * - Component imports and structure
@@ -21,7 +21,7 @@ console.log('📁 Testing file existence...');
 const requiredFiles = [
   'src/services/reward-service.ts',
   'src/components/GiftCatalog.tsx',
-  'src/components/GiftInventory.tsx', 
+  'src/components/GiftInventory.tsx',
   'src/components/GiftShop.tsx',
   'src/components/RewardNotificationSystem.tsx',
   'src/components/CelebrationEffects.tsx',
@@ -29,7 +29,7 @@ const requiredFiles = [
   'src/types/reward-system.ts',
   'database/migrations/007_create_reward_system.sql',
   'database/migrations/008_seed_reward_system_data.sql',
-  'database/migrations/run_all_migrations.sql'
+  'database/migrations/run_all_migrations.sql',
 ];
 
 let filesExist = true;
@@ -63,7 +63,7 @@ const rewardServiceTests = [
   { name: 'checkAndUnlockRewards method', pattern: /async checkAndUnlockRewards/ },
   { name: 'Supabase integration', pattern: /SupabaseService/ },
   { name: 'Error handling', pattern: /try.*catch/ },
-  { name: 'Analytics integration', pattern: /AppAnalyticsService/ }
+  { name: 'Analytics integration', pattern: /AppAnalyticsService/ },
 ];
 
 for (const test of rewardServiceTests) {
@@ -84,7 +84,7 @@ const giftShopTests = [
   { name: 'useState hook', pattern: /useState/ },
   { name: 'RewardService usage', pattern: /RewardService/ },
   { name: 'Tab interface', pattern: /TabsContent/ },
-  { name: 'Export statement', pattern: /export default GiftShop/ }
+  { name: 'Export statement', pattern: /export default GiftShop/ },
 ];
 
 for (const test of giftShopTests) {
@@ -98,7 +98,10 @@ for (const test of giftShopTests) {
 // Test 3: Check migration structure
 console.log('\n📊 Testing database migration structure...');
 
-const migration007Path = path.join(__dirname, 'database/migrations/007_create_reward_system.sql');
+const migration007Path = path.join(
+  __dirname,
+  'database/migrations/007_create_reward_system.sql'
+);
 const migration007Content = fs.readFileSync(migration007Path, 'utf8');
 
 const migration007Tests = [
@@ -109,7 +112,7 @@ const migration007Tests = [
   { name: 'User habits table', pattern: /CREATE TABLE.*user_habits/ },
   { name: 'Primary keys', pattern: /PRIMARY KEY/ },
   { name: 'Foreign keys', pattern: /FOREIGN KEY/ },
-  { name: 'Indexes', pattern: /CREATE INDEX/ }
+  { name: 'Indexes', pattern: /CREATE INDEX/ },
 ];
 
 for (const test of migration007Tests) {
@@ -120,8 +123,11 @@ for (const test of migration007Tests) {
   }
 }
 
-// Test 4: Check seed data structure  
-const migration008Path = path.join(__dirname, 'database/migrations/008_seed_reward_system_data.sql');
+// Test 4: Check seed data structure
+const migration008Path = path.join(
+  __dirname,
+  'database/migrations/008_seed_reward_system_data.sql'
+);
 const migration008Content = fs.readFileSync(migration008Path, 'utf8');
 
 const migration008Tests = [
@@ -129,7 +135,7 @@ const migration008Tests = [
   { name: 'Gift catalog INSERT', pattern: /INSERT INTO gift_catalog/ },
   { name: 'Achievement rewards', pattern: /early_riser|consistency|wellness/ },
   { name: 'Gift themes', pattern: /nature|urban|cosmic/ },
-  { name: 'Multiple rarities', pattern: /common.*rare.*epic.*legendary/s }
+  { name: 'Multiple rarities', pattern: /common.*rare.*epic.*legendary/s },
 ];
 
 for (const test of migration008Tests) {
@@ -152,7 +158,7 @@ const appIntegrationTests = [
   { name: 'GiftShop import', pattern: /import.*GiftShop/ },
   { name: 'Gift Shop navigation', pattern: /gift-shop/ },
   { name: 'RewardManager wrapper', pattern: /<RewardManager>/ },
-  { name: 'Database-backed refresh', pattern: /RewardService\.getInstance/ }
+  { name: 'Database-backed refresh', pattern: /RewardService\.getInstance/ },
 ];
 
 for (const test of appIntegrationTests) {
@@ -176,7 +182,7 @@ const typeTests = [
   { name: 'UserAnalytics interface', pattern: /interface UserAnalytics/ },
   { name: 'AIInsight interface', pattern: /interface AIInsight/ },
   { name: 'Rarity enum/type', pattern: /rarity.*common.*rare.*epic.*legendary/ },
-  { name: 'Export statements', pattern: /export.*interface/ }
+  { name: 'Export statements', pattern: /export.*interface/ },
 ];
 
 for (const test of typeTests) {
@@ -190,7 +196,10 @@ for (const test of typeTests) {
 // Test 7: Check notification system
 console.log('\n🔔 Testing notification system...');
 
-const notificationPath = path.join(__dirname, 'src/components/RewardNotificationSystem.tsx');
+const notificationPath = path.join(
+  __dirname,
+  'src/components/RewardNotificationSystem.tsx'
+);
 const notificationContent = fs.readFileSync(notificationPath, 'utf8');
 
 const notificationTests = [
@@ -199,7 +208,7 @@ const notificationTests = [
   { name: 'Sound effects', pattern: /sound|audio/ },
   { name: 'Celebration levels', pattern: /celebration.*level/i },
   { name: 'Rarity handling', pattern: /rarity.*common|rare|epic|legendary/ },
-  { name: 'Analytics tracking', pattern: /analytics.*track/i }
+  { name: 'Analytics tracking', pattern: /analytics.*track/i },
 ];
 
 for (const test of notificationTests) {
@@ -215,7 +224,7 @@ console.log('\n🎉 Reward System Integration Test Complete!\n');
 console.log('📋 Implementation Summary:');
 console.log('✅ Database schema with 7 tables for comprehensive reward tracking');
 console.log('✅ Seed data with 25+ achievements and 20+ gifts');
-console.log('✅ Database-backed RewardService with full CRUD operations'); 
+console.log('✅ Database-backed RewardService with full CRUD operations');
 console.log('✅ Gift management UI (catalog, inventory, shop)');
 console.log('✅ Advanced notification system with celebrations and effects');
 console.log('✅ RewardManager for global event orchestration');
@@ -224,4 +233,6 @@ console.log('✅ TypeScript interfaces for type safety');
 console.log('✅ Analytics integration for comprehensive tracking');
 console.log('✅ AI insights and behavior analysis capabilities');
 
-console.log('\n🚀 Ready for deployment! The reward system is fully integrated and functional.');
+console.log(
+  '\n🚀 Ready for deployment! The reward system is fully integrated and functional.'
+);

@@ -71,24 +71,24 @@ class WebhookManagementAPI {
 
       // Calculate stats for each webhook
       const webhooksWithStats = await Promise.all(
-        webhooks?.map(async (webhook) => {
+        webhooks?.map(async webhook => {
           const stats = await this.calculateWebhookStats(webhook.id);
           return {
             ...webhook,
-            ...stats
+            ...stats,
           };
         }) || []
       );
 
       res.json({
         success: true,
-        webhooks: webhooksWithStats
+        webhooks: webhooksWithStats,
       });
     } catch (error) {
       ErrorHandler.handleError(error as Error, 'Failed to get webhook configs');
       res.status(500).json({
         success: false,
-        error: 'Failed to get webhook configurations'
+        error: 'Failed to get webhook configurations',
       });
     }
   }
@@ -105,7 +105,10 @@ class WebhookManagementAPI {
       const { data: events } = await supabase
         .from('webhook_logs')
         .select('status, response_time, created_at')
-        .gte('created_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString());
+        .gte(
+          'created_at',
+          new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
+        );
 
       if (!configs || !events) {
         throw new Error('Failed to fetch webhook data');
@@ -115,15 +118,18 @@ class WebhookManagementAPI {
         totalWebhooks: configs.length,
         activeWebhooks: configs.filter(c => c.enabled && c.status === 'active').length,
         totalEvents: events.length,
-        successRate: events.length > 0 
-          ? (events.filter(e => e.status === 'success').length / events.length) * 100 
-          : 0,
-        avgResponseTime: events.length > 0
-          ? events.reduce((sum, e) => sum + (e.response_time || 0), 0) / events.length
-          : 0,
-        errorRate: events.length > 0
-          ? (events.filter(e => e.status === 'error').length / events.length) * 100
-          : 0
+        successRate:
+          events.length > 0
+            ? (events.filter(e => e.status === 'success').length / events.length) * 100
+            : 0,
+        avgResponseTime:
+          events.length > 0
+            ? events.reduce((sum, e) => sum + (e.response_time || 0), 0) / events.length
+            : 0,
+        errorRate:
+          events.length > 0
+            ? (events.filter(e => e.status === 'error').length / events.length) * 100
+            : 0,
       };
 
       res.json(stats);
@@ -131,7 +137,7 @@ class WebhookManagementAPI {
       ErrorHandler.handleError(error as Error, 'Failed to get webhook stats');
       res.status(500).json({
         success: false,
-        error: 'Failed to get webhook statistics'
+        error: 'Failed to get webhook statistics',
       });
     }
   }
@@ -146,10 +152,12 @@ class WebhookManagementAPI {
 
       let query = supabase
         .from('webhook_logs')
-        .select(`
+        .select(
+          `
           *,
           webhook_configs(name, type)
-        `)
+        `
+        )
         .order('created_at', { ascending: false })
         .limit(limit);
 
@@ -163,23 +171,24 @@ class WebhookManagementAPI {
 
       res.json({
         success: true,
-        events: events?.map(event => ({
-          id: event.id,
-          type: event.event_type,
-          status: event.status,
-          timestamp: event.created_at,
-          payload: event.metadata,
-          errorMessage: event.error_message,
-          retryCount: event.retry_count || 0,
-          responseTime: event.response_time,
-          webhookName: event.webhook_configs?.name
-        })) || []
+        events:
+          events?.map(event => ({
+            id: event.id,
+            type: event.event_type,
+            status: event.status,
+            timestamp: event.created_at,
+            payload: event.metadata,
+            errorMessage: event.error_message,
+            retryCount: event.retry_count || 0,
+            responseTime: event.response_time,
+            webhookName: event.webhook_configs?.name,
+          })) || [],
       });
     } catch (error) {
       ErrorHandler.handleError(error as Error, 'Failed to get webhook events');
       res.status(500).json({
         success: false,
-        error: 'Failed to get webhook events'
+        error: 'Failed to get webhook events',
       });
     }
   }
@@ -190,7 +199,7 @@ class WebhookManagementAPI {
   async testWebhook(req: Request, res: Response): Promise<void> {
     try {
       const webhookId = req.params.id;
-      
+
       const { data: webhook, error } = await supabase
         .from('webhook_configs')
         .select('*')
@@ -200,36 +209,34 @@ class WebhookManagementAPI {
       if (error || !webhook) {
         return res.status(404).json({
           success: false,
-          error: 'Webhook configuration not found'
+          error: 'Webhook configuration not found',
         });
       }
 
       const testResult = await this.executeWebhookTest(webhook);
-      
+
       // Log the test event
-      await supabase
-        .from('webhook_logs')
-        .insert({
-          webhook_id: webhookId,
-          event_type: 'webhook_test',
-          status: testResult.success ? 'success' : 'error',
-          error_message: testResult.error,
-          response_time: testResult.responseTime,
-          metadata: { test: true, result: testResult }
-        });
+      await supabase.from('webhook_logs').insert({
+        webhook_id: webhookId,
+        event_type: 'webhook_test',
+        status: testResult.success ? 'success' : 'error',
+        error_message: testResult.error,
+        response_time: testResult.responseTime,
+        metadata: { test: true, result: testResult },
+      });
 
       res.json({
         success: testResult.success,
-        message: testResult.success 
-          ? 'Webhook test successful' 
+        message: testResult.success
+          ? 'Webhook test successful'
           : `Webhook test failed: ${testResult.error}`,
-        responseTime: testResult.responseTime
+        responseTime: testResult.responseTime,
       });
     } catch (error) {
       ErrorHandler.handleError(error as Error, 'Failed to test webhook');
       res.status(500).json({
         success: false,
-        error: 'Failed to test webhook'
+        error: 'Failed to test webhook',
       });
     }
   }
@@ -255,7 +262,7 @@ class WebhookManagementAPI {
         .from('webhook_configs')
         .update({
           ...sanitizedUpdates,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
         .eq('id', webhookId)
         .select()
@@ -267,19 +274,19 @@ class WebhookManagementAPI {
       AnalyticsService.getInstance().track('webhook_config_updated', {
         webhookId,
         changes: Object.keys(sanitizedUpdates),
-        timestamp: new Date()
+        timestamp: new Date(),
       });
 
       res.json({
         success: true,
         webhook,
-        message: 'Webhook configuration updated successfully'
+        message: 'Webhook configuration updated successfully',
       });
     } catch (error) {
       ErrorHandler.handleError(error as Error, 'Failed to update webhook config');
       res.status(500).json({
         success: false,
-        error: 'Failed to update webhook configuration'
+        error: 'Failed to update webhook configuration',
       });
     }
   }
@@ -294,7 +301,7 @@ class WebhookManagementAPI {
       if (!name || !type || !url) {
         return res.status(400).json({
           success: false,
-          error: 'Name, type, and URL are required'
+          error: 'Name, type, and URL are required',
         });
       }
 
@@ -311,7 +318,7 @@ class WebhookManagementAPI {
           enabled: true,
           secret_key: secretKey,
           metadata,
-          created_at: new Date().toISOString()
+          created_at: new Date().toISOString(),
         })
         .select()
         .single();
@@ -321,19 +328,19 @@ class WebhookManagementAPI {
       AnalyticsService.getInstance().track('webhook_config_created', {
         webhookId: webhook.id,
         type,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
 
       res.status(201).json({
         success: true,
         webhook,
-        message: 'Webhook configuration created successfully'
+        message: 'Webhook configuration created successfully',
       });
     } catch (error) {
       ErrorHandler.handleError(error as Error, 'Failed to create webhook config');
       res.status(500).json({
         success: false,
-        error: 'Failed to create webhook configuration'
+        error: 'Failed to create webhook configuration',
       });
     }
   }
@@ -354,18 +361,18 @@ class WebhookManagementAPI {
 
       AnalyticsService.getInstance().track('webhook_config_deleted', {
         webhookId,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
 
       res.json({
         success: true,
-        message: 'Webhook configuration deleted successfully'
+        message: 'Webhook configuration deleted successfully',
       });
     } catch (error) {
       ErrorHandler.handleError(error as Error, 'Failed to delete webhook config');
       res.status(500).json({
         success: false,
-        error: 'Failed to delete webhook configuration'
+        error: 'Failed to delete webhook configuration',
       });
     }
   }
@@ -379,7 +386,7 @@ class WebhookManagementAPI {
         this.checkStripeWebhookHealth(),
         this.checkPushNotificationHealth(),
         this.checkMonitoringWebhookHealth(),
-        this.checkDatabaseHealth()
+        this.checkDatabaseHealth(),
       ]);
 
       const [stripe, push, monitoring, database] = healthChecks;
@@ -389,16 +396,16 @@ class WebhookManagementAPI {
         health: {
           stripe,
           push,
-          monitoring, 
+          monitoring,
           database,
-          overall: healthChecks.every(check => check.status === 'healthy')
-        }
+          overall: healthChecks.every(check => check.status === 'healthy'),
+        },
       });
     } catch (error) {
       ErrorHandler.handleError(error as Error, 'Failed to get webhook health');
       res.status(500).json({
         success: false,
-        error: 'Failed to get webhook health status'
+        error: 'Failed to get webhook health status',
       });
     }
   }
@@ -413,20 +420,20 @@ class WebhookManagementAPI {
       if (!Array.isArray(eventIds)) {
         return res.status(400).json({
           success: false,
-          error: 'eventIds must be an array'
+          error: 'eventIds must be an array',
         });
       }
 
       const retryResults = await Promise.all(
-        eventIds.map(async (eventId) => {
+        eventIds.map(async eventId => {
           try {
             const result = await this.retryWebhookEvent(eventId);
             return { eventId, success: true, result };
           } catch (error) {
-            return { 
-              eventId, 
-              success: false, 
-              error: error instanceof Error ? error.message : 'Unknown error'
+            return {
+              eventId,
+              success: false,
+              error: error instanceof Error ? error.message : 'Unknown error',
             };
           }
         })
@@ -437,13 +444,13 @@ class WebhookManagementAPI {
       res.json({
         success: true,
         message: `Retried ${successCount}/${eventIds.length} events`,
-        results: retryResults
+        results: retryResults,
       });
     } catch (error) {
       ErrorHandler.handleError(error as Error, 'Failed to retry webhook events');
       res.status(500).json({
         success: false,
-        error: 'Failed to retry webhook events'
+        error: 'Failed to retry webhook events',
       });
     }
   }
@@ -462,7 +469,7 @@ class WebhookManagementAPI {
         successRate: 0,
         totalEvents: 0,
         errorCount: 0,
-        lastTriggered: null
+        lastTriggered: null,
       };
     }
 
@@ -473,7 +480,9 @@ class WebhookManagementAPI {
       successRate: (successCount / events.length) * 100,
       totalEvents: events.length,
       errorCount,
-      lastTriggered: new Date(Math.max(...events.map(e => new Date(e.created_at).getTime())))
+      lastTriggered: new Date(
+        Math.max(...events.map(e => new Date(e.created_at).getTime()))
+      ),
     };
   }
 
@@ -488,117 +497,123 @@ class WebhookManagementAPI {
       switch (webhook.type) {
         case 'stripe':
           return await this.testStripeWebhook(webhook);
-        
+
         case 'push':
           return await this.testPushNotification(webhook);
-        
+
         case 'monitoring':
           return await this.testMonitoringWebhook(webhook);
-        
+
         case 'custom':
           return await this.testCustomWebhook(webhook);
-        
+
         default:
           return {
             success: false,
             error: `Unknown webhook type: ${webhook.type}`,
-            responseTime: Date.now() - startTime
+            responseTime: Date.now() - startTime,
           };
       }
     } catch (error) {
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
-        responseTime: Date.now() - startTime
+        responseTime: Date.now() - startTime,
       };
     }
   }
 
   private async testStripeWebhook(webhook: any) {
     const startTime = Date.now();
-    
+
     // Test Stripe webhook by validating configuration
     const hasValidKey = process.env.STRIPE_SECRET_KEY?.startsWith('sk_');
-    const hasValidWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET?.startsWith('whsec_');
-    
+    const hasValidWebhookSecret =
+      process.env.STRIPE_WEBHOOK_SECRET?.startsWith('whsec_');
+
     return {
       success: hasValidKey && hasValidWebhookSecret,
-      error: !hasValidKey ? 'Invalid Stripe secret key' : 
-             !hasValidWebhookSecret ? 'Invalid webhook secret' : undefined,
-      responseTime: Date.now() - startTime
+      error: !hasValidKey
+        ? 'Invalid Stripe secret key'
+        : !hasValidWebhookSecret
+          ? 'Invalid webhook secret'
+          : undefined,
+      responseTime: Date.now() - startTime,
     };
   }
 
   private async testPushNotification(webhook: any) {
     const startTime = Date.now();
-    
+
     try {
       await PushNotificationService.testPushNotification();
       return {
         success: true,
-        responseTime: Date.now() - startTime
+        responseTime: Date.now() - startTime,
       };
     } catch (error) {
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Push notification test failed',
-        responseTime: Date.now() - startTime
+        responseTime: Date.now() - startTime,
       };
     }
   }
 
   private async testMonitoringWebhook(webhook: any) {
     const startTime = Date.now();
-    
+
     try {
       const response = await fetch(webhook.url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          text: '🧪 Webhook test from Relife Management Dashboard'
-        })
+          text: '🧪 Webhook test from Relife Management Dashboard',
+        }),
       });
 
       return {
         success: response.ok,
-        error: !response.ok ? `HTTP ${response.status}: ${response.statusText}` : undefined,
-        responseTime: Date.now() - startTime
+        error: !response.ok
+          ? `HTTP ${response.status}: ${response.statusText}`
+          : undefined,
+        responseTime: Date.now() - startTime,
       };
     } catch (error) {
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Network error',
-        responseTime: Date.now() - startTime
+        responseTime: Date.now() - startTime,
       };
     }
   }
 
   private async testCustomWebhook(webhook: any) {
     const startTime = Date.now();
-    
+
     try {
       const response = await fetch(webhook.url, {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
-          'User-Agent': 'Relife-Webhook-Test/1.0'
+          'User-Agent': 'Relife-Webhook-Test/1.0',
         },
         body: JSON.stringify({
           test: true,
-          timestamp: new Date().toISOString()
-        })
+          timestamp: new Date().toISOString(),
+        }),
       });
 
       return {
         success: response.ok,
         error: !response.ok ? `HTTP ${response.status}` : undefined,
-        responseTime: Date.now() - startTime
+        responseTime: Date.now() - startTime,
       };
     } catch (error) {
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Request failed',
-        responseTime: Date.now() - startTime
+        responseTime: Date.now() - startTime,
       };
     }
   }
@@ -606,9 +621,11 @@ class WebhookManagementAPI {
   private async checkStripeWebhookHealth() {
     return {
       name: 'Stripe Webhooks',
-      status: process.env.STRIPE_SECRET_KEY && process.env.STRIPE_WEBHOOK_SECRET 
-        ? 'healthy' : 'unhealthy',
-      lastCheck: new Date()
+      status:
+        process.env.STRIPE_SECRET_KEY && process.env.STRIPE_WEBHOOK_SECRET
+          ? 'healthy'
+          : 'unhealthy',
+      lastCheck: new Date(),
     };
   }
 
@@ -616,7 +633,7 @@ class WebhookManagementAPI {
     return {
       name: 'Push Notifications',
       status: PushNotificationService.getPermissionStatus() ? 'healthy' : 'unhealthy',
-      lastCheck: new Date()
+      lastCheck: new Date(),
     };
   }
 
@@ -624,7 +641,7 @@ class WebhookManagementAPI {
     return {
       name: 'Monitoring Webhooks',
       status: 'healthy', // Could check actual monitoring endpoints
-      lastCheck: new Date()
+      lastCheck: new Date(),
     };
   }
 
@@ -637,13 +654,13 @@ class WebhookManagementAPI {
       return {
         name: 'Database',
         status: error ? 'unhealthy' : 'healthy',
-        lastCheck: new Date()
+        lastCheck: new Date(),
       };
     } catch (error) {
       return {
         name: 'Database',
         status: 'unhealthy',
-        lastCheck: new Date()
+        lastCheck: new Date(),
       };
     }
   }
@@ -666,7 +683,7 @@ class WebhookManagementAPI {
       .update({
         status: 'pending',
         retry_count: (event.retry_count || 0) + 1,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
       .eq('id', eventId);
 
@@ -680,30 +697,30 @@ const webhookAPI = WebhookManagementAPI.getInstance();
 export const webhookManagementRoutes = {
   // GET /api/webhooks/config
   getConfigs: webhookAPI.getWebhookConfigs.bind(webhookAPI),
-  
-  // GET /api/webhooks/stats  
+
+  // GET /api/webhooks/stats
   getStats: webhookAPI.getWebhookStats.bind(webhookAPI),
-  
+
   // GET /api/webhooks/events
   getEvents: webhookAPI.getWebhookEvents.bind(webhookAPI),
-  
+
   // POST /api/webhooks/test/:id
   testWebhook: webhookAPI.testWebhook.bind(webhookAPI),
-  
+
   // PATCH /api/webhooks/config/:id
   updateConfig: webhookAPI.updateWebhookConfig.bind(webhookAPI),
-  
+
   // POST /api/webhooks/config
   createConfig: webhookAPI.createWebhookConfig.bind(webhookAPI),
-  
+
   // DELETE /api/webhooks/config/:id
   deleteConfig: webhookAPI.deleteWebhookConfig.bind(webhookAPI),
-  
+
   // GET /api/webhooks/health
   getHealth: webhookAPI.getWebhookHealth.bind(webhookAPI),
-  
+
   // POST /api/webhooks/retry
-  retryEvents: webhookAPI.retryFailedEvents.bind(webhookAPI)
+  retryEvents: webhookAPI.retryFailedEvents.bind(webhookAPI),
 };
 
 export default WebhookManagementAPI;

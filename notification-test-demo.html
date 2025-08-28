@@ -1,495 +1,589 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>🔔 Relife Notification Test Demo</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-            color: #333;
-        }
+      body {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+        color: #333;
+      }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      }
 
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
 
-        .header h1 {
-            font-size: 2.5rem;
-            color: #667eea;
-            margin-bottom: 10px;
-        }
+      .header h1 {
+        font-size: 2.5rem;
+        color: #667eea;
+        margin-bottom: 10px;
+      }
 
-        .header p {
-            color: #666;
-            font-size: 1.1rem;
-        }
+      .header p {
+        color: #666;
+        font-size: 1.1rem;
+      }
 
-        .test-section {
-            margin-bottom: 30px;
-            padding: 20px;
-            background: #f8f9ff;
-            border-radius: 15px;
-            border-left: 5px solid #667eea;
-        }
+      .test-section {
+        margin-bottom: 30px;
+        padding: 20px;
+        background: #f8f9ff;
+        border-radius: 15px;
+        border-left: 5px solid #667eea;
+      }
 
-        .test-section h3 {
-            color: #667eea;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+      .test-section h3 {
+        color: #667eea;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
 
-        .test-btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            margin: 5px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
+      .test-btn {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 5px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      }
 
-        .test-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
+      .test-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+      }
 
-        .test-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
+      .test-btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
 
-        .status {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: 500;
-        }
+      .status {
+        margin-top: 15px;
+        padding: 10px;
+        border-radius: 8px;
+        font-weight: 500;
+      }
 
-        .status.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
+      .status.success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
 
-        .status.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
+      .status.error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
 
-        .status.info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
+      .status.info {
+        background: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+      }
 
-        .permission-status {
-            padding: 15px;
-            background: white;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
+      .permission-status {
+        padding: 15px;
+        background: white;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
 
-        .emoji {
-            font-size: 1.5em;
-        }
+      .emoji {
+        font-size: 1.5em;
+      }
 
-        .config-info {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
+      .config-info {
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 20px;
+      }
 
-        .config-info h4 {
-            color: #856404;
-            margin-bottom: 10px;
-        }
+      .config-info h4 {
+        color: #856404;
+        margin-bottom: 10px;
+      }
 
-        .config-info code {
-            background: #f1c40f;
-            padding: 2px 6px;
-            border-radius: 4px;
-            color: #2c3e50;
-        }
+      .config-info code {
+        background: #f1c40f;
+        padding: 2px 6px;
+        border-radius: 4px;
+        color: #2c3e50;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="header">
-            <h1>🔔 Notification Test Demo</h1>
-            <p>Test your Relife Smart Alarm notification system</p>
-        </div>
+      <div class="header">
+        <h1>🔔 Notification Test Demo</h1>
+        <p>Test your Relife Smart Alarm notification system</p>
+      </div>
 
-        <div class="permission-status">
-            <h3>📋 Notification Permission Status</h3>
-            <div id="permission-status">Checking permissions...</div>
-        </div>
+      <div class="permission-status">
+        <h3>📋 Notification Permission Status</h3>
+        <div id="permission-status">Checking permissions...</div>
+      </div>
 
-        <div class="test-section">
-            <h3><span class="emoji">🌐</span> Web Push Notifications</h3>
-            <p>Test browser push notifications using your configured VAPID keys.</p>
-            <button class="test-btn" onclick="testWebPush()">Test Web Push</button>
-            <button class="test-btn" onclick="requestNotificationPermission()">Request Permission</button>
-            <div id="web-push-status" class="status" style="display: none;"></div>
-        </div>
+      <div class="test-section">
+        <h3><span class="emoji">🌐</span> Web Push Notifications</h3>
+        <p>Test browser push notifications using your configured VAPID keys.</p>
+        <button class="test-btn" onclick="testWebPush()">Test Web Push</button>
+        <button class="test-btn" onclick="requestNotificationPermission()">
+          Request Permission
+        </button>
+        <div id="web-push-status" class="status" style="display: none"></div>
+      </div>
 
-        <div class="test-section">
-            <h3><span class="emoji">⏰</span> Alarm Notifications</h3>
-            <p>Test different types of alarm and reminder notifications.</p>
-            <button class="test-btn" onclick="testAlarmNotification()">Test Alarm Reminder</button>
-            <button class="test-btn" onclick="testMotivationalNotification()">Test Daily Motivation</button>
-            <button class="test-btn" onclick="testProgressNotification()">Test Weekly Progress</button>
-            <div id="alarm-status" class="status" style="display: none;"></div>
-        </div>
+      <div class="test-section">
+        <h3><span class="emoji">⏰</span> Alarm Notifications</h3>
+        <p>Test different types of alarm and reminder notifications.</p>
+        <button class="test-btn" onclick="testAlarmNotification()">
+          Test Alarm Reminder
+        </button>
+        <button class="test-btn" onclick="testMotivationalNotification()">
+          Test Daily Motivation
+        </button>
+        <button class="test-btn" onclick="testProgressNotification()">
+          Test Weekly Progress
+        </button>
+        <div id="alarm-status" class="status" style="display: none"></div>
+      </div>
 
-        <div class="test-section">
-            <h3><span class="emoji">🧠</span> Emotional AI Notifications</h3>
-            <p>Test AI-driven personalized notifications based on emotional state.</p>
-            <button class="test-btn" onclick="testEmotionalNotification('happy')">Test Happy Mood</button>
-            <button class="test-btn" onclick="testEmotionalNotification('stressed')">Test Stressed Mood</button>
-            <button class="test-btn" onclick="testEmotionalNotification('tired')">Test Tired Mood</button>
-            <div id="emotional-status" class="status" style="display: none;"></div>
-        </div>
+      <div class="test-section">
+        <h3><span class="emoji">🧠</span> Emotional AI Notifications</h3>
+        <p>Test AI-driven personalized notifications based on emotional state.</p>
+        <button class="test-btn" onclick="testEmotionalNotification('happy')">
+          Test Happy Mood
+        </button>
+        <button class="test-btn" onclick="testEmotionalNotification('stressed')">
+          Test Stressed Mood
+        </button>
+        <button class="test-btn" onclick="testEmotionalNotification('tired')">
+          Test Tired Mood
+        </button>
+        <div id="emotional-status" class="status" style="display: none"></div>
+      </div>
 
-        <div class="test-section">
-            <h3><span class="emoji">🔒</span> Secure Notifications</h3>
-            <p>Test notifications with security validation and encryption.</p>
-            <button class="test-btn" onclick="testSecureNotification()">Test Secure Notification</button>
-            <button class="test-btn" onclick="testRateLimiting()">Test Rate Limiting</button>
-            <div id="security-status" class="status" style="display: none;"></div>
-        </div>
+      <div class="test-section">
+        <h3><span class="emoji">🔒</span> Secure Notifications</h3>
+        <p>Test notifications with security validation and encryption.</p>
+        <button class="test-btn" onclick="testSecureNotification()">
+          Test Secure Notification
+        </button>
+        <button class="test-btn" onclick="testRateLimiting()">
+          Test Rate Limiting
+        </button>
+        <div id="security-status" class="status" style="display: none"></div>
+      </div>
 
-        <div class="test-section">
-            <h3><span class="emoji">⏰</span> Smart Timing Test</h3>
-            <p>Test context-aware notification timing and quiet hours.</p>
-            <button class="test-btn" onclick="testQuietHours()">Test Quiet Hours</button>
-            <button class="test-btn" onclick="testBatteryOptimization()">Test Battery Optimization</button>
-            <div id="timing-status" class="status" style="display: none;"></div>
-        </div>
+      <div class="test-section">
+        <h3><span class="emoji">⏰</span> Smart Timing Test</h3>
+        <p>Test context-aware notification timing and quiet hours.</p>
+        <button class="test-btn" onclick="testQuietHours()">Test Quiet Hours</button>
+        <button class="test-btn" onclick="testBatteryOptimization()">
+          Test Battery Optimization
+        </button>
+        <div id="timing-status" class="status" style="display: none"></div>
+      </div>
 
-        <div class="config-info">
-            <h4>💡 Configuration Tips</h4>
-            <ul>
-                <li>Run <code>npm run notifications:setup</code> to configure your environment</li>
-                <li>Run <code>npm run test:notifications</code> to validate your setup</li>
-                <li>Check your <code>.env.local</code> file for proper VAPID keys configuration</li>
-                <li>Make sure notification permissions are granted in your browser settings</li>
-            </ul>
-        </div>
+      <div class="config-info">
+        <h4>💡 Configuration Tips</h4>
+        <ul>
+          <li>
+            Run <code>npm run notifications:setup</code> to configure your environment
+          </li>
+          <li>Run <code>npm run test:notifications</code> to validate your setup</li>
+          <li>
+            Check your <code>.env.local</code> file for proper VAPID keys configuration
+          </li>
+          <li>
+            Make sure notification permissions are granted in your browser settings
+          </li>
+        </ul>
+      </div>
     </div>
 
     <script>
-        // Initialize notification system
-        let notificationPermission = 'default';
-        let serviceWorkerRegistration = null;
+      // Initialize notification system
+      let notificationPermission = 'default';
+      let serviceWorkerRegistration = null;
 
-        // Check notification support and permissions
-        function checkNotificationSupport() {
-            if ('Notification' in window) {
-                notificationPermission = Notification.permission;
-                updatePermissionStatus();
-            } else {
-                document.getElementById('permission-status').innerHTML = 
-                    '<span style="color: red;">❌ Notifications not supported in this browser</span>';
-            }
+      // Check notification support and permissions
+      function checkNotificationSupport() {
+        if ('Notification' in window) {
+          notificationPermission = Notification.permission;
+          updatePermissionStatus();
+        } else {
+          document.getElementById('permission-status').innerHTML =
+            '<span style="color: red;">❌ Notifications not supported in this browser</span>';
+        }
+      }
+
+      function updatePermissionStatus() {
+        const statusDiv = document.getElementById('permission-status');
+
+        switch (notificationPermission) {
+          case 'granted':
+            statusDiv.innerHTML =
+              '<span style="color: green;">✅ Notifications are enabled</span>';
+            break;
+          case 'denied':
+            statusDiv.innerHTML =
+              '<span style="color: red;">❌ Notifications are blocked. Enable them in browser settings.</span>';
+            break;
+          case 'default':
+            statusDiv.innerHTML =
+              '<span style="color: orange;">⚠️ Notification permission not requested yet</span>';
+            break;
+        }
+      }
+
+      // Request notification permission
+      async function requestNotificationPermission() {
+        if ('Notification' in window) {
+          const permission = await Notification.requestPermission();
+          notificationPermission = permission;
+          updatePermissionStatus();
+
+          if (permission === 'granted') {
+            showStatus(
+              'web-push-status',
+              'Notification permission granted successfully!',
+              'success'
+            );
+          } else {
+            showStatus(
+              'web-push-status',
+              'Notification permission denied. Please enable in browser settings.',
+              'error'
+            );
+          }
+        }
+      }
+
+      // Test web push notification
+      function testWebPush() {
+        if (notificationPermission !== 'granted') {
+          showStatus(
+            'web-push-status',
+            'Please grant notification permission first.',
+            'error'
+          );
+          return;
         }
 
-        function updatePermissionStatus() {
-            const statusDiv = document.getElementById('permission-status');
-            
-            switch (notificationPermission) {
-                case 'granted':
-                    statusDiv.innerHTML = '<span style="color: green;">✅ Notifications are enabled</span>';
-                    break;
-                case 'denied':
-                    statusDiv.innerHTML = '<span style="color: red;">❌ Notifications are blocked. Enable them in browser settings.</span>';
-                    break;
-                case 'default':
-                    statusDiv.innerHTML = '<span style="color: orange;">⚠️ Notification permission not requested yet</span>';
-                    break;
-            }
-        }
-
-        // Request notification permission
-        async function requestNotificationPermission() {
-            if ('Notification' in window) {
-                const permission = await Notification.requestPermission();
-                notificationPermission = permission;
-                updatePermissionStatus();
-                
-                if (permission === 'granted') {
-                    showStatus('web-push-status', 'Notification permission granted successfully!', 'success');
-                } else {
-                    showStatus('web-push-status', 'Notification permission denied. Please enable in browser settings.', 'error');
-                }
-            }
-        }
-
-        // Test web push notification
-        function testWebPush() {
-            if (notificationPermission !== 'granted') {
-                showStatus('web-push-status', 'Please grant notification permission first.', 'error');
-                return;
-            }
-
-            const notification = new Notification('🔔 Relife Test Notification', {
-                body: 'Your web push notifications are working perfectly!',
-                icon: '/favicon.ico',
-                badge: '/favicon.ico',
-                tag: 'relife-test',
-                requireInteraction: true,
-                actions: [
-                    {
-                        action: 'view',
-                        title: 'View App'
-                    },
-                    {
-                        action: 'dismiss',
-                        title: 'Dismiss'
-                    }
-                ]
-            });
-
-            notification.onclick = function() {
-                window.focus();
-                notification.close();
-            };
-
-            showStatus('web-push-status', 'Test notification sent! Check your system notifications.', 'success');
-        }
-
-        // Test alarm notification
-        function testAlarmNotification() {
-            if (notificationPermission !== 'granted') {
-                showStatus('alarm-status', 'Please grant notification permission first.', 'error');
-                return;
-            }
-
-            const notification = new Notification('⏰ Wake Up Time!', {
-                body: 'Good morning! Your Relife alarm is ready to start your day.',
-                icon: '/favicon.ico',
-                tag: 'relife-alarm',
-                requireInteraction: true,
-                vibrate: [200, 100, 200]
-            });
-
-            showStatus('alarm-status', 'Alarm notification sent successfully!', 'success');
-        }
-
-        // Test motivational notification
-        function testMotivationalNotification() {
-            if (notificationPermission !== 'granted') {
-                showStatus('alarm-status', 'Please grant notification permission first.', 'error');
-                return;
-            }
-
-            const motivationalMessages = [
-                "💪 You've got this! Start your day with confidence.",
-                "🌟 Today is full of possibilities. Make it count!",
-                "🚀 Your future self will thank you for the progress you make today.",
-                "✨ Small steps lead to big achievements. Keep going!"
-            ];
-
-            const message = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
-
-            const notification = new Notification('🌅 Daily Motivation', {
-                body: message,
-                icon: '/favicon.ico',
-                tag: 'relife-motivation'
-            });
-
-            showStatus('alarm-status', 'Motivational notification sent!', 'success');
-        }
-
-        // Test progress notification
-        function testProgressNotification() {
-            if (notificationPermission !== 'granted') {
-                showStatus('alarm-status', 'Please grant notification permission first.', 'error');
-                return;
-            }
-
-            const notification = new Notification('📊 Weekly Progress Update', {
-                body: 'Great job this week! You completed 85% of your wake-up goals and improved your sleep quality by 12%.',
-                icon: '/favicon.ico',
-                tag: 'relife-progress'
-            });
-
-            showStatus('alarm-status', 'Progress notification sent!', 'success');
-        }
-
-        // Test emotional AI notifications
-        function testEmotionalNotification(mood) {
-            if (notificationPermission !== 'granted') {
-                showStatus('emotional-status', 'Please grant notification permission first.', 'error');
-                return;
-            }
-
-            const emotionalMessages = {
-                happy: {
-                    title: '😊 You seem happy today!',
-                    body: 'Your positive energy is contagious! Keep spreading those good vibes and maintain your healthy sleep routine.'
-                },
-                stressed: {
-                    title: '🧘 Feeling stressed?',
-                    body: 'Take a deep breath. Remember, a good night\'s sleep can help reduce stress and improve your mood tomorrow.'
-                },
-                tired: {
-                    title: '😴 Time to recharge',
-                    body: 'You seem tired. Consider an earlier bedtime tonight to help your body and mind recover.'
-                }
-            };
-
-            const message = emotionalMessages[mood];
-
-            const notification = new Notification(message.title, {
-                body: message.body,
-                icon: '/favicon.ico',
-                tag: `relife-emotional-${mood}`
-            });
-
-            showStatus('emotional-status', `Emotional AI notification (${mood}) sent successfully!`, 'success');
-        }
-
-        // Test secure notification
-        function testSecureNotification() {
-            if (notificationPermission !== 'granted') {
-                showStatus('security-status', 'Please grant notification permission first.', 'error');
-                return;
-            }
-
-            const notification = new Notification('🔒 Secure Notification Test', {
-                body: 'This is a cryptographically signed notification with timestamp validation.',
-                icon: '/favicon.ico',
-                tag: 'relife-secure-test',
-                data: {
-                    timestamp: Date.now(),
-                    signature: 'mock-signature-hash',
-                    encrypted: true
-                }
-            });
-
-            showStatus('security-status', 'Secure notification sent with validation!', 'success');
-        }
-
-        // Test rate limiting
-        function testRateLimiting() {
-            showStatus('security-status', 'Testing rate limiting - sending 5 notifications rapidly...', 'info');
-            
-            for (let i = 1; i <= 5; i++) {
-                setTimeout(() => {
-                    if (notificationPermission === 'granted') {
-                        new Notification(`Rate Limit Test ${i}/5`, {
-                            body: `Testing notification delivery limits. Message ${i}`,
-                            tag: `rate-limit-${i}`,
-                            silent: true
-                        });
-                    }
-                    
-                    if (i === 5) {
-                        showStatus('security-status', 'Rate limiting test complete! Check if all 5 notifications were delivered.', 'success');
-                    }
-                }, i * 500);
-            }
-        }
-
-        // Test quiet hours
-        function testQuietHours() {
-            const now = new Date();
-            const hour = now.getHours();
-            
-            // Simulate quiet hours (22:00-07:00 by default)
-            const isQuietTime = hour >= 22 || hour < 7;
-            
-            if (isQuietTime) {
-                showStatus('timing-status', `🌙 Quiet hours detected (${hour}:${now.getMinutes().toString().padStart(2, '0')}). Notification would be delayed until 07:00.`, 'info');
-            } else {
-                showStatus('timing-status', `☀️ Active hours (${hour}:${now.getMinutes().toString().padStart(2, '0')}). Notification would be delivered immediately.`, 'success');
-                
-                if (notificationPermission === 'granted') {
-                    new Notification('⏰ Smart Timing Test', {
-                        body: 'This notification was delivered during active hours.',
-                        tag: 'smart-timing-test'
-                    });
-                }
-            }
-        }
-
-        // Test battery optimization
-        function testBatteryOptimization() {
-            if ('getBattery' in navigator) {
-                navigator.getBattery().then(battery => {
-                    const level = Math.round(battery.level * 100);
-                    const charging = battery.charging;
-                    
-                    let message = `Battery: ${level}% (${charging ? 'charging' : 'not charging'})`;
-                    let statusType = 'info';
-                    
-                    if (level < 20 && !charging) {
-                        message += ' - Notifications would be reduced to preserve battery.';
-                        statusType = 'info';
-                    } else {
-                        message += ' - Normal notification delivery enabled.';
-                        statusType = 'success';
-                    }
-                    
-                    showStatus('timing-status', `🔋 ${message}`, statusType);
-                });
-            } else {
-                showStatus('timing-status', '🔋 Battery API not supported in this browser. Battery optimization would use system-level detection.', 'info');
-            }
-        }
-
-        // Helper function to show status messages
-        function showStatus(elementId, message, type) {
-            const statusDiv = document.getElementById(elementId);
-            statusDiv.textContent = message;
-            statusDiv.className = `status ${type}`;
-            statusDiv.style.display = 'block';
-            
-            // Auto-hide success messages after 5 seconds
-            if (type === 'success') {
-                setTimeout(() => {
-                    statusDiv.style.display = 'none';
-                }, 5000);
-            }
-        }
-
-        // Initialize when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            checkNotificationSupport();
+        const notification = new Notification('🔔 Relife Test Notification', {
+          body: 'Your web push notifications are working perfectly!',
+          icon: '/favicon.ico',
+          badge: '/favicon.ico',
+          tag: 'relife-test',
+          requireInteraction: true,
+          actions: [
+            {
+              action: 'view',
+              title: 'View App',
+            },
+            {
+              action: 'dismiss',
+              title: 'Dismiss',
+            },
+          ],
         });
+
+        notification.onclick = function () {
+          window.focus();
+          notification.close();
+        };
+
+        showStatus(
+          'web-push-status',
+          'Test notification sent! Check your system notifications.',
+          'success'
+        );
+      }
+
+      // Test alarm notification
+      function testAlarmNotification() {
+        if (notificationPermission !== 'granted') {
+          showStatus(
+            'alarm-status',
+            'Please grant notification permission first.',
+            'error'
+          );
+          return;
+        }
+
+        const notification = new Notification('⏰ Wake Up Time!', {
+          body: 'Good morning! Your Relife alarm is ready to start your day.',
+          icon: '/favicon.ico',
+          tag: 'relife-alarm',
+          requireInteraction: true,
+          vibrate: [200, 100, 200],
+        });
+
+        showStatus('alarm-status', 'Alarm notification sent successfully!', 'success');
+      }
+
+      // Test motivational notification
+      function testMotivationalNotification() {
+        if (notificationPermission !== 'granted') {
+          showStatus(
+            'alarm-status',
+            'Please grant notification permission first.',
+            'error'
+          );
+          return;
+        }
+
+        const motivationalMessages = [
+          "💪 You've got this! Start your day with confidence.",
+          '🌟 Today is full of possibilities. Make it count!',
+          '🚀 Your future self will thank you for the progress you make today.',
+          '✨ Small steps lead to big achievements. Keep going!',
+        ];
+
+        const message =
+          motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
+
+        const notification = new Notification('🌅 Daily Motivation', {
+          body: message,
+          icon: '/favicon.ico',
+          tag: 'relife-motivation',
+        });
+
+        showStatus('alarm-status', 'Motivational notification sent!', 'success');
+      }
+
+      // Test progress notification
+      function testProgressNotification() {
+        if (notificationPermission !== 'granted') {
+          showStatus(
+            'alarm-status',
+            'Please grant notification permission first.',
+            'error'
+          );
+          return;
+        }
+
+        const notification = new Notification('📊 Weekly Progress Update', {
+          body: 'Great job this week! You completed 85% of your wake-up goals and improved your sleep quality by 12%.',
+          icon: '/favicon.ico',
+          tag: 'relife-progress',
+        });
+
+        showStatus('alarm-status', 'Progress notification sent!', 'success');
+      }
+
+      // Test emotional AI notifications
+      function testEmotionalNotification(mood) {
+        if (notificationPermission !== 'granted') {
+          showStatus(
+            'emotional-status',
+            'Please grant notification permission first.',
+            'error'
+          );
+          return;
+        }
+
+        const emotionalMessages = {
+          happy: {
+            title: '😊 You seem happy today!',
+            body: 'Your positive energy is contagious! Keep spreading those good vibes and maintain your healthy sleep routine.',
+          },
+          stressed: {
+            title: '🧘 Feeling stressed?',
+            body: "Take a deep breath. Remember, a good night's sleep can help reduce stress and improve your mood tomorrow.",
+          },
+          tired: {
+            title: '😴 Time to recharge',
+            body: 'You seem tired. Consider an earlier bedtime tonight to help your body and mind recover.',
+          },
+        };
+
+        const message = emotionalMessages[mood];
+
+        const notification = new Notification(message.title, {
+          body: message.body,
+          icon: '/favicon.ico',
+          tag: `relife-emotional-${mood}`,
+        });
+
+        showStatus(
+          'emotional-status',
+          `Emotional AI notification (${mood}) sent successfully!`,
+          'success'
+        );
+      }
+
+      // Test secure notification
+      function testSecureNotification() {
+        if (notificationPermission !== 'granted') {
+          showStatus(
+            'security-status',
+            'Please grant notification permission first.',
+            'error'
+          );
+          return;
+        }
+
+        const notification = new Notification('🔒 Secure Notification Test', {
+          body: 'This is a cryptographically signed notification with timestamp validation.',
+          icon: '/favicon.ico',
+          tag: 'relife-secure-test',
+          data: {
+            timestamp: Date.now(),
+            signature: 'mock-signature-hash',
+            encrypted: true,
+          },
+        });
+
+        showStatus(
+          'security-status',
+          'Secure notification sent with validation!',
+          'success'
+        );
+      }
+
+      // Test rate limiting
+      function testRateLimiting() {
+        showStatus(
+          'security-status',
+          'Testing rate limiting - sending 5 notifications rapidly...',
+          'info'
+        );
+
+        for (let i = 1; i <= 5; i++) {
+          setTimeout(() => {
+            if (notificationPermission === 'granted') {
+              new Notification(`Rate Limit Test ${i}/5`, {
+                body: `Testing notification delivery limits. Message ${i}`,
+                tag: `rate-limit-${i}`,
+                silent: true,
+              });
+            }
+
+            if (i === 5) {
+              showStatus(
+                'security-status',
+                'Rate limiting test complete! Check if all 5 notifications were delivered.',
+                'success'
+              );
+            }
+          }, i * 500);
+        }
+      }
+
+      // Test quiet hours
+      function testQuietHours() {
+        const now = new Date();
+        const hour = now.getHours();
+
+        // Simulate quiet hours (22:00-07:00 by default)
+        const isQuietTime = hour >= 22 || hour < 7;
+
+        if (isQuietTime) {
+          showStatus(
+            'timing-status',
+            `🌙 Quiet hours detected (${hour}:${now.getMinutes().toString().padStart(2, '0')}). Notification would be delayed until 07:00.`,
+            'info'
+          );
+        } else {
+          showStatus(
+            'timing-status',
+            `☀️ Active hours (${hour}:${now.getMinutes().toString().padStart(2, '0')}). Notification would be delivered immediately.`,
+            'success'
+          );
+
+          if (notificationPermission === 'granted') {
+            new Notification('⏰ Smart Timing Test', {
+              body: 'This notification was delivered during active hours.',
+              tag: 'smart-timing-test',
+            });
+          }
+        }
+      }
+
+      // Test battery optimization
+      function testBatteryOptimization() {
+        if ('getBattery' in navigator) {
+          navigator.getBattery().then((battery) => {
+            const level = Math.round(battery.level * 100);
+            const charging = battery.charging;
+
+            let message = `Battery: ${level}% (${charging ? 'charging' : 'not charging'})`;
+            let statusType = 'info';
+
+            if (level < 20 && !charging) {
+              message += ' - Notifications would be reduced to preserve battery.';
+              statusType = 'info';
+            } else {
+              message += ' - Normal notification delivery enabled.';
+              statusType = 'success';
+            }
+
+            showStatus('timing-status', `🔋 ${message}`, statusType);
+          });
+        } else {
+          showStatus(
+            'timing-status',
+            '🔋 Battery API not supported in this browser. Battery optimization would use system-level detection.',
+            'info'
+          );
+        }
+      }
+
+      // Helper function to show status messages
+      function showStatus(elementId, message, type) {
+        const statusDiv = document.getElementById(elementId);
+        statusDiv.textContent = message;
+        statusDiv.className = `status ${type}`;
+        statusDiv.style.display = 'block';
+
+        // Auto-hide success messages after 5 seconds
+        if (type === 'success') {
+          setTimeout(() => {
+            statusDiv.style.display = 'none';
+          }, 5000);
+        }
+      }
+
+      // Initialize when page loads
+      document.addEventListener('DOMContentLoaded', function () {
+        checkNotificationSupport();
+      });
     </script>
-</body>
+  </body>
 </html>

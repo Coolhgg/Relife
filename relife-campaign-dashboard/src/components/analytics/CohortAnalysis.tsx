@@ -153,7 +153,8 @@ export function CohortAnalysis({ className }: CohortAnalysisProps) {
     return sum / cohortData.length;
   });
 
-  return (<Card className={className}>
+  return (
+    <Card className={className}>
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
@@ -270,7 +271,9 @@ export function CohortAnalysis({ className }: CohortAnalysisProps) {
                 <td className="p-2">Average</td>
                 <td className="p-2 text-center">
                   <Badge variant="outline">
-                    {Math.round(_cohortData.reduce((sum, c) => sum + c.size, 0) / cohortData.length
+                    {Math.round(
+                      _cohortData.reduce((sum, c) => sum + c.size, 0) /
+                        cohortData.length
                     ).toLocaleString()}
                   </Badge>
                 </td>

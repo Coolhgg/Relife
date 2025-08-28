@@ -14,7 +14,11 @@ const ToggleGroupContext = React.createContext<VariantProps<typeof toggleVariant
 });
 
 function ToggleGroup({
-  className, _variant, _size, _children, ...props
+  className,
+  _variant,
+  _size,
+  _children,
+  ...props
 }: React.ComponentProps<typeof ToggleGroupPrimitive.Root> &
   VariantProps<typeof toggleVariants>) {
   return (
@@ -36,7 +40,11 @@ function ToggleGroup({
 }
 
 function ToggleGroupItem({
-  className, children, _variant, _size, ...props
+  className,
+  children,
+  _variant,
+  _size,
+  ...props
 }: React.ComponentProps<typeof ToggleGroupPrimitive.Item> &
   VariantProps<typeof toggleVariants>) {
   const context = React.useContext(ToggleGroupContext);
