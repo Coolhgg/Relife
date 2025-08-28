@@ -71,12 +71,12 @@ jobs:
           # Create package-lock.json if it doesn't exist for npm cache compatibility
           if [ ! -f package-lock.json ] && [ -f bun.lock ]; then
             echo "Creating package-lock.json for npm cache compatibility..."
-            npm install --package-lock-only --ignore-scripts
+            npm install --package-lock-only --ignore-scripts --legacy-peer-deps
           fi
           # Also handle dashboard
           if [ ! -f relife-campaign-dashboard/package-lock.json ] && [ -f relife-campaign-dashboard/bun.lock ]; then
             cd relife-campaign-dashboard
-            npm install --package-lock-only --ignore-scripts
+            npm install --package-lock-only --ignore-scripts --legacy-peer-deps
             cd ..
           fi
 
@@ -119,7 +119,7 @@ jobs:
           # Create package-lock.json if it doesn't exist for npm cache compatibility
           if [ ! -f package-lock.json ] && [ -f bun.lock ]; then
             echo "Creating package-lock.json for npm cache compatibility..."
-            npm install --package-lock-only --ignore-scripts
+            npm install --package-lock-only --ignore-scripts --legacy-peer-deps
           fi
 
       - name: Setup Node.js
@@ -227,11 +227,11 @@ jobs:
         run: |
           if [ ! -f package-lock.json ] && [ -f bun.lock ]; then
             echo "Creating package-lock.json for npm cache compatibility..."
-            npm install --package-lock-only --ignore-scripts
+            npm install --package-lock-only --ignore-scripts --legacy-peer-deps
           fi
           if [ ! -f relife-campaign-dashboard/package-lock.json ] && [ -f relife-campaign-dashboard/bun.lock ]; then
             cd relife-campaign-dashboard
-            npm install --package-lock-only --ignore-scripts
+            npm install --package-lock-only --ignore-scripts --legacy-peer-deps
             cd ..
           fi
 
@@ -245,7 +245,7 @@ jobs:
         run: |
           # Create npm lock file for cache compatibility
           if [ ! -f package-lock.json ] && [ -f bun.lock ]; then
-            npm install --package-lock-only --ignore-scripts
+            npm install --package-lock-only --ignore-scripts --legacy-peer-deps
           fi
           bun install --frozen-lockfile || bun install --frozen-lockfile || bun install
 
