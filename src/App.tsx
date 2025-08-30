@@ -90,7 +90,7 @@ class EmailCampaignService {
 
   async detectPersona(_user: any): Promise<PersonaDetectionResult> {
     let persona: PersonaType = 'struggling_sam';
-    const tier = user?.subscriptionTier || user?.subscription?.tier || 'free';
+    const tier = _user?.subscriptionTier || _user?.subscription?.tier || 'free';
 
     switch (tier) {
       case 'free':
@@ -298,7 +298,7 @@ function AppContent() {
         });
       } catch (_error) {
         ErrorHandler.handleError(
-          error instanceof Error ? _error : new Error(String(_error)),
+          _error instanceof Error ? _error : new Error(String(_error)),
           'Failed to refresh rewards system',
           { context: 'rewards_refresh' }
         );
@@ -349,7 +349,7 @@ function AppContent() {
           await refreshRewardsSystem(savedAlarms);
         } catch (_error) {
           ErrorHandler.handleError(
-            error instanceof Error ? _error : new Error(String(_error)),
+            _error instanceof Error ? _error : new Error(String(_error)),
             'Remote alarm loading failed, using offline alarms',
             { context: 'load_remote_alarms', metadata: { userId: auth.user.id } }
           );
@@ -372,7 +372,7 @@ function AppContent() {
       }
     } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? _error : new Error(String(_error)),
+        _error instanceof Error ? _error : new Error(String(_error)),
         'Failed to load user alarms',
         { context: 'load_user_alarms', metadata: { userId: auth.user.id } }
       );
@@ -406,18 +406,18 @@ function AppContent() {
         const duration = performance.now() - startTime;
         analytics.trackAlarmAction('snooze', alarmId, {
           success: false,
-          error: error instanceof Error ? _error.message : String(_error),
+          error: _error instanceof Error ? _error.message : String(_error),
           duration,
         });
         analytics.trackError(
-          error instanceof Error ? error : new Error(String(_error)),
+          _error instanceof Error ? _error : new Error(String(_error)),
           {
             action: 'snooze_alarm',
           }
         );
 
         ErrorHandler.handleError(
-          error instanceof Error ? error : new Error(String(_error)),
+          _error instanceof Error ? _error : new Error(String(_error)),
           'Failed to snooze alarm',
           {
             context: 'snooze_alarm',
@@ -614,7 +614,7 @@ function AppContent() {
 
         // Set up service worker message listener
         navigator.serviceWorker.addEventListener('message', event => {
-          const { type, data } = _event.data;
+          const { type, data } = event.data;
 
           switch (type) {
             case 'ALARM_TRIGGERED':
@@ -680,7 +680,7 @@ function AppContent() {
       } catch (_error) {
         console.error('App: Service worker registration failed:', _error);
         ErrorHandler.handleError(
-          error instanceof Error ? _error : new Error(String(_error)),
+          _error instanceof Error ? _error : new Error(String(_error)),
           'Enhanced service worker registration failed',
           { context: 'service_worker_registration' }
         );
@@ -721,7 +721,7 @@ function AppContent() {
             }
           } catch (_error) {
             ErrorHandler.handleError(
-              error instanceof Error ? _error : new Error(String(_error)),
+              _error instanceof Error ? _error : new Error(String(_error)),
               'Failed to sync offline change',
               {
                 context: 'sync_offline_change',
@@ -748,7 +748,7 @@ function AppContent() {
       }
     } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? _error : new Error(String(_error)),
+        _error instanceof Error ? _error : new Error(String(_error)),
         'Failed to sync offline changes'
       );
       setSyncStatus('_error');
@@ -822,7 +822,7 @@ function AppContent() {
       });
     } catch (_error) {
       ErrorHandler.handleError(
-        error instanceof Error ? _error : new Error(String(_error)),
+        _error instanceof Error ? _error : new Error(String(_error)),
         'Failed to initialize accessibility services',
         { context: 'accessibility_initialization' }
       );
@@ -1055,7 +1055,7 @@ function AppContent() {
         setIsInitialized(true);
       } catch (_error) {
         ErrorHandler.handleError(
-          error instanceof Error ? _error : new Error(String(_error)),
+          _error instanceof Error ? _error : new Error(String(_error)),
           'Failed to initialize app',
           {
             context: 'app_initialization',
@@ -1364,16 +1364,16 @@ function AppContent() {
       // Track error and performance
       const duration = appAnalytics.endPerformanceMarker('alarm_creation', {
         success: false,
-        error: error instanceof Error ? _error.message : String(_error),
+        error: _error instanceof Error ? _error.message : String(_error),
       });
 
       appAnalytics.trackAlarmAction('create', 'unknown', {
         success: false,
-        error: error instanceof Error ? _error.message : String(_error),
+        error: _error instanceof Error ? _error.message : String(_error),
         duration,
       });
       appAnalytics.trackError(
-        error instanceof Error ? error : new Error(String(_error)),
+        _error instanceof Error ? _error : new Error(String(_error)),
         {
           action: 'create_alarm',
           alarmData,
@@ -1381,7 +1381,7 @@ function AppContent() {
       );
 
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(_error)),
+        _error instanceof Error ? _error : new Error(String(_error)),
         'Failed to create alarm',
         {
           context: 'create_alarm',
@@ -1471,15 +1471,18 @@ function AppContent() {
       const duration = performance.now() - startTime;
       analytics.trackAlarmAction('edit', editingAlarm?.id || 'unknown', {
         success: false,
-        error: error instanceof Error ? _error.message : String(_error),
+        error: _error instanceof Error ? _error.message : String(_error),
         duration,
       });
-      analytics.trackError(error instanceof Error ? error : new Error(String(_error)), {
-        action: 'edit_alarm',
-      });
+      analytics.trackError(
+        _error instanceof Error ? _error : new Error(String(_error)),
+        {
+          action: 'edit_alarm',
+        }
+      );
 
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(_error)),
+        _error instanceof Error ? _error : new Error(String(_error)),
         'Failed to edit alarm',
         {
           context: 'edit_alarm',
@@ -1547,15 +1550,18 @@ function AppContent() {
       const duration = performance.now() - startTime;
       analytics.trackAlarmAction('delete', alarmId, {
         success: false,
-        error: error instanceof Error ? _error.message : String(_error),
+        error: _error instanceof Error ? _error.message : String(_error),
         duration,
       });
-      analytics.trackError(error instanceof Error ? error : new Error(String(_error)), {
-        action: 'delete_alarm',
-      });
+      analytics.trackError(
+        _error instanceof Error ? _error : new Error(String(_error)),
+        {
+          action: 'delete_alarm',
+        }
+      );
 
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(_error)),
+        _error instanceof Error ? _error : new Error(String(_error)),
         'Failed to delete alarm',
         {
           context: 'delete_alarm',
@@ -1635,15 +1641,18 @@ function AppContent() {
       analytics.trackAlarmAction('toggle', alarmId, {
         success: false,
         enabled,
-        error: error instanceof Error ? _error.message : String(_error),
+        error: _error instanceof Error ? _error.message : String(_error),
         duration,
       });
-      analytics.trackError(error instanceof Error ? error : new Error(String(_error)), {
-        action: 'toggle_alarm',
-      });
+      analytics.trackError(
+        _error instanceof Error ? _error : new Error(String(_error)),
+        {
+          action: 'toggle_alarm',
+        }
+      );
 
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(_error)),
+        _error instanceof Error ? _error : new Error(String(_error)),
         'Failed to toggle alarm',
         {
           context: 'toggle_alarm',
@@ -1706,16 +1715,16 @@ function AppContent() {
         analytics.trackAlarmAction('dismiss', alarmId, {
           success: false,
           method,
-          error: error instanceof Error ? _error.message : String(_error),
+          error: _error instanceof Error ? _error.message : String(_error),
           duration,
         });
         analytics.trackError(
-          error instanceof Error ? error : new Error(String(_error)),
+          _error instanceof Error ? _error : new Error(String(_error)),
           { action: 'dismiss_alarm' }
         );
 
         ErrorHandler.handleError(
-          error instanceof Error ? error : new Error(String(_error)),
+          _error instanceof Error ? _error : new Error(String(_error)),
           'Failed to dismiss alarm',
           {
             context: 'dismiss_alarm',
