@@ -87,7 +87,15 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [autoDetectEnabled, setAutoDetectEnabled] = useState(() => {
     const stored = localStorage.getItem('language-auto-detect');
-    return stored !== null ? JSON.parse(stored) : enableAutoDetect;
+    if (stored !== null) {
+      try {
+        return JSON.parse(stored);
+      } catch (error) {
+        console.error('Failed to parse language-auto-detect from localStorage:', error);
+        return enableAutoDetect;
+      }
+    }
+    return enableAutoDetect;
   });
 
   // Current language state

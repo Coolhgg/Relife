@@ -240,7 +240,15 @@ function AppContent() {
   const [_tabProtectionEnabled, setTabProtectionEnabled] = useState(() => {
     // Get from localStorage or default to true
     const stored = localStorage.getItem('tabProtectionEnabled');
-    return stored !== null ? JSON.parse(stored) : true;
+    if (stored !== null) {
+      try {
+        return JSON.parse(stored);
+      } catch (error) {
+        console.error('Failed to parse tabProtectionEnabled from localStorage:', error);
+        return true;
+      }
+    }
+    return true;
   });
 
   // Sync alarms with enhanced service worker when they change
@@ -1210,7 +1218,15 @@ function AppContent() {
   useEffect(() => {
     const handleStorageChange = () => {
       const stored = localStorage.getItem('tabProtectionEnabled');
-      const enabled = stored !== null ? JSON.parse(stored) : true;
+      let enabled = true;
+      if (stored !== null) {
+        try {
+          enabled = JSON.parse(stored);
+        } catch (error) {
+          console.error('Failed to parse tabProtectionEnabled from localStorage:', error);
+          enabled = true;
+        }
+      }
       setTabProtectionEnabled(enabled);
     };
 

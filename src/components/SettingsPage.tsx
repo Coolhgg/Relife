@@ -91,7 +91,15 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
   const [_tabProtectionEnabled, _setTabProtectionEnabled] = useState(() => {
     // Get from localStorage or default to true
     const stored = localStorage.getItem('tabProtectionEnabled');
-    return stored !== null ? JSON.parse(stored) : true;
+    if (stored !== null) {
+      try {
+        return JSON.parse(stored);
+      } catch (error) {
+        console.error('Failed to parse tabProtectionEnabled from localStorage:', error);
+        return true;
+      }
+    }
+    return true;
   });
 
   const {
