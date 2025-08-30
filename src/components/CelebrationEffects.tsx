@@ -112,7 +112,6 @@ const CelebrationEffects: React.FC<CelebrationEffectsProps> = ({
           Math.floor(Math.random() * 4)
         ] as any,
       };
-      // eslint-disable-next-line react-hooks/exhaustive-deps -- auto: manual review required; refs: defaultColors
     },
     [config]
   );

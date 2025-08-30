@@ -451,7 +451,7 @@ export class StorageMigrationService {
     // Backup all legacy keys
     for (const key of this.LEGACY_KEYS) {
       // Try encrypted storage first
-      let data = SecurityService.secureStorageGet(key);
+      const data = SecurityService.secureStorageGet(key);
       if (data) {
         backup.data[key] = { encrypted: true, data };
       } else {
