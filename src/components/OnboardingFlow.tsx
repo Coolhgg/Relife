@@ -485,7 +485,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                           : 'bg-gray-300 dark:bg-gray-600'
                       }`}
                       role="img"
-                      aria-label={`Step ${index + 1}: ${stepNames[index]} - ${isActive ? 'current' : isCompleted ? 'completed' : 'pending'}`}
+                      aria-label={`Step ${index + 1}: ${stepNames[index]}`}
                     />
                   )}
                 </li>
