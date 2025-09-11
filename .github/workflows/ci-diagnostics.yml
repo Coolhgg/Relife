@@ -1,0 +1,55 @@
+name: "CI Diagnostics"
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  checks: read
+
+jobs:
+  diag:
+    name: Diagnostics
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          check-latest: true
+      - name: Try Bun (optional)
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+        continue-on-error: true
+      - name: Print tool versions
+        run: |
+          echo "node: $(node -v || true)"
+          echo "npm:  $(npm -v || true)"
+          echo "bun:  $(bun -v || true)"
+      - name: Hash lockfiles
+        run: |
+          for f in bun.lock bun.lockb package-lock.json pnpm-lock.yaml yarn.lock; do
+            if [ -f "$f" ]; then shasum "$f" || true; fi
+          done
+      - name: Run CI commands
+        id: run_ci
+        run: |
+          set -o pipefail
+          { ${CI_COMMANDS} 2>ci-stderr.log | tee ci-stdout.log; } || echo "cmd_exit=$?" > ci-exit.txt
+        env:
+          CI_COMMANDS: "bun install && bun run test && bun run build"
+      - name: Collect logs
+        if: always()
+        run: |
+          echo "exit_code=$(cat ci-exit.txt 2>/dev/null | sed 's/[^0-9]//g' || echo 0)" > diag-summary.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ci-diagnostics-logs
+          path: |
+            ci-stdout.log
+            ci-stderr.log
+            diag-summary.txt
