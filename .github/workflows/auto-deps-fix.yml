@@ -1,0 +1,46 @@
+name: Auto Fix Missing Dependencies
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: auto-deps-fix-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  auto-deps:
+    runs-on: ubuntu-latest
+    env:
+      WORK_BRANCH: fix/deps-${{ github.run_id }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: "latest"
+      - name: Auto-fix deps (root)
+        env:
+          PROJECT_DIR: "."
+          ALLOW_PR_CREATE: ${{ github.event_name == 'push' && 'true' || 'false' }}
+        run: |
+          bash scripts/ci/auto-deps-fix.sh
+      - name: Auto-fix deps (relife-campaign-dashboard)
+        env:
+          PROJECT_DIR: "relife-campaign-dashboard"
+          ALLOW_PR_CREATE: ${{ github.event_name == 'push' && 'true' || 'false' }}
+        run: |
+          bash scripts/ci/auto-deps-fix.sh
