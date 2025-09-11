@@ -40,7 +40,7 @@ jobs:
           set -o pipefail
           { ${CI_COMMANDS} 2>ci-stderr.log | tee ci-stdout.log; } || echo "cmd_exit=$?" > ci-exit.txt
         env:
-          CI_COMMANDS: "npm ci && npm test && npm run build"
+          CI_COMMANDS: "bun install && bun run test && bun run build"
       - name: Collect logs
         if: always()
         run: |
