@@ -1,4 +1,4 @@
-# Enhanced CI/CD Pipeline with Comprehensive Service Testing
+# Enhanced CI/CD Pipeline with Comprehensive Service Testing (npm)
 # Includes the new AlarmService, VoiceService, and SubscriptionService test suites
 
 name: 🧪 Enhanced Testing & Deployment Pipeline
@@ -38,27 +38,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: ${{ matrix.node-version }}
+          check-latest: true
+          cache: npm
 
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.bun/install/cache
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
-          restore-keys: |
-            ${{ runner.os }}-bun-
-
-      - name: Install dependencies (with lockfile flexibility)
+      - name: Install dependencies
         run: |
           echo "🔧 Installing dependencies..."
-          # Try frozen lockfile first, fallback to regular install for dependency PRs
-          if ! bun install --frozen-lockfile; then
-            echo "⚠️ Lockfile changed (expected for dependency updates), installing with updates..."
-            bun install
-          fi
+          npm ci || npm install
 
       - name: Check dependency compatibility
         run: |
@@ -70,14 +60,14 @@ jobs:
           fi
 
       - name: Type checking
-        run: bun run type-check
+        run: npm run type-check
 
       - name: Lint code
-        run: bun run lint
+        run: npm run lint
 
       - name: Format check
         run: |
-          if bun run format:check; then
+          if npm run format:check; then
             echo "✅ Format check passed"
           else
             echo "⚠️ Format check failed, but continuing..."
@@ -86,26 +76,25 @@ jobs:
       - name: Run Core Service Tests
         run: |
           echo "🧪 Running comprehensive service tests..."
-          # Check if test files exist before running
           if [ -f "src/services/__tests__/alarm.test.ts" ]; then
-            bun test src/services/__tests__/alarm.test.ts --verbose
+            npm test -- src/services/__tests__/alarm.test.ts
           fi
           if [ -f "src/services/__tests__/voice.test.ts" ]; then
-            bun test src/services/__tests__/voice.test.ts --verbose
+            npm test -- src/services/__tests__/voice.test.ts
           fi
           if [ -f "src/services/__tests__/subscription.test.ts" ]; then
-            bun test src/services/__tests__/subscription.test.ts --verbose
+            npm test -- src/services/__tests__/subscription.test.ts
           fi
 
       - name: Run Unit Tests with Coverage
-        run: bun run test:coverage
+        run: npm run test:coverage
         env:
           NODE_ENV: test
 
       - name: Run Integration Tests
         run: |
           echo "🔗 Running integration tests for critical user flows..."
-          bun run test:integration:coverage
+          npm run test:integration:coverage
         env:
           NODE_ENV: test
           # Mock external services for integration tests
@@ -117,8 +106,7 @@ jobs:
       - name: Generate Coverage Report
         run: |
           echo "📊 Generating detailed coverage report..."
-          # More flexible coverage command
-          if bun run test:coverage; then
+          if npm run test:coverage; then
             echo "✅ Coverage generated successfully"
           else
             echo "⚠️ Coverage generation failed, continuing..."
@@ -154,20 +142,16 @@ jobs:
             try {
               if (fs.existsSync(path)) {
                 const coverage = JSON.parse(fs.readFileSync(path, 'utf8'));
-                
-                // Try to read integration coverage as well
                 const integrationPath = './coverage/integration/coverage-summary.json';
                 let integrationCoverage = null;
                 if (fs.existsSync(integrationPath)) {
                   integrationCoverage = JSON.parse(fs.readFileSync(integrationPath, 'utf8'));
                 }
-                
                 const formatCoverage = (metric) => {
                   const pct = metric.pct;
                   const emoji = pct >= 95 ? '🟢' : pct >= 80 ? '🟡' : '🔴';
                   return `${emoji} ${pct}%`;
                 };
-                
                 let integrationSection = '';
                 if (integrationCoverage) {
                   integrationSection = `
@@ -184,7 +168,6 @@ jobs:
                 - ✅ Service worker notifications & background processing
                 - ✅ Gaming & rewards system with social features`;
                 }
-                
                 const body = `## 📊 Test Coverage Report
                 
                 ### 🧪 Unit Test Coverage
@@ -201,8 +184,6 @@ jobs:
                 
                 **Note**: Jest/ts-jest dependency fixes ensure reliable test execution.
                 `;
-                
-                // Post coverage comment
                 await github.rest.issues.createComment({
                   issue_number: context.issue.number,
                   owner: context.repo.owner,
@@ -215,11 +196,10 @@ jobs:
               }
             } catch (error) {
               console.error('❌ Failed to post coverage comment:', error);
-              // Don't fail the job if commenting fails
             }
 
       - name: Build Application
-        run: bun run build
+        run: npm run build
         env:
           VITE_APP_VERSION: ${{ github.sha }}
           NODE_ENV: production
@@ -230,12 +210,8 @@ jobs:
             echo "❌ Build validation failed - missing artifacts"
             exit 1
           fi
-
-          # Check bundle size
           BUNDLE_SIZE=$(du -sh dist | cut -f1)
           echo "📦 Bundle size: $BUNDLE_SIZE"
-
-          # Validate critical files
           critical_files=("dist/index.html" "dist/assets")
           for file in "${critical_files[@]}"; do
             if [ ! -e "$file" ]; then
@@ -243,7 +219,6 @@ jobs:
               exit 1
             fi
           done
-
           echo "✅ Build validation passed"
 
       - name: Store build artifacts
@@ -263,12 +238,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          check-latest: true
+          cache: npm
 
       - name: Security audit
         run: |
-          if bun audit; then
+          if npm audit; then
             echo "✅ Security audit passed"
           else
             echo "⚠️ Security audit found issues, review recommended"
@@ -290,8 +269,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          check-latest: true
+          cache: npm
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -299,14 +282,10 @@ jobs:
           distribution: "temurin"
           java-version: "17"
 
-      - name: Install dependencies (with lockfile flexibility)
+      - name: Install dependencies
         run: |
           echo "🔧 Installing dependencies..."
-          # Try frozen lockfile first, fallback to regular install for dependency PRs
-          if ! bun install --frozen-lockfile; then
-            echo "⚠️ Lockfile changed (expected for dependency updates), installing with updates..."
-            bun install
-          fi
+          npm ci || npm install
 
       - name: Check dependency compatibility
         run: |
@@ -318,10 +297,10 @@ jobs:
           fi
 
       - name: Build web application
-        run: bun run build
+        run: npm run build
 
       - name: Sync Capacitor
-        run: bunx cap sync android
+        run: npx cap sync android
 
       - name: Build Android APK (debug)
         run: |
@@ -356,7 +335,6 @@ jobs:
         run: |
           echo "🚀 Deploying to staging environment..."
           # Add your staging deployment commands here
-          # Example: rsync, AWS S3, Vercel, Netlify, etc.
 
       - name: Run staging health check
         run: |
@@ -440,7 +418,6 @@ jobs:
                 draft: false,
                 prerelease: false
               });
-              
               console.log(`Release created: ${release.html_url}`);
             } catch (error) {
               console.error('❌ Failed to create release:', error);

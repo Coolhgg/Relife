@@ -2,9 +2,9 @@ name: Auto Fix Missing Dependencies
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -29,10 +29,12 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          bun-version: "latest"
+          node-version: "20"
+          check-latest: true
+          cache: npm
       - name: Auto-fix deps (root)
         env:
           PROJECT_DIR: "."

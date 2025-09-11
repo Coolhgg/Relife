@@ -1,4 +1,4 @@
-# Mobile App Release Pipeline
+# Mobile App Release Pipeline (npm)
 # Builds and distributes Android and iOS apps to app stores
 
 name: 📱 Mobile App Release
@@ -69,13 +69,15 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: ${{ env.NODE_VERSION }}
+          check-latest: true
+          cache: npm
 
       - name: Install dependencies
-        run: bun install --production=false
+        run: npm ci || npm install --production=false
 
       - name: Determine platforms to build
         id: platform
@@ -97,31 +99,23 @@ jobs:
       - name: Generate version and build number
         id: version
         run: |
-          # Get current version from package.json
           CURRENT_VERSION=$(node -p "require('./package.json').version")
-
-          # Determine new version based on input
           BUMP_TYPE="${{ github.event.inputs.version_bump || 'patch' }}"
-
           if [[ "$BUMP_TYPE" != "none" ]]; then
             NEW_VERSION=$(npm version $BUMP_TYPE --no-git-tag-version --preid=rc)
-            NEW_VERSION=${NEW_VERSION#v}  # Remove 'v' prefix
+            NEW_VERSION=${NEW_VERSION#v}
           else
             NEW_VERSION="$CURRENT_VERSION"
           fi
-
-          # Generate build number (timestamp-based)
           BUILD_NUMBER=$(date +'%Y%m%d%H%M')
-
           echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "build-number=$BUILD_NUMBER" >> $GITHUB_OUTPUT
-
           echo "📱 Mobile Release Version: $NEW_VERSION"
           echo "🔢 Build Number: $BUILD_NUMBER"
 
       - name: Build web application
         run: |
-          bun run build
+          npm run build
         env:
           VITE_APP_VERSION: ${{ steps.version.outputs.version }}
           VITE_BUILD_TIME: ${{ github.event.head_commit.timestamp }}
@@ -148,10 +142,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: ${{ env.NODE_VERSION }}
+          check-latest: true
+          cache: npm
 
       - name: Set up Java
         uses: actions/setup-java@v3
@@ -163,7 +159,7 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Install dependencies
-        run: bun install --production=false
+        run: npm ci || npm install --production=false
 
       - name: Download web build
         uses: actions/download-artifact@v3
@@ -178,19 +174,13 @@ jobs:
         run: |
           VERSION="${{ needs.prepare.outputs.version }}"
           BUILD_NUMBER="${{ needs.prepare.outputs.build-number }}"
-
-          # Update version in android/app/build.gradle
           sed -i "s/versionName .*/versionName \"$VERSION\"/" android/app/build.gradle
           sed -i "s/versionCode .*/versionCode $BUILD_NUMBER/" android/app/build.gradle
-
           echo "Updated Android version to $VERSION ($BUILD_NUMBER)"
 
       - name: Setup Android signing
         run: |
-          # Create keystore from secrets
           echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > android/release.keystore
-
-          # Create keystore.properties
           cat > android/keystore.properties << EOF
           RELIFE_RELEASE_STORE_FILE=../release.keystore
           RELIFE_RELEASE_STORE_PASSWORD=${{ secrets.ANDROID_STORE_PASSWORD }}
@@ -207,23 +197,14 @@ jobs:
       - name: Build Android APK/AAB
         run: |
           cd android
-
-          # Build APK for direct distribution
           ./gradlew assembleRelease
-
-          # Build AAB for Play Store
           ./gradlew bundleRelease
-
           echo "✅ Android build completed"
 
       - name: Sign Android artifacts
         run: |
           cd android/app/build/outputs
-
-          # Verify APK is signed
           $ANDROID_HOME/build-tools/$(ls $ANDROID_HOME/build-tools | tail -1)/aapt dump badging apk/release/app-release.apk | grep package
-
-          # Verify AAB is signed
           if [ -f bundle/release/app-release.aab ]; then
             echo "AAB bundle created successfully"
           fi
@@ -303,13 +284,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: ${{ env.NODE_VERSION }}
+          check-latest: true
+          cache: npm
 
       - name: Install dependencies
-        run: bun install --production=false
+        run: npm ci || npm install --production=false
 
       - name: Download web build
         uses: actions/download-artifact@v3
@@ -324,37 +307,25 @@ jobs:
         run: |
           VERSION="${{ needs.prepare.outputs.version }}"
           BUILD_NUMBER="${{ needs.prepare.outputs.build-number }}"
-
-          # Update version in iOS project
           /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $VERSION" ios/App/App/Info.plist
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" ios/App/App/Info.plist
-
           echo "Updated iOS version to $VERSION ($BUILD_NUMBER)"
 
       - name: Install iOS certificates
         run: |
-          # Create keychain
           security create-keychain -p "${{ secrets.IOS_KEYCHAIN_PASSWORD }}" build.keychain
           security default-keychain -s build.keychain
           security unlock-keychain -p "${{ secrets.IOS_KEYCHAIN_PASSWORD }}" build.keychain
           security set-keychain-settings -t 3600 -l ~/Library/Keychains/build.keychain
-
-          # Import certificates
           echo "${{ secrets.IOS_DISTRIBUTION_CERTIFICATE }}" | base64 -d > ios_distribution.p12
           security import ios_distribution.p12 -k ~/Library/Keychains/build.keychain -P "${{ secrets.IOS_CERTIFICATE_PASSWORD }}" -T /usr/bin/codesign
-
-          # Install provisioning profile
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           echo "${{ secrets.IOS_PROVISIONING_PROFILE }}" | base64 -d > ~/Library/MobileDevice/Provisioning\ Profiles/relife_distribution.mobileprovision
-
-          # Allow codesign to access keychain
           security set-key-partition-list -S apple-tool:,apple: -s -k "${{ secrets.IOS_KEYCHAIN_PASSWORD }}" ~/Library/Keychains/build.keychain
 
       - name: Build iOS app
         run: |
           cd ios
-
-          # Build and archive
           xcodebuild -workspace App/App.xcworkspace \
             -scheme App \
             -configuration Release \
@@ -363,14 +334,11 @@ jobs:
             archive \
             DEVELOPMENT_TEAM="${{ secrets.IOS_TEAM_ID }}" \
             PROVISIONING_PROFILE_SPECIFIER="relife_distribution"
-
           echo "✅ iOS build completed"
 
       - name: Export IPA
         run: |
           cd ios
-
-          # Create export options
           cat > ExportOptions.plist << EOF
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -389,13 +357,10 @@ jobs:
           </dict>
           </plist>
           EOF
-
-          # Export IPA
           xcodebuild -exportArchive \
             -archivePath App.xcarchive \
             -exportPath export \
             -exportOptionsPlist ExportOptions.plist
-
           echo "✅ iOS export completed"
 
       - name: Upload IPA
@@ -408,8 +373,6 @@ jobs:
         if: ${{ github.event.inputs.release_type == 'beta' || github.event.inputs.release_type == 'production' }}
         run: |
           cd ios/export
-
-          # Upload to App Store Connect
           xcrun altool --upload-app \
             --type ios \
             --file *.ipa \
@@ -421,8 +384,6 @@ jobs:
         if: ${{ github.event.inputs.release_type == 'internal' || github.event.inputs.release_type == 'alpha' }}
         run: |
           cd ios/export
-
-          # Upload to TestFlight
           xcrun altool --upload-app \
             --type ios \
             --file *.ipa \
@@ -557,7 +518,6 @@ jobs:
 
       - name: Update monitoring
         run: |
-          # Notify monitoring systems of mobile release
           curl -X POST https://relife.app/api/analytics \
             -H "Content-Type: application/json" \
             -d '{
