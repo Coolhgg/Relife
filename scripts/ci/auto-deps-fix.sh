@@ -26,11 +26,18 @@ for cmd in git gh jq tar node npm; do command -v ${cmd} >/dev/null 2>&1 || true;
 # Ensure clean main
 git fetch --all --prune
 git checkout "${TARGET_BRANCH}"
+
+# Aggressively clean the working tree
 # Stash any changes to ensure clean working tree
-git stash push -m "auto-deps-stash-${TIMESTAMP}" || log "No changes to stash"
+git stash push -m "auto-deps-stash-${TIMESTAMP}" --include-untracked || log "No changes to stash or stash failed"
+# Reset any staged changes
+git reset --hard HEAD || log "Failed to reset staged changes"
+# Clean untracked files (but preserve important directories)
+git clean -fd --exclude=node_modules --exclude=.git || log "Failed to clean untracked files"
+
 git pull "${REMOTE}" "${TARGET_BRANCH}"
 if [[ -n "$(git status --porcelain)" ]]; then 
-  log "ERROR: working tree not clean after stash and pull. Files:"
+  log "ERROR: working tree not clean after aggressive clean. Files:"
   git status --porcelain | tee -a "${OUT_DIR}/run.log"
   exit 1
 fi
