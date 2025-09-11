@@ -18,7 +18,7 @@ ALLOW_PR_CREATE="${ALLOW_PR_CREATE:-true}"
 
 # Create directories before logging
 mkdir -p "${OUT_DIR}" backup
-log(){ echo "[$(date +%H:%M:%S)] $*" | tee -a "${OUT_DIR}/run.log"; }
+log(){ mkdir -p "${OUT_DIR}" >/dev/null 2>&1 || true; echo "[$(date +%H:%M:%S)] $*" | tee -a "${OUT_DIR}/run.log"; }
 
 # Basic checks
 for cmd in git gh jq tar node npm; do command -v ${cmd} >/dev/null 2>&1 || true; done
@@ -33,7 +33,12 @@ git stash push -m "auto-deps-stash-${TIMESTAMP}" --include-untracked || log "No 
 # Reset any staged changes
 git reset --hard HEAD || log "Failed to reset staged changes"
 # Clean untracked files (but preserve important directories)
-git clean -fd --exclude=node_modules --exclude=.git || log "Failed to clean untracked files"
+# Preserve CI output and backup directories to avoid breaking logging
+# and artifact creation.
+git clean -fd --exclude=node_modules --exclude=.git --exclude=ci --exclude=ci/ --exclude=ci/step-outputs --exclude=backup || log "Failed to clean untracked files"
+
+# Recreate output and backup dirs if they were removed (defensive)
+mkdir -p "${OUT_DIR}" backup
 
 git pull "${REMOTE}" "${TARGET_BRANCH}"
 if [[ -n "$(git status --porcelain)" ]]; then 
@@ -165,7 +170,7 @@ while [[ ${iteration} -lt ${MAX_ITER} ]]; do
     git commit -m "chore(deps): install missing packages (auto) [iter ${iteration}]" || true
     git push "${REMOTE}" "${WORK_BRANCH}" || true
   fi
-done
+ done
 
 # Finalize: create PR if build passed or push work branch for manual review
 if [[ ${BUILD_EXIT} -eq 0 && "${ALLOW_PR_CREATE}" == "true" ]]; then
