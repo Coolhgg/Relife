@@ -16,6 +16,8 @@ PROJECT_DIR="${PROJECT_DIR:-.}"
 OUT_DIR="ci/step-outputs/deps-fix-${TIMESTAMP}/${PROJECT_DIR//\//_}"
 ALLOW_PR_CREATE="${ALLOW_PR_CREATE:-true}"
 
+# Create directories before logging
+mkdir -p "${OUT_DIR}" backup
 log(){ echo "[$(date +%H:%M:%S)] $*" | tee -a "${OUT_DIR}/run.log"; }
 
 # Basic checks
@@ -35,15 +37,17 @@ tar --exclude='./.git' --exclude='./node_modules' --exclude='./backup' -czf "bac
 cp "backup/repo_snapshot_${TIMESTAMP}.tar.gz" "${OUT_DIR}/" || true
 log "Backup: ${BACKUP_TAG}"
 
-# Detect package manager - with bun.lock added
+# Package manager detection will be done after pushd
+
+# Change to project directory
+pushd "$PROJECT_DIR" >/dev/null
+
+# Detect package manager - with bun.lock added (now in PROJECT_DIR context)
 PM="npm"
 [[ -f bun.lock || -f bun.lockb || -f bunfig.toml ]] && PM="bun"
 [[ -f pnpm-lock.yaml ]] && PM="pnpm"
 [[ -f yarn.lock && ! -f pnpm-lock.yaml ]] && PM="yarn"
 log "PM detected: ${PM}"
-
-# Change to project directory
-pushd "$PROJECT_DIR" >/dev/null
 
 install_all(){
   log "Installing deps via ${PM}..."
@@ -104,21 +108,14 @@ while [[ ${iteration} -lt ${MAX_ITER} ]]; do
     break
   fi
 
-  # Only proceed if we're not in the root directory
-  if [[ "${PROJECT_DIR}" != "." ]]; then
-    # Check if the build command exists
-    if ! jq -e '.scripts.build' package.json >/dev/null 2>&1; then
-      log "No build script found; skipping dependency installation"
-      break
-    fi
-  fi
+  # (removed unnecessary PROJECT_DIR check - let existing logic determine build_cmd)
 
   cat "${OUT_DIR}/build_stdout_${iteration}.log" "${OUT_DIR}/build_stderr_${iteration}.log" > "${OUT_DIR}/combined_build_${iteration}.log"
   # extract missing module patterns
-  mapfile -t a < <(grep -oE "Cannot find module '([^']+)'" "${OUT_DIR}/combined_build_${iteration}.log" | sed -E "s/.*'([^']+)'.*/\\1/" | sort -u || true)
-  mapfile -t b < <(grep -oE "Can't resolve '([^']+)'" "${OUT_DIR}/combined_build_${iteration}.log" | sed -E "s/.*'([^']+)'.*/\\1/" | sort -u || true)
-  mapfile -t c < <(grep -oE "TS2307: Cannot find module '([^']+)'" "${OUT_DIR}/combined_build_${iteration}.log" | sed -E "s/.*'([^']+)'.*/\\1/" | sort -u || true)
-  mapfile -t d < <(grep -oE "Failed to resolve import \"([^\"]+)\"" "${OUT_DIR}/combined_build_${iteration}.log" | sed -E "s/.*\"([^\"]+)\".*/\\1/" | sort -u || true)
+  mapfile -t a < <(grep -oE "Cannot find module '([^']+)'" "${OUT_DIR}/combined_build_${iteration}.log" | sed -E "s/.*'([^']+)'.*/\1/" | sort -u || true)
+  mapfile -t b < <(grep -oE "Can't resolve '([^']+)'" "${OUT_DIR}/combined_build_${iteration}.log" | sed -E "s/.*'([^']+)'.*/\1/" | sort -u || true)
+  mapfile -t c < <(grep -oE "TS2307: Cannot find module '([^']+)'" "${OUT_DIR}/combined_build_${iteration}.log" | sed -E "s/.*'([^']+)'.*/\1/" | sort -u || true)
+  mapfile -t d < <(grep -oE "Failed to resolve import \"([^\"]+)\"" "${OUT_DIR}/combined_build_${iteration}.log" | sed -E "s/.*\"([^\"]+)\".*/\1/" | sort -u || true)
 
   pkgs=()
   for x in "${a[@]}" "${b[@]}" "${c[@]}" "${d[@]}"; do
@@ -160,7 +157,7 @@ done
 # Finalize: create PR if build passed or push work branch for manual review
 if [[ ${BUILD_EXIT} -eq 0 && "${ALLOW_PR_CREATE}" == "true" ]]; then
   log "Build passed; finalizing PR"
-  git add package.json package-lock.json yarn.lock pnpm-lock.yaml bun.lockb bun.lock 2>/dev/null || true
+  git add package.json package-lock.json yarn.lock pnpm-lock.yaml bun.lockb bun.lock ci/step-outputs 2>/dev/null || true
   if [[ -n "$(git status --porcelain)" ]]; then
     git commit -m "chore(deps): finalize dependency installs (auto)" || true
     git push "${REMOTE}" "${WORK_BRANCH}" -u || true
