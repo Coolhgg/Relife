@@ -26,8 +26,14 @@ for cmd in git gh jq tar node npm; do command -v ${cmd} >/dev/null 2>&1 || true;
 # Ensure clean main
 git fetch --all --prune
 git checkout "${TARGET_BRANCH}"
+# Stash any changes to ensure clean working tree
+git stash push -m "auto-deps-stash-${TIMESTAMP}" || log "No changes to stash"
 git pull "${REMOTE}" "${TARGET_BRANCH}"
-if [[ -n "$(git status --porcelain)" ]]; then log "ERROR: working tree not clean. Commit or stash first."; exit 1; fi
+if [[ -n "$(git status --porcelain)" ]]; then 
+  log "ERROR: working tree not clean after stash and pull. Files:"
+  git status --porcelain | tee -a "${OUT_DIR}/run.log"
+  exit 1
+fi
 
 # Backup
 BACKUP_TAG="pre-deps-fix-${TIMESTAMP}"
