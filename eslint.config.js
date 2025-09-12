@@ -16,6 +16,7 @@ export default tseslint.config([
       'android/**/*',
       'ios/**/*',
       'build/**/*',
+      'backup/**/*',
       '.next/**/*',
       '*.config.{js,ts}',
       '*.d.ts',
