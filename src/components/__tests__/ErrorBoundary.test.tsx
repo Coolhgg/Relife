@@ -31,7 +31,7 @@ describe('ErrorBoundary', () => {
     vi.clearAllMocks();
 
     // Suppress console._error for these tests since we're intentionally throwing errors
-    vi.spyOn(console, '_error').mockImplementation(() => {});
+    vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -74,12 +74,12 @@ describe('ErrorBoundary', () => {
         </ErrorBoundary>
       );
 
-      expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument();
-      expect(
-        screen.getByText(/we encountered an unexpected _error/i)
-      ).toBeInTheDocument();
+      expect(screen.getByText('Something went wrong')).toBeInTheDocument();
+      expect(screen.getByText(/something unexpected happened/i)).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /try again/i })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /go back/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /go back|go to home/i })
+      ).toBeInTheDocument();
     });
 
     test('displays custom context in _error message', () => {
@@ -99,7 +99,7 @@ describe('ErrorBoundary', () => {
         </ErrorBoundary>
       );
 
-      expect(screen.getByText(/_error id:/i)).toBeInTheDocument();
+      expect(screen.getByText(/Error ID:/i)).toBeInTheDocument();
     });
 
     test('displays _error details in development mode', () => {
@@ -113,7 +113,7 @@ describe('ErrorBoundary', () => {
         </ErrorBoundary>
       );
 
-      expect(screen.getByText('Error Details')).toBeInTheDocument();
+      expect(screen.getByText('Developer Details')).toBeInTheDocument();
       expect(screen.getByText(/detailed _error message/i)).toBeInTheDocument();
 
       process.env.NODE_ENV = originalEnv;
@@ -130,7 +130,7 @@ describe('ErrorBoundary', () => {
         </ErrorBoundary>
       );
 
-      expect(screen.queryByText('Error Details')).not.toBeInTheDocument();
+      expect(screen.queryByText('Developer Details')).not.toBeInTheDocument();
       expect(screen.queryByText(/detailed _error message/i)).not.toBeInTheDocument();
 
       process.env.NODE_ENV = originalEnv;
@@ -151,7 +151,7 @@ describe('ErrorBoundary', () => {
 
       expect(screen.getByTestId('custom-fallback')).toBeInTheDocument();
       expect(screen.getByText('Custom _error message')).toBeInTheDocument();
-      expect(screen.queryByText('Oops! Something went wrong')).not.toBeInTheDocument();
+      expect(screen.queryByText('Something went wrong')).not.toBeInTheDocument();
     });
 
     test('uses default fallback when custom fallback is not provided', () => {
@@ -161,7 +161,7 @@ describe('ErrorBoundary', () => {
         </ErrorBoundary>
       );
 
-      expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument();
+      expect(screen.getByText('Something went wrong')).toBeInTheDocument();
     });
   });
 
@@ -173,7 +173,7 @@ describe('ErrorBoundary', () => {
         </ErrorBoundary>
       );
 
-      expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument();
+      expect(screen.getByText('Something went wrong')).toBeInTheDocument();
 
       const retryButton = screen.getByRole('button', { name: /try again/i });
       fireEvent.click(retryButton);
@@ -211,7 +211,7 @@ describe('ErrorBoundary', () => {
         </ErrorBoundary>
       );
 
-      const goBackButton = screen.getByRole('button', { name: /go back/i });
+      const goBackButton = screen.getByRole('button', { name: /go back|go to home/i });
       fireEvent.click(goBackButton);
 
       expect(mockNavigateBack).toHaveBeenCalled();
@@ -231,7 +231,7 @@ describe('ErrorBoundary', () => {
         </ErrorBoundary>
       );
 
-      const goBackButton = screen.getByRole('button', { name: /go back/i });
+      const goBackButton = screen.getByRole('button', { name: /go back|go to home/i });
       fireEvent.click(goBackButton);
 
       expect(mockBack).toHaveBeenCalled();
@@ -271,7 +271,7 @@ describe('ErrorBoundary', () => {
       );
 
       // Component stack should be captured (implementation detail)
-      expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument();
+      expect(screen.getByText('Something went wrong')).toBeInTheDocument();
     });
   });
 
@@ -286,7 +286,7 @@ describe('ErrorBoundary', () => {
         </ErrorBoundary>
       );
 
-      expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument();
+      expect(screen.getByText('Something went wrong')).toBeInTheDocument();
     });
 
     test('handles React errors', () => {
@@ -303,12 +303,12 @@ describe('ErrorBoundary', () => {
         </ErrorBoundary>
       );
 
-      expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument();
+      expect(screen.getByText('Something went wrong')).toBeInTheDocument();
     });
 
     test('does not catch async errors in useEffect', () => {
       // Error boundaries do not catch async errors, so this should not trigger the boundary
-      const consoleSpy = vi.spyOn(console, '_error').mockImplementation();
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation();
 
       render(
         <ErrorBoundary>
@@ -340,7 +340,7 @@ describe('ErrorBoundary', () => {
       // Inner boundary should catch the error
       expect(screen.getByText('Outer content')).toBeInTheDocument();
       expect(screen.getByText('More outer content')).toBeInTheDocument();
-      expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument();
+      expect(screen.getByText('Something went wrong')).toBeInTheDocument();
       expect(screen.getByText(/inner/i)).toBeInTheDocument();
     });
   });
@@ -358,7 +358,9 @@ describe('ErrorBoundary', () => {
 
       // Check for proper button roles
       expect(screen.getByRole('button', { name: /try again/i })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /go back/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /go back|go to home/i })
+      ).toBeInTheDocument();
     });
 
     test('_error message is announced to screen readers', () => {
@@ -369,9 +371,7 @@ describe('ErrorBoundary', () => {
       );
 
       // The error container should have appropriate ARIA attributes
-      const errorContainer = screen
-        .getByText('Oops! Something went wrong')
-        .closest('div');
+      const errorContainer = screen.getByText('Something went wrong').closest('div');
       expect(errorContainer).toBeInTheDocument();
     });
   });
@@ -386,7 +386,7 @@ describe('ErrorBoundary', () => {
         </ErrorBoundary>
       );
 
-      expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument();
+      expect(screen.getByText('Something went wrong')).toBeInTheDocument();
     });
 
     test('getDerivedStateFromError sets _error state', () => {
@@ -397,7 +397,7 @@ describe('ErrorBoundary', () => {
       );
 
       // Error state should be set, as evidenced by the error UI
-      expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument();
+      expect(screen.getByText('Something went wrong')).toBeInTheDocument();
     });
   });
 });

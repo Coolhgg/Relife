@@ -1,6 +1,6 @@
-import React from 'react'; // auto: added missing React import
+import React, { useState } from 'react'; // auto: added missing React import
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, waitFor, act, fireEvent } from '@testing-library/react';
+import { render, screen, waitFor, act, _fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   setupAllMocks,
@@ -10,19 +10,31 @@ import {
   measurePerformance,
   expectPerformanceWithin,
 } from '../utils/test-mocks';
-import type { User, Battle, Tournament, BattleResult } from '../../src/types';
+import type { User, _Battle, Tournament, _BattleResult } from '../../src/types';
 
 // Mock Components (these would be real components in the actual app)
-const SocialBattlesComponent = ({ user }: { user: User }) => {
+const SocialBattlesComponent = ({ _user }: { _user: User }) => {
+  const [open, setOpen] = React.useState(false);
   return (
     <div data-testid="social-battles">
       <h1>Social Battles</h1>
-      <button data-testid="create-battle">Create Battle</button>
+      <button data-testid="create-battle" onClick={() => setOpen(true)}>
+        Create Battle
+      </button>
       <button data-testid="join-battle">Join Battle</button>
       <button data-testid="view-tournaments">View Tournaments</button>
       <div data-testid="battle-list">
         <div data-testid="battle-item">Test Battle</div>
       </div>
+      {open && (
+        <BattleCreationModal
+          onSubmit={battle => {
+            mockSocialBattlesService.createBattle(battle);
+            setOpen(false);
+          }}
+          onClose={() => setOpen(false)}
+        />
+      )}
     </div>
   );
 };
@@ -208,8 +220,8 @@ const generateBattleProgress = (participants: string[]) => {
 
 describe('Social Battles Integration Tests', () => {
   let mockUser: User;
-  let mockFriends: User[];
-  let mockWebSocketInstance: any;
+  let _mockFriends: User[];
+  let _mockWebSocketInstance: any;
 
   beforeEach(() => {
     setupAllMocks();
@@ -680,7 +692,7 @@ describe('Social Battles Integration Tests', () => {
         },
       });
 
-      const lowLevelUser = createMockUser({
+      const _lowLevelUser = createMockUser({
         level: 5,
         subscriptionTier: 'free',
         achievements: [],
@@ -738,7 +750,7 @@ describe('Social Battles Integration Tests', () => {
     });
 
     it('should display team battle coordination', async () => {
-      const teamBattle = createMockBattle({
+      const _teamBattle = createMockBattle({
         type: 'team',
         participants: [mockUser.id, 'friend-1', 'friend-2', 'friend-3'],
         teams: [
@@ -1078,7 +1090,7 @@ describe('Social Battles Integration Tests', () => {
     });
 
     it('should handle WebSocket disconnections', async () => {
-      const activeBattle = createMockBattle({ status: 'active' });
+      const _activeBattle = createMockBattle({ status: 'active' });
 
       mockRealtimeService.connect.mockResolvedValue({ connected: true });
 
