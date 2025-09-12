@@ -17,6 +17,7 @@ export default tseslint.config([
       'ios/**/*',
       'build/**/*',
       'backup/**/*',
+      'relife-campaign-dashboard/**/*',
       '.next/**/*',
       '*.config.{js,ts}',
       '*.d.ts',
