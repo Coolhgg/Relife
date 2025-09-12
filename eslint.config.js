@@ -25,6 +25,7 @@ export default tseslint.config([
       '.next/**/*',
       '*.config.{js,ts}',
       '*.d.ts',
+      'src/__tests__/utils/assertion-helpers.ts',
     ],
   },
 
