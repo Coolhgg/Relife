@@ -46,7 +46,7 @@ export function _generateTimestamp(options?: {
     date = faker.date.anytime();
   }
 
-  return asDate ? date : date.toISOString();
+  return format === 'date' ? date : date.toISOString();
 }
 
 // Generate realistic time strings (HH:MM format)
@@ -210,7 +210,7 @@ export const _generateRealisticAlarmTime = () => {
     return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
   } else {
     // Some people have unusual schedules
-    return generateTimeString();
+    return _generateTimeString();
   }
 };
 

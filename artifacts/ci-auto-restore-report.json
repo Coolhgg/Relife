@@ -1,0 +1,35 @@
+{
+  "repo": "Coolhgg/Relife",
+  "default_branch": "main",
+  "cifix_branch": "cifix/ci-restore-20250911T215045Z-6f59968",
+  "pr_url": "https://github.com/Coolhgg/Relife/pull/499",
+  "merge_sha": null,
+  "commands_ran": [
+    {
+      "cmd": "npm ci && npm test && npm run build",
+      "stdout_snippet": "",
+      "stderr_snippet": "npm ERR! `npm ci` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync. Missing: expect@29.7.0, @jest/expect-utils@29.7.0, jest-matcher-utils@29.7.0, pretty-format@29.7.0, ..."
+    },
+    {
+      "cmd": "bun install && bun run test && bun run build",
+      "stdout_snippet": "bun install v1.2.21 ... vitest run ...",
+      "stderr_snippet": "Invalid URL: your-supabase-url (fallback). Numerous test assertion failures in integration/unit suites."
+    }
+  ],
+  "diag_logs_url": null,
+  "ci_status": "PR checks running; some failing (e.g., Strict Quality Gates, Security Scanning). Merge state: UNSTABLE",
+  "fixes_applied": [
+    ".github/workflows/ci-diagnostics.yml",
+    "package-lock.json",
+    "package.json"
+  ],
+  "block_reasons": [
+    "Unable to dispatch diagnostics: workflow not found on default branch (404). New workflow exists only on cifix branch.",
+    "PR not mergeable via API: 405 Pull Request is not mergeable. Active failing checks block auto-merge.",
+    "Local Node v20.12.1 < Vite required ^20.19 (warning only)."
+  ],
+  "rollback_instructions": "Remove diagnostics workflow: git rm .github/workflows/ci-diagnostics.yml && git commit -m 'revert: remove CI diagnostics'; Remove npm lockfile: git rm package-lock.json && git commit -m 'revert: remove npm lockfile'; Re-add removed dev deps if needed: npm i -D redux-devtools-extension jest-axe; Or revert merge via GitHub or git revert -m 1 <merge_sha>.",
+  "attempts": 5,
+  "confidence": 0.7,
+  "timestamp": "2025-09-11T22:18:39Z"
+}

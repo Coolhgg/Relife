@@ -17,7 +17,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
           check-latest: true
       - name: Try Bun (optional)
         uses: oven-sh/setup-bun@v2
@@ -40,7 +40,7 @@ jobs:
           set -o pipefail
           { ${CI_COMMANDS} 2>ci-stderr.log | tee ci-stdout.log; } || echo "cmd_exit=$?" > ci-exit.txt
         env:
-          CI_COMMANDS: "bun install && bun run test && bun run build"
+          CI_COMMANDS: "bun install && bun run lint && bun run type-check && bun run test && bun run build"
       - name: Collect logs
         if: always()
         run: |
