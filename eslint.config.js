@@ -143,6 +143,7 @@ export default tseslint.config([
       ],
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unsafe-function-type': 'warn', // Warn instead of error
+      '@typescript-eslint/no-namespace': 'warn',
       '@typescript-eslint/no-require-imports': 'warn',
       '@typescript-eslint/triple-slash-reference': 'warn',
 
