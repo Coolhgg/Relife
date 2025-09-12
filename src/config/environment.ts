@@ -101,8 +101,6 @@ export interface EnvironmentConfig {
   };
 }
 
-
-
 // Get current environment
 export function getEnvironment(): Environment {
   const env = import.meta.env.VITE_APP_ENV || import.meta.env.NODE_ENV;
@@ -118,40 +116,73 @@ export function getEnvironment(): Environment {
 export function createEnvironmentConfig(): EnvironmentConfig {
   const env = getEnvironment();
   const isDevelopment = env === 'development';
-  const isStaging = env === 'staging';
-  const isProduction = env === 'production';
+  const _isStaging = env === 'staging';
+  const _isProduction = env === 'production';
 
   return {
     env,
-    version: validateEnvString(import.meta.env.VITE_APP_VERSION, '2.0.0', { maxLength: 20 }),
-    buildTime: validateEnvString(import.meta.env.VITE_BUILD_TIME, new Date().toISOString(), { maxLength: 50 }),
-    domain: validateEnvString(import.meta.env.VITE_APP_DOMAIN, 'localhost:3000', { maxLength: 100 }),
-    apiBaseUrl: validateEnvUrl(import.meta.env.VITE_API_BASE_URL, 'http://localhost:3001'),
-    cdnUrl: import.meta.env.VITE_CDN_URL ? validateEnvUrl(import.meta.env.VITE_CDN_URL, '') : undefined,
+    version: validateEnvString(import.meta.env.VITE_APP_VERSION, '2.0.0', {
+      maxLength: 20,
+    }),
+    buildTime: validateEnvString(
+      import.meta.env.VITE_BUILD_TIME,
+      new Date().toISOString(),
+      { maxLength: 50 }
+    ),
+    domain: validateEnvString(import.meta.env.VITE_APP_DOMAIN, 'localhost:3000', {
+      maxLength: 100,
+    }),
+    apiBaseUrl: validateEnvUrl(
+      import.meta.env.VITE_API_BASE_URL,
+      'http://localhost:3001'
+    ),
+    cdnUrl: import.meta.env.VITE_CDN_URL
+      ? validateEnvUrl(import.meta.env.VITE_CDN_URL, '')
+      : undefined,
 
     supabase: {
       url: validateEnvUrl(import.meta.env.VITE_SUPABASE_URL, ''),
-      anonKey: validateEnvString(import.meta.env.VITE_SUPABASE_ANON_KEY, '', { maxLength: 500, keyType: 'Supabase Anon Key' }),
-      serviceRoleKey: import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY ? 
-        validateEnvString(import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY, '', { maxLength: 500, keyType: 'Supabase Service Role Key' }) : undefined,
+      anonKey: validateEnvString(import.meta.env.VITE_SUPABASE_ANON_KEY, '', {
+        maxLength: 500,
+        keyType: 'Supabase Anon Key',
+      }),
+      serviceRoleKey: import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY
+        ? validateEnvString(import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY, '', {
+            maxLength: 500,
+            keyType: 'Supabase Service Role Key',
+          })
+        : undefined,
     },
 
     analytics: {
       posthog: {
-        apiKey: validateEnvString(import.meta.env.VITE_POSTHOG_KEY, '', { maxLength: 200, keyType: 'PostHog API Key' }),
-        host: validateEnvUrl(import.meta.env.VITE_POSTHOG_HOST, 'https://app.posthog.com'),
+        apiKey: validateEnvString(import.meta.env.VITE_POSTHOG_KEY, '', {
+          maxLength: 200,
+          keyType: 'PostHog API Key',
+        }),
+        host: validateEnvUrl(
+          import.meta.env.VITE_POSTHOG_HOST,
+          'https://app.posthog.com'
+        ),
       },
       sentry: {
         dsn: validateEnvString(import.meta.env.VITE_SENTRY_DSN, '', { maxLength: 500 }),
         environment: env,
-        org: import.meta.env.VITE_SENTRY_ORG ? 
-          validateEnvString(import.meta.env.VITE_SENTRY_ORG, '', { maxLength: 100 }) : undefined,
-        project: import.meta.env.VITE_SENTRY_PROJECT ? 
-          validateEnvString(import.meta.env.VITE_SENTRY_PROJECT, '', { maxLength: 100 }) : undefined,
+        org: import.meta.env.VITE_SENTRY_ORG
+          ? validateEnvString(import.meta.env.VITE_SENTRY_ORG, '', { maxLength: 100 })
+          : undefined,
+        project: import.meta.env.VITE_SENTRY_PROJECT
+          ? validateEnvString(import.meta.env.VITE_SENTRY_PROJECT, '', {
+              maxLength: 100,
+            })
+          : undefined,
       },
       amplitude: import.meta.env.VITE_AMPLITUDE_API_KEY
         ? {
-            apiKey: validateEnvString(import.meta.env.VITE_AMPLITUDE_API_KEY, '', { maxLength: 200, keyType: 'Amplitude API Key' }),
+            apiKey: validateEnvString(import.meta.env.VITE_AMPLITUDE_API_KEY, '', {
+              maxLength: 200,
+              keyType: 'Amplitude API Key',
+            }),
           }
         : undefined,
       datadog: import.meta.env.VITE_DATADOG_CLIENT_TOKEN

@@ -1223,7 +1223,10 @@ function AppContent() {
         try {
           enabled = JSON.parse(stored);
         } catch (error) {
-          console.error('Failed to parse tabProtectionEnabled from localStorage:', error);
+          console.error(
+            'Failed to parse tabProtectionEnabled from localStorage:',
+            error
+          );
           enabled = true;
         }
       }

@@ -38,7 +38,6 @@ jobs:
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-          
 
       - name: Check for Python files
         id: check_python
