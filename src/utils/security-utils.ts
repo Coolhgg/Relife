@@ -41,7 +41,7 @@ export function validateApiKey(
     'demo',
     'xxx',
     '123456',
-    'abcdef'
+    'abcdef',
   ];
 
   const lowerKey = key.toLowerCase();
@@ -90,26 +90,25 @@ export function safeLocalStorageSet(key: string, value: string): boolean {
  * Create safe innerHTML content (for static content only)
  * WARNING: Never use with user-generated content
  */
-export function createSafeStaticHTML(
-  element: HTMLElement,
-  staticHTML: string
-): void {
+export function createSafeStaticHTML(element: HTMLElement, staticHTML: string): void {
   // Only allow specific safe HTML for loading screens
   const tempDiv = document.createElement('div');
   tempDiv.innerHTML = staticHTML;
-  
+
   // Remove any script tags or event handlers
   const scripts = tempDiv.querySelectorAll('script');
   scripts.forEach(script => script.remove());
-  
-  const elementsWithEvents = tempDiv.querySelectorAll('[onclick], [onload], [onerror], [onmouseover]');
+
+  const elementsWithEvents = tempDiv.querySelectorAll(
+    '[onclick], [onload], [onerror], [onmouseover]'
+  );
   elementsWithEvents.forEach(el => {
     el.removeAttribute('onclick');
     el.removeAttribute('onload');
     el.removeAttribute('onerror');
     el.removeAttribute('onmouseover');
   });
-  
+
   // Use textContent for any user data
   element.innerHTML = tempDiv.innerHTML;
 }
@@ -119,7 +118,7 @@ export function createSafeStaticHTML(
  */
 export function validateEnvUrl(url: string | undefined, fallback: string): string {
   if (!url) return fallback;
-  
+
   try {
     const parsedUrl = new URL(url);
     // Only allow http/https protocols

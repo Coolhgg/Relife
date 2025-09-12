@@ -399,7 +399,7 @@ class MockSupabaseQueryBuilder {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 50));
 
-    let data = MockSupabaseQueryBuilder.mockData.get(this.table) || [];
+    const data = MockSupabaseQueryBuilder.mockData.get(this.table) || [];
 
     // Handle INSERT
     if (this.queryParams.insert) {

@@ -8,45 +8,54 @@ permissions:
   actions: read
   checks: read
 
+env:
+  CI_COMMANDS: >-
+    bun install && bun run lint && bun run type-check && bun run test && bun run build
+
 jobs:
-  diag:
+  diagnostics:
     name: Diagnostics
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
           check-latest: true
-      - name: Try Bun (optional)
+
+      - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
-        continue-on-error: true
+          bun-version: "1.2.19"
+
       - name: Print tool versions
         run: |
           echo "node: $(node -v || true)"
           echo "npm:  $(npm -v || true)"
           echo "bun:  $(bun -v || true)"
+          echo "pnpm: $(pnpm -v || true)"
+          echo "yarn: $(yarn -v || true)"
+
       - name: Hash lockfiles
         run: |
-          for f in bun.lock bun.lockb package-lock.json pnpm-lock.yaml yarn.lock; do
-            if [ -f "$f" ]; then shasum "$f" || true; fi
-          done
+          echo "Lockfile checksums:" > diag-summary.txt
+          find . -maxdepth 3 -type f \( -name "bun.lock" -o -name "bun.lockb" -o -name "package-lock.json" -o -name "pnpm-lock.yaml" -o -name "yarn.lock" \) -print0 | xargs -0 -I{} shasum "{}" | tee -a diag-summary.txt || true
+
       - name: Run CI commands
-        id: run_ci
         run: |
           set -o pipefail
-          { ${CI_COMMANDS} 2>ci-stderr.log | tee ci-stdout.log; } || echo "cmd_exit=$?" > ci-exit.txt
-        env:
-          CI_COMMANDS: "bun install && bun run test && bun run build"
-      - name: Collect logs
+          echo "Command: ${CI_COMMANDS}" >> diag-summary.txt
+          echo "Started: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> diag-summary.txt
+          { ${CI_COMMANDS} 2>ci-stderr.log | tee ci-stdout.log; } ; ec=$?
+          echo "Finished: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> diag-summary.txt
+          echo "exit_code=${ec}" >> diag-summary.txt
+          exit 0
+
+      - name: Upload diagnostics
         if: always()
-        run: |
-          echo "exit_code=$(cat ci-exit.txt 2>/dev/null | sed 's/[^0-9]//g' || echo 0)" > diag-summary.txt
-      - uses: actions/upload-artifact@v4
-        if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: ci-diagnostics-logs
           path: |

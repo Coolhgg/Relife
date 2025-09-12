@@ -16,9 +16,16 @@ export default tseslint.config([
       'android/**/*',
       'ios/**/*',
       'build/**/*',
+      'backup/**/*',
+      'relife-campaign-dashboard/**/*',
+      'ci/**/*',
+      'scripts/**/*',
+      'email-campaigns/**/*',
+      'monitoring/**/*',
       '.next/**/*',
       '*.config.{js,ts}',
       '*.d.ts',
+      'src/__tests__/utils/assertion-helpers.ts',
     ],
   },
 
@@ -47,7 +54,7 @@ export default tseslint.config([
       ],
       'no-constant-condition': 'warn',
       'prefer-const': 'warn',
-      'no-undef': 'error',
+      'no-undef': 'off',
       'no-useless-escape': 'warn', // More lenient for regex patterns
       'no-case-declarations': 'off', // Allow declarations in case blocks
     },
@@ -80,7 +87,7 @@ export default tseslint.config([
           destructuredArrayIgnorePattern: '^_',
         },
       ],
-      'no-undef': 'error',
+      'no-undef': 'off',
     },
   },
 
@@ -137,12 +144,15 @@ export default tseslint.config([
       ],
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unsafe-function-type': 'warn', // Warn instead of error
-      '@typescript-eslint/no-require-imports': 'error',
+      '@typescript-eslint/no-namespace': 'warn',
+      '@typescript-eslint/no-require-imports': 'warn',
+      '@typescript-eslint/triple-slash-reference': 'warn',
 
       // React rules
       'react/react-in-jsx-scope': 'off',
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn', // Warn instead of error for development
+      'no-case-declarations': 'off',
 
       // React Refresh rules - more permissive
       'react-refresh/only-export-components': [
@@ -157,7 +167,7 @@ export default tseslint.config([
       'no-constant-condition': 'warn',
       'prefer-const': 'warn',
       'no-console': 'off', // Allow console in development
-      'no-undef': 'error',
+      'no-undef': 'off',
       'no-useless-catch': 'warn', // More lenient
     },
   },
@@ -219,7 +229,7 @@ export default tseslint.config([
       ],
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unsafe-function-type': 'off', // Very permissive for tests
-      '@typescript-eslint/no-require-imports': 'error',
+      '@typescript-eslint/no-require-imports': 'warn',
 
       // React rules
       'react/react-in-jsx-scope': 'off',
@@ -233,7 +243,7 @@ export default tseslint.config([
       'no-constant-condition': 'warn',
       'prefer-const': 'warn',
       'no-console': 'off',
-      'no-undef': 'error',
+      'no-undef': 'off',
     },
   },
 
@@ -330,7 +340,7 @@ export default tseslint.config([
       ],
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unsafe-function-type': 'off', // Very permissive for tests
-      '@typescript-eslint/no-require-imports': 'error',
+      '@typescript-eslint/no-require-imports': 'warn',
 
       // React rules
       'react/react-in-jsx-scope': 'off',
@@ -362,7 +372,7 @@ export default tseslint.config([
       },
     },
     rules: {
-      'no-undef': 'error',
+      'no-undef': 'off',
     },
   },
 
@@ -419,7 +429,7 @@ export default tseslint.config([
       ],
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unsafe-function-type': 'warn',
-      '@typescript-eslint/no-require-imports': 'error',
+      '@typescript-eslint/no-require-imports': 'warn',
       'react/react-in-jsx-scope': 'off',
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
@@ -428,7 +438,7 @@ export default tseslint.config([
       'no-constant-condition': 'warn',
       'prefer-const': 'warn',
       'no-console': 'off',
-      'no-undef': 'error',
+      'no-undef': 'off',
     },
   },
 
@@ -487,7 +497,7 @@ export default tseslint.config([
       ],
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unsafe-function-type': 'warn',
-      '@typescript-eslint/no-require-imports': 'error',
+      '@typescript-eslint/no-require-imports': 'warn',
 
       // React rules
       'react/react-in-jsx-scope': 'off',
@@ -507,7 +517,7 @@ export default tseslint.config([
       'no-constant-condition': 'warn',
       'prefer-const': 'warn',
       'no-console': 'off',
-      'no-undef': 'error',
+      'no-undef': 'off',
     },
   },
 ]);

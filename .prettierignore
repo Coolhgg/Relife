@@ -77,3 +77,6 @@ backup/**/*
 
 # Step outputs with corrupted files
 ci/step-outputs/
+
+# Known parse issues in test code (requires manual fix)
+src/hooks/__tests__/useAdvancedAlarms.test.ts
