@@ -29,7 +29,7 @@ export class MockWebSocket {
   static readonly CLOSING = 2;
   static readonly CLOSED = 3;
 
-  constructor(url: string, protocols?: string | string[]) {
+  constructor(url: string, _protocols?: string | string[]) {
     this.url = url;
     this.id = `ws_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     this.readyState = MockWebSocket.CONNECTING;
@@ -102,7 +102,7 @@ export class MockWebSocket {
               new_rank: 2,
             });
           }
-        } catch (e) {
+        } catch (_e) {
           // Invalid JSON, just echo back
           this.triggerMessage(data);
         }
@@ -367,7 +367,7 @@ export class RealTimeTestUtils {
       try {
         const data = JSON.parse(event.data);
         messages.push(data);
-      } catch (e) {
+      } catch (_e) {
         messages.push(event.data);
       }
     });
@@ -421,7 +421,7 @@ export class RealTimeTestUtils {
   static async testConnectionResilience() {
     const wsUrl = 'wss://localhost:3001/realtime';
     let reconnectionAttempts = 0;
-    let connectionStates: string[] = [];
+    const connectionStates: string[] = [];
 
     const createConnection = () => {
       const ws = new MockWebSocket(wsUrl);
@@ -461,7 +461,7 @@ export class RealTimeTestUtils {
       return ws;
     };
 
-    const initialConnection = createConnection();
+    const _initialConnection = createConnection();
 
     // Wait for reconnection attempts
     await new Promise(resolve => setTimeout(resolve, 8000));

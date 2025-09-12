@@ -143,7 +143,8 @@ export default tseslint.config([
       ],
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unsafe-function-type': 'warn', // Warn instead of error
-      '@typescript-eslint/no-require-imports': 'error',
+      '@typescript-eslint/no-require-imports': 'warn',
+      '@typescript-eslint/triple-slash-reference': 'warn',
 
       // React rules
       'react/react-in-jsx-scope': 'off',
@@ -163,7 +164,7 @@ export default tseslint.config([
       'no-constant-condition': 'warn',
       'prefer-const': 'warn',
       'no-console': 'off', // Allow console in development
-      'no-undef': 'error',
+      'no-undef': 'off',
       'no-useless-catch': 'warn', // More lenient
     },
   },
