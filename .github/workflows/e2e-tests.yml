@@ -89,6 +89,14 @@ jobs:
       - name: Build application
         run: bun run build
 
+      - name: Start preview server
+        run: |
+          nohup bun run preview -- --port 4173 --strictPort >/dev/null 2>&1 &
+          for i in {1..60}; do
+            if curl -sf http://localhost:4173 >/dev/null; then echo "Preview up"; break; fi
+            sleep 1
+          done
+
       - name: Run E2E tests
         run: |
           if [ "${{ github.event.inputs.test_suite }}" = "desktop" ]; then
@@ -169,6 +177,14 @@ jobs:
       - name: Build application
         run: bun run build
 
+      - name: Start preview server
+        run: |
+          nohup bun run preview -- --port 4173 --strictPort >/dev/null 2>&1 &
+          for i in {1..60}; do
+            if curl -sf http://localhost:4173 >/dev/null; then echo "Preview up"; break; fi
+            sleep 1
+          done
+
       - name: Run Mobile E2E Tests
         run: bunx playwright test tests/e2e/specs/mobile-experience.spec.ts --project="Mobile Chrome" --project="Mobile Safari"
 
@@ -221,6 +237,14 @@ jobs:
 
       - name: Build application
         run: bun run build
+
+      - name: Start preview server
+        run: |
+          nohup bun run preview -- --port 4173 --strictPort >/dev/null 2>&1 &
+          for i in {1..60}; do
+            if curl -sf http://localhost:4173 >/dev/null; then echo "Preview up"; break; fi
+            sleep 1
+          done
 
       - name: Run Accessibility Tests
         run: |
@@ -388,7 +412,7 @@ jobs:
               body: comment
             });
 
-  # Cleanup old artifacts
+# Cleanup old artifacts
   cleanup:
     if: github.event_name == 'schedule'
     runs-on: ubuntu-latest
