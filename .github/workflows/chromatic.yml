@@ -15,69 +15,35 @@ concurrency:
 
 jobs:
   chromatic-deployment:
-    # Operating System
     runs-on: ubuntu-latest
 
-    # Job steps
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # 👈 Required to retrieve git history
+          fetch-depth: 0
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
-
-      - name: Create npm lock file for cache compatibility
-        run: |
-          # Create package-lock.json if it doesn't exist for npm cache compatibility
-          if [ ! -f package-lock.json ] && [ -f bun.lock ]; then
-            echo "Creating package-lock.json for npm cache compatibility..."
-            npm install --package-lock-only --ignore-scripts --legacy-peer-deps
-          fi
-          # Also handle dashboard if applicable
-          if [ ! -f relife-campaign-dashboard/package-lock.json ] && [ -f relife-campaign-dashboard/bun.lock ]; then
-            cd relife-campaign-dashboard
-            npm install --package-lock-only --ignore-scripts --legacy-peer-deps
-            cd ..
-          fi
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
+          node-version: '20'
+          check-latest: true
+          cache: npm
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: npm ci || npm install
 
       - name: Build Storybook
-        run: bun run build-storybook
+        run: npm run build-storybook
 
       - name: Publish to Chromatic
         uses: chromaui/action@latest
         with:
-          # Chromatic project token, see https://storybook.js.org/tutorials/visual-testing/react/en/deploy/ to obtain it
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-
-          # Optional: Build script name
           buildScriptName: build-storybook
-
-          # Optional: Exit with non-zero code if there are visual changes
           exitZeroOnChanges: true
-
-          # Optional: Skip if no story files changed
           onlyChanged: true
-
-          # Optional: Ignore last build on this branch if it's the first build
           ignoreLastBuildOnBranch: true
-
-          # Optional: Custom directory for Storybook build output
           storybookBuildDir: storybook-static
-
-          # Optional: Enable accessibility testing
           accessibility: true
-
-          # Optional: Set threshold for visual changes
           threshold: 0.2

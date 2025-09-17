@@ -48,10 +48,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          check-latest: true
           cache: "npm"
 
       - name: Install dependencies
-        run: bun install --production=false
+        run: npm ci || npm install --production=false
 
       - name: Generate staging version
         id: version
@@ -72,7 +73,7 @@ jobs:
 
       - name: Run linting (unless forced)
         if: ${{ !inputs.force_deploy }}
-        run: bun run lint
+        run: npm run lint
 
       - name: Run type checking (unless forced)
         if: ${{ !inputs.force_deploy }}
@@ -83,7 +84,7 @@ jobs:
         run: npm test -- --coverage=false
 
       - name: Build staging application
-        run: bun run build
+        run: npm run build
         env:
           VITE_APP_VERSION: ${{ steps.version.outputs.version }}
           VITE_BUILD_TIME: ${{ github.event.head_commit.timestamp }}
@@ -185,10 +186,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          check-latest: true
           cache: "npm"
 
       - name: Install dependencies
-        run: bun install --production=false
+        run: npm ci || npm install --production=false
 
       - name: Run Lighthouse audit
         run: |
@@ -271,10 +273,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          check-latest: true
           cache: "npm"
 
       - name: Install dependencies
-        run: bun install --production=false
+        run: npm ci || npm install --production=false
 
       - name: Test Supabase integration
         run: |
@@ -363,16 +366,13 @@ jobs:
 
           for i in {1..5}; do
             echo "Health check $i/5..."
-            
             if curl -f "$STAGING_URL/health" > /dev/null 2>&1; then
               echo "✅ Health check passed"
             else
               echo "❌ Health check failed"
             fi
-            
             sleep 60
           done
-
           echo "✅ Monitoring complete"
 
   # Notification

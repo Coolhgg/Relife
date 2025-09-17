@@ -1,0 +1,22 @@
+npm ERR! code ERESOLVE
+npm ERR! ERESOLVE unable to resolve dependency tree
+npm ERR! 
+npm ERR! While resolving: vite-template@0.0.0
+npm ERR! Found: react@19.1.1
+npm ERR! node_modules/react
+npm ERR!   react@"^19.1.0" from the root project
+npm ERR! 
+npm ERR! Could not resolve dependency:
+npm ERR! peer react@"^16.8.5 || ^17.0.0 || ^18.0.0" from react-beautiful-dnd@13.1.1
+npm ERR! node_modules/react-beautiful-dnd
+npm ERR!   react-beautiful-dnd@"^13.1.1" from the root project
+npm ERR! 
+npm ERR! Fix the upstream dependency conflict, or retry
+npm ERR! this command with --force or --legacy-peer-deps
+npm ERR! to accept an incorrect (and potentially broken) dependency resolution.
+npm ERR! 
+npm ERR! 
+npm ERR! For a full report see:
+npm ERR! /root/.cache/npm/_logs/2025-09-11T22_23_58_694Z-eresolve-report.txt
+
+npm ERR! A complete log of this run can be found in: /root/.cache/npm/_logs/2025-09-11T22_23_58_694Z-debug-0.log

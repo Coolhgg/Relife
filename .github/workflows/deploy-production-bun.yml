@@ -1,7 +1,7 @@
-# Production Deployment Pipeline with Bun Support
-# Streamlined deployment with Bun package manager
+# Production Deployment Pipeline with npm Support
+# Streamlined deployment with npm package manager
 
-name: 🚀 Production Deploy (Bun)
+name: 🚀 Production Deploy (npm)
 
 on:
   push:
@@ -37,13 +37,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: '20'
+          check-latest: true
+          cache: npm
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: npm ci || npm install
 
       - name: Generate version
         id: version
@@ -56,14 +58,14 @@ jobs:
 
       - name: Run quality checks
         run: |
-          bun run lint
-          bun run type-check
+          npm run lint
+          npm run type-check
 
       - name: Run tests
-        run: bun run test:coverage
+        run: npm run test:coverage
 
       - name: Build application
-        run: bun run build
+        run: npm run build
         env:
           VITE_APP_VERSION: ${{ steps.version.outputs.version }}
           VITE_BUILD_TIME: ${{ github.event.head_commit.timestamp }}

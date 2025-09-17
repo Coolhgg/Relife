@@ -30,37 +30,30 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: "20"
+          check-latest: true
+          cache: npm
 
       - name: Install dependencies
         run: |
           echo "🔧 Installing dependencies..."
-          bun install --frozen-lockfile || bun install
+          npm ci || npm install
 
       - name: Run React Hooks ESLint Check
         id: hooks-check
         run: |
           echo "🎣 Running React hooks rules validation..."
-
-          # Create output directory
           mkdir -p ci/step-outputs
+          npm run lint:eslint -- --format json --output-file ci/step-outputs/hooks-eslint-results.json || echo "ESLint check completed"
 
-          # Run ESLint specifically for hooks rules with detailed output
-          bun run lint:eslint --format json --output-file ci/step-outputs/hooks-eslint-results.json || echo "ESLint check completed"
-
-          # Extract hooks-specific violations
           if [ -f "ci/step-outputs/hooks-eslint-results.json" ]; then
-            # Check for react-hooks/rules-of-hooks violations
             HOOKS_VIOLATIONS=$(jq '[.[] | select(.messages[]?.ruleId == "react-hooks/rules-of-hooks")] | length' ci/step-outputs/hooks-eslint-results.json)
             HOOKS_EXHAUSTIVE_DEPS=$(jq '[.[] | select(.messages[]?.ruleId == "react-hooks/exhaustive-deps")] | length' ci/step-outputs/hooks-eslint-results.json)
-            
             echo "hooks_violations=$HOOKS_VIOLATIONS" >> $GITHUB_OUTPUT
             echo "exhaustive_deps_warnings=$HOOKS_EXHAUSTIVE_DEPS" >> $GITHUB_OUTPUT
-            
-            # Create detailed report
             echo "# 🎣 React Hooks Validation Report" > ci/step-outputs/hooks-report.md
             echo "" >> ci/step-outputs/hooks-report.md
             echo "**Date**: $(date)" >> ci/step-outputs/hooks-report.md
@@ -70,16 +63,12 @@ jobs:
             echo "- \`react-hooks/rules-of-hooks\` violations: **$HOOKS_VIOLATIONS**" >> ci/step-outputs/hooks-report.md
             echo "- \`react-hooks/exhaustive-deps\` warnings: **$HOOKS_EXHAUSTIVE_DEPS**" >> ci/step-outputs/hooks-report.md
             echo "" >> ci/step-outputs/hooks-report.md
-            
             if [ "$HOOKS_VIOLATIONS" -gt "0" ]; then
               echo "## ❌ Hooks Rules Violations Found" >> ci/step-outputs/hooks-report.md
               echo "" >> ci/step-outputs/hooks-report.md
               echo "The following files contain \`react-hooks/rules-of-hooks\` violations:" >> ci/step-outputs/hooks-report.md
               echo "" >> ci/step-outputs/hooks-report.md
-              
-              # Extract detailed violation information
-              jq -r '.[] | select(.messages[]?.ruleId == "react-hooks/rules-of-hooks") | "- **\(.filePath)**: \(.messages | map(select(.ruleId == "react-hooks/rules-of-hooks")) | length) violation(s)"' ci/step-outputs/hooks-eslint-results.json >> ci/step-outputs/hooks-report.md
-              
+              jq -r '.[] | select(.messages[]?.ruleId == "react-hooks/rules-of-hooks") | "- **\(.filePath)**: \(.messages | map(select(.ruleId == \"react-hooks/rules-of-hooks\")) | length) violation(s)"' ci/step-outputs/hooks-eslint-results.json >> ci/step-outputs/hooks-report.md
               echo "" >> ci/step-outputs/hooks-report.md
               echo "### Common Causes:" >> ci/step-outputs/hooks-report.md
               echo "1. **Naming Convention**: Hooks must start with 'use' (e.g., \`useMyHook\`, not \`_useMyHook\`)" >> ci/step-outputs/hooks-report.md
@@ -90,7 +79,6 @@ jobs:
               echo "- Ensure hook functions start with 'use' prefix" >> ci/step-outputs/hooks-report.md
               echo "- Move hook calls to the top level of components" >> ci/step-outputs/hooks-report.md
               echo "- Convert utility functions that use hooks to proper custom hooks" >> ci/step-outputs/hooks-report.md
-              
               echo "❌ Found $HOOKS_VIOLATIONS react-hooks/rules-of-hooks violations"
               exit 1
             else
@@ -123,17 +111,14 @@ jobs:
             const fs = require('fs');
             const hooksViolations = '${{ steps.hooks-check.outputs.hooks_violations }}';
             const exhaustiveDeps = '${{ steps.hooks-check.outputs.exhaustive_deps_warnings }}';
-
             let reportContent = '';
             try {
               reportContent = fs.readFileSync('ci/step-outputs/hooks-report.md', 'utf8');
             } catch (error) {
               reportContent = 'Report file not found';
             }
-
             const status = hooksViolations === '0' ? '✅' : '❌';
             const title = hooksViolations === '0' ? 'React Hooks Validation Passed' : 'React Hooks Violations Found';
-
             const body = `## 🎣 ${title} ${status}
 
             ${reportContent}
@@ -156,18 +141,14 @@ jobs:
             This prevents runtime errors and ensures React can properly track state and effects.
             </details>
             `;
-
-            // Find existing comment
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
             });
-
             const botComment = comments.find(comment => 
               comment.user.type === 'Bot' && comment.body.includes('React Hooks Validation')
             );
-
             if (botComment) {
               await github.rest.issues.updateComment({
                 owner: context.repo.owner,
@@ -193,7 +174,6 @@ jobs:
             const hooksViolations = '${{ steps.hooks-check.outputs.hooks_violations }}';
             const conclusion = hooksViolations === '0' ? 'success' : 'failure';
             const title = hooksViolations === '0' ? 'No hooks violations' : `${hooksViolations} hooks violations found`;
-
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,

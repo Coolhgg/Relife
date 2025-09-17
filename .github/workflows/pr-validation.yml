@@ -1,7 +1,7 @@
-# Streamlined Pull Request Validation with Bun Support
+# Streamlined Pull Request Validation with npm Support
 # Essential CI checks for PR validation
 
-name: ✅ PR Validation (Bun)
+name: ✅ PR Validation (npm)
 
 on:
   pull_request:
@@ -31,19 +31,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: "20"
+          check-latest: true
+          cache: "npm"
 
-      - name: Install dependencies (with lockfile flexibility)
+      - name: Install dependencies
         run: |
           echo "🔧 Installing dependencies..."
-          # Try frozen lockfile first, fallback to regular install for dependency PRs
-          if ! bun install --frozen-lockfile; then
-            echo "⚠️ Lockfile changed (expected for dependency updates), installing with updates..."
-            bun install
-          fi
+          npm ci || npm install
 
       - name: Check dependency compatibility
         run: |
@@ -55,26 +53,26 @@ jobs:
           fi
 
       - name: Type check
-        run: bun run type-check
+        run: npm run type-check
 
       - name: Lint code
-        run: bun run lint
+        run: npm run lint
 
       - name: Format check
         run: |
-          if bun run format:check; then
+          if npm run format:check; then
             echo "✅ Format check passed"
           else
             echo "⚠️ Format check failed, but continuing..."
           fi
 
       - name: Run unit tests
-        run: bun run test:coverage
+        run: npm run test:coverage
 
       - name: Run integration tests
         run: |
           echo "🔗 Running integration tests for critical user flows..."
-          bun run test:integration:coverage
+          npm run test:integration:coverage
         env:
           NODE_ENV: test
           # Mock external services for integration tests
@@ -84,7 +82,7 @@ jobs:
           VITE_POSTHOG_KEY: phc_test_123
 
       - name: Build application
-        run: bun run build
+        run: npm run build
         env:
           VITE_APP_VERSION: pr-${{ github.event.number }}
 
@@ -113,10 +111,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: "20"
+          check-latest: true
+          cache: "npm"
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -124,14 +124,10 @@ jobs:
           distribution: "temurin"
           java-version: "17"
 
-      - name: Install dependencies (with lockfile flexibility)
+      - name: Install dependencies
         run: |
           echo "🔧 Installing dependencies..."
-          # Try frozen lockfile first, fallback to regular install for dependency PRs
-          if ! bun install --frozen-lockfile; then
-            echo "⚠️ Lockfile changed (expected for dependency updates), installing with updates..."
-            bun install
-          fi
+          npm ci || npm install
 
       - name: Check dependency compatibility
         run: |
@@ -143,10 +139,10 @@ jobs:
           fi
 
       - name: Build web app
-        run: bun run build
+        run: npm run build
 
       - name: Sync Capacitor
-        run: bunx cap sync android
+        run: npx cap sync android
 
       - name: Build Android APK
         run: |
@@ -201,17 +197,14 @@ jobs:
             `;
 
             try {
-              // Update or create PR comment
               const { data: comments } = await github.rest.issues.listComments({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: context.issue.number,
               });
-              
               const botComment = comments.find(comment => 
                 comment.user.type === 'Bot' && comment.body.includes('PR Validation Results')
               );
-              
               if (botComment) {
                 await github.rest.issues.updateComment({
                   owner: context.repo.owner,

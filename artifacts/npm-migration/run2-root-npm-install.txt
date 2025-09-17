@@ -1,0 +1,22 @@
+npm WARN EBADENGINE Unsupported engine {
+npm WARN EBADENGINE   package: 'vite@7.1.5',
+npm WARN EBADENGINE   required: { node: '^20.19.0 || >=22.12.0' },
+npm WARN EBADENGINE   current: { node: 'v20.12.1', npm: '10.5.0' }
+npm WARN EBADENGINE }
+
+> relife-alarm@0.0.0 prepare
+> husky install
+
+husky - Git hooks installed
+
+up to date, audited 1465 packages in 3s
+
+301 packages are looking for funding
+  run `npm fund` for details
+
+4 low severity vulnerabilities
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
